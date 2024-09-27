@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{inc/layout-guest}">
+<head>
+    <meta charset="UTF-8">
+    <title>프로그램 결제</title>
+</head>
+<body>
+<main layout:fragment="main">
+    <h1>주문정보</h1>
+    <section>
+        <h1>주문요약</h1>
+        <section>
+            <header>
+                <h1>주문요약</h1>
+                <a href="">펼치기버튼</a>
+            </header>
+            <div>
+                <div><img src="" alt="대표이미지"></div>
+                <div>
+                    <div><span>카테고리</span></div>
+                    <p>title</p>
+                    <p>host이름</p>
+                    <div>
+                        <span>몇자리남음</span>
+                        <span>30,000</span>
+                        <p>1인당</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h1>개요정보</h1>
+            <p>진행일
+                <span>2024년 9월 20일 14:00~</span>
+            </p>
+            <p>예약인원
+                <span>2명</span>
+            </p>
+        </section>
+        <section>
+            <h1>가격정보</h1>
+            <p>상품
+                <span>30,000(KRW)</span>
+            </p>
+            <p>할인 등등 기타
+                <span>-5,000(KRW)</span>
+            </p>
+            <p>인원
+                <span>2</span>
+            </p>
+            <p>VAT
+                <span>5,000(KRW)</span>
+            </p>
+            <p>수수료
+                <span>2,000(KRW)</span>
+            </p>
+            <p>Total
+                <span>57,000(KRW)</span>
+            </p>
+        </section>
+    </section>
+
+    <section>
+        <h1>진행단계</h1>
+        <ul>
+            <li>참가자 정보</li>
+            <li>요청정보</li>
+            <li>결제</li>
+        </ul>
+    </section>
+
+    <form>
+        <section>
+            <h1>참가자 정보</h1>
+            <p>실제 프로그램 진행 당일에 참가하는 분의 정보를 입력해주세요.</p>
+            <p>* 필수입력사항</p>
+            <div>
+                <label>성함 *
+                    <input type="text" name="apply-name" placeholder="이름을 입력해주세요" required>
+                </label>
+            </div>
+            <div>
+                <label>이메일 *
+                    <input type="text" name="email" placeholder="이메일을 입력해주세요" required>
+                </label>
+            </div>
+            <div>
+                <label>휴대전화
+                    <select name="country-code">
+                        <option value="+1">+1 (USA)</option>
+                        <option value="+44">+44 (UK)</option>
+                        <option value="+82">+82 (South Korea)</option>
+                        <option value="+81">+81 (Japan)</option>
+                        <!-- 추가할 국제번호들 -->
+                    </select>
+                    <input type="tel" name="phone" required>
+                </label>
+            </div>
+            <div>
+                <label>SNS
+                    <select name="sns-type">
+                        <option value="instagram">instagram</option>
+                        <option value="telegram">telegram</option>
+                        <option value="facebook">facebook</option>
+                        <option value="kakaotalk">kakaotalk</option>
+                    </select>
+                    <input type="text" name="sns">
+                </label>
+            </div>
+            <div>
+                <a href="" type="button">이전</a>
+                <a href="" type="button">다음</a>
+            </div>
+
+        </section>
+
+
+        <section>
+            <h1>요청정보</h1>
+            <p>
+                향구 규정에 따라 구룹에 포함된 모든 참가자의 이름,성별,생년월일,국적,여권.신분증 번호를 제공해야 합니다.
+                이 정보는 다른사람과 공유되지 않으며 활동 종료후 삭제됩니다. 식단 제한 관련 정보또한 입력해주세요.
+            </p>
+
+            <label>
+                <textarea name="" cols="30" rows="10"></textarea>
+            </label>
+            <div>
+                <a href="" type="button">이전</a>
+                <a href="" type="button">다음</a>
+            </div>
+
+        </section>
+
+
+        <section>
+            <h1>결제</h1>
+            <section>
+                <header>
+                    <h1>신용카드</h1>
+                    <label>
+                        <input name="pay-method" type="radio" value="credit-card">Credit Card
+                    </label>
+                </header>
+                <div>
+                    <ul>
+                        <li>
+                            <label>
+                                <input type="radio" name="">
+                                My Bank Card - **** **** **** 1234
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" name="">
+                                Other Bank Card - **** **** **** 5678
+                            </label>
+                        </li>
+                    </ul>
+
+                    <div>
+                        <a href="">+ Add new card</a>
+                    </div>
+
+                    <div>
+                        <label>
+                            <input type="checkbox" id="" name="" value="yes">
+                            My billing address is the same as my shipping address
+                        </label>
+                    </div>
+                    <button>결제하기</button>
+                </div>
+            </section>
+
+            <section>
+                <header>
+                    <h1>구글페이</h1>
+                    <label>
+                        <input name="pay-method" type="radio" value="google-pay">Google Pay
+                    </label>
+                </header>
+                <button>결제하기</button>
+            </section>
+
+        </section>
+    </form>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{inc/layout-host}"
+>
+<head>
+    <meta charset=" UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메뉴 탭</title>
+    <link rel="stylesheet" href="/css/host/create-cost.css"/>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <div class="menu-tab">
+        <a href="/host/program/info/create" class="menu-tab-item">기본정보</a>
+        <a href="/host/program/schedule/create" class="menu-tab-item">일정</a>
+        <a href="/host/program/spots/create" class="menu-tab-item">장소</a>
+        <a href="/host/program/parties/create" class="menu-tab-item">인원</a>
+        <a href="" class="menu-tab-item active">비용</a>
+        <a href="/host/program/image/create" class="menu-tab-item">사진</a>
+    </div>
+
+    <section id="cost">
+    <form>
+        <fieldset class="program-cost">
+            <legend>총 비용</legend>
+            <input type="text" name="total-cost" placeholder="0" min="0" max="1000000">
+            <p>원</p>
+        </fieldset>
+    </form>
+
+    <form>
+        <fieldset class="program-cost">
+            <legend>예약금</legend>
+            <input type="text" name="total-cost" placeholder="0" min="0" max="1000000">
+            <p>원</p>
+        </fieldset>
+    </form>
+
+    <p class="difference">차액 :</p>
+
+    <p class="warning">* 차액은 현장에서 후불하는 금액입니다.</p>
+
+    <div class="button-box">
+        <a href="createCount" class="menu-tab-item">이전</a>
+        <button>저장 후 나가기</button>
+        <a href="#" class="menu-tab-item">다음</a>
+    </div>
+    </section>
+</main>
+</body>
+</html>

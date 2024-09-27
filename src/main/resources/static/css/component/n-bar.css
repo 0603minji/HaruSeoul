@@ -1,0 +1,34 @@
+.n-bar {
+    --bar-gap: 8px;
+    align-items: center;
+    display: inline-flex;
+    gap: var(--bar-gap);
+
+    > * {
+        display: inline-flex;
+        transition: transform .5s ease
+    }
+
+    > :hover {
+        transform: scale(1.0)
+    }
+
+    .active {
+        background-color: var(--color-main-2);
+        color: #fff
+    }
+
+    .active:hover {
+        background-color: var(--color-main-1)
+    }
+
+    .active\:bottom {
+        border-bottom: 4px dotted rgba(var(--rgb-accent-1), .5);
+        padding-bottom: 5px
+    }
+
+    .active\:border {
+        border: 4px dotted rgba(var(--rgb-accent-1), .5)
+    }
+
+}

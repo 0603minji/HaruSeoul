@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{inc/layout-host}">
+<head>
+    <meta charset=" UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메뉴 탭</title>
+    <link rel="stylesheet" href="/css/host/create-parties.css"/>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <div class="menu-tab">
+        <a href="/host/program/info/create" class="menu-tab-item ">기본정보</a>
+        <a href="/host/program/schedule/create" class="menu-tab-item">일정</a>
+        <a href="/host/program/spots/create" class="menu-tab-item">장소</a>
+        <a href="" class="menu-tab-item active">인원</a>
+        <a href="/host/program/cost/create" class="menu-tab-item">비용</a>
+        <a href="/host/program/image/create" class="menu-tab-item">사진</a>
+    </div>
+
+    <section id="parties">
+        <h1>인원 선택</h1>
+
+        <form method="post">
+            <fieldset class="member-count">
+                <legend>최소 인원</legend>
+                <select name="minCount" id="min-count">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <p>명</p>
+            </fieldset>
+        </form>
+
+
+        <form method="post">
+            <fieldset class="member-count">
+                <legend>최대 인원</legend>
+                <select name="minCount" id="max-count">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <p>명</p>
+            </fieldset>
+        </form>
+
+
+        <p class="warning">* 본인을 제외한 인원 수를 입력하세요.</p>
+
+        <div class="button-box">
+            <button>이전</button>
+            <button>임시저장</button>
+            <button>다음</button>
+        </div>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{inc/layout-guest}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>게스트계정관리</title>
+</head>
+<body>
+<main layout:fragment="main">
+
+        <h1>계정관리</h1>
+
+        <section>
+            <h1>프로필</h1>
+            <div>
+                <img src="" alt="대표이미지"><a href="">사진수정</a>
+            </div>
+            <p>둥이누나
+                <a href="">닉변</a>
+            </p>
+        </section>
+
+        <section>
+            <h1>기본정보</h1>
+            <section>
+                <h1>아이디</h1>
+                <p>
+                    아이디<span>minji1234</span>
+                </p>
+            </section>
+
+            <section>
+                <h1>비밀번호</h1>
+                <label>
+                    <span>비밀번호</span>
+                    <input type="password" name="password">
+                </label>
+                <a href="">변경</a>
+            </section>
+
+            <section>
+                <h1>이름</h1>
+                <p>김민지</p>
+            </section>
+
+            <section>
+                <h1>연락처</h1>
+                <p>82+ 01012341234</p>
+            </section>
+
+            <section>
+                <h1>이메일</h1>
+                <p>minji1234@email.com</p>
+            </section>
+
+            <section>
+                <h1>구사언어</h1>
+                <div>
+                    <form action="">
+                        <span>English</span>
+                        <button>삭제</button>
+                    </form>
+
+                    <form action="">
+                        <label>
+                            <span>언어선택</span>
+                            <select id="language" name="language">
+                                <option value="english" selected>English</option>
+                                <option value="japanese">Japanese</option>
+                                <option value="chinese">Chinese</option>
+                            </select>
+                        </label>
+                        <button>추가</button>
+                    </form>
+                </div>
+            </section>
+
+            <section>
+                <h1>SNS정보</h1>
+                <div>
+                    <form action="">
+                        <span>@minji</span>
+                        <button>삭제</button>
+                    </form>
+                    <form action="">
+
+                        <label>
+                            <span>sns종류</span>
+                            <select name="sns" id="sns">
+                                <option value="instagram">instagram</option>
+                                <option value="telegram">telegram</option>
+                                <option value="facebook">facebook</option>
+                                <option value="kakaotalk">kakaotalk</option>
+                            </select>
+                        </label>
+                        <label>
+                            <span>계정입력</span>
+                            <input type="text" name="sns" placeholder="계정입력">
+                        </label>
+                        <button>추가</button>
+                    </form>
+                </div>
+            </section>
+        </section>
+
+        <section>
+            <h1>카드관리</h1>
+            <div>
+                <ul>
+                    <li>
+                        <form action="">
+                            <div>
+                                <span>minji’s card</span>
+                                <span>xxxx xxxx xxxx 1234</span>
+                            </div>
+                            <button type="button">삭제</button>
+                        </form>
+                    </li>
+                </ul>
+                <a href="">+ 카드 등록</a>
+            </div>
+        </section>
+
+        <section>
+            <h1>동의여부</h1>
+            <section>
+                <h1>마케팅 수신</h1>
+                <form action="">
+                    <label>
+                        <span>이메일 수신 동의</span>
+                        <input type="checkbox" name="email-consent" checked>
+                    </label>
+                    <label>
+                        <span>SMS 수신 동의</span>
+                        <input type="checkbox" name="sms-consent" checked>
+                    </label>
+                </form>
+            </section>
+
+            <section>
+                <h1>위치정보수집</h1>
+                <form action="">
+                    <label>
+                        <span>위치 정보 수집</span>
+                        <input type="checkbox" name="location-consent" checked>
+                    </label>
+                </form>
+            </section>
+        </section>
+
+        <form action="">
+            <button>계정 삭제하기</button>
+        </form>
+
+</main>
+</body>
+</html>

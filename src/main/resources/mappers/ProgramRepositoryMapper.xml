@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.m2j2.haruseoul.repository.ProgramRepository.ProgramRepository">
+
+    <select id="findAll" resultType="ProgramView">
+        select *
+        from PROGRAM p
+            LEFT JOIN IMAGE i
+                ON p.ID = i.PROGRAM_ID
+        <where>
+            <if test="hostId != null">
+                p.HOST_ID = #{hostId}
+                AND
+                ("ORDER" = 1
+                    OR
+                "ORDER" IS NULL)
+            </if>
+            <if test="categories != null">
+                AND
+                (CATEGORY1 IN
+                <foreach collection="categories" item="category" open="(" separator="," close=")">
+                    #{category}
+                </foreach>
+                OR
+                CATEGORY2 IN
+                <foreach collection="categories" item="category" open="(" separator="," close=")">
+                    #{category}
+                </foreach>
+                )
+            </if>
+            <if test="ids != null">
+                AND
+                (p.ID IN
+                <foreach collection="ids" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+                )
+            </if>
+            <if test="statuses != null">
+                AND
+                (STATUS IN
+                <foreach collection="statuses" item="status" open="(" separator="," close=")">
+                    #{status}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+</mapper>

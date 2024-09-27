@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{inc/layout-host}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/host/create-info.css"/>
+</head>
+<body>
+
+<main layout:fragment="main">
+    <div class="menu-tab">
+        <a href="" class="menu-tab-item active">기본정보</a>
+        <a href="/host/program/schedule/create" class="menu-tab-item">일정</a>
+        <a href="/host/program/spots/create" class="menu-tab-item">장소</a>
+        <a href="/host/program/parties/create" class="menu-tab-item">인원</a>
+        <a href="/host/program/cost/create" class="menu-tab-item">비용</a>
+        <a href="/host/program/image/create" class="menu-tab-item">사진</a>
+    </div>
+
+    <h1>기본정보</h1>
+    <section>
+    <form method="post" action="">
+        <fieldset>
+            <legend>제목</legend>
+            <input name="title" placeholder="Enter title">
+        </fieldset>
+
+        <fieldset>
+            <legend>요약설명</legend>
+            <textarea name="summary" rows="4" cols="50" placeholder=""></textarea>
+        </fieldset>
+
+        <fieldset>
+            <legend>상세설명</legend>
+                <textarea name="description" rows="8" cols="50" placeholder=""></textarea>
+        </fieldset>
+
+        <fieldset>
+            <legend>진행언어</legend>
+
+                <select name="language">
+                    <option>English</option>
+                    <option>Japanese</option>
+                    <option>Chinese</option>
+                    <option>Russian</option>
+                </select>
+
+        </fieldset>
+
+        <fieldset>
+            <legend>카테고리</legend>
+            <label>Food<input type="checkbox" name="category" value="food"></label>
+            <label>Culture<input type="checkbox" name="category" value="culture"></label>
+            <label>Activity<input type="checkbox" name="category" value="activity"></label>
+            <label>Shopping<input type="checkbox" name="category" value="shopping"></label>
+            <label>Nature<input type="checkbox" name="category" value="Nature"></label>
+        </fieldset>
+
+        <div>**2개 이하로 체크</div>
+
+        <div class="button-box">
+            <button>임시저장</button>
+            <button>다음</button>
+        </div>
+
+    </form>
+    </section>
+</main>
+
+</body>
+</html>

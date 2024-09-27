@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{inc/layout-host}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>create</title>
+    <style>
+        /* 모든 섹션 숨김 */
+        section {
+            display: none;
+        }
+
+        /* 현재 타겟 섹션만 보이게 설정 */
+        section:target {
+            display: block;
+        }
+
+        /* 기본적으로 #info 섹션만 보이게 설정 */
+        body:not(:has(:target)) #info {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<main layout:fragment="main">
+    <nav class="menu-tab">
+        <h1>네비게이터</h1>
+        <a href="#intro" class="menu-tab-item">소개</a>
+        <a href="#detail" class="menu-tab-item">세부사항</a>
+        <a href="#course" class="menu-tab-item">코스</a>
+        <a href="#inclusion" class="menu-tab-item">포함사항</a>
+        <a href="#caution" class="menu-tab-item">추가정보</a>
+        <a href="#image" class="menu-tab-item">사진</a>
+    </nav>
+
+    <form method="post" action="" enctype="multipart/form-data">
+        <section id="intro">
+            <h1>소개</h1>
+            <fieldset>
+                <legend>제목</legend>
+                <label for="title">제목을 입력하세요</label>
+                <input id="title" type="text" name="title" placeholder="Enter title">
+                <p>0/60</p>
+            </fieldset>
+            <fieldset>
+                <legend>상세설명</legend>
+                <label for="description">설명을 입력하세요</label>
+                <textarea id="description" name="description" rows="8" cols="50" placeholder=""></textarea>
+                <p>0/1000</p>
+            </fieldset>
+            <fieldset>
+                <legend>카테고리</legend>
+                <label>Food<input type="checkbox" name="category" value="food"></label>
+                <label>Culture<input type="checkbox" name="category" value="culture"></label>
+                <label>Activity<input type="checkbox" name="category" value="activity"></label>
+                <label>Shopping<input type="checkbox" name="category" value="shopping"></label>
+                <label>Nature<input type="checkbox" name="category" value="nature"></label>
+                <p>**2개 이하로 체크</p>
+            </fieldset>
+            <div class="button-box">
+                <button>임시저장 후 나가기</button>
+                <div><a href="#detail">다음</a></div>
+            </div>
+        </section>
+
+        <section id="detail">
+            <h1>개요</h1>
+
+            <fieldset>
+                <legend>진행언어</legend>
+
+                <select name="language">
+                    <option>English</option>
+                    <option>Japanese</option>
+                    <option>Chinese</option>
+                </select>
+
+            </fieldset>
+            <fieldset>
+                <legend>소요시간</legend>
+                <select id="" name="">
+                    <option value="00">00</option>
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                </select>
+                <p>시</p>
+                <select id="" name="">
+                    <option value="00">00</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                </select>
+                <p>분</p>
+            </fieldset>
+            <fieldset>
+                <legend>최대 인원</legend>
+                <input type="number" name="max-count" max="5" min="1" placeholder="최대인원을 입력해주세요">
+                <p>명</p>
+            </fieldset>
+            <fieldset>
+                <legend>최소 인원</legend>
+                <input type="number" name="min-count" max="5" min="1" placeholder="최소인원을 입력해주세요">
+                <p>명</p>
+            </fieldset>
+            <fieldset class="program-cost">
+                <legend>총 비용</legend>
+                <input type="number" name="cost" placeholder="가격을 입력해주세요" min="0" max="1000000">
+                <p>원</p>
+            </fieldset>
+
+            <div>
+                <div><a href="#intro">이전</a></div>
+                <button>임시저장 후 나가기</button>
+                <div><a href="#course">다음</a></div>
+            </div>
+
+        </section>
+        <section id="course">
+            <h1>일정</h1>
+
+            <fieldset class="fieldset-border">
+                <legend>출발지</legend>
+
+                <div class="input-container">
+                    <img src="/image/pen.svg" alt="아이콘">
+                    <input type="text" placeholder="제목을 입력하세요">
+                </div>
+
+                <div class="input-container">
+                    <img src="/image/pen.svg" alt="아이콘">
+                    <input type="text" placeholder="장소설명">
+                </div>
+
+                <div class="input-container">
+                    <img src="/image/pin.svg" alt="아이콘">
+                    <input type="text" placeholder="출발지를 입력하세요">
+                </div>
+
+                <div class="input-container">
+                    <label for="start-hour"><img src="/image/pin.svg" alt="아이콘">시작시각</label>
+                    <div class="time-select">
+                        <select id="start-hour" name="start-hour">
+                            <option value="00">00</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                        </select>
+                        <p>시</p>
+                        <select id="start-minute" name="start-minute">
+                            <option value="00">00</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                        </select>
+                        <p>분</p>
+                    </div>
+                </div>
+                <div>
+                    <label for="duration">
+                        <img src="/image/pin.svg" alt="아이콘">소요시간
+                    </label>
+                    <div>
+                        <button type="button">-</button>
+                        <input type="text" id="duration" name="duration" value="0.0시간" readonly>
+                        <button type="button">+</button>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="fieldset-border">
+                <legend>도착지</legend>
+
+                <div class="input-container">
+                    <img src="/image/pen.svg" alt="아이콘">
+                    <input type="text" placeholder="제목을 입력하세요">
+                </div>
+
+                <div class="input-container">
+                    <img src="/image/pen.svg" alt="아이콘">
+                    <input type="text" placeholder="장소설명">
+                </div>
+
+                <div class="input-container">
+                    <img src="/image/pin.svg" alt="아이콘">
+                    <input type="text" placeholder="도착지를 입력하세요">
+                </div>
+
+                <div class="input-container">
+                    <label for="start-hour"><img src="/image/pin.svg" alt="아이콘">도착시각</label>
+                    <div class="time-select">
+                        <select id="" name="">
+                            <option value="00">00</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                        </select>
+                        <p>시</p>
+                        <select id="" name="">
+                            <option value="00">00</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                        </select>
+                        <p>분</p>
+                    </div>
+                </div>
+                <div>
+                    <label for="">
+                        <img src="/image/pin.svg" alt="아이콘">소요시간
+                    </label>
+                    <div>
+                        <button type="button">-</button>
+                        <input type="text" name="" value="0.0시간" readonly>
+                        <button type="button">+</button>
+                    </div>
+                </div>
+            </fieldset>
+            <div>
+                <button id="add-stop">+경유지</button>
+            </div>
+            <div class="map">지도</div>
+            <div>
+                <div><a href="#detail">이전</a></div>
+                <button>임시저장 후 나가기</button>
+                <div><a href="#inclusion">다음</a></div>
+            </div>
+
+        </section>
+
+
+        <section id="inclusion">
+            <h1>포함사항</h1>
+            <fieldset>
+                <legend>포함사항</legend>
+                <p>List all the features that are included in the price so customers understand the value for money of
+                    your activity.
+                    Start a new line for each one.</p>
+                <label for="included">포함 항목을 작성하세요</label>
+                <textarea id="included" name="included" rows="4" cols="50"
+                          placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+                <p>0 / 1000</p>
+            </fieldset>
+            <fieldset>
+                <legend>미포함사항 (선택사항)</legend>
+                <p>Name what customers need to pay extra for or what they may expect to see that isn't included in the
+                    price.
+                    This allows customers to appropriately set their expectations.</p>
+                <label for="not-included">미포함 항목을 작성하세요</label>
+                <textarea id="not-included" name="not-included" rows="4" cols="50"
+                          placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+                <p>0 / 1000</p>
+            </fieldset>
+
+            <div class="button-box">
+                <div><a href="#course">이전</a></div>
+                <button>임시저장 후 나가기</button>
+                <div><a href="#caution">다음</a></div>
+            </div>
+        </section>
+
+        <section id="caution">
+            <h1>추가정보</h1>
+            <fieldset>
+                <legend>준비물 (선택사항)</legend>
+                <p>Such as a towel for a boat tour, or comfortable shoes for a hike.
+                    This information appears on the activity details page & voucher.</p>
+                <label for="preparation">준비 항목을 작성하세요</label>
+                <textarea id="preparation" name="preparation" rows="4" cols="50"
+                          placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+                <p>0 / 1000</p>
+            </fieldset>
+            <fieldset>
+                <legend>주의사항 (선택사항)</legend>
+                <p>Add any remaining information that customers must know before they book.
+                    This information appears on the activity details page.</p>
+                <label for="notice">주의사항을 작성하세요</label>
+                <textarea id="notice" name="notice" rows="4" cols="50" placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+                <p>0 / 1000</p>
+            </fieldset>
+            <fieldset>
+                <legend>요청사항 (선택사항)</legend>
+                <p>항구 규정에 따라 그룹에 포함된 모든 참가자의 이름, 성별, 생년월일, 국적, 연락/신분 정보를 제공해야 합니다.
+                    이 정보는 다른 사람과 공유되지 않으며 활동 종료 후 삭제됩니다. 식단 제한 관련 정보 또한 입력해주세요.</p>
+                <label for="request">요청 사항을 작성하세요</label>
+                <textarea id="request" name="request" rows="4" cols="50" placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+                <p>0 / 1000</p>
+            </fieldset>
+            <div class="button-box">
+                <div><a href="#inclusion">이전</a></div>
+                <button>임시저장 후 나가기</button>
+                <div><a href="#image">다음</a></div>
+            </div>
+        </section>
+
+        <section id="image">
+            <h1>사진 업로드</h1>
+            <div class="container">
+
+                <div class="photo-grid">
+                    <div>
+                        <span>대표</span>
+                        <div class="photo-box">
+                            <img src="" alt="디폴트 이미지"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="number">1</span>
+                        <div class="photo-box">
+                            <img src="" alt="디폴트 이미지"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="number">2</span>
+                        <div class="photo-box">
+                            <img src="" alt="디폴트 이미지"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="number">3</span>
+                        <div class="photo-box">
+                            <img src="" alt="디폴트 이미지"/>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="number">4</span>
+                        <div class="photo-box">
+                            <img src="" alt="디폴트 이미지"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="number">5</span>
+                        <div class="photo-box">
+                            <img src="" alt="디폴트 이미지"/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <fieldset style="border: none">
+                    <legend style="display: none">이미지 업로드 버튼</legend>
+                    <div class="upload-buttons">
+                        <label class="file-upload"><input name="img" multiple type="file" style="display:none;">파일
+                            선택</label>
+                        <button class="upload-button" type="submit">업로드</button>
+                    </div>
+                </fieldset>
+
+                <div class="button-box">
+                    <div><a href="#course">이전</a></div>
+                    <button>임시저장 후 나가기</button>
+                    <button>작성 완료</button>
+                </div>
+            </div>
+        </section>
+    </form>
+</main>
+</body>
+</html>

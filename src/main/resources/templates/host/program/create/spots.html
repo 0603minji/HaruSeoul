@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{inc/layout-host}"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메뉴 탭</title>
+    <link rel="stylesheet" href="/css/host/create-spots.css"/>
+</head>
+<body>
+<main layout:fragment="main">
+    <div class="menu-tab">
+        <a href="/host/program/info/create" class="menu-tab-item ">기본정보</a>
+        <a href="/host/program/schedule/create" class="menu-tab-item">일정</a>
+        <a href="" class="menu-tab-item active">장소</a>
+        <a href="/host/program/parties/create" class="menu-tab-item">인원</a>
+        <a href="/host/program/cost/create" class="menu-tab-item">비용</a>
+        <a href="/host/program/image/create" class="menu-tab-item">사진</a>
+    </div>
+    <section>
+        <h1>장소 선택</h1>
+        <form id="location-form">
+            <fieldset class="fieldset-border">
+                <legend>출발지</legend>
+                <div class="input-container">
+                    <img src="/image/pen.svg" alt="아이콘">
+                    <input type="text" placeholder="제목을 입력하세요">
+                </div>
+                <div class="input-container">
+                    <img src="/image/pin.svg" alt="아이콘">
+                    <input type="text" placeholder="출발지를 입력하세요">
+                </div>
+            </fieldset>
+            <fieldset class="fieldset-border">
+                <legend>도착지</legend>
+                <div class="input-container">
+                    <img src="/image/pen.svg" alt="아이콘">
+                    <input type="text" placeholder="제목을 입력하세요">
+                </div>
+                <div class="input-container">
+                    <img src="/image/pin.svg" alt="아이콘">
+                    <input type="text" placeholder="도착지를 입력하세요">
+                </div>
+            </fieldset>
+        </form>
+        <div>
+            <button id="add-stop">+경유지</button>
+        </div>
+        <div class="map">지도</div>
+        <div class="button-container">
+            <button>이전</button>
+            <button>저장후 나가기</button>
+            <button>다음</button>
+        </div>
+    </section>
+</main>
+</body>
+</html>

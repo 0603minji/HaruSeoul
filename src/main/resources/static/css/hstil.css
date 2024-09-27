@@ -1,0 +1,362 @@
+/*================= 아이콘 <시작> ====================*/
+.n-icon\:arrow_swap:before {
+    --icon: url(image/icon/arrow_swap.svg)
+}
+
+.n-icon\:calendar:before {
+    --icon: url(image/icon/calendar.svg)
+}
+
+.n-icon\:category:before {
+    --icon: url(image/icon/category.svg)
+}
+
+.n-icon\:clock:before {
+    --icon: url(image/icon/clock.svg)
+}
+
+.n-icon\:clock_sand:before {
+    --icon: url(image/icon/clock_sand.svg)
+}
+
+.n-icon\:globe:before {
+    --icon: url(image/icon/globe.svg)
+}
+
+.n-icon\:group:before {
+    --icon: url(image/icon/group.svg)
+}
+
+.n-icon\:list:before {
+    --icon: url(image/icon/list.svg)
+}
+
+.n-icon\:price:before {
+    --icon: url(image/icon/price.svg)
+}
+
+.n-icon\:reset:before {
+    --icon: url(image/icon/reset.svg)
+}
+
+.n-icon\:share:before {
+    --icon: url(image/icon/share.svg)
+}
+
+.n-icon\:star:before {
+    --icon: url(image/icon/star.svg)
+}
+
+.n-icon\:bookmark_simple:before {
+    --icon: url(image/icon/bookmark.svg)
+}
+
+.n-icon\:instagram:after, .n-icon\:instagram:before {
+    --icon: url(image/icon/instagram.svg)
+}
+
+.n-icon\:credit_card:after, .n-icon\:credit_card:before {
+    --icon: url(image/icon/credit_card.svg)
+}
+
+.n-icon\:star:after, .n-icon\:star:before {
+    --icon: url(image/icon/star.svg)
+}
+
+.n-icon\:success-decagon:after, .n-icon\:success-decagon:before {
+    --icon: url(image/icon/success-decagon.svg)
+}
+
+.n-icon\:success-circle-green:after, .n-icon\:success-circle-green:before {
+    --icon: url(image/icon/success-circle-green.svg)
+}
+
+.n-icon\:error:after, .n-icon\:error:before {
+    --icon: url(image/icon/error.svg)
+}
+
+.n-icon\:caution:after, .n-icon\:caution:before {
+    --icon: url(image/icon/caution.svg)
+}
+
+.n-icon\:reset:after, .n-icon\:reset:before {
+    --icon: url(image/icon/reset.svg)
+}
+
+.n-icon\:placeholder:after, .n-icon\:placeholder:before {
+    --icon: url(image/icon/placeholder.svg)
+}
+
+.n-icon\:arrow_up:after, .n-icon\:arrow_up:before {
+    --icon: url(image/icon/arrow_up.svg)
+}
+
+/*================= 아이콘 <끝> ====================*/
+
+
+/*======================== 컴포넌트 <시작> ========================*/
+
+
+
+
+
+.n-modal {
+    --modal-border-radius: 16px;
+    --modal-border: none;
+    --modal-box-shadow: rgba(0, 0, 0, .08) 0 16px 20px -4px, rgba(0, 0, 0, .03) 0 8px 8px -4px;
+    --modal-z-index: 1200;
+    background-color: var(--color-base-1);
+    border: var(--modal-border);
+    border-radius: var(--modal-border-radius);
+    box-shadow: var(--modal-box-shadow);
+    max-width: 90vw;
+    padding: 16px 24px;
+    position: fixed;
+    right: 50%;
+    top: 50%;
+    transform: translate(50%, -50%);
+    z-index: var(--modal-z-index)
+}
+
+.calendar input[type="checkbox"] {
+    display: none;
+}
+
+.calendar label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    /*font-size: 16px;*/
+    /*transition: background-color 0.3s ease;*/
+}
+
+/*!* 비활성화된 날짜 스타일 *!*/
+/*.calendar input[type="checkbox"]:disabled + label {*/
+/*    background-color: #e0e0e0;*/
+/*    color: #aaa;*/
+/*    cursor: not-allowed;*/
+/*}*/
+
+/*!* 선택된 날짜 스타일 *!*/
+/*.calendar input[type="checkbox"]:checked + label {*/
+/*    background-color: #58aaf7;*/
+/*    color: white;*/
+/*}*/
+
+/* 마우스 오버 시 스타일 */
+.calendar label:hover {
+    background-color: #c0e4ff;
+}
+
+/* 주말 스타일 */
+/*.calendar label:nth-child(6), .calendar label:nth-child(7) {*/
+/*    background-color: #f0f8ff;*/
+/*}*/
+
+/*기본 모달 스타일*/
+aside.n-modal {
+    width: 100%;
+    max-width: none;
+    /*height: auto;*/
+    /*margin: 0 auto;*/
+
+    /*background-color: white;*/
+    /*border-radius: 10px;*/
+
+    /*position: relative;*/
+}
+
+/* 모바일(768px 이하) 기준 모달 스타일 */
+@media (max-width: 768px) {
+    aside.n-modal {
+        width: 100%; /* 모바일에서는 너비를 90%로 설정 */
+        max-width: none; /* 최대 너비 제한 해제 */
+    }
+}
+
+/* ================================ 필터 <시작> ==================================*/
+
+.filter {
+    position: relative;
+    width: 100%;
+
+    .n-btn {
+        --btn-font-size: 14px;
+        --btn-border-color: var(--color-base-3);
+        --btn-border-radius: 5px;
+        --btn-bg-hover: var(--color-sub-3);
+        --btn-bg-color: white;
+        --btn-padding: 10px 12px;
+        align-items: center;
+        background-color: var(--btn-bg-color);
+        border: 1px solid var(--btn-border-color, var(--color-base-3));
+        border-radius: var(--btn-border-radius, 8px);
+        box-sizing: content-box;
+        color: var(--color-base-7);
+        cursor: pointer;
+        display: inline-flex;
+        font-family: inherit;
+        font-size: var(--btn-font-size, 14px);
+        font-weight: 500;
+        justify-content: center;
+        line-height: 1em;
+        padding: var(--btn-padding);
+        position: relative;
+        transition: border-color .3s, background-color .3s;
+        user-select: none;
+        white-space: nowrap;
+        width: auto
+    }
+
+    .n-btn:hover {
+        background-color: var(--btn-bg-hover, var(--color-base-2));
+        text-decoration: none
+    }
+
+    .n-bar {
+        --bar-gap: 10px;
+        align-items: center;
+        display: inline-flex;
+        gap: var(--bar-gap);
+
+        >* {
+            display: inline-flex;
+            transition: transform .5s ease
+        }
+
+        >:hover {
+            transform: scale(1.0);
+            /* background-color: var(--color-sub-3); */
+        }
+
+        .active {
+            background-color: var(--color-sub-3);
+            color: var(--color-sub-1);
+            --icon-color: var(--color-sub-1);
+        }
+
+        .active:hover {
+            background-color: var(--color-sub-3)
+        }
+
+        /* .active\:bottom {
+            border-bottom: 4px dotted rgba(var(--rgb-accent-1), .5);
+            padding-bottom: 5px
+        } */
+
+        .active\:border {
+            border: 1px solid var(--color-sub-1);
+        }
+    }
+
+    .n-icon {
+        --icon-color: var(--color-base-7);
+    }
+
+    .n-icon:before {
+        mask-repeat: no-repeat;
+    }
+}
+
+
+.reset-box {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    height: 100%;
+    right: 0;
+    top: 0;
+}
+
+.gradation {
+    width: 40px;
+    height: 100%;
+    background-image: linear-gradient(270deg, rgb(255, 255, 255) 0px, rgba(255, 255, 255, 0));
+}
+
+.reset-box .icon-box {
+    height: 100%;
+    box-sizing: content-box;
+    padding-left: 8px;
+    padding-right: 16px;
+    --icon-color: var(--color-sub-1);
+    z-index: 1;
+}
+
+.filter-simple {
+    .n-btn {
+        --btn-font-size: 12px;
+        --btn-border-color: var(--color-base-3);
+        --btn-border-radius: 16px;
+        --btn-bg-hover: var(--color-base-4);
+        --btn-bg-color: var(--color-base-3);
+        --btn-padding: 8px 12px;
+        align-items: center;
+        background-color: var(--btn-bg-color);
+        border: 0 solid var(--btn-border-color, var(--color-base-3));
+        border-radius: var(--btn-border-radius, 8px);
+        box-sizing: content-box;
+        color: var(--color-base-7);
+        cursor: pointer;
+        display: inline-flex;
+        font-family: inherit;
+        font-size: var(--btn-font-size, 14px);
+        font-weight: var(--font-weight-2);
+        justify-content: center;
+        line-height: 1em;
+        padding: var(--btn-padding);
+        position: relative;
+        transition: border-color .3s, background-color .3s;
+        user-select: none;
+        white-space: nowrap;
+        width: auto
+    }
+
+    .n-btn:hover {
+        background-color: var(--btn-bg-hover);
+        text-decoration: none
+    }
+
+    .n-bar {
+        --bar-gap: 8px;
+        align-items: center;
+        display: inline-flex;
+        gap: var(--bar-gap);
+
+        >* {
+            display: inline-flex;
+            transition: transform .5s ease
+        }
+
+        >:hover {
+            transform: scale(1.0);
+            /* background-color: var(--color-sub-3); */
+        }
+
+        .active {
+            background-color: var(--color-main-1);
+            color: var(--color-base-1);
+        }
+
+        .active:hover {
+            background-color: var(--color-main-2)
+        }
+
+        /* .active\:bottom {
+            border-bottom: 4px dotted rgba(var(--rgb-accent-1), .5);
+            padding-bottom: 5px
+        } */
+
+        .active\:border {
+            border: 0 solid var(--color-sub-1);
+        }
+    }
+}
+
+/* =============================== 필터 <끝> ===============================*/

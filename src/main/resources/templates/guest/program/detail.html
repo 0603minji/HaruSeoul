@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{inc/layout-guest}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<main layout:fragment="main">
+    <nav>
+        <h1>네비게이터</h1>
+        <a href="#intro">개요</a>
+        <a href="#program-overview">프로그램 소개</a>
+        <a href="#course-information">코스 안내</a>
+        <a href="#meeting-location">만나는 장소</a>
+        <a href="#inclusions">포함사항</a>
+        <a href="#things-to-know">꼭 알아두세요!</a>
+        <a href="#review">리뷰</a>
+    </nav>
+
+
+<!--  프로그램 소개  -->
+    <section>
+        <h1>프로그램 카드</h1>
+        <div>
+            <span><img src="" alt="대표이미지"></span>
+            <span>1/5</span>
+        </div>
+        <div>category</div>
+        <div>title</div>
+        <div>
+            <span>별</span>
+            <span>3.5</span><span>/5.0</span>
+            <span>리뷰 13개</span>
+            <div>(KRW) 35,000</div>
+        </div>
+    </section>
+
+    <section id="intro">
+        <h1>개요</h1>
+        <div>
+            <span>language</span>
+            <span>2/5</span><span>(min/max)</span>
+            <span>duration</span>
+            <span>address</span>
+        </div>
+    </section>
+
+
+<!--  호스트 프로필 카드  -->
+    <section>
+        <h1>호스트 정보</h1>
+        <div>
+            <img src="" alt="프로필이미지">
+            <div>
+                <span>name</span>
+                <span>3.5</span><span>/5.0</span>
+            </div>
+            <a href="">프로필보기</a>
+        </div>
+    </section>
+
+    <article id="program-overview">
+        <h1>프로그램 소개</h1>
+        <p>내용쏼라쏼라</p>
+    </article>
+
+
+<!--  코스 안내  -->
+    <section id="course-information">
+        <h1>코스안내</h1>
+
+        <div>
+            <img src="" alt="코스지도">
+        </div>
+
+        <div>
+            <div>시간</div>
+            <div>
+                <p>만나는 장소 <span>(소요시간)</span></p>
+                <p>짤막한 설명</p>
+            </div>
+            <div>
+                <p>이동수단 <span>소요시간</span></p>
+            </div>
+        </div>
+
+    </section>
+
+
+<!--  만나는 장소  -->
+    <section id="meeting-location">
+        <h1>만나는장소</h1>
+        <div>
+            <p>만나는 장소</p>
+            <span>주소</span><a href="">주소복사</a>
+        </div>
+        <div>
+            <img src="" alt="map">
+        </div>
+    </section>
+
+
+<!--  포함사항  -->
+    <section id="inclusions">
+        <h1>포함사항</h1>
+        <div>
+            <p>포함사항</p>
+            <ul>
+                <li>포함사항</li>
+            </ul>
+            <p>비포함사항</p>
+            <ul>
+                <li>미포함사항</li>
+            </ul>
+        </div>
+    </section>
+
+
+<!--  꼭 알아두세요  -->
+    <section id="things-to-know">
+        <h1>꼭 알아두세요!</h1>
+
+        <!--   준비물    -->
+        <section>
+            <h1>준비물</h1>
+            <ul>
+                <li>준비물1</li>
+                <li>준비물2</li>
+                <li>준비물3</li>
+            </ul>
+        </section>
+
+        <!--   주의사항    -->
+        <section>
+            <h1>주의사항</h1>
+            <ul>
+                <li>주의사항1</li>
+                <li>주의사항2</li>
+                <li>주의사항3</li>
+                <li>주의사항4</li>
+                <li>주의사항5</li>
+                <li>주의사항6</li>
+            </ul>
+        </section>
+
+        <!--   취소 및 환불정책    -->
+        <section>
+            <h1>취소 및 환불정책</h1>
+            <ul>
+                <li>취소환불규정 정책 뭐 이런거</li>
+                <li>취소환불규정 정책 뭐 이런거</li>
+                <li>취소환불규정 정책 뭐 이런거</li>
+                <li>취소환불규정 정책 뭐 이런거</li>
+            </ul>
+        </section>
+    </section>
+
+
+<!--  리뷰  -->
+    <section id="review">
+        <h1>리뷰 60</h1>
+
+        <section>
+            <span>4.9</span>
+            <span>별</span>
+            <ul>
+                <li><img src="" alt="리뷰 대표이미지"></li>
+                <li><img src="" alt="리뷰 대표이미지"></li>
+                <li><img src="" alt="리뷰 대표이미지"></li>
+                <li><img src="" alt="리뷰 대표이미지"></li>
+                <li><img src="" alt="리뷰 대표이미지"></li>
+                <li><a href="#reviewList">+16</a></li>
+            </ul>
+        </section>
+
+        <div>
+            <span>60개 리뷰</span>
+            <a href="">정렬 아이콘</a>
+            <span>최신순</span>
+        </div>
+
+        <!--   리뷰 게스트 댓글   -->
+        <section>
+            <span>별</span>
+            <div>
+                <img src="" alt="프로필이미지">
+                <div>
+                    <div><span>name</span><a href="">똥똥똥</a></div>
+                    <span>date</span>
+                </div>
+            </div>
+
+            <div>
+                <p>내용쏼라쏼라</p>
+                <button>더보기</button>
+                <ul>
+                    <li><img src="" alt="reviewPhoto"></li>
+                    <li><img src="" alt="reviewPhoto"></li>
+                    <li><img src="" alt="reviewPhoto"></li>
+                    <li><img src="" alt="reviewPhoto"></li>
+                    <li><img src="" alt="reviewPhoto"></li>
+                    <li><img src="" alt="reviewPhoto"></li>
+                </ul>
+            </div>
+        </section>
+
+        <!--  리뷰 호스트 답글   -->
+        <section>
+            <div>
+                <img src="" alt="프로필이미지">
+                <div>
+                    <div><span>name</span><a href="">똥똥똥</a></div>
+                    <span>date</span>
+                </div>
+            </div>
+            <div>
+                <p>내용쏼라쏼라</p>
+                <button>더보기</button>
+            </div>
+        </section>
+
+    </section>
+
+    <!-- 리뷰사진 목록 어사이드 -->
+    <aside id="reviewList">
+        <h1>리뷰 사진</h1>
+        <span>X</span>
+
+        <ul>
+            <li><a href="#reviewListDetail"><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+            <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>
+        </ul>
+    </aside>
+
+
+    <!--  리뷰사진 목록 디테일 어사이드   -->
+    <aside id="reviewListDetail">
+        <h1>1/6</h1>
+        <span>X</span>
+
+        <div><img src="" alt="리뷰 사진 큰 화면"></div>
+        <ul>
+            <li><img src="" alt="리뷰 사진 작은 화면"></li>
+            <li><img src="" alt="리뷰 사진 작은 화면"></li>
+            <li><img src="" alt="리뷰 사진 작은 화면"></li>
+            <li><img src="" alt="리뷰 사진 작은 화면"></li>
+            <li><img src="" alt="리뷰 사진 작은 화면"></li>
+            <li><img src="" alt="리뷰 사진 작은 화면"></li>
+        </ul>
+
+
+        <!--   리뷰 게스트 댓글   -->
+        <section>
+            <span>별</span>
+            <div>
+                <img src="" alt="프로필이미지">
+                <div>
+                    <div><span>name</span><a href="">똥똥똥</a></div>
+                    <span>date</span>
+                </div>
+            </div>
+
+            <div>
+                <p>내용쏼라쏼라</p>
+                <button>더보기</button>
+                <ul>
+                    <li><img src="" alt="reviewPhoto"></li>
+                    <li><img src="" alt="reviewPhoto"></li>
+                    <li><img src="" alt="reviewPhoto"></li>
+                    <li><img src="" alt="reviewPhoto"></li>
+                    <li><img src="" alt="reviewPhoto"></li>
+                    <li><img src="" alt="reviewPhoto"></li>
+                </ul>
+            </div>
+        </section>
+
+        <!--  리뷰 호스트 답글   -->
+        <section>
+            <div>
+                <img src="" alt="프로필이미지">
+                <div>
+                    <div><span>name</span><a href="">똥똥똥</a></div>
+                    <span>date</span>
+                </div>
+            </div>
+            <div>
+                <p>내용쏼라쏼라</p>
+                <button>더보기</button>
+            </div>
+        </section>
+    </aside>
+
+
+    <!-- 찜 -->
+    <div>
+        <button>찜</button>
+        <span><a href="#book">예약하기</a></span>
+    </div>
+
+    <aside id="book">
+        <h1>진행일 선택</h1>
+
+        <div>
+            <button type="button" id="prev-month">&lt;</button>
+            <div>
+                <span id="year">2024</span>
+                <span id="month">9</span>
+            </div>
+            <button type="button" id="next-month">&gt;</button>
+        </div>
+
+        <section>
+            <form method="post">
+                <h1>달력</h1>
+
+                <div>Mo</div>
+                <div>Tu</div>
+                <div>We</div>
+                <div>Th</div>
+                <div>Fr</div>
+                <div>Sa</div>
+                <div>Su</div>
+
+                <!-- 첫째 주 -->
+                <div><label><input type="checkbox" disabled>29</label></div>
+                <div><label><input type="checkbox" disabled>30</label></div>
+                <div><label><input type="checkbox" disabled>31</label></div>
+                <div><label><input type="checkbox" disabled>1</label></div>
+                <div><label><input type="checkbox" disabled>2</label></div>
+                <div><label><input type="checkbox" disabled>3</label></div>
+                <div><label><input type="checkbox" disabled>4</label></div>
+
+                <!-- 둘째 주 -->
+                <div><label><input type="checkbox" disabled>5</label></div>
+                <div><label><input type="checkbox" disabled>6</label></div>
+                <div><label><input type="checkbox" disabled>7</label></div>
+                <div><label><input type="checkbox" disabled>8</label></div>
+                <div><label><input type="checkbox" disabled>9</label></div>
+                <div><label><input type="checkbox" disabled>10</label></div>
+                <div><label><input type="checkbox" disabled>11</label></div>
+
+                <!-- 셋째 주부터 활성화 -->
+                <div><label><input type="checkbox">12</label></div>
+                <div><label><input type="checkbox">13</label></div>
+                <div><label><input type="checkbox">14</label></div>
+                <div><label><input type="checkbox">16</label></div>
+                <div><label><input type="checkbox">17</label></div>
+                <div><label><input type="checkbox">18</label></div>
+
+                <div><label><input type="checkbox">19</label></div>
+                <div><label><input type="checkbox">20</label></div>
+                <div><label><input type="checkbox">21</label></div>
+                <div><label><input type="checkbox">22</label></div>
+                <div><label><input type="checkbox">23</label></div>
+                <div><label><input type="checkbox">24</label></div>
+                <div><label><input type="checkbox">25</label></div>
+
+                <div><label><input type="checkbox">26</label></div>
+                <div><label><input type="checkbox" disabled>27</label></div>
+                <div><label><input type="checkbox">28</label></div>
+                <div><label><input type="checkbox">29</label></div>
+                <div><label><input type="checkbox">30</label></div>
+                <div><label><input type="checkbox" disabled>31</label></div>
+            </form>
+        </section>
+
+        <section>
+            <h1>인원수 고르기</h1>
+            <button type="button" id="decrease">-</button>
+            <div><label><input type="text" value="" min="1" max="5" readonly></label></div>
+            <button type="button" id="increase">+</button>
+        </section>
+
+    </aside>
+
+</main>
+</body>
+</html>
