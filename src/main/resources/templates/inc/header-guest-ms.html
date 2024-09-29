@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/component/n-global-header.css">
+</head>
+
+<body>
+<!-- 상단바 .n-global-header:guest -->
+<header th:fragment="header" class="n-global-header n-global-header:guest">
+
+    <h1 class="n-heading:2">HaruSeoul</h1>
+
+    <!-- 서비스 로고 -->
+    <!-- <div class="logo">
+                <a href=""><img src="/image/logo.svg" alt="service name"/></a>
+            </div> -->
+
+    <!-- <div class="n-btn">
+                <a href="/host/main">호스트 되기</a>
+            </div> -->
+    <nav class="ml:auto">
+        <h1 class="d:none">헤더메뉴</h1>
+        <ul class="n-bar"> <!-- d:inline-flex align-items:center gap:2 -->
+            <li><a class="n-btn" href="/host/main">호스트 되기</a></li>
+        </ul>
+    </nav>
+
+    <!-- 카테고리 햄버거 버튼 -->
+    <div class="">
+        <!-- <a href=""><img src="/image/navi.svg" alt="menu"/></a> -->
+        <label class="n-icon n-icon:list n-icon-size:6 ml:3 cursor:pointer">
+            <span>사이드메뉴버튼</span>
+            <input class="d:none n-aside-hider" type="checkbox">
+        </label>
+    </div>
+
+</header>
+</body>
+
+</html>

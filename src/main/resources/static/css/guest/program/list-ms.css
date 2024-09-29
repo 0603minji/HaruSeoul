@@ -1,0 +1,79 @@
+/* ====================== 프로그램 카드 ==================== */
+
+.card-container {
+    * {
+        box-sizing: border-box;
+    }
+
+    --card-list-gap: var(--gap-5);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--card-list-gap);
+    max-width: 600px;
+    min-width: 400px;
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        flex-basis: calc(50% - (var(--card-list-gap) * 0.5));
+        max-width: calc(50% - (var(--card-list-gap) * 0.5));
+        flex-grow: 1;
+        flex-shrink: 0;
+
+        .card-main {
+            display: flex;
+            flex-direction: column;
+
+            .img-wrapper {
+                aspect-ratio: 1 / 1;
+                overflow: hidden;
+                border-radius: var(--border-radius-4);
+
+                img {
+                    width: var(--width-10p);
+                    height: var(--height-10p);
+                    object-fit: cover;
+                }
+            }
+
+            .info-wrapper {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+                word-break: break-all;
+                gap: var(--gap-2);
+                margin-top: var(--gap-2);
+
+                .n-icon:before {
+                    --icon-size: 14px;
+                }
+
+                .n-icon\:clock_sand:before {
+                    --icon-color: var(--color-base-8);
+                }
+
+                .n-icon\:price:before {
+                    --icon-color: var(--color-base-8);
+                }
+
+                .info {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-items: center;
+                    gap: var(--gap-1);
+
+                    .n-icon\:star:before {
+                        --icon-color: var(--color-yellow-1);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
