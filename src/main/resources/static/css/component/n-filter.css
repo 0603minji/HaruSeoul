@@ -118,7 +118,7 @@
 
 .filter-simple {
     .n-btn {
-        --btn-font-size: 12px;
+        --btn-font-size: 14px;
         --btn-border-color: var(--color-base-3);
         --btn-border-radius: 16px;
         --btn-bg-hover: var(--color-base-4);
@@ -151,7 +151,7 @@
     }
 
     .n-bar {
-        --bar-gap: 8px;
+        --bar-gap: 16px;
         align-items: center;
         display: inline-flex;
         gap: var(--bar-gap);

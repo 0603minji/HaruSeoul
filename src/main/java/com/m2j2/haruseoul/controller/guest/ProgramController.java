@@ -15,7 +15,7 @@ public class ProgramController {
 
     @GetMapping("list")
     public String list(){
-        return "guest/program/list";
+        return "guest/program/list-ms";
     }
 
     @GetMapping("pay")
