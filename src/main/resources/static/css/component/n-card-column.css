@@ -1,7 +1,8 @@
 /* ====================== 프로그램 카드 ==================== */
 
-.card-container-column {
-    --card-list-gap: var(--gap-5);
+.card-container {
+    --column-number: 3; /**/
+    --card-list-gap: var(--gap-5); /**/
     display: flex;
     flex-direction: row; /**/
     flex-wrap: wrap; /**/
@@ -9,53 +10,62 @@
     max-width: 600px;
     min-width: 400px;
 
-    .card {
-        display: flex;
-        flex-direction: column;
-        flex-basis: calc(50% - (var(--card-list-gap) * 0.5)); /**/
-        max-width: calc(50% - (var(--card-list-gap) * 0.5)); /**/
-        flex-grow: 1;
-        flex-shrink: 0;
+    box-sizing: content-box; /**/
+    padding: 20px 16px;
+
+    .card-column {
+        flex-basis: calc((100% - var(--card-list-gap) * (var(--column-number) - 1)) / var(--column-number)); /**/
+        max-width: calc((100% - var(--card-list-gap) * (var(--column-number) - 1)) / var(--column-number));
+        min-width: calc((100% - var(--card-list-gap) * (var(--column-number) - 1)) / var(--column-number));
+
+        /*flex-basis: 50%; !**!*/
+        /*max-width: 50%;*/
+        /*min-width: 50%;*/
+
+        border-radius: 0;
+        border: 0 solid var(--color-base-3);
+        gap: 0;
 
         .card-main {
-            display: flex;
             flex-direction: column; /**/
+            gap: 0;
+            width: 100%;
 
             .img-wrapper {
+                width: 100%;
+                min-width: 100%;
+                margin-bottom: 8px;
 
+                img {
+                    width: var(--width-10p);
+                    height: var(--height-10p);
+                    object-fit: cover;
+                }
             }
 
             .card-info-wrapper {
-                display: flex;
-                flex-direction: column;
-                flex-grow: 1;
                 word-break: break-all;
-                gap: var(--gap-2);
-                margin-top: var(--gap-2);
+                padding: 0 10px;
+                /*gap: var(--gap-2);*/
+                /*margin-top: var(--gap-2);*/
 
-                .n-icon:before {
-                    --icon-size: 14px;
-                }
-
-                .n-icon\:clock_sand:before {
-                    --icon-color: var(--color-base-8);
-                }
-
-                .n-icon\:price:before {
-                    --icon-color: var(--color-base-8);
+                .title {
+                    font-size: 16px;
+                    margin-bottom: 8px;
                 }
 
                 .card-info {
-                    justify-items: center; /* ? */
-                    gap: var(--gap-1);
-
-                    .n-icon\:star:before {
-                        --icon-color: var(--color-yellow-1);
-                    }
+                    font-size: 14px;
+                    display: flex;
+                    align-items: center;
+                    flex-direction: row;
+                    gap: var(--gap-2);
                 }
             }
         }
+
+        .card-footer {
+            margin-bottom: 30px;
+        }
     }
-
-
 }

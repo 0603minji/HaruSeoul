@@ -72,11 +72,6 @@
                     align-items: center;
                     flex-direction: row;
                     gap: var(--gap-2);
-
-                    span:first-child {
-                        --icon-size: var(--icon-size-2);
-                        --icon-color: var(--color-main-3);
-                    }
                 }
             }
 
