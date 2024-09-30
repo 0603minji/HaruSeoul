@@ -29,40 +29,35 @@ public class ProgramController {;
     @Autowired
     private CategoryService categoryService;
 
-//    @GetMapping("list")
-//    public String list(
-//            @RequestParam(value = "hostId",required = true) Long hostId,
-//            @RequestParam(value = "category", required = false) List<String> selectedCategories,
-//            @RequestParam(value = "pg-id", required = false) List<Long> selectedIds,
-//            @RequestParam(value = "status", required = false) List<String> selectedStatuses,
-//            Model model) {
-//        List<ProgramView> programs= programService.getList(hostId, selectedCategories, selectedIds, selectedStatuses);
-//        List<ProgramView> filteredPrograms = programService.getList(hostId,
-//                                                            selectedCategories,
-//                                                            selectedIds,
-//                                                            selectedStatuses);
-//
-//        System.out.println(selectedIds);
-//        System.out.println(selectedCategories);
-//        System.out.println(selectedStatuses);
-//        System.out.println(filteredPrograms);
-//
-//        List<Category> categories = categoryService.getList();
-//        List<String> statuses = Arrays.asList("In Progress", "Unpublished", "Published");
-//
-//        model.addAttribute("programs", programs);
-//        model.addAttribute("categories", categories);
-//        model.addAttribute("statuses", statuses);
-//        model.addAttribute("selectedIds", selectedIds);
-//        model.addAttribute("selectedCategories", selectedCategories);
-//        model.addAttribute("selectedStatuses", selectedStatuses);
-//        model.addAttribute("filteredPrograms", filteredPrograms);
-//
-//        return "host/program/list";
-//    }
-
     @GetMapping("list")
-    public String list() {
+    public String list(
+            @RequestParam(value = "hostId",required = true) Long hostId,
+            @RequestParam(value = "category", required = false) List<String> selectedCategories,
+            @RequestParam(value = "pg-id", required = false) List<Long> selectedIds,
+            @RequestParam(value = "status", required = false) List<String> selectedStatuses,
+            Model model) {
+        List<ProgramView> programs= programService.getList(hostId, selectedCategories, selectedIds, selectedStatuses);
+        List<ProgramView> filteredPrograms = programService.getList(hostId,
+                                                            selectedCategories,
+                                                            selectedIds,
+                                                            selectedStatuses);
+
+        System.out.println(selectedIds);
+        System.out.println(selectedCategories);
+        System.out.println(selectedStatuses);
+        System.out.println(filteredPrograms);
+
+        List<Category> categories = categoryService.getList();
+        List<String> statuses = Arrays.asList("In Progress", "Unpublished", "Published");
+
+        model.addAttribute("programs", programs);
+        model.addAttribute("categories", categories);
+        model.addAttribute("statuses", statuses);
+        model.addAttribute("selectedIds", selectedIds);
+        model.addAttribute("selectedCategories", selectedCategories);
+        model.addAttribute("selectedStatuses", selectedStatuses);
+        model.addAttribute("filteredPrograms", filteredPrograms);
+
         return "host/program/list";
     }
 
