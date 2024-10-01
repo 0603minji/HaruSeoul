@@ -10,7 +10,7 @@ public class ReservationController {
 
     @GetMapping("list")
     public String list() {
-        return "host/reservation/list-ms";
+        return "host/reservation/list";
     }
 
     @GetMapping("calendar")
