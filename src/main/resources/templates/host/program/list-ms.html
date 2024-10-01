@@ -4,8 +4,8 @@
       layout:decorate="~{inc/layout-host-ms}">
 <head>
     <meta charset="UTF-8">
-    <title>예약관리</title>
-    <link rel="stylesheet" href="/css/host/reservation/list-ms.css"/>
+    <title>프로그램 관리</title>
+    <link rel="stylesheet" href="/css/host/program/list-ms.css"/>
 </head>
 <body>
 
@@ -13,28 +13,28 @@
 
     <section>
         <!--=== heading ==========================================-->
-        <!--    예약 관리           +일정추가-->
+        <!--    프로그램 관리           +프로그램 등록-->
         <header class="n-title">
-            <h1 class="">예약관리</h1>
+            <h1 class="">프로그램 관리</h1>
             <div>
-                <a href="" class="n-btn n-icon n-icon:plus n-deco">일정 추가</a>
+                <a href="" class="n-btn n-icon n-icon:plus n-deco">프로그램 등록</a>
             </div>
         </header>
 
         <!--=== 필터 .filter ==========================================-->
-        <!--모집 중, 예약 확정, 폐지 임박, 종료, 폐지, 필터-->
+        <!--프로그램, 카테고리, 프로그램 상태 필터-->
         <section class="filter bg-color:base-1 padding-x:6">
             <h1 class="d:none">필터</h1>
 
             <div class="overflow-x:auto">
                 <ul class="n-bar padding-y:5">
-                    <li><a href=""
-                           class="active active:border n-btn n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
-                    </li>
+                    <li><a href="" class="n-btn n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1">프로그램</a></li>
                     <li><a href=""
                            class="active active:border n-btn n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
                         상태</a></li>
-                    <li><a href="" class="n-btn n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1">프로그램</a></li>
+                    <li><a href=""
+                           class="active active:border n-btn n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a>
+                    </li>
                 </ul>
             </div>
 
@@ -50,31 +50,28 @@
         <section>
             <!--=== 정렬 .list-header ==========================================-->
             <header class="list-header bg-color:base-1">
-                <h1 class="d:none">예약카드 목록</h1>
+                <h1 class="d:none">프로그램 목록</h1>
                 <div>
-                    <span>23 Result</span>
+                    <span>3 Result</span>
                     <!--            <button type="button" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">-->
                     <!--                정렬-->
                     <!--            </button>-->
-                    <a href="?view=calendar" class="n-icon n-icon:calendar_month n-icon-color:base-6 n-deco n-deco-gap:1">
-                        캘린더로 보기
+                    <a href=""
+                       class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">
+                        정렬
                     </a>
                 </div>
             </header>
 
-            <!--예약 카드 목록. (모집 중) (예약 확정) (폐지 임박)-->
+            <!--프로그램 카드 목록. (작성 중) (작성 완료) (모집 중)-->
             <ul class="n-card-container bg-color:base-1 padding:7">
                 <!-- =================================== 예약 카드 1개 =================================== -->
                 <li class="n-card bg-color:base-1 padding:6">
-                    <h2 class="d:none">예약 카드</h2>
+                    <h2 class="d:none">프로그램 카드</h2>
 
                     <div class="card-header">
                         <div class="left">
-                            <span class="n-panel-tag n-panel-tag:blue">모집 중</span>
-<!--                            <span class="n-panel-tag n-panel-tag:red">폐지 임박</span>-->
-<!--                            <span class="n-panel-tag n-panel-tag:green">예약 확정</span>-->
-<!--                            <span class="n-panel-tag">취소</span>-->
-<!--                            <span class="n-panel-tag n-panel-tag:gray">종료 </span>-->
+                            <span class="n-panel-tag not-submitted">작성 중</span>
                         </div>
                         <div class="right">
                             <a href="" class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
@@ -89,40 +86,28 @@
                         <div class="card-info-wrapper">
                             <p class="title">Gyeong-bok-gung Palace Tour With Wearing Han-bok</p>
                             <div class="card-info">
-                                <span class="n-icon n-icon:calendar n-deco">24.09.26 Thu</span>
-                                <span class="n-panel-tag">D-4</span>
+                                <span class="n-icon n-icon:star n-deco"></span>
+                                <span>0.0 (0)</span>
+                            </div>
+                            <div class="card-info gap:1">
+                                <span class="category">Culture</span>
+                                <span>·</span>
+                                <span class="category">Activity</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="card-footer">
-                        <div class="applicant-status margin-left:auto">
-                            <div class="guest-profile-container">
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/program_01.png" alt="게스트 프로필">
-                                </div>
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/profile.png" alt="게스트 프로필">
-                                </div>
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/program_02.png" alt="게스트 프로필">
-                                </div>
-                            </div>
-                            <span class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">3 / 5</span>
-                        </div>
+                        <a href="aa" class="n-btn create">작성하기</a>
                     </div>
                 </li>
                 <!-- =================================== 예약 카드 1개 =================================== -->
                 <li class="n-card bg-color:base-1 padding:6">
-                    <h2 class="d:none">예약 카드</h2>
+                    <h2 class="d:none">프로그램 카드</h2>
 
                     <div class="card-header">
                         <div class="left">
-<!--                            <span class="n-panel-tag n-panel-tag:blue">모집 중</span>-->
-                            <span class="n-panel-tag n-panel-tag:red">폐지 임박</span>
-<!--                            <span class="n-panel-tag n-panel-tag:green">예약 확정</span>-->
-<!--                            <span class="n-panel-tag">취소</span>-->
-<!--                            <span class="n-panel-tag n-panel-tag:gray">종료 </span>-->
+                            <span class="n-panel-tag submitted">작성 완료</span>
                         </div>
                         <div class="right">
                             <a href="" class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
@@ -137,40 +122,27 @@
                         <div class="card-info-wrapper">
                             <p class="title">Gyeong-bok-gung Palace Tour With Wearing Han-bok</p>
                             <div class="card-info">
-                                <span class="n-icon n-icon:calendar n-deco">24.09.26 Thu</span>
-                                <span class="n-panel-tag">D-4</span>
+                                <span class="n-icon n-icon:star n-deco"></span>
+                                <span>0.0 (0)</span>
+                            </div>
+                            <div class="card-info gap:1 color:base-7 font-size:5">
+                                <span class="category n-panel-tag">Culture</span>
+                                <span class="category n-panel-tag">Activity</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="card-footer">
-                        <div class="applicant-status margin-left:auto">
-                            <div class="guest-profile-container">
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/program_01.png" alt="게스트 프로필">
-                                </div>
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/profile.png" alt="게스트 프로필">
-                                </div>
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/program_02.png" alt="게스트 프로필">
-                                </div>
-                            </div>
-                            <span class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">3 / 5</span>
-                        </div>
+                        <a href="aa" class="n-btn open">개설하기</a>
                     </div>
                 </li>
                 <!-- =================================== 예약 카드 1개 =================================== -->
                 <li class="n-card bg-color:base-1 padding:6">
-                    <h2 class="d:none">예약 카드</h2>
+                    <h2 class="d:none">프로그램 카드</h2>
 
                     <div class="card-header">
                         <div class="left">
-<!--                            <span class="n-panel-tag n-panel-tag:blue">모집 중</span>-->
-<!--                            <span class="n-panel-tag n-panel-tag:red">폐지 임박</span>-->
-                            <span class="n-panel-tag n-panel-tag:green">예약 확정</span>
-<!--                            <span class="n-panel-tag">취소</span>-->
-<!--                            <span class="n-panel-tag n-panel-tag:gray">종료 </span>-->
+                            <span class="n-panel-tag open">모집 중</span>
                         </div>
                         <div class="right">
                             <a href="" class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
@@ -185,127 +157,18 @@
                         <div class="card-info-wrapper">
                             <p class="title">Gyeong-bok-gung Palace Tour With Wearing Han-bok</p>
                             <div class="card-info">
-                                <span class="n-icon n-icon:calendar n-deco">24.09.26 Thu</span>
-                                <span class="n-panel-tag">D-4</span>
+                                <span class="n-icon n-icon:star rated n-deco"></span>
+                                <span>4.9 (27)</span>
+                            </div>
+                            <div class="card-info gap:1 color:base-7 font-size:5">
+                                <span class="category n-panel-tag">Culture</span>
+                                <span class="category n-panel-tag">Activity</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="card-footer">
-                        <div class="applicant-status margin-left:auto">
-                            <div class="guest-profile-container">
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/program_01.png" alt="게스트 프로필">
-                                </div>
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/profile.png" alt="게스트 프로필">
-                                </div>
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/program_02.png" alt="게스트 프로필">
-                                </div>
-                            </div>
-                            <span class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">3 / 5</span>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-
-            <!--예약 카드 목록. (폐지) (종료)-->
-            <ul class="n-card-container bg-color:base-1 padding:7">
-                <!-- =================================== 예약 카드 1개 =================================== -->
-                <li class="n-card bg-color:base-1 padding:6">
-                    <h2 class="d:none">예약 카드</h2>
-
-                    <div class="card-header">
-                        <div class="left">
-<!--                            <span class="n-panel-tag n-panel-tag:blue">모집 중</span>-->
-<!--                            <span class="n-panel-tag n-panel-tag:red">폐지 임박</span>-->
-<!--                            <span class="n-panel-tag n-panel-tag:green">예약 확정</span>-->
-                            <span class="n-panel-tag">취소</span>
-<!--                            <span class="n-panel-tag n-panel-tag:gray">종료 </span>-->
-                        </div>
-                        <div class="right">
-                            <a href="" class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
-                        </div>
-                    </div>
-
-                    <div class="card-main">
-                        <div class="img-wrapper">
-                            <img src="/image/guest/program_01.png" alt="대표사진">
-                        </div>
-
-                        <div class="card-info-wrapper">
-                            <p class="title">Gyeong-bok-gung Palace Tour With Wearing Han-bok</p>
-                            <div class="card-info">
-                                <span class="n-icon n-icon:calendar n-deco">24.09.26 Thu</span>
-<!--                                <span class="n-panel-tag">D-4</span>-->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-footer">
-                        <div class="applicant-status margin-left:auto">
-                            <div class="guest-profile-container">
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/program_01.png" alt="게스트 프로필">
-                                </div>
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/profile.png" alt="게스트 프로필">
-                                </div>
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/program_02.png" alt="게스트 프로필">
-                                </div>
-                            </div>
-                            <span class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">3 / 5</span>
-                        </div>
-                    </div>
-                </li>
-                <!-- =================================== 예약 카드 1개 =================================== -->
-                <li class="n-card bg-color:base-1 padding:6">
-                    <h2 class="d:none">예약 카드</h2>
-
-                    <div class="card-header">
-                        <div class="left">
-<!--                            <span class="n-panel-tag n-panel-tag:blue">모집 중</span>-->
-<!--                            <span class="n-panel-tag n-panel-tag:red">폐지 임박</span>-->
-<!--                            <span class="n-panel-tag n-panel-tag:green">예약 확정</span>-->
-<!--                            <span class="n-panel-tag">취소</span>-->
-                            <span class="n-panel-tag n-panel-tag:gray">종료 </span>
-                        </div>
-                        <div class="right">
-                            <a href="" class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
-                        </div>
-                    </div>
-
-                    <div class="card-main">
-                        <div class="img-wrapper">
-                            <img src="/image/guest/program_01.png" alt="대표사진">
-                        </div>
-
-                        <div class="card-info-wrapper">
-                            <p class="title">Gyeong-bok-gung Palace Tour With Wearing Han-bok</p>
-                            <div class="card-info">
-                                <span class="n-icon n-icon:calendar n-deco">24.09.26 Thu</span>
-<!--                                <span class="n-panel-tag">D-4</span>-->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-footer">
-                        <div class="applicant-status margin-left:auto">
-                            <div class="guest-profile-container">
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/program_01.png" alt="게스트 프로필">
-                                </div>
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/profile.png" alt="게스트 프로필">
-                                </div>
-                                <div class="guest-profile-wrapper">
-                                    <img src="/image/guest/program_02.png" alt="게스트 프로필">
-                                </div>
-                            </div>
-                            <span class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">3 / 5</span>
-                        </div>
+                        <a href="aa" class="n-btn manage">예약 관리</a>
                     </div>
                 </li>
             </ul>

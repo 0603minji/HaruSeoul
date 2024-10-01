@@ -2769,8 +2769,7 @@
 
 .bd\:2,
 .border\:2 {
-    border: 2px solid var(--
-    ) !important
+    border: 2px solid var(--border-color) !important
 }
 
 .bd\:3,

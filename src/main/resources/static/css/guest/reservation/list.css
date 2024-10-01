@@ -1,0 +1,18 @@
+/* 예약 중, 이용완료, 취소 */
+.n-panel-tag {
+    --tag-border-radius: 14px;
+    --tag-padding: 6px 8px;
+    font-weight: 600; /* semi-bold */
+}
+
+.completed {
+    --tag-border-color: var(--color-base-8);
+    --tag-bg-color: var(--color-base-8);
+    color: var(--color-base-1);
+}
+
+.canceled {
+    --tag-border-color: var(--color-base-3);
+    --tag-bg-color: var(--color-base-3);
+    color: var(--color-base-8);
+}

@@ -13,6 +13,7 @@
         font-weight: var(--title-font-weight);
     }
 
+    /* === 우측 버튼 ==========================================================*/
     div:last-of-type {
         margin-left: auto;
         display: inline-flex;
