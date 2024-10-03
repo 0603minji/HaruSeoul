@@ -1,0 +1,71 @@
+.n-btn {
+    --btn-font-size: 14px;
+    --btn-border-radius: 12px;
+    --btn-border-color: var(--color-base-3);
+    --btn-border-hover: var(--color-base-3);
+    --btn-bg-hover: var(--color-base-2);
+    --btn-bg-color: transparent;
+    --btn-font-color: inherit;
+    --btn-padding: 8px 16px;
+    --btn-box-shadow: none;
+    align-items: center;
+    background-color: var(--btn-bg-color);
+    border: 1px solid var(--btn-border-color, var(--color-base-3));
+    border-radius: var(--btn-border-radius, 8px);
+    box-sizing: content-box;
+    color: var(--btn-font-color);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: inherit;
+    font-size: var(--btn-font-size, 14px);
+    font-weight: 400; /* regular */
+    justify-content: center;
+    line-height: 1em;
+    padding: var(--btn-padding);
+    position: relative;
+    transition: border-color .3s, background-color .3s, box-shadow .3s;
+    user-select: none;
+    white-space: nowrap;
+    width: auto;
+}
+
+.n-btn\:hover:hover {
+    --btn-bg-color: var(--btn-bg-hover);
+    --btn-border-color: var(--btn-border-hover);
+}
+
+.n-btn\:hover-shadow:hover {
+    --btn-box-shadow: 0 4px 8px var(--color-base-3);
+    box-shadow: var(--btn-box-shadow);
+}
+
+/*----------------------------------------*/
+.n-btn-border\:none, .n-btn-bd\:none {
+    --btn-border-color: transparent;
+    --btn-border-hover: transparent;
+}
+
+.n-btn-border\:main, .n-btn-bd\:main {
+    --btn-border-color: var(--color-main-1);
+    --btn-border-hover: var(--color-main-1);
+    --btn-bg-hover: var(--color-main-4); /* 수정 필요 */
+    --btn-font-color: var(--color-main-1);
+}
+
+.n-btn-border\:sub, .n-btn-bd\:sub {
+    --btn-border-color: var(--color-sub-1);
+    --btn-border-hover: var(--color-sub-1);
+    --btn-bg-hover: var(--color-sub-3);
+    --btn-font-color: var(--color-sub-1);
+}
+
+/*----------------------------------------*/
+.n-btn-bg-color\:main, .n-btn-background-color\:main {
+    --btn-border-color: var(--color-main-1);
+    --btn-border-hover: var(--color-main-2);
+    --btn-bg-color: var(--color-main-1);
+    --btn-bg-hover: var(--color-main-2);
+    color: var(--color-base-1);
+}
+
+/*----------------------------------------*/

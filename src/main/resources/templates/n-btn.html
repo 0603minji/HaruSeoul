@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko"
+>
+<!--      xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{inc/layout-host}"-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haru Seoul</title>
+    <link rel="stylesheet" href="/css/style-ms.css" type="text/css">
+    <link type="text/css" rel="stylesheet" href="/css/component/n-btn-ms.css"/>
+    <style>
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 40px;
+
+            .border {
+                display: flex;
+                gap: 40px;
+
+            }
+
+            .btns {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+<main> <!--layout:fragment="main"-->
+    <div class="btn-container">
+        <!-- === 기본 ========================================================== -->
+        <div class="btns">
+            <button class="n-btn">n-btn</button>
+
+            <button class="n-btn n-btn:hover">n-btn:hover</button>
+
+            <button class="n-btn n-btn:hover-shadow">n-btn:hover-shadow</button>
+
+            <button class="n-btn n-btn:hover n-btn:hover-shadow">hover, hover-shadow</button>
+        </div>
+
+        <!-- === border ========================================================== -->
+        <div class="border">
+            <!-- === border:none ========================================================== -->
+            <div class="btns">
+                <button class="n-btn n-btn-border:none">n-btn-border:none</button>
+
+                <button class="n-btn n-btn-border:none n-btn:hover">hover</button>
+
+                <button class="n-btn n-btn-border:none n-btn:hover-shadow">hover-shadow</button>
+
+                <button class="n-btn n-btn-border:none n-btn:hover n-btn:hover-shadow">hover, hover-shadow</button>
+            </div>
+
+            <!-- === border:sub ========================================================== -->
+            <div class="btns">
+                <button class="n-btn n-btn-border:sub">n-btn-border:sub</button>
+
+                <button class="n-btn n-btn-border:sub n-btn:hover">hover</button>
+
+                <button class="n-btn n-btn-border:sub n-btn:hover-shadow">hover-shadow</button>
+
+                <button class="n-btn n-btn-border:sub n-btn:hover n-btn:hover-shadow">hover, hover-shadow</button>
+            </div>
+
+            <!-- === border:main ========================================================== -->
+            <div class="btns">
+                <button class="n-btn n-btn-border:main">n-btn-border:main</button>
+
+                <button class="n-btn n-btn-border:main n-btn:hover">hover</button>
+
+                <button class="n-btn n-btn-border:main n-btn:hover-shadow">hover-shadow</button>
+
+                <button class="n-btn n-btn-border:main n-btn:hover n-btn:hover-shadow">hover, hover-shadow</button>
+            </div>
+        </div>
+
+        <!-- === background-color:main ========================================================== -->
+        <div class="btns">
+            <button class="n-btn n-btn-bg-color:main">n-btn-bg-color:main</button>
+
+            <button class="n-btn n-btn-bg-color:main n-btn:hover">hover</button>
+
+            <button class="n-btn n-btn-bg-color:main n-btn:hover-shadow"
+                    style="--btn-box-shadow: 0 4px 8px var(--color-base-7);">hover-shadow
+            </button>
+
+            <button class="n-btn n-btn-bg-color:main n-btn:hover n-btn:hover-shadow"
+                    style="--btn-box-shadow: 0 4px 8px var(--color-base-7);">hover, hover-shadow
+            </button>
+        </div>
+    </div>
+</main>
+</body>
+</html>
