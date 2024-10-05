@@ -1,0 +1,81 @@
+/*======================== 컴포넌트 <시작> ========================*/
+
+.n-modal {
+    --modal-border-radius: 16px;
+    --modal-border: none;
+    --modal-box-shadow: rgba(0, 0, 0, .08) 0 16px 20px -4px, rgba(0, 0, 0, .03) 0 8px 8px -4px;
+    --modal-z-index: 1200;
+    background-color: var(--color-base-1);
+    border: var(--modal-border);
+    border-radius: var(--modal-border-radius);
+    box-shadow: var(--modal-box-shadow);
+    max-width: 90vw;
+    padding: 16px 24px;
+    position: fixed;
+    right: 50%;
+    top: 50%;
+    transform: translate(50%, -50%);
+    z-index: var(--modal-z-index)
+}
+
+.calendar input[type="checkbox"] {
+    display: none;
+}
+
+.calendar label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    /*font-size: 16px;*/
+    /*transition: background-color 0.3s ease;*/
+}
+
+/*!* 비활성화된 날짜 스타일 *!*/
+/*.calendar input[type="checkbox"]:disabled + label {*/
+/*    background-color: #e0e0e0;*/
+/*    color: #aaa;*/
+/*    cursor: not-allowed;*/
+/*}*/
+
+/*!* 선택된 날짜 스타일 *!*/
+/*.calendar input[type="checkbox"]:checked + label {*/
+/*    background-color: #58aaf7;*/
+/*    color: white;*/
+/*}*/
+
+/* 마우스 오버 시 스타일 */
+.calendar label:hover {
+    background-color: #c0e4ff;
+}
+
+/* 주말 스타일 */
+/*.calendar label:nth-child(6), .calendar label:nth-child(7) {*/
+/*    background-color: #f0f8ff;*/
+/*}*/
+
+/*기본 모달 스타일*/
+aside.n-modal {
+    width: 100%;
+    max-width: none;
+    /*height: auto;*/
+    /*margin: 0 auto;*/
+
+    /*background-color: white;*/
+    /*border-radius: 10px;*/
+
+    /*position: relative;*/
+}
+
+/* 모바일(768px 이하) 기준 모달 스타일 */
+@media (max-width: 768px) {
+    aside.n-modal {
+        width: 100%; /* 모바일에서는 너비를 90%로 설정 */
+        max-width: none; /* 최대 너비 제한 해제 */
+    }
+}

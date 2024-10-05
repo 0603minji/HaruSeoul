@@ -1,0 +1,33 @@
+/* 상단바 */
+.n-global-header {
+    --n-header-h: 70px;
+    background-color: var(--color-base-1);
+    /*border-bottom: 1px solid var(--color-base-3);*/
+    display: flex;
+    flex-shrink: 0;
+    height: var(--n-header-h);
+    padding-left: 16px;
+    padding-right: 16px;
+    /* transition: height .5s ease; */
+
+    align-items: center;
+    width: 100%;
+
+    .n-btn {
+        --btn-padding: 4px 6px;
+        --btn-font-size: 12px;
+        --btn-border-radius: 10px;
+        color: var(--color-base-6);
+    }
+
+    /*=====================================================*/
+
+    .n-global-header\:host {
+
+    }
+
+    .n-global-header\:guest {
+
+    }
+}
+

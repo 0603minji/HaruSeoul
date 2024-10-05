@@ -1,0 +1,14 @@
+.list-header {
+    padding: 16px;
+    font-size: var(--font-size-6);
+
+    div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        span {
+            font-size: var(--font-size-8);
+        }
+    }
+}

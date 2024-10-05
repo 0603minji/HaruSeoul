@@ -1,0 +1,13 @@
+/* footer */
+.n-footer {
+    background-color: var(--color-main-2);
+    flex-shrink: 0;
+    color: var(--color-base-1);
+    font-size: var(--font-size-6);
+    /* height: 120px */
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 30px 20px;
+}
