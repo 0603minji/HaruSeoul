@@ -1,0 +1,44 @@
+.n-deco {
+    --deco-gap: 10px;
+    --deco-size: 24px;
+    gap: var(--deco-gap);
+    text-align: center;
+    text-indent: 0;
+    width: auto
+}
+
+.n-deco-pos\:bottom,
+.n-deco-pos\:top {
+    flex-direction: column;
+    gap: 0;
+    height: auto
+}
+
+:is(li, dt, dd, td, th, div):has(>.n-deco-pos\:bottom),
+:is(li, dt, dd, td, th, div):has(>.n-deco-pos\:top) {
+    height: auto;
+    padding-bottom: 5px;
+    padding-top: 5px
+}
+
+.n-deco-pos\:left:before,
+.n-deco-pos\:top:before {
+    order: unset
+}
+
+.n-deco-pos\:bottom:before,
+.n-deco-pos\:right:before {
+    order: 1
+}
+
+.n-deco-gap\:0 {
+    --deco-gap: 0px
+}
+
+.n-deco-gap\:1 {
+    --deco-gap: 5px
+}
+
+.n-deco-gap\:2 {
+    --deco-gap: 10px
+}

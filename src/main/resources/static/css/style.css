@@ -1,3 +1,5 @@
+/*===================== 색상 정의 =====================*/
+
 :root {
     --color-main-1: #092241;
     --color-main-2: #3A4E67;
@@ -24,8 +26,17 @@
     --color-base-10: #000;
 }
 
+.n-icon-color\:yellow-1:before {
+    background-color: var(--color-yellow-1);
+}
+
+
+/*================== body 스타일 정의 ===================*/
 body {
-    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto,
+    "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR",
+    "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     font-size: 14px;
     color: var(--color-base-9);
     /*
@@ -36,7 +47,6 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
-
 }
 
 /* 상단바 */

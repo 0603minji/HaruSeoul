@@ -31,6 +31,10 @@
     --icon: url(image/icon/list.svg)
 }
 
+.n-icon\:more:before {
+    --icon: url(image/icon/more.svg)
+}
+
 .n-icon\:price:before {
     --icon: url(image/icon/price.svg)
 }
@@ -90,6 +94,7 @@
 .n-icon\:arrow_up:after, .n-icon\:arrow_up:before {
     --icon: url(image/icon/arrow_up.svg)
 }
+
 
 /*================= 아이콘 <끝> ====================*/
 

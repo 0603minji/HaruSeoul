@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{inc/layout-guest}" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/n-modal.css">
+</head>
+<body>
+<main layout:fragment="main">
+    <!--  필터  -->
+    <aside class="n-modal">
+        <header class="modal-header">
+            <h1 class="margin:auto font-weight:bold font-size:8">필터</h1>
+            <button class="border:none n-btn n-btn-size:1">X</button>
+        </header>
+
+        <!--   기간    -->
+        <section>
+            <h1 class="d:none">기간 필터</h1>
+            <form action="">
+                <div>
+                    <p>기간</p>
+                    <div class="modal-duration">
+                        <label><input type="text"></label>
+                        <span>~</span>
+                        <label><input type="text"></label>
+                    </div>
+                </div>
+
+                <div class="modal-reset">
+                    <p>날짜</p>
+                    <button class="border:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-btn n-deco color:sub-1">
+                        초기화
+                    </button>
+                </div>
+
+                <div class="calendar-container">
+                    <div class="calendar-top">
+                        <button class="n-btn border-radius:full" type="button" id="prev-month">&lt;</button>
+                        <div class="font-size:9 font-weight:bold">
+                            <select id="year">
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                            </select>
+
+                            <select id="month">
+                                <option value="1">1월</option>
+                                <option value="2">2월</option>
+                                <option value="3">3월</option>
+                                <option value="4">4월</option>
+                                <option value="5">5월</option>
+                                <option value="6">6월</option>
+                                <option value="7">7월</option>
+                                <option value="8">8월</option>
+                                <option value="9">9월</option>
+                                <option value="10">10월</option>
+                                <option value="11">11월</option>
+                                <option value="12">12월</option>
+                            </select>
+                        </div>
+                        <button class="n-btn border-radius:full" type="button" id="next-month">&gt;</button>
+                    </div>
+
+                    <section class="calendar">
+                        <h1 class="d:none">달력</h1>
+                        <div class="d:flex jc:space-around">
+                            <div>Mo</div>
+                            <div>Tu</div>
+                            <div>We</div>
+                            <div>Th</div>
+                            <div>Fr</div>
+                            <div>Sa</div>
+                            <div>Su</div>
+                        </div>
+                        <!-- 첫째 주 -->
+                        <div class="calendar-row">
+                            <div><label><input type="checkbox">29</label></div>
+                            <div><label><input type="checkbox">30</label></div>
+                            <div><label><input type="checkbox">31</label></div>
+                            <div><label><input type="checkbox">1</label></div>
+                            <div><label><input type="checkbox">2</label></div>
+                            <div><label><input type="checkbox">3</label></div>
+                            <div><label><input type="checkbox">4</label></div>
+                        </div>
+                        <!-- 둘째 주 -->
+                        <div class="calendar-row">
+                            <div><label><input type="checkbox">5</label></div>
+                            <div><label><input type="checkbox">6</label></div>
+                            <div><label><input type="checkbox">7</label></div>
+                            <div><label><input type="checkbox">8</label></div>
+                            <div><label><input type="checkbox">9</label></div>
+                            <div><label><input type="checkbox">10</label></div>
+                            <div><label><input type="checkbox">11</label></div>
+                        </div>
+                        <!-- 셋째 주부터 활성화 -->
+                        <div class="calendar-row">
+                            <div><label><input type="checkbox">12</label></div>
+                            <div><label><input type="checkbox">13</label></div>
+                            <div><label><input type="checkbox">14</label></div>
+                            <div><label><input type="checkbox">16</label></div>
+                            <div><label><input type="checkbox">17</label></div>
+                            <div><label><input type="checkbox">18</label></div>
+                            <div><label><input type="checkbox">19</label></div>
+                        </div>
+
+                        <div class="calendar-row">
+                            <div><label><input type="checkbox">20</label></div>
+                            <div><label><input type="checkbox">21</label></div>
+                            <div><label><input type="checkbox">22</label></div>
+                            <div><label><input type="checkbox">23</label></div>
+                            <div><label><input type="checkbox">24</label></div>
+                            <div><label><input type="checkbox">25</label></div>
+                            <div><label><input type="checkbox">26</label></div>
+                        </div>
+
+                        <div class="calendar-row">
+                            <div><label><input type="checkbox">27</label></div>
+                            <div><label><input type="checkbox">28</label></div>
+                            <div><label><input type="checkbox">29</label></div>
+                            <div><label><input type="checkbox">30</label></div>
+                            <div><label><input type="checkbox">31</label></div>
+                            <div><label><input type="checkbox">1</label></div>
+                            <div><label><input type="checkbox">2</label></div>
+                        </div>
+
+                    </section>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="n-btn n-btn-color:sub-1 n-btn-size:1">확인</button>
+                </div>
+
+            </form>
+        </section>
+    </aside>
+
+
+    <!--   가격    -->
+    <aside class="n-modal">
+        <header class="modal-header">
+            <h1 class="margin:auto">필터</h1>
+            <button class="border:none n-btn n-btn-size:1">X</button>
+        </header>
+
+        <section>
+            <h1 class="d:none">가격 필터</h1>
+            <form action="">
+
+                <div class="modal-reset">
+                    <p>Price</p>
+                    <button class="border:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-btn n-deco color:sub-1">
+                        초기화
+                    </button>
+                </div>
+
+                <div>
+                    <label><input class="" type="text" placeholder="₩0" min="0" max="100000"></label>
+                    <span>~</span>
+                    <label><input class="" type="text" placeholder="₩10,000" min="0" max="100000"></label>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="n-btn n-btn-color:sub-1 n-btn-size:1">확인</button>
+                </div>
+
+            </form>
+        </section>
+    </aside>
+
+
+    <!--   카테고리    -->
+    <aside class="n-modal">
+        <header class="modal-header">
+            <h1 class="margin:auto">필터</h1>
+            <button class="border:none n-btn n-btn-size:1">X</button>
+        </header>
+
+        <section>
+            <h1 class="d:none">카테고리 필터</h1>
+            <form action="">
+
+                <div class="modal-reset">
+                    <p>카테고리</p>
+                    <button class="border:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-btn n-deco color:sub-1">
+                        초기화
+                    </button>
+                </div>
+
+                <div class="modal-checkbox">
+                    <label><input type="checkbox">All</label>
+                    <label><input type="checkbox">Activity</label>
+                    <label><input type="checkbox">Culture</label>
+                    <label><input type="checkbox">Shopping</label>
+                    <label><input type="checkbox">Food</label>
+                    <label><input type="checkbox">Nature</label>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="n-btn n-btn-color:sub-1 n-btn-size:1">확인</button>
+                </div>
+            </form>
+        </section>
+    </aside>
+
+
+    <!--   진행언어    -->
+    <aside class="n-modal">
+        <header class="modal-header">
+            <h1 class="margin:auto">필터</h1>
+            <button class="border:none n-btn n-btn-size:1">X</button>
+        </header>
+
+        <section>
+            <h1 class="d:none">진행언어 필터</h1>
+            <form action="">
+
+
+                <div class="modal-reset">
+                    <p>진행언어</p>
+                    <button class="border:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-btn n-deco color:sub-1">
+                        초기화
+                    </button>
+                </div>
+
+                <div class="modal-radio">
+                    <div><label><input type="radio" class="radio">All</label></div>
+                    <div><label><input type="radio" class="radio">English</label></div>
+                    <div><label><input type="radio" class="radio">Japanese</label></div>
+                    <div><label><input type="radio" class="radio">Chinese</label></div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="n-btn n-btn-color:sub-1 n-btn-size:1">확인</button>
+                </div>
+
+            </form>
+        </section>
+    </aside>
+
+
+    <!--   소요시간    -->
+    <aside class="n-modal">
+        <header class="modal-header">
+            <h1 class="margin:auto">필터</h1>
+            <button class="border:none n-btn n-btn-size:1">X</button>
+        </header>
+
+        <section>
+            <h1 class="d:none">소요시간 필터</h1>
+            <form action="">
+
+
+                <div class="modal-reset">
+                    <p>소요시간</p>
+                    <button class="border:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-btn n-deco color:sub-1">
+                        초기화
+                    </button>
+                </div>
+
+                <div class="modal-radio">
+                    <div><label><input type="radio" class="radio">All</label></div>
+                    <div><label><input type="radio" class="radio">Under 2 hours</label></div>
+                    <div><label><input type="radio" class="radio">2 ~ 4 hours</label></div>
+                    <div><label><input type="radio" class="radio">4 ~ 6 hours</label></div>
+                    <div><label><input type="radio" class="radio">6 ~ 8 hours</label></div>
+                    <div><label><input type="radio" class="radio">Over 8 hours</label></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="n-btn n-btn-color:sub-1 n-btn-size:1">확인</button>
+                </div>
+
+            </form>
+        </section>
+    </aside>
+
+
+    <!--   시작시간    -->
+    <aside class="n-modal">
+        <header class="modal-header">
+            <h1 class="margin:auto">필터</h1>
+            <button class="border:none n-btn n-btn-size:1">X</button>
+        </header>
+
+        <section>
+            <h1 class="d:none">시작시간 필터</h1>
+            <form action="">
+                <div class="modal-reset">
+                    <p>시작시간</p>
+                    <button class="border:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-btn n-deco color:sub-1">
+                        초기화
+                    </button>
+                </div>
+
+                <div class="modal-radio">
+                    <div><label><input type="radio" class="radio">All</label></div>
+                    <div><label><input type="radio" class="radio">Before 12 PM</label></div>
+                    <div><label><input type="radio" class="radio">12 PM to 6PM</label></div>
+                    <div><label><input type="radio" class="radio">After 6 PM</label></div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="n-btn n-btn-color:sub-1 n-btn-size:1">확인</button>
+                </div>
+            </form>
+        </section>
+    </aside>
+
+
+    <!--   참여인원    -->
+    <aside class="n-modal">
+        <header class="modal-header">
+            <h1 class="margin:auto">필터</h1>
+            <button class="border:none n-btn n-btn-size:1">X</button>
+        </header>
+
+        <section>
+            <h1 class="d:none">참여인원 필터</h1>
+            <form action="">
+
+
+                <div class="modal-reset">
+                    <p>참여인원</p>
+                    <button class="border:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-btn n-deco color:sub-1">
+                        초기화
+                    </button>
+                </div>
+
+                <div class="min-max-container">
+                    <div class="min-section">
+                        <span>Min</span>
+                        <div class="input-group">
+                            <button class="n-btn">-</button>
+                            <input type="number" min="0" max="5" value="0">
+                            <button class="n-btn">+</button>
+                        </div>
+                    </div>
+
+                    <span class="tilde">~</span>
+
+                    <div class="max-section">
+                        <span>Max</span>
+                        <div class="input-group">
+                            <button class="n-btn">-</button>
+                            <input type="number" min="0" max="5" value="5">
+                            <button class="n-btn">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="n-btn n-btn-color:sub-1 n-btn-size:1">확인</button>
+                </div>
+
+            </form>
+        </section>
+    </aside>
+</main>
+</body>
+</html>

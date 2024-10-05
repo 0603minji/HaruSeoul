@@ -35,7 +35,8 @@ public class ProgramController {;
             @RequestParam(value = "category", required = false) List<String> selectedCategories,
             @RequestParam(value = "pg-id", required = false) List<Long> selectedIds,
             @RequestParam(value = "status", required = false) List<String> selectedStatuses,
-            Model model) {
+            Model model
+    ) {
         List<ProgramView> programs= programService.getList(hostId, selectedCategories, selectedIds, selectedStatuses);
         List<ProgramView> filteredPrograms = programService.getList(hostId,
                                                             selectedCategories,
@@ -57,7 +58,6 @@ public class ProgramController {;
         model.addAttribute("selectedCategories", selectedCategories);
         model.addAttribute("selectedStatuses", selectedStatuses);
         model.addAttribute("filteredPrograms", filteredPrograms);
-
         return "host/program/list";
     }
 
