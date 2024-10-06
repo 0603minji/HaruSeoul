@@ -4,6 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
@@ -28,7 +29,7 @@
 <body>
     <div th:replace="~{inc/header-host::header}"></div>
     <div layout:fragment="main"></div>
-    <div th:replace="~{inc/aside::aside}"></div>
+    <div th:replace="~{inc/aside-host::aside}"></div>
     <div th:replace="~{inc/footer::footer}"></div>
 </body>
 </html>

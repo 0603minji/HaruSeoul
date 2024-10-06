@@ -2,141 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="/css/reset.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap');
+    <title>호스트 로그인 어사이드</title>
 
-        body {
-            font-family: 'Open Sans', sans-serif;
-            margin: 0; /* 기본 마진 제거 */
-            padding: 0; /* 기본 패딩 제거 */
-        }
-
-        .display-none {
-            display: none;
-        }
-
-        aside {
-            width: 256px;
-            margin: 0;
-            padding: 0;
-        }
-
-        .exit-container {
-            display: flex;
-            height: 24px;
-            padding: 10px 10px;
-        }
-        .exit-container a {
-            height: 24px;
-            width: 24px;
-            background: url('/image/main.png') no-repeat center; /*!* 왼쪽 8px 위치에 아이콘 배경 *!*/
-            background-size: 24px 24px;
-        }
-
-        .host-profile {
-            height: 70px;
-            padding: 20px;
-            display: flex;
-            flex-direction: row;
-            align-items: center; /* 세로 방향으로 가운데 정렬 */
-            gap: 20px;           /* div들 사이의 간격을 20px로 설정 */
-        }
-        .host-profile:first-child {
-            height: 70px;
-            width: 70px;
-            display: flex;      /* 각 div 내부 요소들도 flexbox로 배치 */
-            align-items: center;
-        }
-        .host-profile:last-child {
-            display: flex;      /* 각 div 내부 요소들도 flexbox로 배치 */
-            align-items: center;
-        }
-        .profile-manage {
-            /*background: url('/image/main.png') no-repeat left; !* 왼쪽 8px 위치에 아이콘 배경 *!*/
-            /*background-size: 20px 20px;*/
-        }
-        .host-profile div img {
-            height: 70px;
-            width: 70px;
-            /*max-width: 100%;    !* 이미지가 div를 넘지 않도록 설정 *!*/
-            /*height: auto;       !* 이미지 비율 유지 *!*/
-        }
-        .profile-manage a img {
-            width: 20px;
-            height: 20px;
-        }
-        .profile-manage a {
-            /*margin-left: 24px;*/
-        }
-
-
-        .menu-container {
-            border-top: #6B7A8D solid 1px;
-            padding: 20px 30px;
-        }
-
-        .menu-container ul {
-            margin: 0;
-        }
-        .menu-container ul li {
-            height: 30px;
-            display: flex;
-            justify-content: flex-start;  /* 가로 방향으로 왼쪽 정렬 */
-            align-items: center;          /* 세로 방향으로 가운데 정렬 */
-            background: url('/image/main.png') no-repeat left; /* 왼쪽 8px 위치에 아이콘 배경 */
-            background-size: 20px 20px;
-        }
-        .menu-container ul li a {
-            margin-left: 28px;
-        }
-    </style>
 </head>
 <body>
+<aside class="width:1/3 d:flex flex-direction:column justify-content:space-between"
+       style="min-width: 280px; height: 852px">
+    <section>
+        <header class="d:flex jc:space-between padding:3">
+            <h1 class="d:none">호스트 로그인 어사이드</h1>
+            <a href="나가기" class="n-icon n-deco n-icon:exit"></a>
+            <a href="알림" class="n-icon n-deco n-icon:alert">
+                <span class="n-icon n-deco n-icon:circle n-icon-color:accent-1 position:absolute z-index:1"></span>
+            </a>
+        </header>
 
-<aside>
-    <h1 class="display-none">호스트 로그인 aside</h1>
-    <div class="exit-container"><a href=""></a></div>
 
-    <section class="host-profile">
-        <h1 class="display-none">호스트 프로필</h1>
-        <div><img src="/image/host/profile.jpg" alt="호스트 프로필 사진"></div>
-        <div>
-            <p>호스트 닉네임</p>
-            <div class="profile-manage"><a href=""><img src="/image/main.png">프로필 관리</a></div>
-        </div>
+        <section class="d:flex ai:center jc:center flex-grow:1 bd-color:base-3 padding-top:4 padding-bottom:4"
+                 style="border-bottom: 1px solid">
+            <h1 class="d:none">호스트 프로필</h1>
+            <div class="d:flex jc:center">
+                <img class="w:2/3" src="/image/profile_cat.png" alt="호스트 프로필 사진">
+            </div>
+            <div class="d:flex flex-direction:column jc:flex-start gap:3">
+                <p class="font-size:10 font-weight:2">호스트 닉네임</p>
+                <div class="d:flex ai:center gap:2">
+                    <span class="n-icon n-deco n-icon:setting bg-color:base-3 bd-radius:1"
+                          style="padding: 14px 2px"></span>
+                    <a href="" class="font-size:8">내 계정관리</a>
+                </div>
+            </div>
+        </section>
+
+        <nav>
+            <h1 class="d:none">호스트 로그인 어사이드 메뉴</h1>
+            <ul class="bd-color:base-3 w:10p padding-left:10 d:flex flex-direction:column gap:4 padding-bottom:4 padding-top:4"
+                style="border-bottom: 1px solid">
+                <li><a href="" class="n-icon n-deco n-icon:dashboard font-weight:2">대시보드</a></li>
+                <li><a href="" class="n-icon n-deco n-icon:create font-weight:2">프로그램 등록</a></li>
+                <li><a href="" class="n-icon n-deco n-icon:programs font-weight:2">프로그램 관리</a></li>
+                <li><a href="" class="n-icon n-deco n-icon:check_doc font-weight:2">예약 관리</a></li>
+                <li><a href="" class="n-icon n-deco n-icon:review font-weight:2">리뷰 모아보기</a></li>
+                <li><a href="" class="n-icon n-deco n-icon:chat font-weight:2">Chat</a></li>
+            </ul>
+            <ul class="bd-color:base-3 w:10p padding-left:10 d:flex flex-direction:column gap:4 padding-bottom:4 padding-top:4"
+                style="border-bottom: 1px solid">
+                <li><a href="" class="n-icon n-deco n-icon:notice font-weight:2">공지사항</a></li>
+                <li><a href="" class="n-icon n-deco n-icon:faq font-weight:2">자주 묻는 질문</a></li>
+            </ul>
+            <div class="w:10p padding-left:10 padding-top:4">
+                <a href="" class="n-icon n-deco n-icon:logout font-weight:2">로그아웃</a>
+            </div>
+        </nav>
     </section>
 
-    <nav class="host-menu-container menu-container">
-        <h1 class="display-none">호스트 메뉴</h1>
-        <ul>
-            <li><a href="">호스트 홈</a></li>
-            <li><a href="">프로그램 생성</a></li>
-            <li><a href="">프로그램 목록</a></li>
-            <li><a href="">프로그램 예약현황</a></li>
-            <li><a href="">리뷰</a></li>
-            <li><a href="">Chat</a></li>
-            <li><a href="">알림</a></li>
-        </ul>
-    </nav>
-
-    <nav class="help-container menu-container">
-        <h1 class="display-none">고객센터 메뉴</h1>
-        <ul>
-            <li><a href="">공지사항</a></li>
-            <li><a href="">자주 묻는 질문</a></li>
-        </ul>
-    </nav>
-
-    <div class="menu-container"><button>로그아웃</button></div>
-
-    <div class="language-select">
-        <select name="languages" id="lang">
+    <section
+            class="n-icon n-deco n-icon:globe_2 n-icon-color:main-3 d:flex jc:flex-end padding-right:6 padding-top:10 padding-bottom:10">
+        <select name="language" id="language" class="font-weight:1 color:main-3">
             <option value="English">English</option>
-            <option value="Korean">Korean</option>
+            <option value="Chinese">Chinese</option>
+            <option value="Japanese">Japanese</option>
         </select>
-    </div>
+    </section>
+
+
 </aside>
 
 </body>

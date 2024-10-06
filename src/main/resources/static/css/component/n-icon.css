@@ -154,6 +154,10 @@
 
 /* === 종류 ======================================================*/
 
+.n-icon\:alert:before {
+    --icon: url(/css/image/icon/alert.svg)
+}
+
 .n-icon\:arrow_swap:before {
     --icon: url(/css/image/icon/arrow_swap.svg)
 }
@@ -178,6 +182,10 @@
     --icon: url(/css/image/icon/category.svg)
 }
 
+.n-icon\:chat:before {
+    --icon: url(/css/image/icon/chat.svg)
+}
+
 .n-icon\:clock:before {
     --icon: url(/css/image/icon/clock.svg)
 }
@@ -186,20 +194,53 @@
     --icon: url(/css/image/icon/caution.svg)
 }
 
+.n-icon\:check_doc:before {
+    --icon: url(/css/image/icon/check_doc.svg)
+}
+
+.n-icon\:circle:before {
+    --icon: url(/css/image/icon/circle.svg)
+}
+
 .n-icon\:clock_sand:before {
     --icon: url(/css/image/icon/clock_sand.svg)
+}
+
+.n-icon\:create:before {
+    --icon: url(/css/image/icon/create.svg)
 }
 
 .n-icon\:credit_card:after, .n-icon\:credit_card:before {
     --icon: url(/css/image/icon/credit_card.svg)
 }
 
+.n-icon\:dashboard:before {
+    --icon: url(/css/image/icon/dashboard.svg)
+}
+
+
 .n-icon\:error:after, .n-icon\:error:before {
     --icon: url(/css/image/icon/error.svg)
 }
 
+.n-icon\:error:after, .n-icon\:error:before {
+    --icon: url(/css/image/icon/error.svg)
+}
+
+.n-icon\:exit:before {
+    --icon: url(/css/image/icon/exit.svg)
+}
+
+.n-icon\:faq:before {
+    --icon: url(/css/image/icon/faq.svg)
+}
+
 .n-icon\:globe:before {
     --icon: url(/css/image/icon/globe.svg)
+}
+
+.n-icon\:globe_2:before {
+    --icon: url(/css/image/icon/globe_2.svg)
 }
 
 .n-icon\:group:before {
@@ -212,6 +253,15 @@
 
 .n-icon\:list:before {
     --icon: url(/css/image/icon/list.svg)
+}
+
+
+.n-icon\:logout:before {
+    --icon: url(/css/image/icon/logout.svg)
+}
+
+.n-icon\:notice:before {
+    --icon: url(/css/image/icon/notice.svg)
 }
 
 .n-icon\:more_vertical:before {
@@ -234,12 +284,24 @@
     --icon: url(/css/image/icon/price.svg)
 }
 
+.n-icon\:programs:before {
+    --icon: url(/css/image/icon/programs.svg)
+}
+
 .n-icon\:reset:after, .n-icon\:reset:before {
     --icon: url(/css/image/icon/reset.svg)
 }
 
+.n-icon\:review:before {
+    --icon: url(/css/image/icon/review.svg)
+}
+
 .n-icon\:search:before {
     --icon: url(/css/image/icon/search.svg)
+}
+
+.n-icon\:setting:before {
+    --icon: url(/css/image/icon/setting.svg)
 }
 
 .n-icon\:share:before {
@@ -256,4 +318,12 @@
 
 .n-icon\:success-decagon:after, .n-icon\:success-decagon:before {
     --icon: url(/css/image/icon/success-decagon.svg)
+}
+
+.n-icon\:ticket:before {
+    --icon: url(/css/image/icon/ticket.svg)
+}
+
+.n-icon\:wishlist:before {
+    --icon: url(/css/image/icon/wishlist.svg)
 }

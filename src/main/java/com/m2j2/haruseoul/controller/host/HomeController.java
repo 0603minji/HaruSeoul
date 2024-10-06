@@ -18,6 +18,5 @@ public class HomeController {
         return "host/login";
     }
 
-
 }
 
