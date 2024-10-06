@@ -6,11 +6,10 @@
 
 </head>
 <body>
-<aside class="width:1/3 d:flex flex-direction:column justify-content:space-between"
-       style="min-width: 280px; height: 852px">
+<aside class="n-aside">
     <section>
-        <header class="d:flex jc:space-between padding:3">
-            <h1 class="d:none">게스트 로그인 어사이드</h1>
+        <header class="aside-header">
+            <h1>게스트 로그인 어사이드</h1>
             <a href="나가기" class="n-icon n-deco n-icon:exit"></a>
             <a href="알림" class="n-icon n-deco n-icon:alert">
                 <span class="n-icon n-deco n-icon:circle n-icon-color:accent-1 position:absolute z-index:1"></span>
@@ -18,51 +17,47 @@
         </header>
 
 
-        <section class="d:flex ai:center jc:center flex-grow:1 bd-color:base-3 padding-top:4 padding-bottom:4"
-                 style="border-bottom: 1px solid">
-            <h1 class="d:none">게스트 프로필</h1>
-            <div class="d:flex jc:center">
-                <img class="w:2/3" src="/image/profile_cat.png" alt="게스트 프로필 사진">
+        <section class="aside-profile">
+            <h1>게스트 프로필</h1>
+            <div class="profile-img-container">
+                <img class="profile-img" src="/image/profile_cat.png" alt="게스트 프로필 사진">
             </div>
-            <div class="d:flex flex-direction:column jc:flex-start gap:3">
-                <p class="font-size:10 font-weight:2">게스트 닉네임</p>
-                <div class="d:flex ai:center gap:2">
-                    <span class="n-icon n-deco n-icon:setting bg-color:base-3 bd-radius:1"
-                          style="padding: 14px 2px"></span>
-                    <a href="" class="font-size:8">내 계정관리</a>
+            <div class="profile-info">
+                <p class="nickname">게스트 닉네임</p>
+                <div class="account-setting">
+                    <span class="setting-icon n-icon n-deco n-icon:setting"></span>
+                    <a href="">내 계정관리</a>
                 </div>
             </div>
         </section>
 
+
         <nav>
             <h1 class="d:none">게스트 로그인 어사이드 메뉴</h1>
-            <ul class="bd-color:base-3 w:10p padding-left:10 d:flex flex-direction:column gap:4 padding-bottom:4 padding-top:4"
-                style="border-bottom: 1px solid">
-                <li><a href="" class="n-icon n-deco n-icon:ticket font-weight:2">내 예약</a></li>
-                <li><a href="" class="n-icon n-deco n-icon:wishlist font-weight:2">찜 목록</a></li>
-                <li><a href="" class="n-icon n-deco n-icon:chat font-weight:2">Chat</a></li>
+            <ul class="aside-menu">
+                <li><a href="" class="menu n-icon n-deco n-icon:ticket">내 예약</a></li>
+                <li><a href="" class="menu n-icon n-deco n-icon:wishlist">찜 목록</a></li>
+                <li><a href="" class="menu n-icon n-deco n-icon:chat">Chat</a></li>
             </ul>
-            <ul class="bd-color:base-3 w:10p padding-left:10 d:flex flex-direction:column gap:4 padding-bottom:4 padding-top:4"
-                style="border-bottom: 1px solid">
-                <li><a href="" class="n-icon n-deco n-icon:notice font-weight:2">공지사항</a></li>
-                <li><a href="" class="n-icon n-deco n-icon:faq font-weight:2">자주 묻는 질문</a></li>
+            <ul class="aside-menu">
+                <li><a href="" class="menu n-icon n-deco n-icon:notice">공지사항</a></li>
+                <li><a href="" class="menu n-icon n-deco n-icon:faq">자주 묻는 질문</a></li>
             </ul>
-            <div class="w:10p padding-left:10 padding-top:4">
-                <a href="" class="n-icon n-deco n-icon:logout font-weight:2">로그아웃</a>
-            </div>
+            <ul class="aside-menu bd-color:transparent">
+                <li><a href="" class="menu n-icon n-deco n-icon:logout">로그아웃</a></li>
+            </ul>
         </nav>
     </section>
 
+
     <section
-            class="n-icon n-deco n-icon:globe_2 n-icon-color:main-3 d:flex jc:flex-end padding-right:6 padding-top:10 padding-bottom:10">
-        <select name="language" id="language" class="font-weight:1 color:main-3">
+            class="aside-footer n-icon n-deco n-icon:globe_2 n-icon-color:main-3">
+        <select name="language" id="language">
             <option value="English">English</option>
             <option value="Chinese">Chinese</option>
             <option value="Japanese">Japanese</option>
         </select>
     </section>
-
-
 </aside>
 
 </body>
