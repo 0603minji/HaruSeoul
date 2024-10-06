@@ -12,6 +12,46 @@
     }
 }
 
+.n-layout-ms {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 300px;
+
+    .n-aside-ms {
+        display: none;
+        width: 250px;
+        height: 100%;
+    }
+}
+
+@media (min-width:768px) {
+    main {
+        display: flex;
+        justify-content: center;
+    }
+
+    .n-layout-ms {
+        max-width: 1200px;
+        flex-direction: row;
+        gap: 40px;
+
+        .n-filter {
+            display: none;
+        }
+
+        .pg-list {
+            width: 910px;
+            flex-shrink: 0;
+        }
+
+        .n-aside-ms {
+            display: flex;
+            flex-shrink: 0;
+        }
+    }
+}
+
 
 
 

@@ -1,17 +1,23 @@
 /* ====================== .card-main의 flex-direction: column ==================== */
 
-.n-card-container {
-    --column-number: 3; /* 한 줄에 표시될 카드 개수 */
+.n-card-container-column {
+    --column-number: 2; /* 한 줄에 표시될 카드 개수 */
     --card-list-gap: var(--gap-5); /* !0이 되면 절대 안됨..! */
     display: flex;
     flex-direction: row; /**/
     flex-wrap: wrap; /**/
     gap: var(--card-list-gap);
-    max-width: 600px;
-    min-width: 400px;
+    /*max-width: 600px;*/
+    /*min-width: 300px;*/
 
     box-sizing: content-box; /**/
     padding: 20px 16px;
+}
+
+@media (min-width:768px) {
+    .n-card-container-column {
+        --column-number: 3;
+    }
 }
 
 .n-card-column {
