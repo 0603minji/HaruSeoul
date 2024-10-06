@@ -66,6 +66,9 @@
 
         > button {
             border-radius: 9999px;
+            background-color: var(--color-sub-1);
+            border-color: var(--color-sub-1);
+            color: var(--color-base-1)
         }
     }
 
