@@ -32,3 +32,60 @@
     }
 
 }
+
+/* === hover, active 시 underlined ========================================================================== */
+.n-bar-underline {
+    display: flex;
+    flex-direction: column;
+
+    .item-wrapper {
+        --bar-gap: 16px;
+        align-items: center;
+        justify-content: space-between;
+        display: inline-flex;
+        gap: var(--bar-gap);
+
+        > * {
+            position: relative;
+        }
+        /*=============== hover, active상태 ================================*/
+        > *::after {
+            content: "";
+            width: 100%;
+            height: 3px;
+            background-color: var(--color-main-4);
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            z-index: 1;
+
+            visibility: hidden;
+        }
+
+        > *:hover::after {
+            background-color: var(--color-main-4);
+            visibility: visible;
+        }
+
+        > .active::after {
+            background-color: var(--color-main-1);
+            visibility: visible;
+        }
+
+        > .active:hover::after {
+            background-color: var(--color-main-1);
+            visibility: visible;
+        }
+    }
+}
+
+.n-bar-underline::after {
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-base-5);
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*bottom: 0;*/
+    /*z-index: 1;*/
+}
