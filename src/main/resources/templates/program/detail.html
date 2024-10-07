@@ -15,19 +15,19 @@
 </head>
 <body>
 <main layout:fragment="main">
-    <!--=== host/reservation/list 예약관리 상단바==========================================-->
-    <nav class="n-bar-underline">
+    <nav class="n-bar-underline padding-y:5">
         <h1 class="d:none">네비탭</h1>
-        <ul class="item-wrapper padding-x:6 justify-content:flex-start">
-            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#intro" class="">개요</a></li>
-            <li class="active n-btn:hover n-btn n-btn-border:none n-btn-radius:0"><a href="#program-overview" class="">프로그램 소개</a></li>
-            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#course-information" class="">코스 안내</a></li>
-            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#meeting-location" class="">만나는 장소</a></li>
-            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#inclusions" class="">포함사항</a></li>
-            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#things-to-know" class="">꼭 알아두세요!</a></li>
-            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#review" class="">리뷰</a></li>
+        <ul class="item-wrapper padding-x:6">
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#intro">개요</a></li>
+            <li class="n-btn n-btn:hover n-btn n-btn-border:none n-btn-radius:0"><a href="#program-overview">프로그램 소개</a></li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#course-information">코스 안내</a></li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#meeting-location">만나는 장소</a></li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#inclusions">포함사항</a></li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#things-to-know">꼭 알아두세요!</a></li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#review">리뷰</a></li>
         </ul>
     </nav>
+
 
     <!--  프로그램 소개  -->
     <section class="card bg-color:base-1 width:10p">
@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <div class="card-info-wrapper" style="margin-bottom: 20px;">
+            <div class="card-info-wrapper">
                 <p style="color: var(--color-base-9);
             font-size: var(--font-size-11);
             font-weight: bold;
@@ -74,6 +74,7 @@
                 </div>
             </div>
 
+            <div style="background-color: var(--color-base-2); height: 20px;"></div>
         </div>
     </section>
 
@@ -521,8 +522,8 @@
                     </section>
                     <div style="display: flex; justify-content: center; align-items: center;">
                         <div style="display:flex; justify-items: center;">
-                            <a href="#" class="n-btn n-icon n-icon:circle n-deco n-deco-pos:right"
-                               style="width: var(--width-9p); height: var(--height-percent-4); --icon-color: var(--color-sub-1); border: 1px solid var(--color-base-9)">후기
+                            <a href="#" class="n-btn n-btn:hover n-icon n-icon:circle n-deco n-deco-pos:right"
+                               style="width: var(--width-9p); height: var(--height-percent-4); --icon-color: var(--color-sub-1); border: 1px solid var(--color-base-9)">리뷰
                                 더보기</a>
                         </div>
                     </div>
