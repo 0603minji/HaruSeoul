@@ -33338,7 +33338,7 @@ label:has(.n-toggle.n-toggle-label\:bottom) {
 }
 
 .n-icon\:manage:before {
-    --icon: url(image/icon/manage.svg)
+    --icon: url(image/icon/check_doc.svg)
 }
 
 .n-icon\:magnifying_glass:before {
