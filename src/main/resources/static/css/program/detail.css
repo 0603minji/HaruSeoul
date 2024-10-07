@@ -55,54 +55,6 @@
     /*color: var(--color-main-1); !* 마우스 오버 시 배경색 변경 *!*/
 }
 
-/* navigation */
-
-.navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0 20px;
-    border-bottom: 1px solid #e0e0e0;
-    position: sticky;
-    top: 0;
-    z-index: 1000; /* 탭이 본문보다 위에 보이게 */
-    background-color: white; /* 탭 뒤 배경을 가려줌 */
-
-    h1 {
-        display: none;
-    }
-
-    a {
-        text-align: center;
-        position: relative; /* ::after 가상 요소를 위치시키기 위해 relative 사용 */
-        padding: 10px 0;
-        text-decoration: none;
-        color: #333;
-    }
-
-    a::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background-color: #000;
-        transition: width 0.3s ease;
-    }
-
-    /*a:hover::after, a.active::after {*/
-    /*    width: 100%;*/
-    /*}*/
-
-    a.active {
-        font-weight: bold;
-        color: #000;
-    }
-
-}
-
 #intro,
 #program-overview,
 #course-information,
@@ -179,6 +131,7 @@
 
 
 .intro {
+
     .title {
         color: var(--color-base-9);
     }
@@ -219,6 +172,7 @@
 
 
 .content {
+    background-color: var(--color-base-2);
 
     .content-header {
         width: max-content;
@@ -255,7 +209,7 @@
     }
 
     .id-container {
-        margin: var(--gap-3) 0;
+        margin-top: var(--gap-6);
     }
 
     .program-container {

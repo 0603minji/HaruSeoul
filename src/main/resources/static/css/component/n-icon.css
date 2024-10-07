@@ -162,12 +162,28 @@
     --icon: url(/css/image/icon/arrow_swap.svg)
 }
 
+.n-icon\:arrow_down:after, .n-icon\:arrow_down:before {
+    --icon: url(/css/image/icon/arrow_down.svg)
+}
+
 .n-icon\:arrow_up:after, .n-icon\:arrow_up:before {
     --icon: url(/css/image/icon/arrow_up.svg)
 }
 
+.n-icon\:arrow_right:after, .n-icon\:arrow_right:before {
+    --icon: url(/css/image/icon/arrow_right.svg)
+}
+
+.n-icon\:arrow_left:after, .n-icon\:arrow_left:before {
+    --icon: url(/css/image/icon/arrow_left.svg)
+}
+
 .n-icon\:bookmark_simple:before {
     --icon: url(/css/image/icon/bookmark.svg)
+}
+
+.n-icon\:bus:after, .n-icon\:bus:before {
+    --icon: url(static/image/bus.png)
 }
 
 .n-icon\:calendar:before {
@@ -182,16 +198,16 @@
     --icon: url(/css/image/icon/category.svg)
 }
 
+.n-icon\:caution:after, .n-icon\:caution:before {
+    --icon: url(/css/image/icon/caution.svg)
+}
+
 .n-icon\:chat:before {
     --icon: url(/css/image/icon/chat.svg)
 }
 
 .n-icon\:clock:before {
     --icon: url(/css/image/icon/clock.svg)
-}
-
-.n-icon\:caution:after, .n-icon\:caution:before {
-    --icon: url(/css/image/icon/caution.svg)
 }
 
 .n-icon\:check_doc:before {
@@ -216,11 +232,6 @@
 
 .n-icon\:dashboard:before {
     --icon: url(/css/image/icon/dashboard.svg)
-}
-
-
-.n-icon\:error:after, .n-icon\:error:before {
-    --icon: url(/css/image/icon/error.svg)
 }
 
 .n-icon\:error:after, .n-icon\:error:before {
@@ -255,7 +266,6 @@
     --icon: url(/css/image/icon/list.svg)
 }
 
-
 .n-icon\:logout:before {
     --icon: url(/css/image/icon/logout.svg)
 }
@@ -264,12 +274,20 @@
     --icon: url(/css/image/icon/notice.svg)
 }
 
+.n-icon\:meatball:after, .n-icon\:meatball:before {
+    --icon: url(/css/image/icon/meatball.svg)
+}
+
 .n-icon\:more_vertical:before {
     --icon: url(/css/image/icon/more_vertical.svg)
 }
 
 .n-icon\:pending:before {
     --icon: url(/css/image/icon/pending.svg)
+}
+
+.n-icon\:people:after, .n-icon\:people:before {
+    --icon: url(/css/image/icon/people.svg)
 }
 
 .n-icon\:placeholder:after, .n-icon\:placeholder:before {
@@ -286,6 +304,10 @@
 
 .n-icon\:programs:before {
     --icon: url(/css/image/icon/programs.svg)
+}
+
+.n-icon\:rectangle:after, .n-icon\:rectangle:before {
+    --icon: url(/css/image/icon/rectangle.svg)
 }
 
 .n-icon\:reset:after, .n-icon\:reset:before {
@@ -312,6 +334,10 @@
     --icon: url(/css/image/icon/star.svg)
 }
 
+.n-icon\:subway:after, .n-icon\:subway:before {
+    --icon: url(static/image/subway.png)
+}
+
 .n-icon\:success-circle-green:after, .n-icon\:success-circle-green:before {
     --icon: url(/css/image/icon/success-circle-green.svg)
 }
@@ -322,6 +348,10 @@
 
 .n-icon\:ticket:before {
     --icon: url(/css/image/icon/ticket.svg)
+}
+
+.n-icon\:walk:after, .n-icon\:walk:before {
+    --icon: url(static/image/walk.png)
 }
 
 .n-icon\:wishlist:before {
