@@ -34870,7 +34870,7 @@ label:has(.n-toggle.n-toggle-label\:bottom) {
     }
 }
 
-.n-btn {
+/*.n-btn {
     --btn-font-size: 14px;
     --btn-border-color: var(--color-base-3);
     --btn-border-radius: 8px;
@@ -34901,9 +34901,9 @@ label:has(.n-toggle.n-toggle-label\:bottom) {
 .n-btn:hover {
     background-color: var(--btn-bg-hover, var(--color-base-2));
     text-decoration: none
-}
+}*/
 
-.n-btn\:static {
+/*.n-btn\:static {
     cursor: unset
 }
 
@@ -34999,7 +34999,7 @@ label:has(.n-toggle.n-toggle-label\:bottom) {
 
 .n-btn-color\:accent:is(.n-icon):before {
     background-color: var(--color-base-1)
-}
+}*/
 
 @media screen and (min-width:480px) {
     .md\:n-btn {

@@ -6,107 +6,119 @@
 <head>
     <meta charset="UTF-8">
     <title>프로그램 목록</title>
-        <link rel="stylesheet" href="/css/program/list.css"/>
+    <link rel="stylesheet" href="/css/program/list.css"/>
 </head>
 
 <body>
 <main layout:fragment="main">
 
-    <section>
+    <section class="n-layout-ms">
         <h1 class="d:none">프로그램 목록</h1>
-        <!--=== 필터 .filter ==========================================-->
-        <section class="filter bg-color:base-1 padding-x:6">
-            <h1 class="d:none">필터</h1>
 
-            <div class="overflow-x:auto">
-                <ul class="n-bar padding-y:5">
-                    <li><a href=""
-                           class="active active:border n-btn n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
-                    </li>
-                    <li><a href=""
-                           class="active active:border n-btn n-icon n-icon:price n-icon-size:1 n-deco n-deco-gap:1">가격</a>
-                    </li>
-                    <li><a href="" class="n-btn n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a></li>
-                    <li><a href="" class="n-btn n-icon n-icon:globe n-icon-size:1 n-deco n-deco-gap:1">언어</a></li>
-                    <li><a href="" class="n-btn n-icon n-icon:clock n-icon-size:1 n-deco n-deco-gap:1">시작시간</a></li>
-                    <li><a href="" class="n-btn n-icon n-icon:group n-icon-size:1 n-deco n-deco-gap:1 ">참여인원</a></li>
-                </ul>
-            </div>
+            <!--=== 필터 .n-filter ==========================================-->
+            <section class="n-filter bg-color:base-1 padding-x:6">
+                <h1 class="d:none">필터</h1>
 
-            <div class="reset-box">
-                <div class="gradation"></div>
-                <a href="" class="icon-box n-deco1 n-icon n-icon:reset">
-                    초기화
-                </a>
-            </div>
-        </section>
+                <div class="overflow-x:auto">
+                    <ul class="item-wrapper padding-y:5">
+                        <li><a href=""
+                               class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
+                        </li>
+                        <li><a href=""
+                               class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:price n-icon-size:1 n-deco n-deco-gap:1">가격</a>
+                        </li>
+                        <li><a href=""
+                               class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a>
+                        </li>
+                        <li><a href=""
+                               class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:globe n-icon-size:1 n-deco n-deco-gap:1">언어</a>
+                        </li>
+                        <li><a href=""
+                               class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:clock n-icon-size:1 n-deco n-deco-gap:1">시작시간</a>
+                        </li>
+                        <li><a href=""
+                               class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:group n-icon-size:1 n-deco n-deco-gap:1 ">참여인원</a>
+                        </li>
+                    </ul>
+                </div>
 
-        <!--=== 프로그램 목록==========================================-->
-        <section>
-            <!--=== 정렬 .list-header ==========================================-->
-            <header class="list-header bg-color:base-1">
-                <h1 class="d:none">정렬</h1>
-                <div>
-                    <span>60 Result</span>
-                    <!--            <button type="button" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">-->
-                    <!--                정렬-->
-                    <!--            </button>-->
-                    <a href="" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">
-                        정렬
+                <div class="reset-box">
+                    <a href="" class="icon-box n-deco1 n-icon n-icon:reset">
+                        초기화
                     </a>
                 </div>
-            </header>
+            </section>
 
-            <!--=== 프로그램 카드 목록 ===================================================-->
-            <ul class="n-card-container bg-color:base-1">
-                <!-- =================================== 예약 카드 1개 =================================== -->
-                <li class="n-card n-card-column bg-color:base-1"
-                    th:each="i : ${#numbers.sequence(1, 10)}">
-                    <a class="n-link-box" href="detail?id=1"></a>
-                    <h2 class="d:none">프로그램 카드</h2>
+            <!--=== 프로그램 목록==========================================-->
+            <section class="pg-list">
+                <!--=== 정렬 .list-header ==========================================-->
+                <header class="list-header bg-color:base-1">
+                    <h1 class="d:none">정렬</h1>
+                    <div>
+                        <span>60 Result</span>
+                        <!--            <button type="button" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">-->
+                        <!--                정렬-->
+                        <!--            </button>-->
+                        <a href="" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">
+                            정렬
+                        </a>
+                    </div>
+                </header>
 
-                    <div class="card-main">
-                        <div class="img-wrapper">
-                            <img src="/image/guest/program_01.png" alt="대표사진">
-                        </div>
+                <!--=== 프로그램 카드 목록 ===================================================-->
+                <ul class="n-card-container-column bg-color:base-1">
+                    <!-- =================================== 예약 카드 1개 =================================== -->
+                    <li class="n-card n-card-column bg-color:base-1"
+                        th:each="i : ${#numbers.sequence(1, 10)}">
+                        <a class="n-link-box" href="detail?id=1"></a>
+                        <h2 class="d:none">프로그램 카드</h2>
 
-                        <div class="card-info-wrapper">
-                            <div class="card-info gap:1 color:base-7 font-size:5">
-                                <span>Culture</span>
-                                <span>·</span>
-                                <span>Activity</span>
+                        <div class="card-main">
+                            <div class="img-wrapper">
+                                <img src="/image/guest/program_01.png" alt="대표사진">
                             </div>
-                            <p class="title">Gyeong-bok-gung Palace Tour With Wearing Han-bok</p>
 
-                            <div class="card-info">
+                            <div class="card-info-wrapper">
+                                <div class="card-info gap:1 color:base-7 font-size:5">
+                                    <span>Culture</span>
+                                    <span>·</span>
+                                    <span>Activity</span>
+                                </div>
+                                <p class="title">Gyeong-bok-gung Palace Tour With Wearing Han-bok</p>
+
+                                <div class="card-info">
                             <span class="n-icon n-icon:star n-deco"
                                   style="--icon-color: var(--color-yellow-1)"></span>
-                                <span>4.9 (27)</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="n-icon n-icon:clock_sand n-deco"></span>
-                                <span>4 hours</span>
+                                    <span>4.9 (27)</span>
+                                </div>
+                                <div class="card-info">
+                                    <span class="n-icon n-icon:clock_sand n-deco"></span>
+                                    <span>4 hours</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="card-footer justify-content:flex-end">
-                        <span class="n-icon n-icon:price n-icon-size:2 n-deco n-deco-gap:1 font-size:8 margin-right:3">27,900</span>
-                    </div>
-                </li>
-            </ul>
-        </section>
+                        <div class="card-footer justify-content:flex-end">
+                            <span class="n-icon n-icon:price n-icon-size:2 n-deco n-deco-gap:1 font-size:8 margin-right:3">27,900</span>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!--=== 필터 @media (min-width:768px)==========================================-->
+            <aside class="n-aside-ms bg-color:base-3">dd</aside>
     </section>
 
     <!--=== 필터 aside ============================================================================-->
     <!--  필터  -->
+<!--
     <aside class="n-modal">
         <header class="modal-header">
             <h1 class="margin:auto font-weight:bold font-size:8">필터</h1>
             <button class="border:none n-btn n-btn-size:1">X</button>
         </header>
 
-        <!--   기간    -->
+        &lt;!&ndash;   기간    &ndash;&gt;
         <section>
             <h1 class="d:none">기간 필터</h1>
             <form action="">
@@ -165,7 +177,7 @@
                             <div>Sa</div>
                             <div>Su</div>
                         </div>
-                        <!-- 첫째 주 -->
+                        &lt;!&ndash; 첫째 주 &ndash;&gt;
                         <div class="calendar-row">
                             <div><label><input type="checkbox">29</label></div>
                             <div><label><input type="checkbox">30</label></div>
@@ -175,7 +187,7 @@
                             <div><label><input type="checkbox">3</label></div>
                             <div><label><input type="checkbox">4</label></div>
                         </div>
-                        <!-- 둘째 주 -->
+                        &lt;!&ndash; 둘째 주 &ndash;&gt;
                         <div class="calendar-row">
                             <div><label><input type="checkbox">5</label></div>
                             <div><label><input type="checkbox">6</label></div>
@@ -185,7 +197,7 @@
                             <div><label><input type="checkbox">10</label></div>
                             <div><label><input type="checkbox">11</label></div>
                         </div>
-                        <!-- 셋째 주부터 활성화 -->
+                        &lt;!&ndash; 셋째 주부터 활성화 &ndash;&gt;
                         <div class="calendar-row">
                             <div><label><input type="checkbox">12</label></div>
                             <div><label><input type="checkbox">13</label></div>
@@ -228,7 +240,7 @@
     </aside>
 
 
-    <!--   가격    -->
+    &lt;!&ndash;   가격    &ndash;&gt;
     <aside class="n-modal">
         <header class="modal-header">
             <h1 class="margin:auto">필터</h1>
@@ -262,7 +274,7 @@
     </aside>
 
 
-    <!--   카테고리    -->
+    &lt;!&ndash;   카테고리    &ndash;&gt;
     <aside class="n-modal">
         <header class="modal-header">
             <h1 class="margin:auto">필터</h1>
@@ -298,7 +310,7 @@
     </aside>
 
 
-    <!--   진행언어    -->
+    &lt;!&ndash;   진행언어    &ndash;&gt;
     <aside class="n-modal">
         <header class="modal-header">
             <h1 class="margin:auto">필터</h1>
@@ -334,7 +346,7 @@
     </aside>
 
 
-    <!--   소요시간    -->
+    &lt;!&ndash;   소요시간    &ndash;&gt;
     <aside class="n-modal">
         <header class="modal-header">
             <h1 class="margin:auto">필터</h1>
@@ -371,7 +383,7 @@
     </aside>
 
 
-    <!--   시작시간    -->
+    &lt;!&ndash;   시작시간    &ndash;&gt;
     <aside class="n-modal">
         <header class="modal-header">
             <h1 class="margin:auto">필터</h1>
@@ -404,7 +416,7 @@
     </aside>
 
 
-    <!--   참여인원    -->
+    &lt;!&ndash;   참여인원    &ndash;&gt;
     <aside class="n-modal">
         <header class="modal-header">
             <h1 class="margin:auto">필터</h1>
@@ -452,6 +464,7 @@
             </form>
         </section>
     </aside>
+-->
 
 </main>
 

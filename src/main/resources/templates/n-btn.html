@@ -8,9 +8,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Haru Seoul</title>
+    <link rel="stylesheet" href="/css/newtil.css" type="text/css">
     <link rel="stylesheet" href="/css/style-ms.css" type="text/css">
+    <link type="text/css" rel="stylesheet" href="/css/component/n-icon.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/component/n-deco.css"/>
     <link type="text/css" rel="stylesheet" href="/css/component/n-btn-ms.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/component/n-filter.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/component/n-bar.css"/>
     <style>
+
+        :where(html, body, div, span, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, blockquote, p, address, pre, cite, form, fieldset, input, textarea, select, table, th, td, button, a) {
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            margin: 0;
+            padding: 0
+        }
+
+        :where(h1, h2, h3, h4, h5, h6) {
+            font-size: 100%;
+            font-weight: 400;
+            margin: 0;
+            padding: 0
+        }
+
+        :where(fieldset, img, abbr, acronym) {
+            border: 0
+        }
+
+        :where(ol, ul) {
+            list-style: none;
+            margin: 0;
+            padding: 0
+        }
+
+        :where(table) {
+            border: 0;
+            border-collapse: separate;
+            border-spacing: 0
+        }
+
+        :where(caption, th, td) {
+            font-weight: 400;
+            text-align: left
+        }
+
+        :where(address, caption, strong, em, cite) {
+            font-style: normal;
+            font-weight: 400
+        }
+
+        :where(ins) {
+            text-decoration: none
+        }
+
+        :where(del) {
+            text-decoration: line-through
+        }
+
+        :where(blockquote:before, blockquote:after, q:before, q:after) {
+            content: ""
+        }
+
+        :where(blockquote, q) {
+            quotes: "" ""
+        }
+
+        :where(hr) {
+            display: none
+        }
+
+        :where(a) {
+            color: inherit;
+            text-decoration: none
+        }
+
+        :where(input) {
+            border: none
+        }
+
+        :where(textarea:focus, input:focus) {
+            outline: none
+        }
+
+        :where(label, legend, fieldset) {
+            border: 0;
+            padding: 0
+        }
+
+        :where(input[type=checkbox]) {
+            margin: 0
+        }
+
+        :where(input:focus, select:focus, option:focus, textarea:focus, button:focus) {
+            outline: none
+        }
+
+        :where(button) {
+            background-color: transparent
+        }
+
+        :where(*, :before, :after) {
+            box-sizing: border-box
+        }
+
         .btn-container {
             display: flex;
             flex-direction: column;
@@ -84,21 +185,98 @@
             </div>
         </div>
 
-        <!-- === background-color:main ========================================================== -->
-        <div class="btns">
-            <button class="n-btn n-btn-bg-color:main">n-btn-bg-color:main</button>
+        <!-- === bg ========================================================== -->
+        <div class="border">
+            <!-- === background-color:main ========================================================== -->
+            <div class="btns">
+                <button class="n-btn n-btn-bg-color:main">n-btn-bg-color:main</button>
 
-            <button class="n-btn n-btn-bg-color:main n-btn:hover">hover</button>
+                <button class="n-btn n-btn-bg-color:main n-btn:hover">hover</button>
 
-            <button class="n-btn n-btn-bg-color:main n-btn:hover-shadow"
-                    style="--btn-box-shadow: 0 4px 8px var(--color-base-7);">hover-shadow
-            </button>
+                <button class="n-btn n-btn-bg-color:main n-btn:hover-shadow"
+                        style="--btn-box-shadow: 0 4px 8px var(--color-base-7);">hover-shadow
+                </button>
 
-            <button class="n-btn n-btn-bg-color:main n-btn:hover n-btn:hover-shadow"
-                    style="--btn-box-shadow: 0 4px 8px var(--color-base-7);">hover, hover-shadow
-            </button>
+                <button class="n-btn n-btn-bg-color:main n-btn:hover n-btn:hover-shadow"
+                        style="--btn-box-shadow: 0 4px 8px var(--color-base-7);">hover, hover-shadow
+                </button>
+            </div>
+
+            <!-- === background-color:sub ========================================================== -->
+            <div class="btns">
+                <button class="n-btn n-btn-bg-color:sub">n-btn-bg-color:main</button>
+
+                <button class="n-btn n-btn-bg-color:sub n-btn:hover">hover</button>
+
+                <button class="n-btn n-btn-bg-color:sub n-btn:hover-shadow"
+                        style="--btn-box-shadow: 0 4px 8px var(--color-base-7);">hover-shadow
+                </button>
+
+                <button class="n-btn n-btn-bg-color:sub n-btn:hover n-btn:hover-shadow"
+                        style="--btn-box-shadow: 0 4px 8px var(--color-base-7);">hover, hover-shadow
+                </button>
+            </div>
+        </div>
+
+        <div class="border">
+            <!-- === n-btn-filter-pg ========================================================== -->
+            <div class="btns">
+                <button class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">필터</button>
+
+                <button class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">active 필터</button>
+            </div>
+
+            <!-- === n-btn-filter-rv ========================================================== -->
+            <div class="btns">
+                <button class="n-btn n-btn-rv-filter n-btn:hover">필터</button>
+
+                <button class="active n-btn n-btn-rv-filter n-btn:hover">active 필터</button>
+            </div>
         </div>
     </div>
+
+    <!--=== 필터 .n-filter ==========================================-->
+    <section class="n-filter bg-color:base-1 padding-x:6">
+        <h1 class="d:none">필터</h1>
+
+        <div class="overflow-x:auto">
+            <ul class="item-wrapper padding-y:5">
+                <li><a href=""
+                       class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
+                </li>
+                <li><a href=""
+                       class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:price n-icon-size:1 n-deco n-deco-gap:1">가격</a>
+                </li>
+                <li><a href="" class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a></li>
+                <li><a href="" class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:globe n-icon-size:1 n-deco n-deco-gap:1">언어</a></li>
+                <li><a href="" class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:clock n-icon-size:1 n-deco n-deco-gap:1">시작시간</a></li>
+                <li><a href="" class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:group n-icon-size:1 n-deco n-deco-gap:1 ">참여인원</a></li>
+            </ul>
+        </div>
+
+        <div class="reset-box">
+            <a href="" class="icon-box n-deco1 n-icon n-icon:reset">
+                초기화
+            </a>
+        </div>
+    </section>
+
+    <!--=== 필터 .n-filter .n-filter-rv==========================================-->
+    <!-- 전체, 예약 중, 이용완료, 취소됨 필터-->
+    <section class="n-filter n-filter-rv bg-color:base-1 padding-x:6">
+        <h1 class="d:none">필터</h1>
+
+        <div class="overflow-x:auto">
+            <ul class="item-wrapper padding-y:6">
+                <li><a href="" class="active n-btn n-btn-rv-filter n-btn:hover">전체</a></li>
+                <li><a href="" class="n-btn n-btn n-btn-rv-filter n-btn:hover">예약 중</a></li>
+                <li><a href="" class="n-btn n-btn n-btn-rv-filter n-btn:hover">이용완료</a></li>
+                <li><a href="" class="n-btn n-btn n-btn-rv-filter n-btn:hover">취소됨</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <br><br><br><br><br><br><br>
 </main>
 </body>
 </html>
