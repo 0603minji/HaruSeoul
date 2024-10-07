@@ -1,17 +1,10 @@
-section {
+.intro, .detail, .course, .inclusion,.caution, .images-upload-container{
     display: none;
 }
-
-/* 기본적으로 #info 섹션만 보이게 설정 */
-body:not(:has(:target)) #info {
+ /*현재 타겟 섹션만 보이게 설정*/
+.intro:target, .detail:target, .course:target, .inclusion:target,.caution:target, .images-upload-container:target {
     display: block;
 }
-
-/* 현재 타겟 섹션만 보이게 설정 */
-section:target {
-    display: block;
-}
-
 
 .menu-tab {
     display: flex;
@@ -139,6 +132,9 @@ section:target {
         font-size: 1rem;
         font-weight: bold;
         margin-bottom: 5px;
+        align-content: center;
+        align-items: center;
+        padding: 0 10px 0 0;
     }
 
     /* 선택 박스 스타일 */
@@ -199,6 +195,7 @@ section:target {
     .people-unit {
         font-size: 1rem;
         color: #333;
+        padding: 0 10px;
     }
 
     /* 경고 문구 스타일 */
@@ -213,6 +210,8 @@ section:target {
     .currency-unit {
         margin-left: 10px;
         font-size: 1rem;
+        align-items: center;
+        align-content: center;
     }
 }
 
