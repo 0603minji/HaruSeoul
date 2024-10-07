@@ -7,11 +7,9 @@
 <head>
     <meta charset="UTF-8">
     <title>create</title>
-    <link rel="stylesheet" href="/css/newtil.css">
-    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/host/program/create.css">
     <script>
-        window.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('DOMContentLoaded', function () {
             if (!window.location.hash) {
                 window.location.hash = '#intro';
             }
@@ -21,15 +19,18 @@
 
 <body>
 <main layout:fragment="main">
-    <nav class="menu-tab">
-        <a href="#intro" class="">소개</a>
-        <a href="#detail" class="">세부사항</a>
-        <a href="#course" class="">코스</a>
-        <a href="#inclusion" class="">포함사항</a>
-        <a href="#caution" class="">추가정보</a>
-        <a href="#image" class="">사진</a>
-    </nav>
+    <nav class="n-bar-underline">
+        <h1 class="d:none">네비탭</h1>
+        <ul class="item-wrapper padding-x:6 justify-content:flex-start">
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#intro" class="">소개</a></li>
+            <li class="n-btn:hover n-btn n-btn-border:none n-btn-radius:0"><a href="#detail" class="">세부사항</a></li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#course" class="">코스</a></li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#inclusion" class="">포함사항</a></li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#caution" class="">추가정보</a></li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#image" class="">사진</a></li>
 
+        </ul>
+    </nav>
 
     <form method="post" action="" enctype="multipart/form-data">
         <section id="intro" class="intro">
@@ -369,7 +370,7 @@
         <section id="image" class="images-upload-container">
             <header>
                 <h1>사진 업로드</h1>
-                <label class="n-btn n-btn-color:sub-1"><input type="file" id="fileInput">파일 선택</label>
+                <label class="n-btn n-btn-border:sub n-btn-size:1"><input type="file" id="fileInput">파일 선택</label>
             </header>
             <div style="border: 1px solid; border-radius: 10px; padding: 0 20px 20px 20px">
                 <div class="upload-images">
