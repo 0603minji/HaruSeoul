@@ -1,6 +1,12 @@
 .n-aside {
-    max-width: 320px;
-    height: var(--height-10p);
+    width: 260px;
+    height: 100%; /* height를 100%로 설정하여 화면 전체를 차지 */
+    position: fixed;
+    right: -260px; /* 기본적으로 화면 밖에 숨김 */
+    top: 0;
+    background-color: var(--color-base-1);
+    transition: left 0.3s ease; /* 부드러운 이동 효과 */
+    z-index: 2; /* 다른 요소 위에 표시되도록 */
 
     .aside-header {
         display: flex;
@@ -17,8 +23,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-grow: 1;
+        /*flex-grow: 1;*/
         border-bottom: 1px solid var(--color-base-3);
+        gap: var(--gap-2);
         padding-top: var(--gap-4);
         padding-bottom: var(--gap-4);
 
@@ -27,33 +34,34 @@
         }
 
         .profile-img-container {
-            display: flex;
-            justify-content: center;
+            height: fit-content;
+            width: fit-content;
 
             .profile-img {
-                width: 66%;
+                width: 62px;
             }
-
         }
 
         .profile-info {
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            gap: var(--gap-3);
+            /*justify-content: flex-start;*/
+            gap: var(--gap-1);
 
             .nickname {
-                font-size: var(--font-size-10);
+                font-size: var(--font-size-8);
                 font-weight: var(--font-weight-2);
             }
 
             .account-setting {
                 display: flex;
                 align-items: center;
-                font-size: var(--font-size-8);
 
                 a {
-                    --deco-gap: 8px;
+                    --deco-gap: 2px;
+                    --icon-size: 16px;
+                    display: flex;
+                    align-items: center;
                 }
             }
         }
@@ -78,15 +86,12 @@
 
         .menu:hover {
             --icon-color: var(--color-sub-1);
-            --btn-box-shadow: 0 -4px 8px var(--color-base-2), 0 4px 8px var(--color-base-2);
+            --btn-box-shadow: 0 -4px 8px var(--color-base-3), 0 4px 8px var(--color-base-3);
             color: var(--color-sub-1);
-            background-color: var(--color-base-2);
+            background-color: var(--color-base-3);
             box-shadow: var(--btn-box-shadow);
         }
 
-        .menu:active {
-            color: var(--color-sub-1);
-        }
     }
 
     .aside-footer {
@@ -100,6 +105,34 @@
         select {
             font-weight: var(--font-weight-1);
             color: var(--color-main-3);
+            background-color: inherit;
         }
     }
 }
+
+#asideMenu:target{
+    right:0;
+
+}
+
+/* 어사이드 메뉴 바깥 영역 어둡게 */
+.bg-darkened {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1;
+}
+
+/* 오버레이가 활성화되면 보이게 설정 */
+#asideMenu:target ~ .bg-darkened {
+    visibility: visible;
+    opacity: 1;
+}
+
+
