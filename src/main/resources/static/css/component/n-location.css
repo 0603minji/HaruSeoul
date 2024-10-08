@@ -11,8 +11,9 @@
     background-color: var(--color-base-5);
 }
 
-/* btn */
-.n-btn\:time {
+/* panel */
+.n-panel-tag\:time {
+    border:none;
     --btn-font-size: 12px;
     --btn-padding: 3px 4px;
     background-color: var(--color-base-3);
@@ -51,7 +52,7 @@
 
             .n-icon\:placeholder:after, .n-icon\:placeholder:before {
                 position: absolute;
-                top: 32%; /* 상단에 위치 */
+                top: 36%; /* 상단에 위치 */
                 left: 50%; /* 수평 중앙 정렬 */
                 transform: translateX(-50%); /* 수평 중앙 정렬 보정 */
                 --icon-size: var(--icon-size-7);
@@ -79,7 +80,7 @@
 
             .point-info {
                 color: var(--color-base-7);
-                margin-top: 6px;
+                margin-top: 14px;
             }
         }
 
