@@ -6,48 +6,67 @@
     display: block;
 }
 
-.menu-tab {
+.n-bar-underline-create {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0 20px;
-    border-bottom: 1px solid #e0e0e0;
-    position: sticky;
-    top: 0;
-    z-index: 1000; /* 탭이 본문보다 위에 보이게 */
-    background-color: white; /* 탭 뒤 배경을 가려줌 */
+    flex-direction: column;
 
-
-    a {
-        text-align: center;
-        position: relative; /* ::after 가상 요소를 위치시키기 위해 relative 사용 */
-        padding: 10px 0;
-        text-decoration: none;
-        color: #333;
+    h1{
+        display: none;
     }
 
-    a::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background-color: #000;
-        transition: width 0.3s ease;
+    .item-wrapper {
+        --bar-gap: 16px;
+        align-items: center;
+        justify-content: space-between;
+        display: inline-flex;
+        gap: var(--bar-gap);
+
+        > * {
+            position: relative;
+        }
+        /*=============== hover, active상태 ================================*/
+        > *::after {
+            content: "";
+            width: 100%;
+            height: 3px;
+            background-color: var(--color-main-4);
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            z-index: 1;
+
+            visibility: hidden;
+        }
+
+        > *:hover::after {
+            background-color: var(--color-main-4);
+            visibility: visible;
+        }
+
+        > .active::after {
+            background-color: var(--color-main-1);
+            visibility: visible;
+        }
+
+        > .active:hover::after {
+            background-color: var(--color-main-1);
+            visibility: visible;
+        }
     }
-
-    /*a:hover::after, a.active::after {*/
-    /*    width: 100%;*/
-    /*}*/
-
-    a.active {
-        font-weight: bold;
-        color: #000;
-    }
-
 }
+
+.n-bar-underline-create::after {
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-base-5);
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*bottom: 0;*/
+    /*z-index: 1;*/
+}
+
+
 
 /* 섹션 기본 스타일 */
 .intro {
@@ -140,7 +159,7 @@
     /* 선택 박스 스타일 */
 
     .input-select {
-        width: 100%;
+        width: 26%;
         padding: 10px;
         font-size: 1rem;
         border: 1px solid #ccc;
@@ -446,6 +465,13 @@
 
     header {
         display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        label{
+            border:none;
+            background-color: var(--color-sub-2);
+        }
     }
 }
 
@@ -597,6 +623,74 @@ textarea {
     border-left: 3px dotted var(--color-base-9); /* 점선 설정 */
     margin: 0 auto;
 }
+
+@media (min-width: 768px) {
+
+    main {
+        display: flex;
+        align-items: flex-start; /* 목차와 폼이 위쪽에 정렬되도록 설정 */
+    }
+
+    .n-bar-underline-create {
+        display: flex;
+        flex-direction: column; /* 목차를 세로로 배치 */
+        align-items: flex-start; /* 왼쪽 정렬 */
+        width: 250px; /* 목차 너비 고정 */
+        position: relative;
+        height: auto;
+        margin-left: 20px;
+
+        h1 {
+            display: flex;
+            font-weight: bold;
+            padding: 10px 0;
+        }
+    }
+
+    .n-bar-underline-create .item-wrapper {
+        display: flex;
+        flex-direction: column; /* 항목들을 세로로 배치 */
+        align-items: flex-start; /* 항목들도 왼쪽 정렬 */
+        width: 100%;
+    }
+
+    .item-wrapper {
+        padding: 20px;
+        border: 1px solid;
+        position: relative; /* hover 줄을 위한 상대 위치 설정 */
+    }
+
+
+        /* hover 시 항목 왼쪽에 줄을 추가 */
+    .item-wrapper > *::after {
+        content: "";
+        width: 3px; /* 줄의 너비를 3px로 설정 */
+        height: 100%; /* 줄의 높이를 항목 전체로 설정 */
+        background-color: var(--color-main-4); /* 기본 줄 색상 */
+        position: absolute;
+        left: -5px; /* 줄을 항목의 왼쪽으로 배치 */
+        top: 0; /* 항목의 상단에서 줄이 시작되도록 설정 */
+        visibility: hidden;
+    }
+
+    /* hover 시 왼쪽에 줄이 표시되도록 설정 */
+    .item-wrapper > *:hover::after {
+        visibility: visible;
+    }
+
+    /* active 상태에서 줄의 색상을 변경 */
+    .item-wrapper > .active::after {
+        background-color: var(--color-main-1); /* 활성화된 항목의 줄 색상 */
+        visibility: visible;
+    }
+
+    form {
+        flex-grow: 1; /* 나머지 공간을 폼이 차지하도록 설정 */
+        width: 100%; /* 화면에 맞춰 폼의 너비 설정 */
+        padding: 20px; /* 폼에 적당한 패딩 추가 */
+    }
+}
+
 
 
 
