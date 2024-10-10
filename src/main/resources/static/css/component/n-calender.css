@@ -1,0 +1,24 @@
+.n-calender {
+    display: none;
+
+    h1 {
+        display: none;
+    }
+
+    .calender-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .title {
+            font-size: var(--font-size-9);
+        }
+
+        .n-btn{
+            border: none;
+            position: absolute;
+            right: 15px;
+        }
+        }
+    }
+}

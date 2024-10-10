@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/css/component/n-review.css"/>
     <link rel="stylesheet" href="/css/program/detail.css"/>
     <link rel="stylesheet" href="/css/component/n-location.css"/>
+    <link rel="stylesheet" href="/css/component/n-calender.css"/>
 </head>
 <body>
 <main layout:fragment="main">
@@ -462,7 +463,7 @@
                                     <div style="flex-grow: 1;">
                                         <div class="meatball-icon">
                                             <span class="name">김준성</span>
-                                            <a href="" class="n-icon n-icon:meatball">똥똥똥</a>
+                                            <label class="n-icon n-icon:meatball"><span>똥똥똥</span><input type="checkbox"></label>
                                         </div>
                                         <span class="date">2024-09-29</span>
                                     </div>
@@ -502,7 +503,7 @@
                                         <div style="flex-grow: 1;">
                                             <div class="meatball-icon">
                                                 <span class="name">김민지</span>
-                                                <a href="" class="n-icon n-icon:meatball">똥똥똥</a>
+                                                <label class="n-icon n-icon:meatball"><span>똥똥똥</span><input type="checkbox"></label>
                                             </div>
                                             <span class="date">2024-09-30</span>
                                         </div>
@@ -523,7 +524,9 @@
                         </section>
                     </section>
                     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: var(--gap-6);">
-                        <a href="#" class="n-btn n-btn:hover" style="padding: var(--gap-3) var(--height-3p); border: 1px solid var(--color-base-8);">리뷰 더 보기</a>
+                        <a href="#" class="n-btn n-btn:hover"
+                           style="padding: var(--gap-3) var(--height-3p); border: 1px solid var(--color-base-8);">리뷰 더
+                            보기</a>
                     </div>
                 </div>
             </div>
@@ -572,129 +575,104 @@
         <!--            </ul>-->
 
 
-        <!--            &lt;!&ndash;   리뷰 게스트 댓글   &ndash;&gt;-->
-        <!--            <section>-->
-        <!--                <span>별</span>-->
-        <!--                <div>-->
-        <!--                    <img src="" alt="프로필이미지">-->
-        <!--                    <div>-->
-        <!--                        <div><span>name</span><a href="">똥똥똥</a></div>-->
-        <!--                        <span>date</span>-->
-        <!--                    </div>-->
-        <!--                </div>-->
-
-        <!--                <div>-->
-        <!--                    <p>내용쏼라쏼라</p>-->
-        <!--                    <button>더보기</button>-->
-        <!--                    <ul>-->
-        <!--                        <li><img src="" alt="reviewPhoto"></li>-->
-        <!--                        <li><img src="" alt="reviewPhoto"></li>-->
-        <!--                        <li><img src="" alt="reviewPhoto"></li>-->
-        <!--                        <li><img src="" alt="reviewPhoto"></li>-->
-        <!--                        <li><img src="" alt="reviewPhoto"></li>-->
-        <!--                        <li><img src="" alt="reviewPhoto"></li>-->
-        <!--                    </ul>-->
-        <!--                </div>-->
-        <!--            </section>-->
-
-        <!--            &lt;!&ndash;  리뷰 호스트 답글   &ndash;&gt;-->
-        <!--            <section>-->
-        <!--                <div>-->
-        <!--                    <img src="" alt="프로필이미지">-->
-        <!--                    <div>-->
-        <!--                        <div><span>name</span><a href="">똥똥똥</a></div>-->
-        <!--                        <span>date</span>-->
-        <!--                    </div>-->
-        <!--                </div>-->
-        <!--                <div>-->
-        <!--                    <p>내용쏼라쏼라</p>-->
-        <!--                    <button>더보기</button>-->
-        <!--                </div>-->
-        <!--            </section>-->
-        <!--        </aside>-->
-
-
         <!-- 찜 -->
         <div class="floating-bar">
             <button class="n-btn picked"><span class="n-icon n-icon:bookmark_simple">찜</span></button>
-            <span class="n-btn book"><a href="#book">예약하기</a></span>
+            <label class="n-btn book"><span>예약하기</span><input type="checkbox"/></label>
         </div>
 
-        <!--        <aside id="book">-->
-        <!--            <h1>진행일 선택</h1>-->
 
-        <!--            <div>-->
-        <!--                <button type="button" id="prev-month">&lt;</button>-->
-        <!--                <div>-->
-        <!--                    <span id="year">2024</span>-->
-        <!--                    <span id="month">9</span>-->
-        <!--                </div>-->
-        <!--                <button type="button" id="next-month">&gt;</button>-->
-        <!--            </div>-->
+        <!--  예약하기 캘린더  -->
+        <aside id="book" class="n-calender">
+            <h1>예약 캘린더</h1>
 
-        <!--            <section>-->
-        <!--                <form method="post">-->
-        <!--                    <h1>달력</h1>-->
+            <div class="calender-header">
+                <span class="title">예약하기</span>
+                <button class="n-btn"><span class="n-icon n-icon:exit">나가기 버튼</span></button>
+            </div>
+            <div>
+                <button type="button" id="prev-month">&lt;</button>
+                <div>
+                    <span id="year">2024</span>
+                    <span id="month">9</span>
+                </div>
+                <button type="button" id="next-month">&gt;</button>
+            </div>
 
-        <!--                    <div>Mo</div>-->
-        <!--                    <div>Tu</div>-->
-        <!--                    <div>We</div>-->
-        <!--                    <div>Th</div>-->
-        <!--                    <div>Fr</div>-->
-        <!--                    <div>Sa</div>-->
-        <!--                    <div>Su</div>-->
+            <section>
+                <form method="post">
+                    <h1>달력</h1>
 
-        <!--                    &lt;!&ndash; 첫째 주 &ndash;&gt;-->
-        <!--                    <div><label><input type="checkbox" disabled>29</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>30</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>31</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>1</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>2</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>3</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>4</label></div>-->
+                    <div>Mo</div>
+                    <div>Tu</div>
+                    <div>We</div>
+                    <div>Th</div>
+                    <div>Fr</div>
+                    <div>Sa</div>
+                    <div>Su</div>
 
-        <!--                    &lt;!&ndash; 둘째 주 &ndash;&gt;-->
-        <!--                    <div><label><input type="checkbox" disabled>5</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>6</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>7</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>8</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>9</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>10</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>11</label></div>-->
+                    <!-- 첫째 주 -->
+                    <div><label><input type="checkbox" disabled>29</label></div>
+                    <div><label><input type="checkbox" disabled>30</label></div>
+                    <div><label><input type="checkbox" disabled>31</label></div>
+                    <div><label><input type="checkbox" disabled>1</label></div>
+                    <div><label><input type="checkbox" disabled>2</label></div>
+                    <div><label><input type="checkbox" disabled>3</label></div>
+                    <div><label><input type="checkbox" disabled>4</label></div>
 
-        <!--                    &lt;!&ndash; 셋째 주부터 활성화 &ndash;&gt;-->
-        <!--                    <div><label><input type="checkbox">12</label></div>-->
-        <!--                    <div><label><input type="checkbox">13</label></div>-->
-        <!--                    <div><label><input type="checkbox">14</label></div>-->
-        <!--                    <div><label><input type="checkbox">16</label></div>-->
-        <!--                    <div><label><input type="checkbox">17</label></div>-->
-        <!--                    <div><label><input type="checkbox">18</label></div>-->
+                    <!-- 둘째 주 -->
+                    <div><label><input type="checkbox" disabled>5</label></div>
+                    <div><label><input type="checkbox" disabled>6</label></div>
+                    <div><label><input type="checkbox" disabled>7</label></div>
+                    <div><label><input type="checkbox" disabled>8</label></div>
+                    <div><label><input type="checkbox" disabled>9</label></div>
+                    <div><label><input type="checkbox" disabled>10</label></div>
+                    <div><label><input type="checkbox" disabled>11</label></div>
 
-        <!--                    <div><label><input type="checkbox">19</label></div>-->
-        <!--                    <div><label><input type="checkbox">20</label></div>-->
-        <!--                    <div><label><input type="checkbox">21</label></div>-->
-        <!--                    <div><label><input type="checkbox">22</label></div>-->
-        <!--                    <div><label><input type="checkbox">23</label></div>-->
-        <!--                    <div><label><input type="checkbox">24</label></div>-->
-        <!--                    <div><label><input type="checkbox">25</label></div>-->
+                    <!-- 셋째 주부터 활성화 -->
+                    <div><label><input type="checkbox">12</label></div>
+                    <div><label><input type="checkbox">13</label></div>
+                    <div><label><input type="checkbox">14</label></div>
+                    <div><label><input type="checkbox">16</label></div>
+                    <div><label><input type="checkbox">17</label></div>
+                    <div><label><input type="checkbox">18</label></div>
 
-        <!--                    <div><label><input type="checkbox">26</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>27</label></div>-->
-        <!--                    <div><label><input type="checkbox">28</label></div>-->
-        <!--                    <div><label><input type="checkbox">29</label></div>-->
-        <!--                    <div><label><input type="checkbox">30</label></div>-->
-        <!--                    <div><label><input type="checkbox" disabled>31</label></div>-->
-        <!--                </form>-->
-        <!--            </section>-->
+                    <div><label><input type="checkbox">19</label></div>
+                    <div><label><input type="checkbox">20</label></div>
+                    <div><label><input type="checkbox">21</label></div>
+                    <div><label><input type="checkbox">22</label></div>
+                    <div><label><input type="checkbox">23</label></div>
+                    <div><label><input type="checkbox">24</label></div>
+                    <div><label><input type="checkbox">25</label></div>
 
-        <!--            <section>-->
-        <!--                <h1>인원수 고르기</h1>-->
-        <!--                <button type="button" id="decrease">-</button>-->
-        <!--                <div><label><input type="text" value="" min="1" max="5" readonly></label></div>-->
-        <!--                <button type="button" id="increase">+</button>-->
-        <!--            </section>-->
+                    <div><label><input type="checkbox">26</label></div>
+                    <div><label><input type="checkbox" disabled>27</label></div>
+                    <div><label><input type="checkbox">28</label></div>
+                    <div><label><input type="checkbox">29</label></div>
+                    <div><label><input type="checkbox">30</label></div>
+                    <div><label><input type="checkbox" disabled>31</label></div>
+                </form>
+            </section>
 
-        <!--        </aside>-->
+            <section>
+                <h1>인원수 고르기</h1>
+                <button type="button" id="decrease">-</button>
+                <div><label><input type="text" value="" min="1" max="5" readonly></label></div>
+                <button type="button" id="increase">+</button>
+            </section>
+
+        </aside>
+
+        <script>
+            document.getElementById("bookButton").addEventListener("click", function () {
+                var book = document.getElementById("myDiv");
+                if (book.style.display === "none") {
+                    book.style.display = "block";
+                } else {
+                    book.style.display = "none";
+                }
+            });
+        </script>
 
     </section>
 </main>

@@ -41,14 +41,13 @@
             }
         }
 
-        a {
-            color: #333;
-            text-decoration: none;
-        }
-
         .meatball-icon {
             display: flex;
             justify-content: space-between;
+
+            span {
+                z-index: 1;
+            }
         }
 
     }
@@ -120,5 +119,10 @@
         padding: var(--gap-6);
         border-radius: var(--border-radius-4);
         background-color: var(--color-base-2);
+    }
+
+    input[type="checkbox"] {
+        opacity: 0;
+        position: absolute;
     }
 }
