@@ -18,40 +18,162 @@
 
     min-width: 300px;
 
-    .n-aside-ms {
+    .n-filter-aside {
         display: none;
         width: 250px;
         height: 100%;
+        margin-right: 16px;
+
+        .n-title {
+            --title-font-size: var(--font-size-9); /* 18 */
+            --title-font-weight: 600; /* semi bold */
+            --title-padding: 20px 4px;
+
+            .n-icon {
+                --icon-size: var(--icon-size-4);
+            }
+        }
     }
 }
 
-@media (min-width:768px) {
-    main {
-        display: flex;
-        justify-content: center;
-    }
-
+@media (min-width: 768px) {
     .n-layout-ms {
-        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+
+        max-width: 1092px;
+        min-width: 992px;
         flex-direction: row;
-        gap: 40px;
+        gap: 8px;
 
         .n-filter {
             display: none;
         }
 
         .pg-list {
-            width: 910px;
-            flex-shrink: 0;
+            flex-shrink: 1;
+            flex-grow: 1;
         }
 
-        .n-aside-ms {
+        .n-filter-aside {
             display: flex;
+            flex-direction: column;
             flex-shrink: 0;
+
+            .filters {
+                padding: 0 16px;
+                border: 1px solid var(--color-base-3);
+                border-radius: 12px;
+            }
         }
     }
 }
 
+.filter {
+    border-bottom: 1px solid var(--color-base-3);
+
+    .collapse {
+        --collapse-padding: 24px 0 24px 0;
+        display: flex;
+        align-items: center;
+        padding: var(--collapse-padding);
+        list-style-type: none;
+
+        .title {
+            /*justify-content: space-between;*/
+            /*align-items: center;*/
+            font-size: 16px;
+            font-weight: 600;
+            /*flex-grow: 1;*/
+            margin-right: auto;
+        }
+
+        .n-icon {
+            cursor: pointer;
+            /*border: none;*/
+            /*position: absolute;*/
+            /*right: var(--gap-7);*/
+        }
+    }
+
+
+    .form {
+        margin-bottom: 24px;
+    }
+
+    .modal-checkbox {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between; /* 좌우 여백 조정 */
+        align-items: center;
+        border-radius: 16px;
+        background-color: var(--color-base-2);
+        padding: 20px; /* 내부 여백 추가 */
+        gap: 10px; /* 각 체크박스 사이에 간격 추가 */
+
+        > label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            width: 45%; /* 각 체크박스 그룹을 두 열로 분할 */
+            padding: 5px 0; /* 체크박스 그룹 위아래 간격 추가 */
+
+            > input[type="checkbox"] {
+                margin-right: 8px; /* 체크박스와 텍스트 사이 간격 */
+            }
+        }
+    }
+    .modal-radio {
+
+        .radio {
+            margin-right: 8px;
+        }
+    }
+    .min-max-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%; /* 전체 너비를 조정하고 싶으면 값 변경 */
+
+        >.min-section, .max-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 10px;
+        }
+
+        >.input-group {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* 버튼과 입력창 사이의 간격 */
+        }
+
+
+        input[type="number"] {
+            width: 50px;
+            height: 30px;
+            text-align: center;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        >.tilde {
+            font-size: 24px;
+            padding: 0 10px;
+        }
+    }
+}
+
+.filter[open] {
+    .collapse {
+        --collapse-padding: 24px 0 12px 0;
+
+        .n-icon\:arrow_up:before {
+            --icon: url(/css/image/icon/arrow_down.svg);
+        }
+    }
+}
 
 
 
