@@ -1,7 +1,6 @@
 /* n-icon */
 
 .n-icon {
-    --icon-size: var(--icon-size-3);
     color: var(--color-base-9);
 }
 
@@ -16,11 +15,12 @@
 }
 
 .n-icon\:credit_card:before {
-    --icon-size: var(--icon-size-4);
+    --icon-size: var(--icon-size-5);
     width: var(--icon-size);
 }
 
 .n-icon\:instagram:before {
+    --icon-size: var(--icon-size-5);
     width: var(--icon-size);
 }
 
@@ -77,6 +77,10 @@
     }
 }
 
+main {
+    font-size: 16px;
+}
+
 .content {
 
     body {
@@ -100,59 +104,60 @@
     }
 }
 
+
 .program {
     .title {
         color: var(--color-base-9);
     }
 
     section {
-        padding-top: var(--gap-6);
-        border-bottom: var(--border-width-2) solid var(--color-base-3);
-
         .title {
             color: var(--color-base-9);
-            font-size: var(--font-size-8);
+            font-size: var(--font-size-9);
             font-weight: bold;
             padding: var(--gap-7);
         }
 
-        .info {
+        .info-container {
             display: block;
             color: var(--color-base-9);
-            padding: var(--gap-6) var(--gap-8);
+            padding: 0 var(--gap-6);
         }
 
-        .info-li {
+        .list-container {
             display: block;
             color: var(--color-base-9);
-            /*padding: var(--gap-4) var(--gap-5);*/
-            padding: var(--gap-7) 0 var(--gap-4) var(--gap-5);
+            padding: var(--gap-5);
+            padding-top: 0;
 
             li {
                 margin-bottom: var(--gap-3);
             }
         }
 
-        .li-input {
-            font-size: var(--font-size-5);
-            align-items: center;
-            width: auto;
-            justify-content: left;
-            list-style-type: disc;
-            list-style-position: inside;
+        ul {
+            list-style: none; /* 기본 점을 없앰 */
+            padding-left: var(--gap-3);
         }
 
-        .map {
-            display: flex;
-            justify-content: center;
-            padding-bottom: var(--gap-6);
+        .list-content {
+            font-size: var(--font-size-8);
+            align-items: center;
+            width: auto;
+        }
+
+        .list-content::before {
+            content: "•"; /* 기본 점 없애고 커스텀 점 */
+            display: inline-block;
+            width: 1em; /* 점과 텍스트 사이의 간격 */
+            padding-left: var(--gap-3);
+            margin-left: -1.5em; /* 점을 왼쪽으로 이동 */
         }
     }
 
 
     h2 {
-        display: flex;
-        color: var(--color-base-9);
+        font-size: var(--font-size-8);
         font-weight: bold;
         width: auto;
         height: 30px;
@@ -160,7 +165,7 @@
 
     li {
         color: var(--color-main-2);
-        padding: var(--gap-2) var(--gap-4);
+        padding: var(--gap-4);
     }
 }
 
@@ -171,7 +176,6 @@
 }
 
 .info-input {
-    font-size: var(--font-size-5);
     display: flex;
     align-items: center;
     width: auto;
