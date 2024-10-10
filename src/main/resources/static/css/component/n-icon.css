@@ -274,6 +274,26 @@
     --icon: url(/css/image/icon/notice.svg)
 }
 
+.n-icon\:number1:after, .n-icon\:number1:before {
+    --icon: url(/css/image/icon/number1.svg)
+}
+
+.n-icon\:number2:after, .n-icon\:number2:before {
+    --icon: url(/css/image/icon/number2.svg)
+}
+
+.n-icon\:number3:after, .n-icon\:number3:before {
+    --icon: url(/css/image/icon/number3.svg)
+}
+
+.n-icon\:number4:after, .n-icon\:number4:before {
+    --icon: url(/css/image/icon/number4.svg)
+}
+
+.n-icon\:number5:after, .n-icon\:number5:before {
+    --icon: url(/css/image/icon/number5.svg)
+}
+
 .n-icon\:meatball:after, .n-icon\:meatball:before {
     --icon: url(/css/image/icon/meatball.svg)
 }

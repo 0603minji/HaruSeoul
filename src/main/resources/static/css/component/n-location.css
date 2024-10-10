@@ -29,7 +29,7 @@
 /* 코스 흐름 */
 .n-course-flow {
 
-    padding-top: var(--gap-4);
+    padding-top: var(--gap-6);
     padding-bottom: var(--gap-8);
 
     /* 경유지 */
@@ -50,15 +50,6 @@
                 text-indent: -9999px;
             }
 
-            .n-icon\:placeholder:after, .n-icon\:placeholder:before {
-                position: absolute;
-                top: 36%; /* 상단에 위치 */
-                left: 50%; /* 수평 중앙 정렬 */
-                transform: translateX(-50%); /* 수평 중앙 정렬 보정 */
-                --icon-size: var(--icon-size-7);
-                background-color: var(--color-base-7);
-            }
-
             .n-icon\:rectangle:after, .n-icon\:rectangle:before {
                 position: absolute;
                 top: -41px; /* 상단에 위치 */
@@ -66,6 +57,16 @@
                 transform: translateX(-50%); /* 수평 중앙 정렬 보정 */
                 width: 7px;
                 height: 110px;
+            }
+
+            .n-icon\:placeholder:after, .n-icon\:placeholder:before,
+            .n-icon\:number1:after, .n-icon\:number1:before{
+                position: absolute;
+                top: 36%; /* 상단에 위치 */
+                left: 50%; /* 수평 중앙 정렬 */
+                transform: translateX(-50%); /* 수평 중앙 정렬 보정 */
+                --icon-size: var(--icon-size-7);
+                background-color: var(--color-base-7);
             }
         }
 
@@ -83,8 +84,55 @@
                 margin-top: 14px;
             }
         }
-
     }
+
+    /* 임시 ! 이렇게 하면 안됨*/
+
+    /* 첫 번째 경유지의 아이콘 */
+    .drop-by:nth-child(3) {
+        .icon-wrapper {
+            .n-icon\:number1:after, .n-icon\:number1:before {
+                --icon: url('/css/image/icon/number1.svg');
+            }
+        }
+    }
+
+    /* 두 번째 경유지의 아이콘 */
+    .drop-by:nth-child(5) {
+        .icon-wrapper {
+            .n-icon\:number1:after, .n-icon\:number1:before {
+                --icon: url('/css/image/icon/number2.svg');
+            }
+        }
+    }
+
+    /* 세 번째 경유지의 아이콘 */
+    .drop-by:nth-child(7) {
+        .icon-wrapper {
+            .n-icon\:number1:after, .n-icon\:number1:before {
+                --icon: url('/css/image/icon/number3.svg');
+            }
+        }
+    }
+
+    /* 네 번째 경유지의 아이콘 */
+    .drop-by:nth-child(9) {
+        .icon-wrapper {
+            .n-icon\:number1:after, .n-icon\:number1:before {
+                --icon: url('/css/image/icon/number4.svg');
+            }
+        }
+    }
+
+    /* 다섯 번째 경유지의 아이콘 */
+    .drop-by:nth-child(11) {
+        .icon-wrapper {
+            .n-icon\:number1:after, .n-icon\:number1:before {
+                --icon: url('/css/image/icon/number5.svg');
+            }
+        }
+    }
+
 
     /* 도착지 */
 
