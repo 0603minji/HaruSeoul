@@ -14,7 +14,7 @@
     padding: 20px 16px;
 }
 
-@media (min-width:768px) {
+@media (min-width:992px) {
     .n-card-container-column {
         --column-number: 3;
     }

@@ -1,5 +1,5 @@
 .list-header {
-    padding: 16px;
+    padding: 16px 20px;
     font-size: var(--font-size-6);
 
     div {
@@ -9,6 +9,43 @@
 
         span {
             font-size: var(--font-size-8);
+            font-weight: 600;
+        }
+
+        .sort-expanded {
+            display: none;
+            gap: 8px;
+            color: var(--color-base-6);
+
+            .active {
+                color: var(--color-base-9);
+            }
+        }
+
+        .sort-expanded > li {
+            list-style-type: disc;
+            list-style-position: inside;
+
+            > a {
+                font-size: 14px;
+                position: relative;
+                left: -8px;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .list-header {
+        div {
+            .sort {
+                display: none;
+            }
+
+            .sort-expanded {
+                display: flex;
+            }
         }
     }
 }
