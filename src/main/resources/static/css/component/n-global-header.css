@@ -9,6 +9,7 @@
     padding-left: 16px;
     padding-right: 16px;
     /* transition: height .5s ease; */
+    margin-bottom: 40px;
 
     align-items: center;
     width: 100%;
@@ -17,17 +18,91 @@
         --btn-padding: 4px 6px;
         --btn-font-size: 12px;
         --btn-border-radius: 10px;
-        color: var(--color-base-6);
+        --btn-font-color: var(--color-base-6);
     }
 
-    /*=====================================================*/
+    .header-menu-container {
+        ul {
+            --bar-gap: 8px;
+            align-items: center;
+            display: inline-flex;
+            gap: var(--bar-gap);
 
-    .n-global-header\:host {
+            .header-menu {
+                display: none;
 
+                .profile-img-container {
+                    display: inline-flex;
+                    aspect-ratio: 1 / 1;
+                    width: 40px;
+                    border-radius: 50%;
+                    overflow: hidden;
+
+                    .profile-img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+            }
+        }
     }
+}
 
-    .n-global-header\:guest {
+@media (min-width: 768px) {
+    .n-global-header {
+        min-width: 992px;
 
+        .header-menu-container {
+            ul {
+                .header-menu {
+                    display: unset;
+                }
+
+                li:first-of-type {
+                    margin-right: var(--gap-6);
+                }
+            }
+        }
+
+        .menu-icon {
+            display: none;
+        }
+    }
+}
+
+.n-global-header\:host {
+
+    .host-btn {
+        /* font */
+        --btn-font-size: 14px;
+        --btn-font-color: var(--color-base-9);
+        --btn-font-hover: var(--color-base-9);
+
+        /* border */
+        --btn-border-radius: 0;
+        --btn-border-color: transparent;
+        --btn-border-hover: transparent;
+
+        /* background */
+        --btn-bg-color: transparent;
+        --btn-bg-hover: var(--color-base-2);
+
+        --btn-padding: 8px 8px;
+    }
+}
+
+.n-global-header\:guest {
+
+
+}
+
+@media (min-width: 768px) {
+    .n-global-header {
+        margin-left: auto;
+        margin-right: auto;
+
+        max-width: 1092px;
     }
 }
 

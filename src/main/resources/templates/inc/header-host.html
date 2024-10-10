@@ -28,15 +28,30 @@
     <!-- <div class="n-btn">
                 <a href="/host/main">호스트 되기</a>
             </div> -->
-    <nav class="ml:auto">
+    <nav class="header-menu-container ml:auto">
         <h1 class="d:none">헤더메뉴</h1>
-        <ul class="n-bar"> <!-- d:inline-flex align-items:center gap:2 -->
+        <ul class=""> <!-- d:inline-flex align-items:center gap:2 -->
             <li><a class="n-btn n-btn:hover" href="/host/main">게스트 되기</a></li>
+
+            <li class="header-menu"><a class="n-btn n-btn:hover n-btn-bd:transparent host-btn" href="/host/main">프로그램 등록</a></li>
+            <li class="header-menu"><a class="n-btn n-btn:hover n-btn-bd:transparent host-btn" href="/host/main">프로그램 관리</a></li>
+            <li class="header-menu"><a class="n-btn n-btn:hover n-btn-bd:transparent host-btn" href="/host/main">예약 관리</a></li>
+            <li class="header-menu"><a class="n-btn n-btn:hover n-btn-bd:transparent host-btn" href="/host/main">리뷰 모아보기</a></li>
+
+            <li class="header-menu"><a class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:dashboard" href="/host/main">대시보드</a></li>
+
+            <li class="header-menu"><a class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:chat" href="/host/main">Chat</a></li>
+            <li class="header-menu"><a class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:alert" href="/host/main">알림</a></li>
+            <li class="header-menu">
+                <a class="profile-img-container">
+                    <img class="profile-img" src="/image/profile_cat.png" alt="게스트 프로필 사진">
+                </a>
+            </li>
         </ul>
     </nav>
 
     <!-- 어사이드 메뉴 버튼 -->
-    <div>
+    <div class="menu-icon">
         <a href="#asideMenu" class="n-icon n-icon:list n-icon-size:6 margin-left:3 cursor:pointer"></a>
     </div>
     <!--    <iframe src="aside-host.html" id="asideFrame"></iframe>-->
