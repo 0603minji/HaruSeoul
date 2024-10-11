@@ -15,7 +15,7 @@
 <body>
 <main layout:fragment="main">
 
-    <!--  카드  -->
+    <!--  모바일 카드  -->
     <div class="n-card bg-color:base-1 padding:6">
         <a class="n-link-box" href="detail?id=1"></a>
 
@@ -46,6 +46,41 @@
         <div class="card-footer margin-top:2">
             <a href="aa" class="n-btn bg-color:main-1 color:base-1">Host 문의</a>
             <a href="aa" class="n-btn">예약 취소</a>
+            <a href="aa"
+               class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0 d:inline-flex">공유하기</a>
+        </div>
+    </div>
+
+    <!--  PC 버전 카드  -->
+    <div class="n-card n-card-pc bg-color:base-1 padding:6" style="flex-direction: row;">
+        <a class="n-link-box" href="detail?id=1"></a>
+
+        <div class="card-main" style="align-items: center;">
+            <div class="img-wrapper" style="width: 130px;">
+                <img src="/image/guest/program_01.png" alt="대표사진">
+            </div>
+
+            <div class="card-info-wrapper">
+                <div class="card-header">
+                    <div class="left">
+                        <span class="n-panel-tag">D-4</span>
+                    </div>
+                </div>
+                <p class="title">Gyeong-bok-gung Palace Tour With Wearing Han-bok</p>
+                <div class="card-info">
+                    <span class="n-icon n-icon:calendar n-deco">진행일</span>
+                    <span>24.09.26 Thu</span>
+                </div>
+                <div class="card-info">
+                    <span class="n-icon n-icon:group n-deco">예약인원</span>
+                    <span>3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer margin-top:2" style="justify-content: right">
+            <a href="aa" class="n-btn bg-color:main-1 color:base-1" style="flex-grow: 0;">Host 문의</a>
+            <a href="aa" class="n-btn" style="flex-grow: 0;">예약 취소</a>
             <a href="aa"
                class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0 d:inline-flex">공유하기</a>
         </div>
@@ -260,7 +295,7 @@
 
 
         <div style="display:flex; justify-content: center;  padding-bottom: var(--gap-8);">
-            <a href="#" class="n-btn n-btn:hover" style="width: var(--width-8p); height: var(--height-percent-4);">예약 내역 삭제</a>
+            <a href="#" class="n-btn n-btn:hover" style="width: var(--width-9p); height: var(--height-percent-4);">예약 내역 삭제</a>
         </div>
     </section>
 </main>
