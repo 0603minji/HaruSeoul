@@ -53,14 +53,14 @@
 
 .copy-btn:hover {
     font-weight: bolder;
-    /*color: var(--color-main-1); !* 마우스 오버 시 배경색 변경 *!*/
 }
 
 /* --- */
 
 .n-card {
     position: relative;
-    margin: 0
+    margin: 0 var(--gap-2);
+    pointer-events: none;
 
     .n-link-box {
         display: block;
@@ -75,7 +75,22 @@
     .card-footer>.n-btn {
         z-index: 2;
     }
+
+    .card-footer a {
+        pointer-events: all;
+    }
+
+    .card-info-wrapper {
+        gap: 3px;
+    }
+
 }
+
+.n-card-pc {
+    display: none;
+}
+
+/*    */
 
 main {
     font-size: 14px;
@@ -122,7 +137,6 @@ main {
             display: block;
             color: var(--color-base-9);
             padding: 0;
-            padding-bottom: var(--gap-6);
         }
 
         .list-container {
@@ -209,13 +223,12 @@ main {
         justify-content: center;
         flex-direction: column;
 
-        .program {
-            section {
-                padding: var(--gap-7);
-            }
+        .n-card {
+            display: none;
         }
 
-        .n-card {
+        .n-card-pc {
+            position: relative;
             margin: 0 var(--gap-6);
             width: 100%;
             min-width: 300px;
@@ -227,6 +240,10 @@ main {
             min-width: 300px;
             max-width: 1096px;
 
+        }
+
+        .n-card-pc {
+            display: flex;
         }
     }
 
