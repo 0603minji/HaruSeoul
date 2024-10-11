@@ -15,12 +15,12 @@
 }
 
 .n-icon\:credit_card:before {
-    --icon-size: var(--icon-size-5);
+    --icon-size: var(--icon-size-4);
     width: var(--icon-size);
 }
 
 .n-icon\:instagram:before {
-    --icon-size: var(--icon-size-5);
+    --icon-size: var(--icon-size-4);
     width: var(--icon-size);
 }
 
@@ -60,7 +60,7 @@
 
 .n-card {
     position: relative;
-    margin: 0 var(--gap-6);
+    margin: 0
 
     .n-link-box {
         display: block;
@@ -78,7 +78,7 @@
 }
 
 main {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .content {
@@ -113,22 +113,21 @@ main {
     section {
         .title {
             color: var(--color-base-9);
-            font-size: var(--font-size-9);
+            font-size: var(--font-size-7);
             font-weight: bold;
-            padding: var(--gap-7);
+            padding: var(--gap-2);
         }
 
         .info-container {
             display: block;
             color: var(--color-base-9);
-            padding: 0 var(--gap-6);
+            padding: 0;
+            padding-bottom: var(--gap-6);
         }
 
         .list-container {
             display: block;
             color: var(--color-base-9);
-            padding: var(--gap-5);
-            padding-top: 0;
 
             li {
                 margin-bottom: var(--gap-3);
@@ -137,11 +136,12 @@ main {
 
         ul {
             list-style: none; /* 기본 점을 없앰 */
-            padding-left: var(--gap-3);
+            padding: var(--gap-3);
+            padding-top: 0;
         }
 
         .list-content {
-            font-size: var(--font-size-8);
+            font-size: var(--font-size-7);
             align-items: center;
             width: auto;
         }
@@ -157,15 +157,34 @@ main {
 
 
     h2 {
-        font-size: var(--font-size-8);
+        font-size: var(--font-size-7);
         font-weight: bold;
         width: auto;
         height: 30px;
     }
 
     li {
-        color: var(--color-main-2);
-        padding: var(--gap-4);
+        /*padding: var(--gap-4); --pc버전*/
+        padding: var(--gap-2) var(--gap-1);
+    }
+
+    .map-img-wrapper {
+        display: flex;
+        position: relative;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        flex-shrink: 0;
+        overflow: hidden;
+        min-width: 85px;
+        aspect-ratio: 1 / 1;
+        max-height: 768px;
+        object-fit: cover;
+
+        .map-img {
+            width: 100%;
+        }
     }
 }
 
@@ -181,41 +200,34 @@ main {
     width: auto;
     justify-content: left;
 }
-
-/* profile-card */
-
-.profile-card {
-    display: flex;
-    padding: 0 var(--gap-6) var(--gap-6) var(--gap-6);
-    align-items: center;
-    justify-content: space-between;
-
-    .overview {
-        display: flex;
-        font-size: var(--font-size-8);
-        font-weight: bold;
-
-        div {
-            margin: var(--gap-3);
-        }
-    }
-
-    .img-wrapper {
-        width: 80px;
-        aspect-ratio: 1 / 1;
-        overflow: hidden;
-        border-radius: 50px;
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    }
-
-    .n-btn {
-        --btn-padding: 14px;
-    }
-}
-
 /* --- */
+
+@media (min-width: 768px) {
+    main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        .program {
+            section {
+                padding: var(--gap-7);
+            }
+        }
+
+        .n-card {
+            margin: 0 var(--gap-6);
+            width: 100%;
+            min-width: 300px;
+            max-width: 1096px;
+        }
+
+        .content {
+            width: 100%;
+            min-width: 300px;
+            max-width: 1096px;
+
+        }
+    }
+
+}

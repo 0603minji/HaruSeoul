@@ -6,8 +6,10 @@
 <head>
     <meta charset="UTF-8">
     <title>예약 상세보기</title>
-    <link rel="stylesheet" href="/css/guest/reservation/detail.css"/>
     <link rel="stylesheet" href="/css/component/n-collapse.css"/>
+    <link rel="stylesheet" href="/css/component/n-profile-card.css"/>
+    <link rel="stylesheet" href="/css/guest/reservation/detail.css"/>
+
 </head>
 
 <body>
@@ -45,7 +47,7 @@
             <a href="aa" class="n-btn bg-color:main-1 color:base-1">Host 문의</a>
             <a href="aa" class="n-btn">예약 취소</a>
             <a href="aa"
-               class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+               class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0 d:inline-flex">공유하기</a>
         </div>
     </div>
 
@@ -59,7 +61,7 @@
                 <details open>
                     <summary class="collapse">
                         <span class="title">참가자 정보</span>
-                        <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+                        <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
                     </summary>
                     <div class="details">
                         <div class="info">
@@ -89,7 +91,7 @@
                 <details open>
                     <summary class="collapse">
                         <span class="title">결제 정보</span>
-                        <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+                        <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
                     </summary>
                     <div class="details">
                         <div class="info">
@@ -121,7 +123,7 @@
                 <details open>
                     <summary class="collapse">
                         <span class="title">호스트 정보</span>
-                        <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+                        <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
                     </summary>
                     <!-- 프로필 카드 -->
                     <section class="profile-card">
@@ -148,7 +150,7 @@
                 <details open style="border-bottom:0;">
                     <summary class="collapse">
                         <span class="title">프로그램 정보 및 정책</span>
-                        <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+                        <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
                     </summary>
                     <div class="details">
                         <!--  만나는 장소  -->
@@ -211,7 +213,7 @@
                                         <section>
                                             <h1>꼭 알아두세요!</h1>
 
-                                            <div style="padding: 0 var(--gap-6);">
+                                            <div>
                                                 <h2 class="info-form n-icon n-icon:success-decagon">준비물</h2>
                                                 <ul>
                                                     <li class="list-content">운동화 착용</li>
@@ -220,7 +222,7 @@
                                                 </ul>
                                             </div>
 
-                                            <div style="padding: var(--gap-6); padding-bottom: 0;">
+                                            <div>
                                                 <h2 class="info-form n-icon n-icon:caution">주의사항</h2>
                                                 <ul>
                                                     <li class="list-content">많은 도보</li>
@@ -237,7 +239,7 @@
                                                 </ul>
                                             </div>
 
-                                            <div style="padding: var(--gap-6)">
+                                            <div>
                                                 <h2 class="info-form n-icon n-icon:reset">취소 및 환불정책</h2>
                                                 <ul>
                                                     <li class="list-content">여행일 기준 24시간 전까지 통보 시: 여행 요금 100% 전액 환불됩니다.</li>
@@ -249,81 +251,6 @@
                                         </section>
                                     </div>
                                 </div>
-<!--                        <section style="padding-top: 0;">-->
-<!--                            <h1>만나는장소</h1>-->
-<!--                            <span class="title">만나는 장소</span>-->
-<!--                            <div class="info">-->
-<!--                                <p>14:00 헌법재판소 앞</p>-->
-<!--                                <div style="display:flex; align-items: center; padding: var(&#45;&#45;gap-3) 0;">-->
-<!--                                    <span class="n-icon n-icon:placeholder"-->
-<!--                                          style="margin-right: var(&#45;&#45;gap-1);">위치아이콘</span>-->
-<!--                                    <span style="margin-right: var(&#45;&#45;gap-1);">서울 종로구 북촌로 15</span>-->
-<!--                                    <button class="copy-btn">주소복사</button>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="map">-->
-<!--                                <img src="" alt="map">-->
-<!--                            </div>-->
-<!--                        </section>-->
-
-<!--                        <section>-->
-<!--                            <h1>포함사항</h1>-->
-<!--                            <span class="title">포함사항</span>-->
-<!--                            <div class="info-li">-->
-<!--                                <ul>-->
-<!--                                    <li class="info-input n-icon n-icon:success-circle-green">입장권</li>-->
-<!--                                    <li class="info-input n-icon n-icon:success-circle-green">가이드 비용</li>-->
-<!--                                </ul>-->
-<!--                            </div>-->
-<!--                            <div class="info-li">-->
-<!--                                <ul>-->
-<!--                                    <li class="info-input n-icon n-icon:error">한복 대여료</li>-->
-<!--                                    <li class="info-input n-icon n-icon:error">카페 음료 비용</li>-->
-<!--                                    <li class="info-input n-icon n-icon:error">개인 경비</li>-->
-<!--                                </ul>-->
-<!--                            </div>-->
-<!--                        </section>-->
-
-<!--                        <section>-->
-<!--                            <h1>꼭 알아두세요!</h1>-->
-<!--                            <span class="title">꼭 알아두세요!</span>-->
-<!--                            <div class="details">-->
-<!--                                <div style="padding: 0 0 var(&#45;&#45;gap-4) 0;">-->
-<!--                                    <h2 class="info-form n-icon n-icon:success-decagon">준비물</h2>-->
-<!--                                    <ul>-->
-<!--                                        <li class="li-input">운동화 착용</li>-->
-<!--                                        <li class="li-input">비상금</li>-->
-<!--                                        <li class="li-input">선글라스</li>-->
-<!--                                    </ul>-->
-<!--                                </div>-->
-
-<!--                                <div style="padding: var(&#45;&#45;gap-4) 0;">-->
-<!--                                    <h2 class="info-form n-icon n-icon:caution">주의사항</h2>-->
-<!--                                    <ul>-->
-<!--                                        <li class="li-input">많은 도보</li>-->
-<!--                                        <li class="li-input">음주 예정</li>-->
-<!--                                        <li class="li-input">많은 야외활동</li>-->
-<!--                                        <li class="li-input">여행일 변경 및 타인 양도가 가능한 상품입니다.</li>-->
-<!--                                        <li class="li-input">여행일 변경 및 타인 양도 희망시 궁궐사랑 상기 연락처를 통해 연락 바랍니다. </li>-->
-<!--                                        <li class="li-input">악천후 관련 취소 시 사전에 연락을 드립니다.</li>-->
-<!--                                        <li class="li-input">악천후 취소 기준은 시간당 강수량 10mm 이상, 기온 -5도 이하이며, 여행 전일 여행시간대 기상청-->
-<!--                                            예보를-->
-<!--                                            기준으로-->
-<!--                                            합니다.-->
-<!--                                        </li>-->
-<!--                                    </ul>-->
-<!--                                </div>-->
-
-<!--                                <div style="padding: var(&#45;&#45;gap-4) 0;">-->
-<!--                                    <h2 class="info-form n-icon n-icon:reset">취소 및 환불정책</h2>-->
-<!--                                    <ul>-->
-<!--                                        <li class="li-input">여행일 기준 24시간 전까지 통보 시: 여행 요금 100% 전액 환불됩니다.</li>-->
-<!--                                        <li class="li-input">여행일 기준 24시간 이내 통보 시: 취소/환불 불가합니다.</li>-->
-<!--                                        <li class="li-input">취소 요청 날짜와 시간은 여행 상품이 진행되는 현지 시간을 따릅니다.</li>-->
-<!--                                        <li class="li-input">여행일은 여행 상품이 진행되는 현지 날짜의 오전 9시를 기준으로 합니다.</li>-->
-<!--                                    </ul>-->
-<!--                                </div>-->
-<!--                            </div>-->
                             </div>
                         </section>
                     </div>
@@ -332,7 +259,7 @@
         </section>
 
 
-        <div style="display:flex; justify-content: center;">
+        <div style="display:flex; justify-content: center;  padding-bottom: var(--gap-8);">
             <a href="#" class="n-btn n-btn:hover" style="width: var(--width-8p); height: var(--height-percent-4);">예약 내역 삭제</a>
         </div>
     </section>
