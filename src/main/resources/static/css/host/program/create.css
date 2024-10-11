@@ -1,5 +1,6 @@
 .intro, .detail, .course, .inclusion, .caution, .images-upload-container {
     display: none;
+    scroll-margin-top: 39px;
 }
 
 /*현재 타겟 섹션만 보이게 설정*/
@@ -631,6 +632,11 @@ textarea {
 
 
 @media (min-width: 768px) {
+    .intro, .detail, .course, .inclusion, .caution, .images-upload-container {
+        scroll-margin-top: 100px;
+    }
+
+
     main {
         display: flex;
         align-items: flex-start; /* 목차와 폼이 위쪽에 정렬되도록 설정 */
