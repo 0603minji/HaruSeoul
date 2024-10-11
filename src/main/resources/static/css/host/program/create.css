@@ -1,8 +1,9 @@
-.intro, .detail, .course, .inclusion,.caution, .images-upload-container{
+.intro, .detail, .course, .inclusion, .caution, .images-upload-container {
     display: none;
 }
- /*현재 타겟 섹션만 보이게 설정*/
-.intro:target, .detail:target, .course:target, .inclusion:target,.caution:target, .images-upload-container:target {
+
+/*현재 타겟 섹션만 보이게 설정*/
+.intro:target, .detail:target, .course:target, .inclusion:target, .caution:target, .images-upload-container:target {
     display: block;
 }
 
@@ -10,7 +11,7 @@
     display: flex;
     flex-direction: column;
 
-    h1{
+    h1 {
         display: none;
     }
 
@@ -24,7 +25,9 @@
         > * {
             position: relative;
         }
+
         /*=============== hover, active상태 ================================*/
+
         > *::after {
             content: "";
             width: 100%;
@@ -67,11 +70,10 @@
 }
 
 
-
 /* 섹션 기본 스타일 */
 .intro {
     padding: 20px;
-    background-color: #f9f9f9;
+    /*background-color: #f9f9f9;*/
     border-radius: 10px;
     /*max-width: 600px;*/
     margin: 0 auto;
@@ -129,7 +131,7 @@
 
 .detail {
     padding: 20px;
-    background-color: #f9f9f9;
+    /*background-color: #f9f9f9;*/
     border-radius: 10px;
     /*max-width: 600px;*/
     margin: 0 auto;
@@ -236,7 +238,7 @@
 
 .course {
     padding: 20px;
-    background-color: #f9f9f9;
+    /*background-color: #f9f9f9;*/
     margin: 0 auto;
 
     h1 {
@@ -273,7 +275,7 @@
     position: relative;
     display: inline-block;
     width: 100%;
-    margin-top:10px;
+    margin-top: 10px;
 }
 
 .input-with-icon img {
@@ -412,7 +414,7 @@
 
 .inclusion {
     padding: 20px;
-    background-color: #f9f9f9;
+    /*background-color: #f9f9f9;*/
     border-radius: 10px;
     /*max-width: 600px;*/
     margin: 0 auto;
@@ -425,12 +427,13 @@
         border-radius: var(--border-radius-2);
         margin-top: 5px;
         box-sizing: border-box;
+        background-color: #f9f9f9;
     }
 }
 
 .caution {
     padding: 20px;
-    background-color: #f9f9f9;
+    /*background-color: #f9f9f9;*/
     border-radius: 10px;
     /*max-width: 600px;*/
     margin: 0 auto;
@@ -443,12 +446,13 @@
         border-radius: var(--border-radius-2);
         margin-top: 5px;
         box-sizing: border-box;
+        background-color: #f9f9f9;
     }
 }
 
 .images-upload-container {
     padding: 20px;
-    background-color: #f9f9f9;
+    /*background-color: #f9f9f9;*/
     border-radius: 10px;
     margin: 0 auto;
 
@@ -468,8 +472,9 @@
         justify-content: space-between;
         align-items: center;
         padding: 5px 0;
-        label{
-            border:none;
+
+        label {
+            border: none;
             background-color: var(--color-sub-2);
         }
     }
@@ -624,11 +629,15 @@ textarea {
     margin: 0 auto;
 }
 
-@media (min-width: 768px) {
 
+@media (min-width: 768px) {
     main {
         display: flex;
         align-items: flex-start; /* 목차와 폼이 위쪽에 정렬되도록 설정 */
+        padding: 0 16px; /* 좌우 패딩 추가 */
+        margin: 0 auto; /* 가운데 정렬 */
+        max-width: 1096px; /* 최대 너비를 1096px로 고정 */
+        width: 100%; /* 화면에 맞춰 너비 설정 */
     }
 
     .n-bar-underline-create {
@@ -640,12 +649,22 @@ textarea {
         height: auto;
         margin-left: 20px;
 
+
         h1 {
             display: flex;
             font-weight: bold;
             padding: 10px 0;
         }
     }
+
+    .n-bar-underline-create::after {
+        display: none;
+        /*position: absolute;*/
+        /*left: 0;*/
+        /*bottom: 0;*/
+        /*z-index: 1;*/
+    }
+
 
     .n-bar-underline-create .item-wrapper {
         display: flex;
@@ -655,34 +674,66 @@ textarea {
     }
 
     .item-wrapper {
+        position: relative; /* 자식 요소의 위치를 상대적으로 설정 */
         padding: 20px;
-        border: 1px solid;
-        position: relative; /* hover 줄을 위한 상대 위치 설정 */
+        border: 1px solid #ccc;
+        border-radius: 10px;
     }
 
+    .item-wrapper > * {
+        position: relative;
+        align-items: center;
+        display: flex;
+    }
 
-        /* hover 시 항목 왼쪽에 줄을 추가 */
-    .item-wrapper > *::after {
+    .item-wrapper > *::before {
         content: "";
-        width: 3px; /* 줄의 너비를 3px로 설정 */
-        height: 100%; /* 줄의 높이를 항목 전체로 설정 */
-        background-color: var(--color-main-4); /* 기본 줄 색상 */
+        width: 5px; /* 줄의 너비를 3px로 설정 */
+        height: 86%; /* 줄의 높이를 항목 전체로 설정 */
+        border-radius: 10px;
+        background-color: var(--color-main-4); /* 줄 색상 (검정색이나 다크 색상) */
         position: absolute;
-        left: -5px; /* 줄을 항목의 왼쪽으로 배치 */
-        top: 0; /* 항목의 상단에서 줄이 시작되도록 설정 */
+        left: 0; /* 줄을 항목의 왼쪽에 배치 */
         visibility: hidden;
     }
 
-    /* hover 시 왼쪽에 줄이 표시되도록 설정 */
-    .item-wrapper > *:hover::after {
+    .item-wrapper > *:hover::before {
+        /*display: none;*/
         visibility: visible;
     }
 
-    /* active 상태에서 줄의 색상을 변경 */
-    .item-wrapper > .active::after {
-        background-color: var(--color-main-1); /* 활성화된 항목의 줄 색상 */
+    /* 활성화된 상태에서 줄 색상 변경 */
+    .item-wrapper > .active::before {
+        background-color: var(--color-main-1); /* 활성화된 항목의 줄 색상 (원하는 색상으로 변경 가능) */
         visibility: visible;
     }
+
+
+    .item-wrapper > *::after {
+        display: none;
+        /*content: "";*/
+        /*width: 3px; !* 줄의 너비를 3px로 설정 *!*/
+        /*height: 100%; !* 줄의 높이를 항목 전체로 설정 *!*/
+        /*background-color: var(--color-main-4); !* 줄 색상 *!*/
+        /*position: absolute;*/
+        /*left: -10px; !* 줄을 항목의 왼쪽에 배치 *!*/
+        /*top: 0; !* 항목의 상단에서 줄이 시작되도록 설정 *!*/
+        /*visibility: hidden; !* 기본적으로 줄을 숨김 *!*/
+    }
+
+    /* hover 시 왼쪽에 줄이 나타나도록 설정 */
+    .item-wrapper > *:hover::after {
+        display: none;
+        /*visibility: visible;*/
+    }
+
+    /* active 상태에서 줄 색상을 변경 */
+    .item-wrapper > .active::after {
+        display: none;
+        /*background-color: var(--color-main-1); !* 활성화된 항목의 줄 색상 *!*/
+        /*visibility: visible;*/
+    }
+
 
     form {
         flex-grow: 1; /* 나머지 공간을 폼이 차지하도록 설정 */
