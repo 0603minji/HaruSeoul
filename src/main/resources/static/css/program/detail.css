@@ -292,6 +292,11 @@ main {
         flex-shrink: 0;
         overflow: hidden;
         min-width: 85px;
+        aspect-ratio: 1 / 1;
+
+        .map-img {
+            width: 100%;
+        }
     }
 }
 
@@ -306,7 +311,8 @@ main {
             color: var(--color-base-9);
             font-size: var(--font-size-9);
             font-weight: bold;
-            padding: var(--gap-7);
+            /*padding: var(--gap-7); --pc버전 */
+            padding: var(--gap-2);
         }
 
         .info-container {
@@ -436,8 +442,11 @@ main {
 @media (min-width: 768px) {
     main {
         display: flex;
+        justify-content: center;
         flex-direction: column;
         align-items: center;
+        padding : 0 16px;
+        max-width: 1096px;
 
         .thumbnail-img{
             background-size: contain;
