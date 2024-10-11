@@ -4,8 +4,8 @@
     flex-direction: column;
     /* flex-wrap: wrap; */
     gap: var(--card-list-gap);
-    max-width: 600px;
-    min-width: 400px;
+    /*max-width: 600px;*/
+    /*min-width: 400px;*/
 
     * {
         box-sizing: border-box;
@@ -18,7 +18,7 @@
     /*flex-basis: calc(50% - (var(--card-list-gap)*0.5));*/
     /*max-width: calc(50% - (var(--card-list-gap)*0.5));*/
     max-width: var(--width-10p);
-    min-width: 360px;
+    /*min-width: 360px;*/
     flex-grow: 1;
     flex-shrink: 0;
     border-radius: var(--border-radius-4);
@@ -40,7 +40,7 @@
     .card-main {
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
+        align-items: center;
         gap: 16px;
 
         .img-wrapper {
@@ -71,9 +71,10 @@
                 -webkit-box-orient: vertical;
                 -webkit-line-clamp: 2;
                 width: 100%;
-                height: 40px;
+                height: auto;
+                line-height: 1.5;
                 font-size: 16px;
-                margin-bottom: 12px;
+                margin-bottom: 8px;
 
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -98,6 +99,9 @@
             }
         }
 
+        .md\:footer {
+            display: none; /* 768px 이상에서 flex로 */
+        }
     }
 
     .card-footer {
@@ -110,6 +114,7 @@
         .applicant-status {
             display: flex;
             align-items: center;
+            padding-left: 12px;
             gap: 16px;
 
             .guest-profile-container {
@@ -165,6 +170,51 @@
             user-select: none;
             white-space: nowrap;
             width: auto
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .n-card {
+        .card-main {
+            .md\:footer {
+                display: flex;
+                align-items: center;
+
+                .applicant-status {
+                    display: flex;
+                    align-items: center;
+                    padding-left: 12px;
+                    gap: 16px;
+
+                    .guest-profile-container {
+                        display: flex;
+                        flex-basis: 16px;
+
+                        .guest-profile-wrapper {
+                            flex-shrink: 0;
+                            flex-grow: 0;
+                            margin-left: -12px;
+                            aspect-ratio: 1 / 1;
+                            overflow: hidden;
+                            width: 28px;
+                            border-radius: 50%;
+                            border: 1px solid var(--color-base-2);
+
+                            img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                border-radius: var(--border-radius-4);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .card-footer {
+            display: none;
         }
     }
 }
