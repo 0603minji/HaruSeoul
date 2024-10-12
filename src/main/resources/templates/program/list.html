@@ -127,28 +127,27 @@
                 <!-- 기간 필터 -->
                 <details open class="filter">
                     <summary class="collapse">
-                        <span class="title">기간</span>
+                        <span class="title">Period</span>
                         <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
                     </summary>
 
                     <form action="" class="form">
-
-                        <div>
-                            <p>기간</p>
                             <div class="modal-duration">
-                                <label><input type="text"></label>
+                                <label>
+                                    <input type="date" placeholder="Start Date">
+                                </label>
                                 <span>~</span>
-                                <label><input type="text"></label>
+                                <label>
+                                    <input type="date" placeholder="End Date">
+                                </label>
                             </div>
-                        </div>
-
                     </form>
                 </details>
 
                 <!-- 카테고리 필터 -->
                 <details open class="filter">
                     <summary class="collapse">
-                        <span class="title">카테고리</span>
+                        <span class="title">Category</span>
                         <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
                     </summary>
 
@@ -169,16 +168,20 @@
                 <!-- 가격 필터 -->
                 <details open class="filter">
                     <summary class="collapse">
-                        <span class="title">가격</span>
+                        <span class="title">Price</span>
                         <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
                     </summary>
 
                     <form action="" class="form">
+                        <div class="range-slider">
+                            <input type="range" min="0" max="300000" value="0" id="min" class="slider">
+                            <input type="range" min="0" max="300000" value="0" id="max" class="slider">
+                        </div>
+                        <div class="price-inputs">
+                            <label>
 
-                        <div>
-                            <label><input class="" type="text" placeholder="₩0" min="0" max="100000"></label>
-                            <span>~</span>
-                            <label><input class="" type="text" placeholder="₩10,000" min="0" max="100000"></label>
+                            </label>
+
                         </div>
 
                     </form>
