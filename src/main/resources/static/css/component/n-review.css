@@ -1,12 +1,13 @@
 /* 전체 리뷰 컨테이너 */
 .review-container {
     width: var(--width-10p);
-    margin: var(--gap-7) auto;
+    margin-top: var(--gap-1);
+    margin-bottom: var(--gap-7);
     border: 1px solid var(--color-base-1);
     border-radius: var(--border-radius-3);
     padding: var(--gap-6);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    font-size: var(--font-size-8);
+    font-size: var(--font-size-6);
 
     .star-wrapper {
         display: flex;
@@ -45,8 +46,10 @@
             display: flex;
             justify-content: space-between;
 
-            span {
-                z-index: 1;
+            label {
+                display: flex;
+                cursor: pointer;
+                text-indent: -999px;
             }
         }
 

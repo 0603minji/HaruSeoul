@@ -1,18 +1,12 @@
-main {
+.program-detail {
     font-size: var(--font-size-7);
-
-    .n-bar-underline,
-    .reservation-card,
-    .content {
-        max-width: 700px;
-    }
+    max-width: 700px;
 
     .thumbnail-wrapper,
     .map-img-wrapper {
-        background-color: var(--color-base-4);
+        background-color: var(--color-base-3);
 
-        .thumbnail-img,
-        .map-img {
+        .thumbnail-img {
             max-width: 550px;
         }
     }
@@ -92,6 +86,10 @@ main {
     scroll-margin-top: 39px;
 }
 
+.item-wrapper {
+    overflow: hidden;
+}
+
 /* thumbnail */
 .thumbnail-wrapper {
     display: flex;
@@ -166,7 +164,7 @@ main {
     .list-container {
         display: block;
         color: var(--color-base-9);
-        padding: var(--gap-4) var(--gap-5);
+        padding: var(--gap-4) 0;
 
         li {
             margin-bottom: var(--gap-1);
@@ -175,9 +173,10 @@ main {
 
     .list-content {
         display: flex;
-        font-size: var(--font-size-8);
+        font-size: var(--font-size-6);
         align-items: center;
         width: auto;
+        height: 43px;
         justify-content: left;
         list-style: none;
     }
@@ -200,7 +199,7 @@ main {
 
 .content {
     background-color: var(--color-base-2);
-    font-size: var(--font-size-8);
+    font-size: var(--font-size-6);
 
     .content-header {
         width: max-content;
@@ -210,7 +209,7 @@ main {
         .title {
             justify-content: space-between;
             align-items: center;
-            font-size: var(--font-size-10);
+            font-size: var(--font-size-8);
             font-weight: bold;
             flex-grow: 1;
         }
@@ -292,7 +291,7 @@ main {
         flex-shrink: 0;
         overflow: hidden;
         min-width: 85px;
-        aspect-ratio: 1 / 1;
+        aspect-ratio: 2 / 1;
 
         .map-img {
             width: 100%;
@@ -309,7 +308,7 @@ main {
     section {
         .title {
             color: var(--color-base-9);
-            font-size: var(--font-size-9);
+            font-size: var(--font-size-8);
             font-weight: bold;
             /*padding: var(--gap-7); --pc버전 */
             padding: var(--gap-2);
@@ -318,14 +317,13 @@ main {
         .info-container {
             display: block;
             color: var(--color-base-9);
-            padding: 0 var(--gap-6);
+            padding: 0;
         }
 
         .list-container {
             display: block;
             color: var(--color-base-9);
-            padding: var(--gap-5);
-            padding-top: 0;
+            padding-bottom: var(--gap-5);
 
             li {
                 margin-bottom: var(--gap-3);
@@ -338,7 +336,7 @@ main {
         }
 
         .list-content {
-            font-size: var(--font-size-8);
+            font-size: var(--font-size-6);
             align-items: center;
             width: auto;
         }
@@ -354,7 +352,7 @@ main {
 
 
     h2 {
-        font-size: var(--font-size-8);
+        font-size: var(--font-size-6);
         font-weight: bold;
         width: auto;
         height: 30px;
@@ -374,7 +372,7 @@ main {
 }
 
 .info-input {
-    font-size: var(--font-size-8);
+    font-size: var(--font-size-6);
     display: flex;
     align-items: center;
     width: auto;
@@ -407,6 +405,7 @@ main {
     gap: var(--gap-3);
     padding: var(--gap-6) var(--gap-3);
     background-color: var(--color-base-1);
+    z-index: var(--modal-z-index);
 
     .picked {
         margin-left: var(--gap-3);
@@ -443,10 +442,21 @@ main {
     main {
         display: flex;
         justify-content: center;
-        flex-direction: column;
         align-items: center;
-        padding : 0 16px;
-        max-width: 1096px;
+
+        .main-wrapper {
+            display:flex;
+            max-width: 1060px;
+            position: relative;
+            height: 100%
+        }
+
+        .program-detail {
+            max-width: 700px;
+            width: 100%;
+            padding: 0 16px;
+        }
+
 
         .thumbnail-img{
             background-size: contain;
@@ -456,26 +466,6 @@ main {
             display: none;
         }
 
-        .cross-line {
-            height: 0;
-        }
 
     }
-
-    /*.n-layout-ms {*/
-    /*    max-width: 1200px;*/
-    /*    flex-direction: row;*/
-    /*    gap: 40px;*/
-    /*    .n-filter {*/
-    /*        display: none;*/
-    /*    }*/
-    /*    .pg-list {*/
-    /*        width: 910px;*/
-    /*        flex-shrink: 0;*/
-    /*    }*/
-    /*    .n-aside-ms {*/
-    /*        display: flex;*/
-    /*        flex-shrink: 0;*/
-    /*    }*/
-    /*}*/
 }
