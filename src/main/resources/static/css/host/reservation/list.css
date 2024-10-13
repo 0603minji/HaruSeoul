@@ -1,28 +1,130 @@
-.n-card {
-    .card-header {
-        .right>a {
-            position: relative; /* a태그는 기본 position이 static. static이면 z-index가 안 먹힘*/
-            z-index: 2;
+.layout-body {
+    .n-bar-underline {
+        .item-wrapper {
+            justify-content: space-between;
         }
     }
 
-    position: relative;
-    .n-link-box {
-        display: block;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
+    .layout-main {
+        display: flex;
+
+        .layout-main-list {
+            flex-grow: 1;
+
+            .n-filter {
+                .n-btn {
+                    --btn-font-size: 12px;
+                }
+            }
+
+            /*===============================================================================================*/
+
+            .list-header {
+                padding: 8px 20px;
+
+                div {
+                    .list-view-toggle {
+                        > span {
+                            display: none;
+                        }
+                    }
+                }
+            }
+
+            /*===============================================================================================*/
+
+            .n-card-container {
+                padding: 8px 16px;
+            }
+
+            /*===============================================================================================*/
+
+            .separator {
+                display: flex;
+                width: 1px;
+                height: 16px;
+                background-color: var(--color-base-6);
+                margin-left: 4px;
+                margin-right: 4px;
+            }
+
+            /*===============================================================================================*/
+
+            .n-card {
+                .card-header {
+                    .right > a {
+                        position: relative; /* a태그는 기본 position이 static. static이면 z-index가 안 먹힘*/
+                        z-index: 2;
+                    }
+                }
+
+                position: relative;
+
+                .n-link-box {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    z-index: 1;
+                }
+            }
+
+            /*===============================================================================================*/
+        }
+
+        .layout-main-aside {
+            display: none;
+            flex-shrink: 0;
+            width: 250px;
+            margin: 0 16px;
+            background-color: var(--color-base-3);
+        }
+    }
+}
+
+@media (min-width: 400px) {
+    .layout-body {
+        .n-bar-underline {
+            .item-wrapper {
+                --bar-gap: 24px;
+                justify-content: flex-start;
+            }
+        }
     }
 }
 
 @media (min-width: 768px) {
-    main {
+    .layout-body {
         margin-left: auto;
         margin-right: auto;
-
+        /*min-width: 992px;*/
+        width: 100%;
         max-width: 1092px;
+
+        .n-title {
+            > div {
+                margin-right: calc(16px + 250px + 16px - 20px);
+            }
+        }
+
+        .layout-main {
+            .layout-main-list {
+
+            }
+
+            .layout-main-aside {
+                display: flex;
+            }
+        }
+    }
+
+    .md\:d\:inline {
+        display: inline;
+    }
+
+    .md\:d\:none {
+        display: none;
     }
 }

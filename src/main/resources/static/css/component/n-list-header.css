@@ -7,10 +7,21 @@
         justify-content: space-between;
         align-items: center;
 
-        span {
+        .list-item-count {
             font-size: var(--font-size-8);
-            font-weight: 600;
+            font-weight: 500;
         }
+
+        /*=== 뷰전환, 정렬버튼 호버 ===============================================*/
+        .option {
+            border-radius: 6px;
+            height: fit-content;
+            padding: 4px 8px;
+        }
+        .option:hover {
+            background-color: var(--color-base-2);
+        }
+        /*======================================================================*/
 
         .sort-expanded {
             display: none;
@@ -39,7 +50,7 @@
 @media (min-width: 768px) {
     .list-header {
         div {
-            .sort {
+            .sort.sort-hidden {
                 display: none;
             }
 
