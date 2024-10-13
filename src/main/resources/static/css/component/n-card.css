@@ -103,8 +103,8 @@
             }
         }
 
-        .md\:show {
-            display: none; /* 768px 이상에서 flex로 */
+        .applicant-status {
+            display: none; /* 992px 이상에서 flex로 */
         }
     }
 
@@ -184,7 +184,7 @@
 @media (min-width: 992px) {
     .n-card {
         .card-main {
-            .md\:show {
+            .lg\:show {
                 display: flex;
             }
         }
