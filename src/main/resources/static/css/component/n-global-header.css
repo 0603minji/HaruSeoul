@@ -48,7 +48,12 @@
     }
 }
 
-@media (min-width: 992px) {
+/* 사이드 메뉴 토글 */
+.n-aside-hider {
+    display: none;
+}
+
+@media (min-width: 768px) {
     .n-global-header {
         /*min-width: 992px;*/
 
