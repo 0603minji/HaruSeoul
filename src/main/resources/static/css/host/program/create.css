@@ -23,6 +23,7 @@
         display: inline-flex;
         gap: var(--bar-gap);
 
+
         > * {
             position: relative;
         }
@@ -537,6 +538,7 @@
 .image-title {
     /*position: relative;*/
     display: flex;
+    white-space: nowrap;
     justify-content: flex-start;
     border: 1px solid;
     border-radius: 15px;
@@ -561,40 +563,6 @@
 .image {
     background-color: var(--color-base-3);
 }
-
-/*.image button {*/
-/*    position: absolute;*/
-/*    top: 5px;*/
-/*    right: 5px;*/
-/*    background-color: #001F3F;*/
-/*    color: white;*/
-/*    border: none;*/
-/*    border-radius: 50%;*/
-/*    width: 20px;*/
-/*    height: 20px;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*.image img {*/
-/*    max-width: 80%;*/
-/*    max-height: 80%;*/
-/*}*/
-
-/*.images-upload-container > div:last-child {*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*    margin-top: 10px;*/
-/*}*/
-
-
-/*.upload-button {*/
-/*    background-color: #007BFF;*/
-/*    color: white;*/
-/*    padding: 10px 20px;*/
-/*    border: none;*/
-/*    border-radius: 5px;*/
-/*    cursor: pointer;*/
-/*}*/
 
 .n-btn-color\:sub-1 {
     background-color: var(--color-sub-1);
@@ -654,7 +622,7 @@ textarea {
         position: relative;
         height: auto;
         margin-left: 20px;
-
+        margin-top: 30px;
 
         h1 {
             display: flex;
@@ -746,8 +714,30 @@ textarea {
         width: 100%; /* 화면에 맞춰 폼의 너비 설정 */
         padding: 20px; /* 폼에 적당한 패딩 추가 */
     }
+
+    .upload-images {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        margin-top: 30px;
+
+    }
 }
 
+@media (max-width: 768px) {
 
+    .item-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 20px; /* 원하는 gap 크기 설정 (간격 크기) */
+        padding: 0; /* ul 기본 패딩 제거 */
+        margin: 0; /* ul 기본 마진 제거 */
+
+        li {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+        }
+    }
+}
 
 
