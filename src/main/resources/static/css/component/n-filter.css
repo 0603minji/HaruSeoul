@@ -1,12 +1,14 @@
 .n-filter {
     position: relative;
     width: 100%;
+    padding: 0 16px; /* padding-x:6 --gap-6 */
 
     .item-wrapper {
         --bar-gap: 10px;
         align-items: center;
         display: inline-flex;
         gap: var(--bar-gap);
+        padding: 8px 0; /* padding-y:2 --gap-2 */
     }
 
     .reset-box {

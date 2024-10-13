@@ -37,18 +37,26 @@
 .n-bar-underline {
     display: flex;
     flex-direction: column;
+    padding: 16px 0;
 
     .item-wrapper {
         --bar-gap: 16px;
         align-items: center;
-        justify-content: space-between;
-        display: inline-flex;
+        display: flex;
+        justify-content: flex-start;
         gap: var(--bar-gap);
+        color: var(--color-base-6);
+        overflow-x: auto;
+        padding: 0 16px;
 
         > * {
             position: relative;
         }
         /*=============== hover, active상태 ================================*/
+        .n-btn {
+            --btn-bg-hover: transparent;
+        }
+
         > *::after {
             content: "";
             width: 100%;
@@ -62,9 +70,17 @@
             visibility: hidden;
         }
 
+        > *:hover {
+            color: var(--color-base-9);
+        }
+
         > *:hover::after {
             background-color: var(--color-main-4);
             visibility: visible;
+        }
+
+        > .active {
+            color: var(--color-base-9);
         }
 
         > .active::after {

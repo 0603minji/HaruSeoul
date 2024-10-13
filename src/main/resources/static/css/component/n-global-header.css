@@ -48,9 +48,9 @@
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
     .n-global-header {
-        min-width: 992px;
+        /*min-width: 992px;*/
 
         .header-menu-container {
             ul {
