@@ -86,53 +86,6 @@
         }
     }
 
-    /* 임시 ! 이렇게 하면 안됨*/
-
-    /* 첫 번째 경유지의 아이콘 */
-    .drop-by:nth-child(3) {
-        .icon-wrapper {
-            .n-icon\:number1:after, .n-icon\:number1:before {
-                --icon: url('/css/image/icon/number1.svg');
-            }
-        }
-    }
-
-    /* 두 번째 경유지의 아이콘 */
-    .drop-by:nth-child(5) {
-        .icon-wrapper {
-            .n-icon\:number1:after, .n-icon\:number1:before {
-                --icon: url('/css/image/icon/number2.svg');
-            }
-        }
-    }
-
-    /* 세 번째 경유지의 아이콘 */
-    .drop-by:nth-child(7) {
-        .icon-wrapper {
-            .n-icon\:number1:after, .n-icon\:number1:before {
-                --icon: url('/css/image/icon/number3.svg');
-            }
-        }
-    }
-
-    /* 네 번째 경유지의 아이콘 */
-    .drop-by:nth-child(9) {
-        .icon-wrapper {
-            .n-icon\:number1:after, .n-icon\:number1:before {
-                --icon: url('/css/image/icon/number4.svg');
-            }
-        }
-    }
-
-    /* 다섯 번째 경유지의 아이콘 */
-    .drop-by:nth-child(11) {
-        .icon-wrapper {
-            .n-icon\:number1:after, .n-icon\:number1:before {
-                --icon: url('/css/image/icon/number5.svg');
-            }
-        }
-    }
-
 
     /* 도착지 */
 

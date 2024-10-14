@@ -98,7 +98,7 @@
 
 .n-btn:is(.n-icon):not(.n-deco) {
     --btn-padding: 4px;
-    text-indent: -999px
+    text-indent: -999px;
 }
 
 .n-btn-size\:1:is(.n-icon):not(.n-deco) {
