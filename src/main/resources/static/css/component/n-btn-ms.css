@@ -224,7 +224,7 @@
 
     /* font */
     --btn-font-color: var(--color-sub-1);
-    --btn-font-hover: var(--color-base-1);
+    --btn-font-hover: var(--color-sub-1);
 
     /* border */
     --btn-border-color: var(--color-sub-1);
@@ -232,11 +232,11 @@
 
     /* background */
     --btn-bg-color: var(--color-sub-3);
-    --btn-bg-hover: var(--color-sub-1);
+    --btn-bg-hover: var(--color-sub-2);
 }
 
 .active:where(.n-btn-pg-filter):hover {
-    --icon-color: var(--color-base-1);
+    --icon-color: var(--color-sub-1);
 }
 
 
