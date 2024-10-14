@@ -311,13 +311,14 @@
             font-size: var(--font-size-8);
             font-weight: bold;
             /*padding: var(--gap-7); --pc버전 */
-            padding: var(--gap-2);
+            padding: var(--gap-6);
         }
 
         .info-container {
             display: block;
             color: var(--color-base-9);
-            padding: 0;
+            /*padding: 0;*/
+            padding: var(--gap-6);
         }
 
         .list-container {
@@ -332,7 +333,8 @@
 
         ul {
             list-style: none; /* 기본 점을 없앰 */
-            padding-left: var(--gap-3);
+            /*padding-left: var(--gap-3);*/
+            padding-left: var(--gap-7);
         }
 
         .list-content {
@@ -345,7 +347,8 @@
             content: "•"; /* 기본 점 없애고 커스텀 점 */
             display: inline-block;
             width: 1em; /* 점과 텍스트 사이의 간격 */
-            padding-left: var(--gap-3);
+            /*padding-left: var(--gap-3);*/
+            padding-left: var(--gap-7);
             margin-left: -1.5em; /* 점을 왼쪽으로 이동 */
         }
     }
@@ -360,7 +363,8 @@
 
     li {
         color: var(--color-main-2);
-        padding: var(--gap-4);
+        /*padding: var(--gap-4);*/
+        padding: var(--gap-7);
     }
 }
 
@@ -383,7 +387,8 @@
 
 .details {
     margin: 0;
-    padding: 0 var(--gap-6);
+    /*padding: 0 var(--gap-6);*/
+    padding: var(--gap-6);
 
     .map-img {
         max-width: 700px;
@@ -403,7 +408,8 @@
     justify-content: center;
     align-items: center;
     gap: var(--gap-3);
-    padding: var(--gap-6) var(--gap-3);
+    /*padding: var(--gap-6) var(--gap-3);*/
+    padding: var(--gap-6);
     background-color: var(--color-base-1);
     z-index: var(--modal-z-index);
 

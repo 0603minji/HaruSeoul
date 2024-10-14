@@ -112,6 +112,7 @@
         display: flex;
         /*width: var(--width-10p);*/
         align-items: center;
+        gap: var(--gap-6);
 
         .n-btn {
             flex-grow: 1;
