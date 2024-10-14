@@ -23,22 +23,25 @@
             </div> -->
     <nav class="header-menu-container ml:auto">
         <h1 class="d:none">헤더메뉴</h1>
-        <ul class=""> <!-- d:inline-flex align-items:center gap:2 -->
-            <li><a class="n-btn n-btn:hover mr:6" href="/host/main">호스트 되기</a></li>
+
+        <div class="d:flex align-items:center"><a class="n-btn n-btn:hover" href="/host/main">게스트 되기</a></div>
+
+        <ul class="header-menus:icon-only md:show">
             <li class="header-menu"><a class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:ticket" href="/host/main">내 예약</a></li>
             <li class="header-menu"><a class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:wishlist" href="/host/main">찜 목록</a></li>
             <li class="header-menu"><a class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:chat" href="/host/main">Chat</a></li>
             <li class="header-menu"><a class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:alert" href="/host/main">알림</a></li>
-            <li class="header-menu">
-                <a class="profile-img-container">
-                    <img class="profile-img" src="/image/profile_cat.png" alt="게스트 프로필 사진">
-                </a>
-            </li>
         </ul>
+
+        <div class="profile-img-container md:show">
+            <a href="" class="profile-img-wrapper">
+                <img class="profile-img" src="/image/profile_cat.png" alt="게스트 프로필 사진">
+            </a>
+        </div>
     </nav>
 
     <!-- 어사이드 메뉴 -->
-    <section class="menu-icon">
+    <section class="menu-icon md:d:none">
         <h1 class="d:none">어사이드 메뉴</h1>
 
         <!--햄버거 네비게이터-->
