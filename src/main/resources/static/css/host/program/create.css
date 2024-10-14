@@ -11,6 +11,11 @@
 .n-bar-underline-create {
     display: flex;
     flex-direction: column;
+    overflow-x: auto;
+    position: sticky;
+    top: 0; /* 상단에서 고정되는 위치를 지정 */
+    z-index: 30; /* 다른 요소 위에 나타나도록 설정 */
+    background-color: white; /* 스크롤할 때 배경 유지 */
 
     h1 {
         display: none;
@@ -22,7 +27,6 @@
         justify-content: space-between;
         display: inline-flex;
         gap: var(--bar-gap);
-
 
         > * {
             position: relative;
