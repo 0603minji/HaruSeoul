@@ -10,6 +10,7 @@
 
         .layout-main-list {
             flex-grow: 1;
+            width: 100%;
 
             .n-filter {
                 .n-btn {

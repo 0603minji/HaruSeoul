@@ -1,64 +1,61 @@
-.n-card {
-    position: relative;
+.layout-body {
+    .layout-main {
+        display: flex;
 
-    .n-link-box {
-        display: block;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-    }
-}
+        .layout-main-list {
+            flex-grow: 1;
+            width: 100%;
 
-.n-layout-ms {
-    display: flex;
-    flex-direction: column;
+            .n-filter {
+                .n-btn {
+                    --btn-font-size: 12px;
+                }
+            }
 
-    min-width: 300px;
+            /*===============================================================================================*/
 
-    .n-filter-aside {
-        display: none;
-        width: 250px;
-        height: 100%;
-        margin-right: 16px;
+            .list-header {
+                  padding: 8px 20px;
+              }
 
-        .n-title {
-            --title-font-size: var(--font-size-9); /* 18 */
-            --title-font-weight: 600; /* semi bold */
-            --title-padding: 20px 4px;
+            /*===============================================================================================*/
 
-            .n-icon {
-                --icon-size: var(--icon-size-4);
+            .n-card-container-column {
+            }
+
+            /*===============================================================================================*/
+
+            .n-card {
+                position: relative;
+
+                .n-link-box {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    z-index: 1;
+                }
             }
         }
-    }
-}
 
-@media (min-width: 768px) {
-    .n-layout-ms {
-        margin-left: auto;
-        margin-right: auto;
-
-        max-width: 1092px;
-        min-width: 992px;
-        flex-direction: row;
-        gap: 8px;
-
-        .n-filter {
+        .layout-main-aside {
             display: none;
-        }
-
-        .pg-list {
-            flex-shrink: 1;
-            flex-grow: 1;
-        }
-
-        .n-filter-aside {
-            display: flex;
             flex-direction: column;
             flex-shrink: 0;
+            width: 250px;
+            margin: 0 16px;
+
+            .n-title {
+                --title-font-size: var(--font-size-9); /* 18 */
+                --title-font-weight: 600; /* semi bold */
+                --title-padding: 20px 4px;
+
+                .n-icon {
+                    --icon-size: var(--icon-size-4);
+                }
+            }
 
             .filters {
                 padding: 0 16px;
@@ -66,6 +63,34 @@
                 border-radius: 12px;
             }
         }
+    }
+}
+
+@media (min-width: 768px) {
+    .layout-body {
+        margin-left: auto;
+        margin-right: auto;
+        /*min-width: 992px;*/
+        width: 100%;
+        max-width: 1092px;
+
+        .layout-main {
+            .layout-main-list {
+
+            }
+
+            .layout-main-aside {
+                display: flex;
+            }
+        }
+    }
+
+    .md\:d\:inline {
+        display: inline;
+    }
+
+    .md\:d\:none {
+        display: none;
     }
 }
 
@@ -102,6 +127,7 @@
     }
 
     /*기간 필터*/
+
     .modal-duration {
         display: flex;
         justify-content: center;
@@ -118,6 +144,7 @@
             font-size: 12px;
             cursor: pointer;
         }
+
         input[type="date"]::-webkit-calendar-picker-indicator {
             margin-left: -14px; /* 아이콘과 텍스트 사이의 간격 줄이기 */
         }
@@ -125,8 +152,9 @@
 
 
     /*카테고리 필터*/
+
     .modal-checkbox {
-        width:100%;
+        width: 100%;
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -147,78 +175,80 @@
     }
 
     /*가격 필터*/
-    .price-container{
+
+    .price-container {
         margin-top: 8px;
         display: flex;
         flex-direction: column;
         gap: var(--gap-2);
         padding: 0 8px;
 
-    .range-slider {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 16px;
-        position: relative;
-
-        .slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 8px;
-            background-color: var(--color-base-3);
-            border-radius: 5px;
-            outline: none;
-            position: absolute;
-            pointer-events: none;
-        }
-
-        .slider:first-child {
-            z-index: 1; /* 첫 번째 슬라이더가 뒷부분에 위치하게 함 */
-        }
-
-        .slider:last-child {
-            z-index: 2; /* 두 번째 슬라이더가 앞부분에 위치하게 하여 겹칠 때도 정상적으로 보이도록 설정 */
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            background-color: var(--color-sub-1);
-            border-radius: 50%;
-            cursor: pointer;
+        .range-slider {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 16px;
             position: relative;
-            z-index: 5;
-            pointer-events: auto; /* 슬라이더 핸들에서 이벤트 발생 허용 */
-        }
-    }
 
-    .price-inputs {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
+            .slider {
+                -webkit-appearance: none;
+                width: 100%;
+                height: 8px;
+                background-color: var(--color-base-3);
+                border-radius: 5px;
+                outline: none;
+                position: absolute;
+                pointer-events: none;
+            }
 
-        input {
-            height: 28px;
-            width: 86px;
-            font-size: 12px;
-            text-align: center;
-            border-radius: 4px;
-            border: 1px solid var(--color-base-3);
+            .slider:first-child {
+                z-index: 1; /* 첫 번째 슬라이더가 뒷부분에 위치하게 함 */
+            }
+
+            .slider:last-child {
+                z-index: 2; /* 두 번째 슬라이더가 앞부분에 위치하게 하여 겹칠 때도 정상적으로 보이도록 설정 */
+            }
+
+            .slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 16px;
+                height: 16px;
+                background-color: var(--color-sub-1);
+                border-radius: 50%;
+                cursor: pointer;
+                position: relative;
+                z-index: 5;
+                pointer-events: auto; /* 슬라이더 핸들에서 이벤트 발생 허용 */
+            }
         }
 
-        .tilde {
-            margin: 0 8px;
-            font-size: 16px;
+        .price-inputs {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+
+            input {
+                height: 28px;
+                width: 86px;
+                font-size: 12px;
+                text-align: center;
+                border-radius: 4px;
+                border: 1px solid var(--color-base-3);
+            }
+
+            .tilde {
+                margin: 0 8px;
+                font-size: 16px;
+            }
         }
-    }
     }
 
     /*언어 필터*/
     /*소요시간 필터*/
     /*시작시간 필터*/
+
     .modal-radio {
         display: flex;
         flex-direction: column;
@@ -234,6 +264,7 @@
 
 
     /*인원 필터*/
+
     .min-max-container {
         display: flex;
         align-items: center;
