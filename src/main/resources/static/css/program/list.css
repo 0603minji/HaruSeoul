@@ -101,66 +101,180 @@
         margin-bottom: 24px;
     }
 
-    .modal-checkbox {
+    /*기간 필터*/
+    .modal-duration {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between; /* 좌우 여백 조정 */
+        justify-content: center;
         align-items: center;
-        border-radius: 16px;
-        background-color: var(--color-base-2);
-        padding: 20px; /* 내부 여백 추가 */
-        gap: 10px; /* 각 체크박스 사이에 간격 추가 */
+        border: 1px solid var(--color-base-3);
+        padding: 2px 4px;
+        gap: 6px;
+        border-radius: 4px;
+        width: 100%; /* 입력 필드가 적절한 크기로 보이게 설정 */
 
-        > label {
+        input {
+            border: none;
+            outline: none;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            margin-left: -14px; /* 아이콘과 텍스트 사이의 간격 줄이기 */
+        }
+    }
+
+
+    /*카테고리 필터*/
+    .modal-checkbox {
+        width:100%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        background-color: transparent;
+        gap: 6px;
+        padding: 0 8px;
+
+        label {
             display: flex;
             align-items: center;
             font-size: 14px;
-            width: 45%; /* 각 체크박스 그룹을 두 열로 분할 */
-            padding: 5px 0; /* 체크박스 그룹 위아래 간격 추가 */
+            width: 100%;
 
-            > input[type="checkbox"] {
+            input[type="checkbox"] {
                 margin-right: 8px; /* 체크박스와 텍스트 사이 간격 */
             }
         }
     }
+
+    /*가격 필터*/
+    .price-container{
+        margin-top: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: var(--gap-2);
+        padding: 0 8px;
+
+    .range-slider {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 16px;
+        position: relative;
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background-color: var(--color-base-3);
+            border-radius: 5px;
+            outline: none;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .slider:first-child {
+            z-index: 1; /* 첫 번째 슬라이더가 뒷부분에 위치하게 함 */
+        }
+
+        .slider:last-child {
+            z-index: 2; /* 두 번째 슬라이더가 앞부분에 위치하게 하여 겹칠 때도 정상적으로 보이도록 설정 */
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background-color: var(--color-sub-1);
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            z-index: 5;
+            pointer-events: auto; /* 슬라이더 핸들에서 이벤트 발생 허용 */
+        }
+    }
+
+    .price-inputs {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+
+        input {
+            height: 28px;
+            width: 86px;
+            font-size: 12px;
+            text-align: center;
+            border-radius: 4px;
+            border: 1px solid var(--color-base-3);
+        }
+
+        .tilde {
+            margin: 0 8px;
+            font-size: 16px;
+        }
+    }
+    }
+
+    /*언어 필터*/
+    /*소요시간 필터*/
+    /*시작시간 필터*/
     .modal-radio {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        background-color: transparent;
+        padding: 0 8px;
+        gap: 6px;
 
         .radio {
             margin-right: 8px;
         }
     }
+
+
+    /*인원 필터*/
     .min-max-container {
         display: flex;
         align-items: center;
         justify-content: space-between;
         width: 100%; /* 전체 너비를 조정하고 싶으면 값 변경 */
 
-        >.min-section, .max-section {
+        .min-section, .max-section {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 10px;
+            width: 100%;
+            gap: var(--gap-2);
         }
 
-        >.input-group {
+        .input-group {
             display: flex;
             align-items: center;
             gap: 5px; /* 버튼과 입력창 사이의 간격 */
-        }
 
+            .n-btn {
+                --btn-border-color: var(--color-base-4);
+                --btn-bg-color: var(--color-base-4);
+                --btn-border-radius: 6px;
+                --btn-padding: 4px 8px;
+                width: 6px;
+            }
+        }
 
         input[type="number"] {
-            width: 50px;
-            height: 30px;
+            width: 32px;
+            height: 28px;
+            font-size: 12px;
             text-align: center;
             border-radius: 4px;
-            border: 1px solid #ccc;
-            font-size: 16px;
+            border: 1px solid var(--color-base-3);
         }
 
-        >.tilde {
-            font-size: 24px;
-            padding: 0 10px;
+        .tilde {
+            margin: 0 8px;
+            font-size: 16px;
+            padding: 16px 0 0 0;
         }
     }
 }

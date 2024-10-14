@@ -127,33 +127,31 @@
                 <!-- 기간 필터 -->
                 <details open class="filter">
                     <summary class="collapse">
-                        <span class="title">기간</span>
+                        <span class="title">Period</span>
                         <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
                     </summary>
 
                     <form action="" class="form">
-
-                        <div>
-                            <p>기간</p>
-                            <div class="modal-duration">
-                                <label><input type="text"></label>
-                                <span>~</span>
-                                <label><input type="text"></label>
-                            </div>
+                        <div class="modal-duration">
+                            <label>
+                                <input type="date" placeholder="Start Date">
+                            </label>
+                            <span>~</span>
+                            <label>
+                                <input type="date" placeholder="End Date">
+                            </label>
                         </div>
-
                     </form>
                 </details>
 
                 <!-- 카테고리 필터 -->
                 <details open class="filter">
                     <summary class="collapse">
-                        <span class="title">카테고리</span>
+                        <span class="title">Category</span>
                         <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
                     </summary>
 
                     <form action="" class="form">
-
                         <div class="modal-checkbox">
                             <label><input type="checkbox">All</label>
                             <label><input type="checkbox">Activity</label>
@@ -162,32 +160,36 @@
                             <label><input type="checkbox">Food</label>
                             <label><input type="checkbox">Nature</label>
                         </div>
-
                     </form>
                 </details>
 
                 <!-- 가격 필터 -->
                 <details open class="filter">
                     <summary class="collapse">
-                        <span class="title">가격</span>
+                        <span class="title">Price</span>
                         <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
                     </summary>
 
                     <form action="" class="form">
+                        <div class="price-container">
+                            <div class="range-slider">
+                                <input type="range" min="0" max="300000" value="0" class="slider">
+                                <input type="range" min="0" max="300000" value="300000" class="slider">
+                            </div>
+                            <div class="price-inputs">
+                                <input type="text" placeholder="₩0" value="₩0" readonly>
+                                <span class="tilde">~</span>
+                                <input type="text" placeholder="₩300000" value="₩300000" readonly>
 
-                        <div>
-                            <label><input class="" type="text" placeholder="₩0" min="0" max="100000"></label>
-                            <span>~</span>
-                            <label><input class="" type="text" placeholder="₩10,000" min="0" max="100000"></label>
+                            </div>
                         </div>
-
                     </form>
                 </details>
 
                 <!-- 진행언어 필터 -->
                 <details open class="filter">
                     <summary class="collapse">
-                        <span class="title">진행언어</span>
+                        <span class="title">Language</span>
                         <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
                     </summary>
 
@@ -206,7 +208,7 @@
                 <!-- 참여인원 필터 -->
                 <details open class="filter">
                     <summary class="collapse">
-                        <span class="title">참여인원</span>
+                        <span class="title">Group Size</span>
                         <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
                     </summary>
 
@@ -217,8 +219,8 @@
                                 <span>Min</span>
                                 <div class="input-group">
                                     <button class="n-btn">-</button>
-                                    <input type="number" min="0" max="5" value="0">
-                                    <button class="n-btn">+</button>
+                                    <input type="number" min="0" max="8" value="0">
+                                    <button class="n-btn">＋</button>
                                 </div>
                             </div>
 
@@ -228,8 +230,8 @@
                                 <span>Max</span>
                                 <div class="input-group">
                                     <button class="n-btn">-</button>
-                                    <input type="number" min="0" max="5" value="5">
-                                    <button class="n-btn">+</button>
+                                    <input type="number" min="0" max="8" value="8">
+                                    <button class="n-btn">＋</button>
                                 </div>
                             </div>
                         </div>
@@ -240,7 +242,7 @@
                 <!-- 소요시간 필터 -->
                 <details open class="filter">
                     <summary class="collapse">
-                        <span class="title">소요시간</span>
+                        <span class="title">Duration</span>
                         <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
                     </summary>
 
@@ -261,7 +263,7 @@
                 <!-- 시작시간 필터 -->
                 <details open class="filter">
                     <summary class="collapse">
-                        <span class="title">시작시간</span>
+                        <span class="title">Start Time</span>
                         <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
                     </summary>
 
@@ -270,7 +272,7 @@
                         <div class="modal-radio">
                             <div><label><input type="radio" class="radio">All</label></div>
                             <div><label><input type="radio" class="radio">Before 12 PM</label></div>
-                            <div><label><input type="radio" class="radio">12 PM to 6PM</label></div>
+                            <div><label><input type="radio" class="radio">12 PM to 6 PM</label></div>
                             <div><label><input type="radio" class="radio">After 6 PM</label></div>
                         </div>
 
