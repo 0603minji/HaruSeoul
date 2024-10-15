@@ -12,6 +12,7 @@
 }
 
 .n-icon\:star:before {
+    --icon-size: 14px;
     background-color: var(--color-yellow-1);
 }
 
@@ -34,6 +35,7 @@
 }
 
 .n-icon\:placeholder:before {
+    --icon-size: 16px;
     background-size: var(--icon-size);
 }
 
@@ -58,6 +60,8 @@
 
 /* --- */
 .n-card {
+    margin: 0 var(--gap-6);
+
     .card-main {
         .img-wrapper {
             width: 94px;
@@ -144,8 +148,6 @@
             }
 
             .list-content {
-                font-size: var(--font-size-7);
-                align-items: center;
                 width: auto;
             }
 
@@ -225,6 +227,10 @@
 
             .n-btn {
                 --btn-padding: 10px 14px;
+            }
+
+            .details {
+                margin: var(--gap-4) var(--gap-6);
             }
 
         }

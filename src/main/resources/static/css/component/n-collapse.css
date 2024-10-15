@@ -42,12 +42,8 @@ details[open] .collapse .n-icon\:arrow_down:before {
     }
 }
 
-@media screen and (max-width: 768px) {
-    .collapse {
-        list-style-type: none;
-    }
-}
-
 @media (min-width: 768px) {
     padding: var(--gap-6);
+
+
 }
