@@ -11,6 +11,11 @@
 .n-bar-underline-create {
     display: flex;
     flex-direction: column;
+    overflow-x: auto;
+    position: sticky;
+    top: 0; /* 상단에서 고정되는 위치를 지정 */
+    z-index: 30; /* 다른 요소 위에 나타나도록 설정 */
+    background-color: white; /* 스크롤할 때 배경 유지 */
 
     h1 {
         display: none;
@@ -22,7 +27,6 @@
         justify-content: space-between;
         display: inline-flex;
         gap: var(--bar-gap);
-
 
         > * {
             position: relative;
@@ -74,7 +78,7 @@
 
 /* 섹션 기본 스타일 */
 .intro {
-    padding: 20px;
+    padding: 16px;
     /*background-color: #f9f9f9;*/
     border-radius: 10px;
     /*max-width: 600px;*/
@@ -132,7 +136,7 @@
 }
 
 .detail {
-    padding: 20px;
+    padding: 16px;
     /*background-color: #f9f9f9;*/
     border-radius: 10px;
     /*max-width: 600px;*/
@@ -173,8 +177,9 @@
     }
 
     .input-text {
-        flex: 1; /* 입력 필드가 남은 공간을 차지하게 설정 */
-        padding: 10px;
+        /*flex: 1; !* 입력 필드가 남은 공간을 차지하게 설정 *!*/
+        width: 30%;
+        padding: 0 5px;
         border: 1px solid #ccc;
         border-radius: 5px;
         box-sizing: border-box;
@@ -239,7 +244,7 @@
 }
 
 .course {
-    padding: 20px;
+    padding: 16px;
     /*background-color: #f9f9f9;*/
     margin: 0 auto;
 
@@ -256,7 +261,7 @@
     border-radius: 11px;
     border: 1px solid var(--color-base-7);
     background-color: var(--color-base-4);
-    /*padding: 20px; !* 카드 내부 여백 추가 *!*/
+    /*padding: 16px; !* 카드 내부 여백 추가 *!*/
 }
 
 .course-input-area {
@@ -300,11 +305,11 @@
 
 .input-text {
     width: 100%;
-    padding: 10px;
+    /*padding: 10px;*/
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: var(--border-radius-2);
-    margin-top: 5px;
+    /*margin-top: 5px;*/
     box-sizing: border-box;
 }
 
@@ -415,7 +420,7 @@
 
 
 .inclusion {
-    padding: 20px;
+    padding: 16px;
     /*background-color: #f9f9f9;*/
     border-radius: 10px;
     /*max-width: 600px;*/
@@ -434,7 +439,7 @@
 }
 
 .caution {
-    padding: 20px;
+    padding: 16px;
     /*background-color: #f9f9f9;*/
     border-radius: 10px;
     /*max-width: 600px;*/
@@ -453,7 +458,7 @@
 }
 
 .images-upload-container {
-    padding: 20px;
+    padding: 16px;
     /*background-color: #f9f9f9;*/
     border-radius: 10px;
     margin: 0 auto;
@@ -570,6 +575,12 @@
     color: var(--color-base-1)
 }
 
+.n-btn-color\:main-2 {
+    background-color: var(--color-main-2);
+    /*border-color: var(--color-sub-1);*/
+    color: var(--color-base-1)
+}
+
 /* 버튼 스타일 */
 .button-group {
     display: flex;
@@ -622,7 +633,7 @@ textarea {
         position: relative;
         height: auto;
         margin-left: 20px;
-        margin-top: 30px;
+        margin-top: 20px;
 
         h1 {
             display: flex;
@@ -649,7 +660,7 @@ textarea {
 
     .item-wrapper {
         position: relative; /* 자식 요소의 위치를 상대적으로 설정 */
-        padding: 20px;
+        padding: 16px;
         border: 1px solid #ccc;
         border-radius: 10px;
     }
@@ -712,7 +723,7 @@ textarea {
     form {
         flex-grow: 1; /* 나머지 공간을 폼이 차지하도록 설정 */
         width: 100%; /* 화면에 맞춰 폼의 너비 설정 */
-        padding: 20px; /* 폼에 적당한 패딩 추가 */
+        padding: 16px; /* 폼에 적당한 패딩 추가 */
     }
 
     .upload-images {
