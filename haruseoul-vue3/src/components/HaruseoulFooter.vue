@@ -6,6 +6,7 @@
       <div class="wrapper">
         <div class="language-selector n-icon n-deco n-icon:globe_2">
           <select name="language" id="language">
+            <option value="Korean">Korean</option>
             <option value="English">English</option>
             <option value="Chinese">Chinese</option>
             <option value="Japanese">Japanese</option>
@@ -48,5 +49,6 @@
     </div>
   </footer>
 </template>
-<script></script>
+<script>
+</script>
 <style></style>
