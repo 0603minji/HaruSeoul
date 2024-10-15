@@ -1,7 +1,10 @@
-<template>
-  <div></div>
-</template>
-<script>
-export default {};
+<script setup>
+import HeaderHost from "@/components/host/HeaderHost.vue";
+import HaruseoulFooter from "@/components/HaruseoulFooter.vue";
 </script>
-<style></style>
+
+<template>
+  <HeaderHost/>
+  <RouterView/>
+  <HaruseoulFooter/>
+</template>
