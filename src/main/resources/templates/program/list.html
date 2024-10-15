@@ -13,273 +13,270 @@
 <body>
 <main layout:fragment="main">
 
-    <section class="n-layout-ms">
+    <section class="layout-body">
         <h1 class="d:none">프로그램 목록</h1>
 
-        <!--=== 필터 .n-filter ==========================================-->
-        <section class="n-filter bg-color:base-1 padding-x:6">
-            <h1 class="d:none">필터</h1>
+        <div class="layout-main">
+            <div class="layout-main-list">
+                <!--=== 필터 .n-filter ==========================================-->
+                <section class="n-filter md:d:none bg-color:base-1">
+                    <h1 class="d:none">필터</h1>
 
-            <div class="overflow-x:auto">
-                <ul class="item-wrapper padding-y:5">
-                    <li><a href=""
-                           class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
-                    </li>
-                    <li><a href=""
-                           class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:price n-icon-size:1 n-deco n-deco-gap:1">가격</a>
-                    </li>
-                    <li><a href=""
-                           class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a>
-                    </li>
-                    <li><a href=""
-                           class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:globe n-icon-size:1 n-deco n-deco-gap:1">언어</a>
-                    </li>
-                    <li><a href=""
-                           class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:clock n-icon-size:1 n-deco n-deco-gap:1">시작시간</a>
-                    </li>
-                    <li><a href=""
-                           class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:group n-icon-size:1 n-deco n-deco-gap:1 ">참여인원</a>
-                    </li>
-                </ul>
-            </div>
+                    <div class="overflow-x:auto">
+                        <ul class="item-wrapper">
+                            <li><a href=""
+                                   class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
+                            </li>
+                            <li><a href=""
+                                   class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:price n-icon-size:1 n-deco n-deco-gap:1">가격</a>
+                            </li>
+                            <li><a href=""
+                                   class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a>
+                            </li>
+                            <li><a href=""
+                                   class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:globe n-icon-size:1 n-deco n-deco-gap:1">언어</a>
+                            </li>
+                            <li><a href=""
+                                   class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:clock n-icon-size:1 n-deco n-deco-gap:1">시작시간</a>
+                            </li>
+                            <li><a href=""
+                                   class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:group n-icon-size:1 n-deco n-deco-gap:1 ">참여인원</a>
+                            </li>
+                        </ul>
+                    </div>
 
-            <div class="reset-box">
-                <a href="" class="icon-box n-deco1 n-icon n-icon:reset">
-                    초기화
-                </a>
-            </div>
-        </section>
+                    <div class="reset-box">
+                        <a href="" class="icon-box n-deco1 n-icon n-icon:reset">
+                            초기화
+                        </a>
+                    </div>
+                </section>
 
-        <!--=== 프로그램 목록==========================================-->
-        <section class="pg-list">
-            <!--=== 정렬 .list-header ==========================================-->
-            <header class="list-header bg-color:base-1">
-                <h1 class="d:none">정렬</h1>
-                <div>
-                    <span>60 Result</span>
-                    <!--            <button type="button" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">-->
-                    <!--                정렬-->
-                    <!--            </button>-->
-                    <a href="" class="sort sort-hidden n-icon n-icon:arrow_swap n-deco n-deco-gap:1">
-                        정렬
-                    </a>
+                <!--=== 프로그램 목록==========================================-->
+                <section class="pg-list">
+                    <!--=== 정렬 .list-header ==========================================-->
+                    <header class="list-header bg-color:base-1">
+                        <h1 class="d:none">프로그램 목록</h1>
+                        <div>
+                            <span class="list-item-count">60 Result</span>
+                            <!--            <button type="button" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">-->
+                            <!--                정렬-->
+                            <!--            </button>-->
+                            <a href=""
+                               class="option sort n-icon n-icon:arrow_swap n-icon-color:base-6 n-deco n-deco-gap:1">
+                                정렬
+                            </a>
+                        </div>
+                    </header>
 
-                    <ul class="sort-expanded">
-                        <li class="active"><a href="">최신순</a></li>
-                        <li><a href="">판매순</a></li>
-                        <li><a href="">평점순</a></li>
-                        <li><a href="">가격낮은순</a></li>
-                        <li><a href="">리뷰많은순</a></li>
+                    <!--=== 프로그램 카드 목록 ===================================================-->
+                    <ul class="n-card-container-column bg-color:base-1">
+                        <!-- =================================== 예약 카드 1개 =================================== -->
+                        <li class="n-card n-card-column bg-color:base-1"
+                            th:each="i : ${#numbers.sequence(1, 10)}">
+                            <a class="n-link-box" href="detail?id=1"></a>
+                            <h2 class="d:none">프로그램 카드</h2>
+
+                            <div class="card-main">
+                                <div class="img-wrapper">
+                                    <img src="/image/guest/program_01.png" alt="대표사진">
+                                </div>
+
+                                <div class="card-info-wrapper">
+                                    <div class="card-info gap:1 color:base-7 font-size:5">
+                                        <span>Culture</span>
+                                        <span>·</span>
+                                        <span>Activity</span>
+                                    </div>
+                                    <p class="title">Gyeong-bok-gung Palace Tour With Wearing Han-bok</p>
+
+                                    <div class="card-info">
+                                    <span class="n-icon n-icon:star n-deco"
+                                          style="--icon-color: var(--color-yellow-1)"></span>
+                                        <span>4.9 (27)</span>
+                                    </div>
+                                    <div class="card-info">
+                                        <span class="n-icon n-icon:clock_sand n-deco"></span>
+                                        <span>4 hours</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-footer justify-content:flex-end">
+                                <span class="n-icon n-icon:price n-icon-size:2 n-deco n-deco-gap:1 font-size:8 margin-right:3">27,900</span>
+                            </div>
+                        </li>
                     </ul>
-                </div>
-            </header>
-
-            <!--=== 프로그램 카드 목록 ===================================================-->
-            <ul class="n-card-container-column bg-color:base-1">
-                <!-- =================================== 예약 카드 1개 =================================== -->
-                <li class="n-card n-card-column bg-color:base-1"
-                    th:each="i : ${#numbers.sequence(1, 10)}">
-                    <a class="n-link-box" href="detail?id=1"></a>
-                    <h2 class="d:none">프로그램 카드</h2>
-
-                    <div class="card-main">
-                        <div class="img-wrapper">
-                            <img src="/image/guest/program_01.png" alt="대표사진">
-                        </div>
-
-                        <div class="card-info-wrapper">
-                            <div class="card-info gap:1 color:base-7 font-size:5">
-                                <span>Culture</span>
-                                <span>·</span>
-                                <span>Activity</span>
-                            </div>
-                            <p class="title">Gyeong-bok-gung Palace Tour With Wearing Han-bok</p>
-
-                            <div class="card-info">
-                            <span class="n-icon n-icon:star n-deco"
-                                  style="--icon-color: var(--color-yellow-1)"></span>
-                                <span>4.9 (27)</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="n-icon n-icon:clock_sand n-deco"></span>
-                                <span>4 hours</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-footer justify-content:flex-end">
-                        <span class="n-icon n-icon:price n-icon-size:2 n-deco n-deco-gap:1 font-size:8 margin-right:3">27,900</span>
-                    </div>
-                </li>
-            </ul>
-        </section>
-
-        <!--=== 필터 @media (min-width:768px)==========================================-->
-        <aside class="n-filter-aside 1bg-color:base-3">
-            <header class="n-title">
-                <h1 class="">Filter</h1>
-                <div>
-                    <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)">초기화</button>
-                </div>
-            </header>
-
-            <div class="filters">
-                <!-- 기간 필터 -->
-                <details open class="filter">
-                    <summary class="collapse">
-                        <span class="title">Period</span>
-                        <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-                    </summary>
-
-                    <form action="" class="form">
-                        <div class="modal-duration">
-                            <label>
-                                <input type="date" placeholder="Start Date">
-                            </label>
-                            <span>~</span>
-                            <label>
-                                <input type="date" placeholder="End Date">
-                            </label>
-                        </div>
-                    </form>
-                </details>
-
-                <!-- 카테고리 필터 -->
-                <details open class="filter">
-                    <summary class="collapse">
-                        <span class="title">Category</span>
-                        <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-                    </summary>
-
-                    <form action="" class="form">
-                        <div class="modal-checkbox">
-                            <label><input type="checkbox">All</label>
-                            <label><input type="checkbox">Activity</label>
-                            <label><input type="checkbox">Culture</label>
-                            <label><input type="checkbox">Shopping</label>
-                            <label><input type="checkbox">Food</label>
-                            <label><input type="checkbox">Nature</label>
-                        </div>
-                    </form>
-                </details>
-
-                <!-- 가격 필터 -->
-                <details open class="filter">
-                    <summary class="collapse">
-                        <span class="title">Price</span>
-                        <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-                    </summary>
-
-                    <form action="" class="form">
-                        <div class="price-container">
-                            <div class="range-slider">
-                                <input type="range" min="0" max="300000" value="0" class="slider">
-                                <input type="range" min="0" max="300000" value="300000" class="slider">
-                            </div>
-                            <div class="price-inputs">
-                                <input type="text" placeholder="₩0" value="₩0" readonly>
-                                <span class="tilde">~</span>
-                                <input type="text" placeholder="₩300000" value="₩300000" readonly>
-
-                            </div>
-                        </div>
-                    </form>
-                </details>
-
-                <!-- 진행언어 필터 -->
-                <details open class="filter">
-                    <summary class="collapse">
-                        <span class="title">Language</span>
-                        <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-                    </summary>
-
-                    <form action="" class="form">
-
-                        <div class="modal-radio">
-                            <div><label><input type="radio" class="radio">All</label></div>
-                            <div><label><input type="radio" class="radio">English</label></div>
-                            <div><label><input type="radio" class="radio">Japanese</label></div>
-                            <div><label><input type="radio" class="radio">Chinese</label></div>
-                        </div>
-
-                    </form>
-                </details>
-
-                <!-- 참여인원 필터 -->
-                <details open class="filter">
-                    <summary class="collapse">
-                        <span class="title">Group Size</span>
-                        <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-                    </summary>
-
-                    <form action="" class="form">
-
-                        <div class="min-max-container">
-                            <div class="min-section">
-                                <span>Min</span>
-                                <div class="input-group">
-                                    <button class="n-btn">-</button>
-                                    <input type="number" min="0" max="8" value="0">
-                                    <button class="n-btn">＋</button>
-                                </div>
-                            </div>
-
-                            <span class="tilde">~</span>
-
-                            <div class="max-section">
-                                <span>Max</span>
-                                <div class="input-group">
-                                    <button class="n-btn">-</button>
-                                    <input type="number" min="0" max="8" value="8">
-                                    <button class="n-btn">＋</button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </form>
-                </details>
-
-                <!-- 소요시간 필터 -->
-                <details open class="filter">
-                    <summary class="collapse">
-                        <span class="title">Duration</span>
-                        <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-                    </summary>
-
-                    <form action="" class="form">
-
-                        <div class="modal-radio">
-                            <div><label><input type="radio" class="radio">All</label></div>
-                            <div><label><input type="radio" class="radio">Under 2 hours</label></div>
-                            <div><label><input type="radio" class="radio">2 ~ 4 hours</label></div>
-                            <div><label><input type="radio" class="radio">4 ~ 6 hours</label></div>
-                            <div><label><input type="radio" class="radio">6 ~ 8 hours</label></div>
-                            <div><label><input type="radio" class="radio">Over 8 hours</label></div>
-                        </div>
-
-                    </form>
-                </details>
-
-                <!-- 시작시간 필터 -->
-                <details open class="filter">
-                    <summary class="collapse">
-                        <span class="title">Start Time</span>
-                        <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-                    </summary>
-
-                    <form action="" class="form">
-
-                        <div class="modal-radio">
-                            <div><label><input type="radio" class="radio">All</label></div>
-                            <div><label><input type="radio" class="radio">Before 12 PM</label></div>
-                            <div><label><input type="radio" class="radio">12 PM to 6 PM</label></div>
-                            <div><label><input type="radio" class="radio">After 6 PM</label></div>
-                        </div>
-
-                    </form>
-                </details>
+                </section>
             </div>
-        </aside>
+
+            <!--=== 필터 @media (min-width:768px)==========================================-->
+            <aside class="layout-main-aside">
+                <header class="n-title">
+                    <h1 class="">Filter</h1>
+                    <div>
+                        <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)">초기화</button>
+                    </div>
+                </header>
+
+                <div class="filters">
+                    <!-- 기간 필터 -->
+                    <details open class="filter">
+                        <summary class="collapse">
+                            <span class="title">Period</span>
+                            <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+                        </summary>
+
+                        <form action="" class="form">
+                            <div class="modal-duration">
+                                <label>
+                                    <input type="date" placeholder="Start Date">
+                                </label>
+                                <span>~</span>
+                                <label>
+                                    <input type="date" placeholder="End Date">
+                                </label>
+                            </div>
+                        </form>
+                    </details>
+
+                    <!-- 카테고리 필터 -->
+                    <details open class="filter">
+                        <summary class="collapse">
+                            <span class="title">Category</span>
+                            <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+                        </summary>
+
+                        <form action="" class="form">
+                            <div class="modal-checkbox">
+                                <label><input type="checkbox">All</label>
+                                <label><input type="checkbox">Activity</label>
+                                <label><input type="checkbox">Culture</label>
+                                <label><input type="checkbox">Shopping</label>
+                                <label><input type="checkbox">Food</label>
+                                <label><input type="checkbox">Nature</label>
+                            </div>
+                        </form>
+                    </details>
+
+                    <!-- 가격 필터 -->
+                    <details open class="filter">
+                        <summary class="collapse">
+                            <span class="title">Price</span>
+                            <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+                        </summary>
+
+                        <form action="" class="form">
+                            <div class="price-container">
+                                <div class="range-slider">
+                                    <input type="range" min="0" max="300000" value="0" class="slider">
+                                    <input type="range" min="0" max="300000" value="300000" class="slider">
+                                </div>
+                                <div class="price-inputs">
+                                    <input type="text" placeholder="₩0" value="₩0" readonly>
+                                    <span class="tilde">~</span>
+                                    <input type="text" placeholder="₩300000" value="₩300000" readonly>
+
+                                </div>
+                            </div>
+                        </form>
+                    </details>
+
+                    <!-- 진행언어 필터 -->
+                    <details open class="filter">
+                        <summary class="collapse">
+                            <span class="title">Language</span>
+                            <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+                        </summary>
+
+                        <form action="" class="form">
+
+                            <div class="modal-radio">
+                                <div><label><input type="radio" class="radio">All</label></div>
+                                <div><label><input type="radio" class="radio">English</label></div>
+                                <div><label><input type="radio" class="radio">Japanese</label></div>
+                                <div><label><input type="radio" class="radio">Chinese</label></div>
+                            </div>
+
+                        </form>
+                    </details>
+
+                    <!-- 참여인원 필터 -->
+                    <details open class="filter">
+                        <summary class="collapse">
+                            <span class="title">Group Size</span>
+                            <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+                        </summary>
+
+                        <form action="" class="form">
+
+                            <div class="min-max-container">
+                                <div class="min-section">
+                                    <span>Min</span>
+                                    <div class="input-group">
+                                        <button class="n-btn">-</button>
+                                        <input type="number" min="0" max="8" value="0">
+                                        <button class="n-btn">＋</button>
+                                    </div>
+                                </div>
+
+                                <span class="tilde">~</span>
+
+                                <div class="max-section">
+                                    <span>Max</span>
+                                    <div class="input-group">
+                                        <button class="n-btn">-</button>
+                                        <input type="number" min="0" max="8" value="8">
+                                        <button class="n-btn">＋</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </details>
+
+                    <!-- 소요시간 필터 -->
+                    <details open class="filter">
+                        <summary class="collapse">
+                            <span class="title">Duration</span>
+                            <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+                        </summary>
+
+                        <form action="" class="form">
+
+                            <div class="modal-radio">
+                                <div><label><input type="radio" class="radio">All</label></div>
+                                <div><label><input type="radio" class="radio">Under 2 hours</label></div>
+                                <div><label><input type="radio" class="radio">2 ~ 4 hours</label></div>
+                                <div><label><input type="radio" class="radio">4 ~ 6 hours</label></div>
+                                <div><label><input type="radio" class="radio">6 ~ 8 hours</label></div>
+                                <div><label><input type="radio" class="radio">Over 8 hours</label></div>
+                            </div>
+
+                        </form>
+                    </details>
+
+                    <!-- 시작시간 필터 -->
+                    <details open class="filter">
+                        <summary class="collapse">
+                            <span class="title">Start Time</span>
+                            <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+                        </summary>
+
+                        <form action="" class="form">
+
+                            <div class="modal-radio">
+                                <div><label><input type="radio" class="radio">All</label></div>
+                                <div><label><input type="radio" class="radio">Before 12 PM</label></div>
+                                <div><label><input type="radio" class="radio">12 PM to 6 PM</label></div>
+                                <div><label><input type="radio" class="radio">After 6 PM</label></div>
+                            </div>
+
+                        </form>
+                    </details>
+                </div>
+            </aside>
+        </div>
     </section>
 
 </main>
