@@ -88,7 +88,16 @@
         .card-header {
             display: none;
         }
+
+        .card-main {
+            .img-wrapper {
+                width: 110px;
+                min-width: 110px;
+            }
+        }
     }
+
+
 
     .card-footer-responsive {
         width: 400px;
@@ -155,7 +164,16 @@
         .card-header {
             display: none;
         }
+
+        .card-main {
+            .img-wrapper {
+                width: 110px;
+                min-width: 110px;
+            }
+        }
     }
+
+
 
     .card-footer-responsive {
         width: 400px;
@@ -165,7 +183,7 @@
         gap: 20px;
 
         .n-btn {
-            flex-grow: 1;
+            flex-grow: 0;
             flex-shrink: 1;
 
             --btn-font-size: 14px;

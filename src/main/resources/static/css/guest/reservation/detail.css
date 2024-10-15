@@ -243,6 +243,12 @@
             display: none;
         }
 
+            .card-main {
+                .img-wrapper {
+                    width: 110px;
+                    min-width: 110px;
+                }
+            }
         .n-panel-tag {
             --tag-border-radius: 14px;
             --tag-padding: 3px 6px;
