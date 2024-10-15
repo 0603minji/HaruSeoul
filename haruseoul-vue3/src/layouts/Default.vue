@@ -1,7 +1,12 @@
+<script setup>
+import HeaderGuest from "@/components/guest/HeaderGuest.vue";
+import HaruseoulFooter from "@/components/HaruseoulFooter.vue";
+</script>/
+
 <template>
-  <Header />
-  <RouterView />
-  <Footer />
+  <HeaderGuest/>
+  <RouterView/>
+  <HaruseoulFooter/>
 </template>
-<script></script>
+
 <style></style>
