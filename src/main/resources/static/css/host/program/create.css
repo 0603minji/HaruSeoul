@@ -575,6 +575,12 @@
     color: var(--color-base-1)
 }
 
+.n-btn-color\:main-2 {
+    background-color: var(--color-main-2);
+    /*border-color: var(--color-sub-1);*/
+    color: var(--color-base-1)
+}
+
 /* 버튼 스타일 */
 .button-group {
     display: flex;
