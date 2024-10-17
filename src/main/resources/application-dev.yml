@@ -1,11 +1,11 @@
 spring:
   application:
-    name: M2J2
+    name: HaruSeoul
   datasource:
-    driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@//221.148.97.239:1521/XEPDB1
-    username: M2J2
-    password: dpaxnwpdlxn
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://hi.newlecture.com:3306/m2j2db
+    username: m2j2
+    password: 111
 
 server:
   port: 8080
