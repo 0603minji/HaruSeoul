@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: HaruSeoul
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://hi.newlecture.com:3306/m2j2db
+    username: {SPRING_DATASOURCE_USERNAME}
+    password: {SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true

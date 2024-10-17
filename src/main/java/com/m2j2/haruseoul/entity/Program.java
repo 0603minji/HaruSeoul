@@ -1,27 +1,80 @@
 package com.m2j2.haruseoul.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+import java.time.Instant;
+import java.time.LocalTime;
+import java.util.List;
+
 @Data
+@Entity
+@Table(name = "program")
 public class Program {
+    @Id
+    @Column(name = "id", nullable = false)
     private Long id;
+
+    @Column(name = "title")
     private String title;
-    private String summary;
+
+    @Column(name = "detail", length = 6000)
     private String detail;
-    private String category1;
-    private String category2;
-    private String language;
-    private String startTime;
-    private String endTime;
+
+    @ColumnDefault("current_timestamp()")
+    @Column(name = "reg_date")
+    private Instant regDate;
+
+    @Column(name = "end_time")
+    private Instant endTime;
+
+    @Column(name = "status")
     private String status;
+
+    @Column(name = "price")
     private Integer price;
+
+    @Column(name = "group_size_max")
     private Integer groupSizeMax;
+
+    @Column(name = "group_size_min")
     private Integer groupSizeMin;
-    private Long hostId;
+
+    @Column(name = "rating")
+    private Float rating;
+
+    @ColumnDefault("current_timestamp()")
+    @Column(name = "update_date")
+    private Instant updateDate;
+
+    @Column(name = "category1")
+    private String category1;
+
+    @Column(name = "category2")
+    private String category2;
+
+    @Column(name = "language")
+    private String language;
+
+    @Column(name = "start_time")
+    private Instant startTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reg_member_id")
+    @JsonBackReference
+    private Member member;
+
+    @OneToMany(mappedBy = "program")
+    @JsonManagedReference
+    private List<Image> images;
+
+    @OneToMany(mappedBy = "program")
+    @JsonManagedReference
+    private List<Review> reviews;
+
 }
