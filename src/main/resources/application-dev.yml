@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: HaruSeoul
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://hi.newlecture.com:3306/m2j2db
+    username: m2j2
+    password: 111
+
+server:
+  port: 8080
+#  address: ...
+
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: mappers/*Mapper.xml
+  type-aliases-package: com.m2j2.haruseoul.entity
+logging:
+  level:
+    com.m2j2.haruseoul.repository.ProgramRepository: trace
