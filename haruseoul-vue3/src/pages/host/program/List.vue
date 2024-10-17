@@ -5,7 +5,7 @@
 <template>
   <main>
     <section class="n-layout-mj">
-      <section>
+      <section class="layout-list">
         <!--=== heading ==========================================-->
         <!--    프로그램 관리           +프로그램 등록-->
         <header class="n-title">
