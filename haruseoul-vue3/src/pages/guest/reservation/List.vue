@@ -1,5 +1,5 @@
 <template>
-  <main layout:fragment="main">
+  <main>
     <section class="bg-color:base-1 n-layout-mj">
       <!--=== heading ==========================================-->
       <!--    예약내역           -->

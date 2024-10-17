@@ -12,30 +12,30 @@
       <ul class="header-menus:icon-only md:show">
         <li class="header-menu">
           <a
-            class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:ticket"
-            href="/host/main"
-            >내 예약</a
+              class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:ticket"
+              href="/host/main"
+          >내 예약</a
           >
         </li>
         <li class="header-menu">
           <a
-            class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:wishlist"
-            href="/host/main"
-            >찜 목록</a
+              class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:wishlist"
+              href="/host/main"
+          >찜 목록</a
           >
         </li>
         <li class="header-menu">
           <a
-            class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:chat"
-            href="/host/main"
-            >Chat</a
+              class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:chat"
+              href="/host/main"
+          >Chat</a
           >
         </li>
         <li class="header-menu">
           <a
-            class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:alert"
-            href="/host/main"
-            >알림</a
+              class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:alert"
+              href="/host/main"
+          >알림</a
           >
         </li>
       </ul>
@@ -43,9 +43,9 @@
       <div class="profile-img-container md:show">
         <a href="" class="profile-img-wrapper">
           <img
-            class="profile-img"
-            src="/image/profile_cat.png"
-            alt="게스트 프로필 사진"
+              class="profile-img"
+              src="/image/profile_cat.png"
+              alt="게스트 프로필 사진"
           />
         </a>
       </div>
@@ -57,10 +57,10 @@
 
       <!--햄버거 네비게이터-->
       <label
-        for="menu-toggle"
-        class="n-icon n-icon:list n-icon-size:6 margin-left:3 cursor:pointer"
+          for="menu-toggle"
+          class="n-icon n-icon:list n-icon-size:6 margin-left:3 cursor:pointer"
       ></label>
-      <input id="menu-toggle" class="n-aside-hider" type="checkbox" />
+      <input id="menu-toggle" class="n-aside-hider" type="checkbox"/>
 
       <div class="bg-darkened"></div>
 
@@ -69,12 +69,12 @@
         <header class="aside-header">
           <h1>게스트 로그인 어사이드</h1>
           <label
-            for="menu-toggle"
-            class="n-icon n-deco n-icon:exit cursor:pointer"
+              for="menu-toggle"
+              class="n-icon n-deco n-icon:exit cursor:pointer"
           ></label>
           <a href="#" class="n-icon n-deco n-icon:alert">
             <span
-              class="n-icon n-deco n-icon:circle n-icon-color:accent-1 position:absolute z-index:1"
+                class="n-icon n-deco n-icon:circle n-icon-color:accent-1 position:absolute z-index:1"
             ></span>
           </a>
         </header>
@@ -82,9 +82,9 @@
           <h1>게스트 프로필</h1>
           <div class="profile-img-container">
             <img
-              class="profile-img"
-              src="/image/profile_cat.png"
-              alt="게스트 프로필 사진"
+                class="profile-img"
+                src="/image/profile_cat.png"
+                alt="게스트 프로필 사진"
             />
           </div>
           <div class="profile-info">
@@ -111,7 +111,7 @@
             </li>
             <li>
               <a href="#" class="menu n-icon n-deco n-icon:faq"
-                >자주 묻는 질문</a
+              >자주 묻는 질문</a
               >
             </li>
           </ul>
@@ -122,9 +122,10 @@
           </ul>
         </nav>
         <div
-          class="aside-footer n-icon n-deco n-icon:globe_2 n-icon-color:main-3"
+            class="aside-footer n-icon n-deco n-icon:globe_2 n-icon-color:main-3"
         >
           <select name="language" id="language">
+            <option value="Korean">Korean</option>
             <option value="English">English</option>
             <option value="Chinese">Chinese</option>
             <option value="Japanese">Japanese</option>
@@ -134,5 +135,6 @@
     </section>
   </header>
 </template>
-<script></script>
+<script>
+</script>
 <style></style>

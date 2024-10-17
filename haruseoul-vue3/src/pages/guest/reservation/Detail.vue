@@ -1,5 +1,5 @@
 <template>
-  <main layout:fragment="main">
+  <main>
     <section class="reservation-detail">
       <h1 class="d:none">guest-reservation-detail 페이지</h1>
 
