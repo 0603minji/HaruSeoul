@@ -1,5 +1,7 @@
 package com.m2j2.haruseoul.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -8,7 +10,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 import java.time.LocalTime;
-
+import java.util.List;
 
 @Data
 @Entity
@@ -17,10 +19,6 @@ public class Program {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reg_member_id")
-    private Member regMember;
 
     @Column(name = "title")
     private String title;
@@ -33,7 +31,7 @@ public class Program {
     private Instant regDate;
 
     @Column(name = "end_time")
-    private LocalTime endTime;
+    private Instant endTime;
 
     @Column(name = "status")
     private String status;
@@ -64,6 +62,19 @@ public class Program {
     private String language;
 
     @Column(name = "start_time")
-    private LocalTime startTime;
+    private Instant startTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reg_member_id")
+    @JsonBackReference
+    private Member member;
+
+    @OneToMany(mappedBy = "program")
+    @JsonManagedReference
+    private List<Image> images;
+
+    @OneToMany(mappedBy = "program")
+    @JsonManagedReference
+    private List<Review> reviews;
 
 }

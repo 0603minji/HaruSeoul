@@ -1,5 +1,6 @@
 package com.m2j2.haruseoul.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class Member {
     private Long id;
 
     @Column(name = "nickname", nullable = false)
-    private String nickName;
+    private String nickname;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -38,8 +39,13 @@ public class Member {
     private String email;
 
     @Column(name = "birth", nullable = false)
-    private LocalDate birth;
+    private Instant birth;
 
-    @OneToMany(mappedBy = "regMember")
+    @OneToMany(mappedBy = "member")
+    @JsonManagedReference
     private List<Program> programs;
+
+    @OneToMany(mappedBy = "member")
+    @JsonManagedReference
+    private List<Review> reviews;
 }

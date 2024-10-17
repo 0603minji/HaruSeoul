@@ -1,11 +1,12 @@
 spring:
   application:
-    name: M2J2
+    name: HaruSeoul
   datasource:
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: 1234
-    url: jdbc:h2:mem:testdb
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://hi.newlecture.com:3306/m2j2db
+    username: {SPRING_DATASOURCE_USERNAME}
+    password: {SPRING_DATASOURCE_PASSWORD}
+
   jpa:
     generate-ddl: true
     hibernate:
