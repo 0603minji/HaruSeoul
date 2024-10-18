@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ProgramRepository extends JpaRepository<Program, Long> {
-
-    @Query("from Program where " +
-            "(:cIds is null or categoryId in (:cIds))")
-    Page<Program> findAll(@Param("username") String korName, @Param("cIds") List<Long> categoryIds, Pageable pageable);
+    @Query("from Program p " +
+            "where (:statuses is null or p.status = :statuses)" +
+            "and (:pIds is null or p.id in :pIds)")
+    Page<Program> findAll(@Param("pIds") List<Long> programIds, List<String> statuses, Pageable pageable);
 }
