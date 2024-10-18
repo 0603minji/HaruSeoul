@@ -204,6 +204,10 @@
     min-width: 300px;
     max-width: 1092px;
 
+    .layout-list {
+        flex-grow: 1;
+    }
+
     .n-filter-aside {
         display: none;
         width: 250px;

@@ -1,5 +1,6 @@
 package com.m2j2.haruseoul.repository;
 
+import com.m2j2.haruseoul.entity.Program;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
