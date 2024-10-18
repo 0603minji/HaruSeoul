@@ -8,12 +8,15 @@ spring:
     password: 111
 
   jpa:
-    generate-ddl: true
+    generate-ddl: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
 
     show-sql: true
     properties:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true
+
+server:
+  port: 8080
