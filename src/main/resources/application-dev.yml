@@ -7,16 +7,26 @@ spring:
     username: m2j2
     password: 111
 
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
 server:
   port: 8080
 #  address: ...
 
 
-mybatis:
-  configuration:
-    map-underscore-to-camel-case: true
-  mapper-locations: mappers/*Mapper.xml
-  type-aliases-package: com.m2j2.haruseoul.entity
-logging:
-  level:
-    com.m2j2.haruseoul.repository.ProgramRepository: trace
+#mybatis:
+#  configuration:
+#    map-underscore-to-camel-case: true
+#  mapper-locations: mappers/*Mapper.xml
+#  type-aliases-package: com.m2j2.haruseoul.entity
+#logging:
+#  level:
+#    com.m2j2.haruseoul.repository.ProgramRepository: trace
