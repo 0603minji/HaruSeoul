@@ -217,7 +217,7 @@
         .n-title {
             --title-font-size: var(--font-size-9); /* 18 */
             --title-font-weight: 600; /* semi bold */
-            --title-padding: 10px 4px;
+            --title-padding: 16px 4px;
 
             .n-icon {
                 --icon-size: var(--icon-size-4);
@@ -243,7 +243,7 @@
 @media (min-width: 768px) {
     .n-layout-mj {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: center;
         gap: 8px;
         padding-bottom: 16px;
@@ -339,7 +339,7 @@
 @media (min-width: 1092px) {
     .n-layout-mj {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: center;
         max-width: 1092px;
         margin: 0 auto;

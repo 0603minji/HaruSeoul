@@ -6,11 +6,19 @@ import com.m2j2.haruseoul.entity.Image;
 import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.entity.Review;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 import java.util.List;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProgramDto {
 
     private Long id;
@@ -34,10 +42,6 @@ public class ProgramDto {
     private Float rating;
 
     private Instant updateDate;
-
-    private String category1;
-
-    private String category2;
 
     private String language;
 
