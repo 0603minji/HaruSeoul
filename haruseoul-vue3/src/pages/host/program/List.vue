@@ -5,16 +5,17 @@
 <template>
   <main>
     <section class="n-layout-mj">
-      <section class="layout-list">
-        <!--=== heading ==========================================-->
-        <!--    프로그램 관리           +프로그램 등록-->
-        <header class="n-title">
-          <h1 class="">프로그램 관리</h1>
-          <div>
-            <a href="" class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록</a>
-          </div>
-        </header>
+      <!--=== heading ==========================================-->
+      <!--    프로그램 관리           +프로그램 등록-->
+      <header class="n-title">
+        <h1 class="">프로그램 관리</h1>
+        <div>
+          <a href="" class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록</a>
+        </div>
+      </header>
 
+      <section class="d:flex">
+      <section class="layout-list">
         <!--=== 필터 .filter ==========================================-->
         <!--프로그램, 카테고리, 프로그램 상태 필터-->
         <section class="n-filter bg-color:base-1 padding-x:6">
@@ -263,6 +264,7 @@
           </details>
         </div>
       </aside>
+      </section>
     </section>
 
   </main>

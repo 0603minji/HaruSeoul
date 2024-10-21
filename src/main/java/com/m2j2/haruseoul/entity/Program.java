@@ -3,15 +3,18 @@ package com.m2j2.haruseoul.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
-import java.time.LocalTime;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 @Entity
 @Table(name = "program")
@@ -52,12 +55,6 @@ public class Program {
     @Column(name = "update_date")
     private Instant updateDate;
 
-    @Column(name = "category1")
-    private String category1;
-
-    @Column(name = "category2")
-    private String category2;
-
     @Column(name = "language")
     private String language;
 
@@ -76,5 +73,9 @@ public class Program {
     @OneToMany(mappedBy = "program")
     @JsonManagedReference
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "program")
+    @JsonManagedReference
+    private List<CategoryProgram> categoryPrograms;
 
 }
