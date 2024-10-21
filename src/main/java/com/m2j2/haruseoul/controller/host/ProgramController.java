@@ -1,21 +1,29 @@
 package com.m2j2.haruseoul.controller.host;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.m2j2.haruseoul.dto.ProgramResponseDto;
+import com.m2j2.haruseoul.service.DefaultProgramService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller("hostProgramController")
-@RequestMapping("host/program")
-public class ProgramController {;
+import java.util.List;
 
-    @GetMapping("create")
-    public String create() {
-        return "host/program/create";
+
+@RestController("hostProgramController")
+@RequestMapping("host/programs")
+@CrossOrigin
+public class ProgramController {
+    DefaultProgramService service;
+
+    public ProgramController(DefaultProgramService defaultProgramService) {
+        this.service = defaultProgramService;
     }
 
-    @GetMapping("list")
-    public String list() {
-        return "host/program/list";
+    @GetMapping
+    public ResponseEntity<ProgramResponseDto> getList(
+            @RequestParam(name = "c", required = false) List<Long> cIds,
+            @RequestParam(name = "pg", required = false) List<Long> pIds,
+            @RequestParam(name = "s", required = false) List<String> statuses){
+        ProgramResponseDto programResponseDto = service.getList(pIds, cIds, statuses);
+        return ResponseEntity.ok(programResponseDto);
     }
-
 }
