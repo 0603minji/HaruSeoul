@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 import axios from "axios";
 
 //============= 변수 영역 ====================
@@ -15,7 +15,7 @@ onMounted(() => {
 //============= Data Functions =======================
 const fetchPrograms = async () => {
   const response = await axios.get(
-    "http://localhost:8080/api/v1/host/programs"
+      "http://localhost:8080/api/v1/host/programs"
   );
 
   programs.value = response.data.programs;
@@ -35,9 +35,9 @@ const fetchPrograms = async () => {
         <h1 class="">프로그램 관리</h1>
         <div>
           <a
-            href=""
-            class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco"
-            >프로그램 등록</a
+              href=""
+              class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco"
+          >프로그램 등록</a
           >
         </div>
       </header>
@@ -53,23 +53,23 @@ const fetchPrograms = async () => {
               <ul class="item-wrapper padding-y:5">
                 <li>
                   <a
-                    href=""
-                    class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1"
-                    >프로그램</a
+                      href=""
+                      class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1"
+                  >프로그램</a
                   >
                 </li>
                 <li>
                   <a
-                    href=""
-                    class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1"
-                    >프로그램 상태</a
+                      href=""
+                      class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1"
+                  >프로그램 상태</a
                   >
                 </li>
                 <li>
                   <a
-                    href=""
-                    class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1"
-                    >카테고리</a
+                      href=""
+                      class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1"
+                  >카테고리</a
                   >
                 </li>
               </ul>
@@ -103,29 +103,29 @@ const fetchPrograms = async () => {
             <ul class="n-card-container bg-color:base-1 padding:7">
               <!-- =================================== 작성 중 예약 카드 1개 =================================== -->
               <li
-                class="n-card bg-color:base-1 padding:6"
-                v-for="p in programs"
+                  class="n-card bg-color:base-1 padding:6"
+                  v-for="p in programs"
               >
                 <h2 class="d:none">프로그램 카드</h2>
 
                 <div class="card-header">
                   <div class="left">
                     <span class="n-panel-tag not-submitted">{{
-                      p.status
-                    }}</span>
+                        p.status
+                      }}</span>
                   </div>
                   <div class="right">
                     <a
-                      href=""
-                      class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9"
-                      >더보기</a
+                        href=""
+                        class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9"
+                    >더보기</a
                     >
                   </div>
                 </div>
 
                 <div class="card-main">
                   <div class="img-wrapper">
-                    <img src="/image/guest/program_01.png" alt="대표사진" />
+                    <img src="/image/guest/program_01.png" alt="대표사진"/>
                   </div>
 
                   <div class="card-info-wrapper">
@@ -139,9 +139,9 @@ const fetchPrograms = async () => {
                           <span>0.0 (0)</span>
                         </div>
                         <div class="card-info gap:1">
-                          <span class="category">{{ p.categoryIds }}</span>
-                          <span>·</span>
-                          <span class="category"></span>
+                          <span class="category" v-for="(c,index) in p.categoryNames" :key="index">
+                            {{ c }}<span v-if="index<p.categoryNames.length-1"> ·</span>
+                          </span>
                         </div>
                       </div>
                       <div class="card-footer-responsive">
@@ -164,8 +164,8 @@ const fetchPrograms = async () => {
             <h1 class="">Filter</h1>
             <div>
               <button
-                class="n-icon n-icon:reset"
-                style="--icon-color: var(--color-sub-1)"
+                  class="n-icon n-icon:reset"
+                  style="--icon-color: var(--color-sub-1)"
               >
                 초기화
               </button>
@@ -182,12 +182,12 @@ const fetchPrograms = async () => {
 
               <form action="" class="form">
                 <div class="modal-checkbox">
-                  <label><input type="checkbox" />All</label>
-                  <label><input type="checkbox" />Activity</label>
-                  <label><input type="checkbox" />Culture</label>
-                  <label><input type="checkbox" />Shopping</label>
-                  <label><input type="checkbox" />Food</label>
-                  <label><input type="checkbox" />Nature</label>
+                  <label><input type="checkbox"/>All</label>
+                  <label><input type="checkbox"/>Activity</label>
+                  <label><input type="checkbox"/>Culture</label>
+                  <label><input type="checkbox"/>Shopping</label>
+                  <label><input type="checkbox"/>Food</label>
+                  <label><input type="checkbox"/>Nature</label>
                 </div>
               </form>
             </details>
@@ -201,37 +201,37 @@ const fetchPrograms = async () => {
 
               <form action="" class="form">
                 <div class="modal-checkbox">
-                  <label><input type="checkbox" />All</label>
+                  <label><input type="checkbox"/>All</label>
                   <label
-                    ><input type="checkbox" />Gyeong-bok-gung Palace Tour With
+                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
                     Wearing Han-bok</label
                   >
                   <label
-                    ><input type="checkbox" />Gyeong-bok-gung Palace Tour With
+                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
                     Wearing Han-bok</label
                   >
                   <label
-                    ><input type="checkbox" />Gyeong-bok-gung Palace Tour With
+                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
                     Wearing Han-bok</label
                   >
                   <label
-                    ><input type="checkbox" />Gyeong-bok-gung Palace Tour With
+                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
                     Wearing Han-bok</label
                   >
                   <label
-                    ><input type="checkbox" />Gyeong-bok-gung Palace Tour With
+                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
                     Wearing Han-bok</label
                   >
                   <label
-                    ><input type="checkbox" />Gyeong-bok-gung Palace Tour With
+                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
                     Wearing Han-bok</label
                   >
                   <label
-                    ><input type="checkbox" />Gyeong-bok-gung Palace Tour With
+                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
                     Wearing Han-bok</label
                   >
                   <label
-                    ><input type="checkbox" />Gyeong-bok-gung Palace Tour With
+                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
                     Wearing Han-bok</label
                   >
                 </div>
@@ -247,10 +247,10 @@ const fetchPrograms = async () => {
 
               <form action="" class="form">
                 <div class="modal-checkbox">
-                  <label><input type="checkbox" />전체</label>
-                  <label><input type="checkbox" />작성중</label>
-                  <label><input type="checkbox" />작성완료</label>
-                  <label><input type="checkbox" />모집중</label>
+                  <label><input type="checkbox"/>전체</label>
+                  <label><input type="checkbox"/>작성중</label>
+                  <label><input type="checkbox"/>작성완료</label>
+                  <label><input type="checkbox"/>모집중</label>
                 </div>
               </form>
             </details>
