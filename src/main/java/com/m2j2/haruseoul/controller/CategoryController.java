@@ -1,0 +1,38 @@
+package com.m2j2.haruseoul.controller;
+
+import com.m2j2.haruseoul.dto.CategoryDto;
+import com.m2j2.haruseoul.entity.Category;
+import com.m2j2.haruseoul.service.DefaultCategoryService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@RequestMapping("categories")
+@CrossOrigin
+public class CategoryController {
+
+    DefaultCategoryService categoryService;
+
+    public CategoryController(DefaultCategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+    @GetMapping
+    public ResponseEntity<List<CategoryDto>> getList() {
+        List<Category> categories = categoryService.getList();
+        List<CategoryDto> categoryDtos = categories.stream().map(
+                category -> {
+                    return CategoryDto.builder()
+                            .id(category.getId())
+                            .name(category.getName())
+                            .build();
+                }
+        ).toList();
+        return ResponseEntity.ok(categoryDtos);
+    }
+}
