@@ -47,10 +47,12 @@ public class ProgramDto {
 
     private Instant startTime;
 
-    private Member member;
+    private List<String> categoryNames;
 
-    private List<Image> images;
+    private Long memberId;
 
-    private List<Review> reviews;
+//    private List<Image> images;
+//
+//    private List<Review> reviews;
 
 }
