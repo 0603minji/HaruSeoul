@@ -47,7 +47,7 @@ public class ProgramDto {
 
     private Instant startTime;
 
-    private List<Long> categoryIds;
+    private List<String> categoryNames;
 
     private Long memberId;
 
