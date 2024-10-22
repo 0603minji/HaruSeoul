@@ -15,7 +15,7 @@ onMounted(() => {
 //============= Data Functions =======================
 const fetchPrograms = async () => {
   const response = await axios.get(
-    "http://localhost:8080/program/api/v1/programs"
+    "http://localhost:8080/api/v1/host/programs"
   );
 
   programs.value = response.data.programs;

@@ -50,6 +50,14 @@
     background-size: var(--icon-size);
 }
 
+.n-icon\:rectangle:after, .n-icon\:rectangle:before {
+    background-color: var(--color-base-5);
+}
+
+.n-icon\:clock:after, .n-icon\:clock:before {
+    background-color: var(--color-base-7);
+}
+
 /* n-deco */
 .n-deco {
     --deco-gap: var(--gap-2);
