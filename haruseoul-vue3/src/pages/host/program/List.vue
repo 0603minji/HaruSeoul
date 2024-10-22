@@ -1,6 +1,7 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import axios from "axios";
+import Category from "@/components/filter/Category.vue";
 
 //============= 변수 영역 ====================
 const programs = ref([]);
@@ -24,6 +25,7 @@ const fetchPrograms = async () => {
 
   console.log(programs.value);
 };
+
 </script>
 
 <template>
@@ -171,27 +173,9 @@ const fetchPrograms = async () => {
               </button>
             </div>
           </header>
-
           <div class="filters">
             <!-- 카테고리 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">카테고리</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-                <div class="modal-checkbox">
-                  <label><input type="checkbox"/>All</label>
-                  <label><input type="checkbox"/>Activity</label>
-                  <label><input type="checkbox"/>Culture</label>
-                  <label><input type="checkbox"/>Shopping</label>
-                  <label><input type="checkbox"/>Food</label>
-                  <label><input type="checkbox"/>Nature</label>
-                </div>
-              </form>
-            </details>
-
+          <Category/>
             <!-- 프로그램 필터 -->
             <details open class="filter">
               <summary class="collapse">
