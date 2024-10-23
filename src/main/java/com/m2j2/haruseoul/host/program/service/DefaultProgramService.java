@@ -1,6 +1,7 @@
 package com.m2j2.haruseoul.host.program.service;
 
 import com.m2j2.haruseoul.config.ModelMapperConfig;
+import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.host.program.dto.ProgramCreateDto;
 import com.m2j2.haruseoul.host.program.dto.ProgramListDto;
 import com.m2j2.haruseoul.host.program.dto.ProgramResponseDto;
@@ -8,6 +9,7 @@ import com.m2j2.haruseoul.entity.CategoryProgram;
 import com.m2j2.haruseoul.entity.Program;
 import com.m2j2.haruseoul.host.program.mapper.ProgramMapper;
 import com.m2j2.haruseoul.repository.CategoryProgramRepository;
+import com.m2j2.haruseoul.repository.MemberRepository;
 import com.m2j2.haruseoul.repository.ProgramRepository;
 import com.m2j2.haruseoul.repository.RouteRepository;
 import org.apache.catalina.mapper.Mapper;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DefaultProgramService implements ProgramService {
@@ -29,14 +32,16 @@ public class DefaultProgramService implements ProgramService {
     private CategoryProgramRepository categoryProgramRepository;
     private RouteRepository routeRepository;
     private final ModelMapper mapper;
+    private MemberRepository memberRepository;
 
     //  생성자 주입
     public DefaultProgramService(ProgramRepository programRepository, CategoryProgramRepository categoryProgramRepository,
-                                 RouteRepository routeRepository, ModelMapper mapper) {
+                                 RouteRepository routeRepository, ModelMapper mapper, MemberRepository memberRepository) {
         this.programRepository = programRepository;
         this.categoryProgramRepository = categoryProgramRepository;
         this.routeRepository = routeRepository;
         this.mapper = mapper;
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -86,10 +91,12 @@ public class DefaultProgramService implements ProgramService {
     @Override
     public Program create(ProgramCreateDto programCreateDto) {
         //Program program = mapper.map(programCreateDto, Program.class);
+        Optional<Member> regMember = memberRepository.findById(programCreateDto.getRegMemberId());
 
         Program program = Program.builder()
                 .title(programCreateDto.getTitle())
                 .detail(programCreateDto.getDetail())
+                .member(regMember.get())
                 .language(programCreateDto.getLanguage())
                 .startTime(LocalTime.parse(programCreateDto.getStartTime()))
                 .endTime(LocalTime.parse(programCreateDto.getEndTime()))
