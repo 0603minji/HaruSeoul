@@ -1,9 +1,9 @@
-package com.m2j2.haruseoul.controller.host;
+package com.m2j2.haruseoul.host.program.controller;
 
-import com.m2j2.haruseoul.dto.ProgramResponseDto;
+import com.m2j2.haruseoul.host.program.dto.ProgramResponseDto;
 
-import com.m2j2.haruseoul.service.DefaultCategoryService;
-import com.m2j2.haruseoul.service.DefaultProgramService;
+import com.m2j2.haruseoul.anonymous.service.DefaultCategoryService;
+import com.m2j2.haruseoul.host.program.service.DefaultProgramService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.m2j2.haruseoul.dto;
+package com.m2j2.haruseoul.host.program.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,5 +15,5 @@ public class ProgramResponseDto {
     private String sort;
     private Long totalRowCount;
     private Long totalPageCount;
-    private List<ProgramDto> programs;
+    private List<ProgramListDto> programs;
 }

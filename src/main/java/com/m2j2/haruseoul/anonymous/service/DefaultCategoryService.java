@@ -1,4 +1,4 @@
-package com.m2j2.haruseoul.service;
+package com.m2j2.haruseoul.anonymous.service;
 
 
 import com.m2j2.haruseoul.entity.Category;

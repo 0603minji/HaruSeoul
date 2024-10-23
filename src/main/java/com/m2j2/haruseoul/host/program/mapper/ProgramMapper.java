@@ -1,6 +1,6 @@
-package com.m2j2.haruseoul.mapper;
+package com.m2j2.haruseoul.host.program.mapper;
 
-import com.m2j2.haruseoul.dto.ProgramDto;
+import com.m2j2.haruseoul.host.program.dto.ProgramListDto;
 import com.m2j2.haruseoul.entity.Category;
 import com.m2j2.haruseoul.entity.CategoryProgram;
 import com.m2j2.haruseoul.entity.Program;
@@ -27,8 +27,8 @@ public class ProgramMapper {
 //                .build();
 //    }
 
-    public static ProgramDto mapToDto(Program program) {
-        return ProgramDto.builder()
+    public static ProgramListDto mapToDto(Program program) {
+        return ProgramListDto.builder()
                 .id(program.getId())
                 .title(program.getTitle())
                 .detail(program.getDetail())

@@ -1,4 +1,4 @@
-package com.m2j2.haruseoul.dto;
+package com.m2j2.haruseoul.anonymous.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

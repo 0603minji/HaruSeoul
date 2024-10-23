@@ -1,15 +1,14 @@
-package com.m2j2.haruseoul.controller;
+package com.m2j2.haruseoul.anonymous.controller;
 
-import com.m2j2.haruseoul.dto.CategoryDto;
+import com.m2j2.haruseoul.anonymous.dto.CategoryDto;
 import com.m2j2.haruseoul.entity.Category;
-import com.m2j2.haruseoul.service.DefaultCategoryService;
+import com.m2j2.haruseoul.anonymous.service.DefaultCategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
