@@ -1,12 +1,14 @@
-package com.m2j2.haruseoul.service;
+package com.m2j2.haruseoul.host.program.service;
 
-import com.m2j2.haruseoul.dto.ProgramDto;
-import com.m2j2.haruseoul.dto.ProgramResponseDto;
+import com.m2j2.haruseoul.host.program.dto.ProgramCreateDto;
+import com.m2j2.haruseoul.host.program.dto.ProgramListDto;
+import com.m2j2.haruseoul.host.program.dto.ProgramResponseDto;
 import com.m2j2.haruseoul.entity.CategoryProgram;
 import com.m2j2.haruseoul.entity.Program;
-import com.m2j2.haruseoul.mapper.ProgramMapper;
+import com.m2j2.haruseoul.host.program.mapper.ProgramMapper;
 import com.m2j2.haruseoul.repository.CategoryProgramRepository;
 import com.m2j2.haruseoul.repository.ProgramRepository;
+import com.m2j2.haruseoul.repository.RouteRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,13 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class DefaultProgramService implements ProgramService {
     
     private ProgramRepository programRepository;
     private CategoryProgramRepository categoryProgramRepository;
+    private RouteRepository routeRepository;
 
     //  생성자 주입
     public DefaultProgramService(ProgramRepository programRepository, CategoryProgramRepository categoryProgramRepository) {
@@ -57,18 +59,26 @@ public class DefaultProgramService implements ProgramService {
 
 
         Page<Program> programPage = programRepository.findAll(pIds, statuses, pageable);
-        List<ProgramDto> programDtos= programPage.getContent()
+        List<ProgramListDto> programListDtos = programPage.getContent()
                 .stream()
                 .map(ProgramMapper::mapToDto)
                 .toList();
         long totalRowCount = programPage.getTotalElements();
         long totalPageCount = programPage.getTotalPages();
         ProgramResponseDto programResponseDto = ProgramResponseDto.builder()
-                .programs(programDtos)
+                .programs(programListDtos)
                 .totalRowCount(totalRowCount)
                 .totalPageCount(totalPageCount)
                 .build();
 
         return programResponseDto;
     }
+
+    @Override
+    public ProgramCreateDto create(ProgramCreateDto programCreateDto) {
+
+        return null;
+    }
+
+
 }

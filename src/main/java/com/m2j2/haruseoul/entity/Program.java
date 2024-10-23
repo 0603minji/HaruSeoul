@@ -78,4 +78,7 @@ public class Program {
     @JsonManagedReference
     private List<CategoryProgram> categoryPrograms;
 
+    @OneToMany(mappedBy = "program")
+    @JsonManagedReference
+    private List<Route> routes;
 }
