@@ -24,9 +24,9 @@ public class ProgramCreateDto {
 
     private String language;
 
-    private Instant startTime;
+    private String startTime;
 
-    private Instant endTime;
+    private String endTime;
 
     private Integer groupSizeMax;
 
