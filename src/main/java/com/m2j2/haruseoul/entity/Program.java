@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.time.LocalTime;
@@ -21,6 +23,7 @@ import java.util.List;
 @Table(name = "program")
 public class Program {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -32,6 +35,7 @@ public class Program {
 
     @ColumnDefault("current_timestamp()")
     @Column(name = "reg_date")
+    @CreationTimestamp
     private Instant regDate;
 
     @Column(name = "end_time")
@@ -54,6 +58,7 @@ public class Program {
 
     @ColumnDefault("current_timestamp()")
     @Column(name = "update_date")
+    @UpdateTimestamp
     private Instant updateDate;
 
     @Column(name = "language")

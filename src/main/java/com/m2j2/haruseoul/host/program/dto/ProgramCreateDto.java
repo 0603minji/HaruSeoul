@@ -20,6 +20,8 @@ public class ProgramCreateDto {
 
     private String detail;
 
+    private Long regMemberId;
+
     private List<String> categoryNames;
 
     private String language;
@@ -46,5 +48,5 @@ public class ProgramCreateDto {
 
     private String requirement; // 요청사항
 
-    private List<Image> images;
+    //private List<Image> images;
 }
