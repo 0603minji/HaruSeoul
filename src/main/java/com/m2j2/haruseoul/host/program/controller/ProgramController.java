@@ -1,5 +1,7 @@
 package com.m2j2.haruseoul.host.program.controller;
 
+import com.m2j2.haruseoul.entity.Program;
+import com.m2j2.haruseoul.host.program.dto.ProgramCreateDto;
 import com.m2j2.haruseoul.host.program.dto.ProgramResponseDto;
 
 import com.m2j2.haruseoul.anonymous.service.DefaultCategoryService;
@@ -12,7 +14,6 @@ import java.util.List;
 
 @RestController("hostProgramController")
 @RequestMapping("host/programs")
-@CrossOrigin
 public class ProgramController {
 
     DefaultProgramService service;
@@ -31,6 +32,13 @@ public class ProgramController {
         ProgramResponseDto programResponseDto = service.getList(pIds, cIds, statuses);
 
         return ResponseEntity.ok(programResponseDto);
+    }
+
+    @PostMapping("new")
+    public ResponseEntity<Program> create(
+            @RequestBody ProgramCreateDto programCreateDto
+    ){
+        return ResponseEntity.ok(service.create(programCreateDto));
     }
 
 }

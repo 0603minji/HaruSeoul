@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.time.LocalTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -34,7 +35,7 @@ public class Program {
     private Instant regDate;
 
     @Column(name = "end_time")
-    private Instant endTime;
+    private LocalTime endTime;
 
     @Column(name = "status")
     private String status;
@@ -59,7 +60,7 @@ public class Program {
     private String language;
 
     @Column(name = "start_time")
-    private Instant startTime;
+    private LocalTime startTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reg_member_id")
@@ -81,4 +82,19 @@ public class Program {
     @OneToMany(mappedBy = "program")
     @JsonManagedReference
     private List<Route> routes;
+
+    @Column(name = "inclusion")
+    private String inclusion;
+
+    @Column(name = "exclusion")
+    private String exclusion;
+
+    @Column(name = "packing_list")
+    private String packingList;
+
+    @Column(name = "caution")
+    private String caution;
+
+    @Column(name = "requirement")
+    private String requirement;
 }
