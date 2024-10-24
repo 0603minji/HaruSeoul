@@ -177,5 +177,9 @@ public class DefaultProgramService implements ProgramService {
         return newProgram;
     }
 
+    public void delete(Long programId) {
+        programRepository.deleteById(programId);
+    }
+
 
 }

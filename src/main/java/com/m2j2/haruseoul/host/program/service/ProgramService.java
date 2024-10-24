@@ -14,4 +14,6 @@ public interface ProgramService {
     Program create(ProgramCreateDto programCreateDto);
 
     Program update(ProgramUpdateDto programUpdateDto);
+
+    void delete(Long programId);
 }

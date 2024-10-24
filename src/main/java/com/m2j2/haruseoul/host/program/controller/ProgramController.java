@@ -49,4 +49,9 @@ public class ProgramController {
         return ResponseEntity.ok(service.update(programUpdateDto));
     }
 
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable(name = "id") Long id){
+        service.delete(id);
+    }
+
 }
