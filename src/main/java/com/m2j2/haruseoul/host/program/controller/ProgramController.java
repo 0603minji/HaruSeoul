@@ -5,6 +5,7 @@ import com.m2j2.haruseoul.host.program.dto.ProgramCreateDto;
 import com.m2j2.haruseoul.host.program.dto.ProgramResponseDto;
 
 import com.m2j2.haruseoul.anonymous.service.DefaultCategoryService;
+import com.m2j2.haruseoul.host.program.dto.ProgramUpdateDto;
 import com.m2j2.haruseoul.host.program.service.DefaultProgramService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,11 +35,18 @@ public class ProgramController {
         return ResponseEntity.ok(programResponseDto);
     }
 
-    @PostMapping("new")
+    @PostMapping
     public ResponseEntity<Program> create(
             @RequestBody ProgramCreateDto programCreateDto
     ){
         return ResponseEntity.ok(service.create(programCreateDto));
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Program> update(
+            @RequestBody ProgramUpdateDto programUpdateDto
+    ){
+        return ResponseEntity.ok(service.update(programUpdateDto));
     }
 
 }

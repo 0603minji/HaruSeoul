@@ -22,7 +22,7 @@ public class ProgramCreateDto {
 
     private Long regMemberId;
 
-    private List<String> categoryNames;
+    private List<Long> categoryIds;
 
     private String language;
 

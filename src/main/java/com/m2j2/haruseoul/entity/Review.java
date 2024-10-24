@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
@@ -15,6 +16,7 @@ import java.time.Instant;
 public class Review {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,6 +26,7 @@ public class Review {
 
     @ColumnDefault("current_timestamp()")
     @Column(name = "reg_date", nullable = false)
+    @CreationTimestamp
     private Instant regDate;
 
     @Column(name = "rating", nullable = false)

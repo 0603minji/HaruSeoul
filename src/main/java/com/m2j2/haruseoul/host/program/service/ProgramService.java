@@ -3,6 +3,7 @@ package com.m2j2.haruseoul.host.program.service;
 import com.m2j2.haruseoul.entity.Program;
 import com.m2j2.haruseoul.host.program.dto.ProgramCreateDto;
 import com.m2j2.haruseoul.host.program.dto.ProgramResponseDto;
+import com.m2j2.haruseoul.host.program.dto.ProgramUpdateDto;
 
 import java.util.List;
 
@@ -11,4 +12,6 @@ public interface ProgramService {
                                List<String> statuses);
 
     Program create(ProgramCreateDto programCreateDto);
+
+    Program update(ProgramUpdateDto programUpdateDto);
 }
