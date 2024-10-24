@@ -10,4 +10,5 @@ public interface CategoryProgramRepository extends JpaRepository<CategoryProgram
 
     List<CategoryProgram> findByCategoryIdIn(List<Long> categoryIds);
 
+    List<CategoryProgram> deleteByProgramId(Long programId);
 }

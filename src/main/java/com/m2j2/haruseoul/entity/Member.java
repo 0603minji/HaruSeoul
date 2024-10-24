@@ -6,17 +6,20 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "member")
 public class Member {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "nickname", nullable = false)
@@ -33,6 +36,7 @@ public class Member {
 
     @ColumnDefault("current_timestamp()")
     @Column(name = "reg_date", nullable = false)
+    @CreationTimestamp
     private Instant regDate;
 
     @Column(name = "email", nullable = false)

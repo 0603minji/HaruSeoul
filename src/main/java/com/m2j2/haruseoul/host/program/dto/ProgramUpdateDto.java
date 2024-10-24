@@ -14,38 +14,38 @@ import java.util.List;
 @NoArgsConstructor
 public class ProgramUpdateDto {
 
-    private Long id;
+    private Long programId;
 
     private String title;
 
     private String detail;
 
-    private Instant regDate;
+    private List<Long> categoryIds;
 
-    private Instant endTime;
+    private String language;
 
-    private String status;
+    private String startTime;
 
-    private Integer price;
+    private String endTime;
 
     private Integer groupSizeMax;
 
     private Integer groupSizeMin;
 
-    private Float rating;
+    private Integer price;
 
-    private Instant updateDate;
+    private List<RouteCreateDto> routes;
 
-    private String language;
+    private String inclusion;
 
-    private Instant startTime;
+    private String exclusion;
 
-    private List<String> categoryNames;
+    private String packingList; // 준비물
 
-    private Long memberId;
+    private String caution; // 주의사항
 
-//    private List<Image> images;
-//
-//    private List<Review> reviews;
+    private String requirement; // 요청사항
+
+    //private List<Image> images;
 
 }
