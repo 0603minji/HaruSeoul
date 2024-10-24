@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -22,7 +23,9 @@ public class ProgramListDto {
 
     private Instant regDate;
 
-    private Instant endTime;
+    private LocalTime endTime;
+
+    private LocalTime startTime;
 
     private String status;
 
@@ -38,7 +41,6 @@ public class ProgramListDto {
 
     private String language;
 
-    private Instant startTime;
 
     private List<String> categoryNames;
 
