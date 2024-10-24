@@ -80,9 +80,13 @@ public class Program {
     @JsonManagedReference
     private List<Review> reviews;
 
-    @OneToMany(mappedBy = "program")
+    @OneToMany(mappedBy = "program", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<CategoryProgram> categoryPrograms;
+
+    @OneToMany(mappedBy = "program", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
+    private List<PublishedProgram> publishedPrograms;
 
     @OneToMany(mappedBy = "program")
     @JsonManagedReference
