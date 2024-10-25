@@ -1,9 +1,11 @@
-package com.m2j2.haruseoul.mapper;
+package com.m2j2.haruseoul.host.program.mapper;
 
-import com.m2j2.haruseoul.dto.ProgramDto;
+import com.m2j2.haruseoul.host.program.dto.ProgramListDto;
 import com.m2j2.haruseoul.entity.Category;
 import com.m2j2.haruseoul.entity.CategoryProgram;
 import com.m2j2.haruseoul.entity.Program;
+
+import java.time.Instant;
 
 public class ProgramMapper {
 //    public static Program mapToEntity(ProgramDto programDto) {
@@ -27,13 +29,14 @@ public class ProgramMapper {
 //                .build();
 //    }
 
-    public static ProgramDto mapToDto(Program program) {
-        return ProgramDto.builder()
+    public static ProgramListDto mapToDto(Program program) {
+        return ProgramListDto.builder()
                 .id(program.getId())
                 .title(program.getTitle())
                 .detail(program.getDetail())
                 .regDate(program.getRegDate())
                 .endTime(program.getEndTime())
+                .startTime(program.getStartTime())
                 .status(program.getStatus())
                 .price(program.getPrice())
                 .groupSizeMin(program.getGroupSizeMin())
@@ -41,7 +44,6 @@ public class ProgramMapper {
                 .rating(program.getRating())
                 .updateDate(program.getUpdateDate())
                 .language(program.getLanguage())
-                .startTime(program.getStartTime())
                 .memberId(program.getMember().getId())
                 .categoryNames(program.getCategoryPrograms()
                         .stream()

@@ -1,16 +1,9 @@
-package com.m2j2.haruseoul.dto;
+package com.m2j2.haruseoul.host.program.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.m2j2.haruseoul.entity.Image;
-import com.m2j2.haruseoul.entity.Member;
-import com.m2j2.haruseoul.entity.Review;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 import java.util.List;
@@ -19,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProgramDto {
+public class ProgramDetailDto {
 
     private Long id;
 
