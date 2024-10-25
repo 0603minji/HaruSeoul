@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PublishedProgramCreateDto {
+    private Long regMemberId;
     private Long programId;
     private List<LocalDate> dates;
 }
