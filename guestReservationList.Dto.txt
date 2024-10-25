@@ -1,0 +1,15 @@
+# 카드 {
+[조회]
+1. Reservation
+- published_program_id
+  - group_size_current
+  - date
+  - Status status
+  - program_id
+	-> program
+		- title
+2. Image image
+---------------
+[삭제]
+
+}
