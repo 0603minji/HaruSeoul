@@ -1,0 +1,57 @@
+[조회]
+1. Reservation
+- id
+- published_program_id
+- member_id
+
+2-1. Member ( Guest )
+- id
+- name
+- email
+- phone
+
+2-2. Member ( Host )
+- name
+- rating [x]
+- profile_img [x]
+
+Payment
+- date [x]
+- method [x]
+- amount [x]
+
+3. Route
+- title
+- address
+
+4. Program
+- start_time
+- inclusion
+- exclusion
+- packing_list
+- caution
+
+------------------------------------------------------------------
+[생성]
+
+------------------------------------------------------------------
+[삭제]
+
+------------------------------------------------------------------
+
+# 카드 {
+[조회]
+1. Reservation
+- published_program_id
+  - group_size_current
+  - date
+  - Status status
+  - program_id
+	-> program
+		- title
+2. Image image
+---------------
+[삭제]
+
+}
+

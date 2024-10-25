@@ -41,7 +41,6 @@ public class ProgramListDto {
 
     private String language;
 
-
     private List<String> categoryNames;
 
     private Long memberId;
