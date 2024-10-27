@@ -1,5 +1,6 @@
 package com.m2j2.haruseoul.repository;
 
+import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.entity.Program;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,5 +15,11 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
             "where (:statuses is null or p.status in :statuses)" +
             "and (:pIds is null or p.id in :pIds)")
     Page<Program> findAll(@Param("pIds") List<Long> programIds, List<String> statuses, Pageable pageable);
+
+    @Query("from Program p " +
+            "where (:hostId is null or p.member.id = :hostId)" +
+            "and (:statuses is null or p.status in :statuses)" +
+            "and (:pIds is null or p.id in :pIds)")
+    List<Program> findAll2(Long hostId, @Param("pIds") List<Long> programIds, List<String> statuses);
 
 }
