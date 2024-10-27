@@ -1,0 +1,756 @@
+<!--<script setup>-->
+<!--const bookCheckbox = document.getElementById('bookCheckbox');-->
+<!--const aside = document.getElementById('book');-->
+<!--const overlay = document.getElementById('overlay');-->
+<!--const closeBtn = document.getElementById('closeBtn');-->
+
+<!--// 페이지가 로드될 때 fade-out 클래스 추가하지 않기-->
+<!--window.onload = function () {-->
+<!--  document.body.classList.remove('fadeout'); // fadeout 클래스 제거-->
+<!--};-->
+
+<!--// 체크박스 상태가 변경될 때 모달 표시/숨기기-->
+<!--bookCheckbox.addEventListener('change', () => {-->
+<!--  if (bookCheckbox.checked) {-->
+<!--    aside.classList.add('active');-->
+<!--    aside.style.visibility = 'visible'; // 모달 보이기-->
+<!--    aside.style.opacity = '1'; // 초기 opacity를 1로 설정-->
+<!--    overlay.classList.add('active'); // 오버레이 보이기-->
+<!--  } else {-->
+<!--    closeModal();-->
+<!--  }-->
+<!--});-->
+
+<!--// 닫기 버튼 클릭 시 모달 닫기-->
+<!--closeBtn.addEventListener('click', closeModal);-->
+
+<!--// 오버레이 클릭 시 모달 닫기-->
+<!--overlay.addEventListener('click', closeModal);-->
+
+<!--// 모달 닫기 함수-->
+<!--function closeModal() {-->
+<!--  aside.classList.remove('active'); // active 클래스 제거-->
+<!--  aside.style.opacity = '0'; // 투명하게 설정-->
+<!--  aside.style.visibility = 'hidden'; // 애니메이션 없이 hidden으로 변경-->
+<!--  overlay.classList.remove('active'); // 오버레이 숨기기-->
+<!--  bookCheckbox.checked = false; // 체크 해제-->
+<!--}-->
+<!--</script>-->
+
+<template>
+    <Head>
+        <Title> Program Detail 페이지 </Title>
+    </Head>
+
+  <main>
+    <section class="main-wrapper">
+      <section class="program-detail">
+        <h1 class="d:none">program-detail 페이지</h1>
+
+        <nav class="n-bar-underline padding-y:5">
+          <h1 class="d:none">네비탭</h1>
+          <ul class="item-wrapper padding-x:6">
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#intro">개요</a></li>
+            <li class="n-btn n-btn:hover n-btn n-btn-border:none n-btn-radius:0"><a href="#program-overview">프로그램
+              소개</a>
+            </li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#course-information">코스
+              안내</a>
+            </li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#meeting-location">만나는
+              장소</a>
+            </li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#inclusions">포함사항</a></li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#things-to-know">꼭
+              알아두세요!</a>
+            </li>
+            <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#review">리뷰</a></li>
+          </ul>
+        </nav>
+
+
+        <!--  프로그램 소개  -->
+        <section class="reservation-card bg-color:base-1 width:10p">
+          <h1 class="d:none">예약 카드</h1>
+
+          <div class="card-main">
+            <div class="thumbnail-wrapper">
+              <button class="n-btn thumbnail-btn thumbnail-btn:left"><span
+                  class="n-icon n-icon:arrow_left"></span>
+              </button>
+              <img src="/image/thumbnail.png" alt="대표사진" class="thumbnail-img">
+              <button class="n-btn thumbnail-btn thumbnail-btn:right"><span
+                  class="n-icon n-icon:arrow_right"></span>
+              </button>
+              <div class="thumbnail-btn thumbnail-btn:num n-deco">1/5</div>
+            </div>
+
+            <div style="display:flex; padding: var(--gap-7) var(--gap-5); padding-bottom: 0;">
+              <div class="n-panel-tag"
+                   style="margin-right: var(--gap-3); border-radius: var(--border-radius-3); --btn-border-color:var(--color-base-9); --btn-padding: 5px 12px; ">
+                Activity
+              </div>
+              <div class="n-panel-tag"
+                   style="border-radius: var(--border-radius-3); --btn-border-color:var(--color-base-9); --btn-padding: 5px 12px;">
+                Food
+              </div>
+            </div>
+
+            <div class="card-info-wrapper">
+              <p style="color: var(--color-base-9);
+            font-size: var(--font-size-11);
+            font-weight: bold;
+            padding: var(--gap-3) var(--gap-5);">Drinks & Bites in Seoul Tour</p>
+              <div style="display:flex;  flex-grow: 1; padding: var(--gap-3) var(--gap-7) var(--gap-8) var(--gap-7); gap: var(--gap-2); align-items: center;">
+                <span class="card-info n-icon n-icon:star n-deco" style="gap: var(--gap-1);">3.5</span>
+                <span>/</span>
+                <span>5.0</span>
+                <span>리뷰 13개</span>
+                <div style="display: flex; justify-content: center; align-items: center; height: 25px; margin-left: auto; ">
+                  <div class="n-icon n-icon:price n-deco"
+                       style="display: flex; justify-content: center; align-items: center; height: inherit; font-size: var(--font-size-10); gap: 0;">
+                    35,000
+                  </div>
+                  <div style="display: flex; justify-content: center; align-items: center; height: inherit; margin-left: var(--gap-1); font-size: var(--font-size-6);">
+                    1인
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cross-line"></div>
+          </div>
+        </section>
+
+
+        <section class="content">
+          <!-- 개요 -->
+          <section id="intro" class="intro" style="margin-bottom: 20px;">
+            <div class="background-color:base-1" style="padding: 0 var(--gap-6); border-bottom:0;">
+              <div class="id-container" style="margin-top: 0;">
+                <div class="details">
+                  <section>
+                    <h1>개요</h1>
+                    <div class="list-container">
+                      <ul>
+                        <li class="list-content"><span
+                            class="n-icon n-icon:globe n-deco">English</span>
+                        </li>
+                        <li class="list-content">
+                          <span class="n-icon n-icon:people n-deco">2/5</span>
+                          <span>(min/max)</span>
+                        </li>
+                        <li class="list-content">
+                          <span class="n-icon n-icon:clock n-deco">3.5</span>
+                          <span>hours</span>
+                        </li>
+                        <li class="list-content"><span class="n-icon n-icon:placeholder n-deco">Jong-ro Station 3rd Exit</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </section>
+
+
+          <!--  호스트 프로필 카드  -->
+          <section style="margin-bottom: 20px;">
+            <h1>호스트정보</h1>
+            <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
+              <div class="id-container">
+                <!-- 프로필 카드 -->
+                <section class="profile-card">
+                  <h1>프로필 카드</h1>
+                  <div class="overview">
+                    <div class="img-wrapper"><img src="/image/guest/profile.png" alt="호스트프사"></div>
+                    <div>
+                      <div>Jasmin</div>
+                      <div class="n-icon n-icon:star n-deco">
+                        <span>4.5 / 5.0</span>
+                        <span>(999)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <a href="" class="n-btn n-btn:hover">프로필보기</a>
+                </section>
+              </div>
+            </div>
+          </section>
+
+
+          <!--  프로그램 소개  -->
+          <section id="program-overview" style="margin-bottom: 20px;">
+            <h1>프로그램 소개</h1>
+            <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
+              <div class="program-container">
+                <div class="content-header">
+                  <span class="title">프로그램 소개</span>
+                </div>
+
+                <div class="text">
+                  <p class="p-summary">
+                    Fall in love with the best nightlife hot spots in Jung-Gu. If you're looking for a
+                    perfect night out in Seoul this drinks and bites tour is the life of the party!
+                    Me, your local host is a nightlife expert and is up to date with current hot spots
+                    and
+                    hip
+                    venues, so ask away and enjoy the city mingling with the locals.
+                    Visit some of the best spots in town and have a drink together with a typical local
+                    bite
+                    like
+                    makgeolli and tteobokki.
+                    I’m desired to feel you happy by let you make your unforgettable Seoul!
+                  </p>
+                  <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">펼치기</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+
+          <!--  코스 안내  -->
+          <section id="course-information" class="program">
+            <h1>코스안내</h1>
+            <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
+              <div class="id-container">
+                <div class="content-header">
+                  <span class="title">코스 안내</span>
+                </div>
+                <div class="details">
+                  <div class="map-img-wrapper">
+                    <img class="map-img" src="/image/map.png" alt="코스지도">
+                  </div>
+
+                  <section class="n-course-flow">
+                    <!--     출발지    -->
+                    <div class="point">
+                      <div class="icon-wrapper">
+                        <span class="n-icon n-icon:rectangle">막대기</span>
+                        <span class="n-icon n-icon:placeholder">위치아이콘</span>
+                      </div>
+                      <div class="point-detail">
+                        <div class="n-panel-tag n-panel-tag:time">
+                                    <span class="n-icon n-icon:clock n-deco">
+                                        16:00
+                                    </span>
+                        </div>
+                        <div>
+                          <span class="point-name">강남역</span>
+                          <span>(1시간)</span>
+                          <div class="point-info">짤막한 설명입니다.</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--   이동 수단   -->
+                    <div class="transport">
+                      <div class="icon-wrapper">
+                        <span class="n-icon n-icon:rectangle">막대기</span>
+                        <div class="img-wrapper">
+                          <img src="/image/bus.png" alt="이동수단">
+                        </div>
+                      </div>
+                      <div>
+
+                        <div class="transport-detail">
+                          <p>버스</p>
+                          <p>10분</p>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <!--     경유지    -->
+                    <div class="point drop-by">
+                      <div class="icon-wrapper">
+                        <span class="n-icon n-icon:rectangle">막대기</span>
+                        <span class="n-icon n-icon:number1">위치아이콘</span>
+                      </div>
+                      <div class="point-detail">
+                        <div class="n-panel-tag n-panel-tag:time">
+                                    <span class="n-icon n-icon:clock n-deco">
+                                        17:00
+                                    </span>
+                        </div>
+                        <div>
+                          <span class="point-name">교대역</span>
+                          <span>(2시간)</span>
+                          <div class="point-info">짤막한 설명</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--   이동 수단   -->
+                    <div class="transport">
+                      <div class="icon-wrapper">
+                        <span class="n-icon n-icon:rectangle">막대기</span>
+                        <div class="img-wrapper">
+                          <img src="/image/subway.png" alt="이동수단">
+                        </div>
+                      </div>
+                      <div>
+
+                        <div class="transport-detail">
+                          <p>지하철</p>
+                          <p>5분</p>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <!--     경유지    -->
+                    <div class="point drop-by">
+                      <div class="icon-wrapper">
+                        <span class="n-icon n-icon:rectangle">막대기</span>
+                        <span class="n-icon n-icon:number1">위치아이콘</span>
+                      </div>
+                      <div class="point-detail">
+                        <div class="n-panel-tag n-panel-tag:time">
+                                    <span class="n-icon n-icon:clock n-deco">
+                                        19:00
+                                    </span>
+                        </div>
+                        <div>
+                          <span class="point-name">홍대역</span>
+                          <span>(4시간)</span>
+                          <div class="point-info"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--   이동 수단   -->
+                    <div class="transport">
+                      <div class="icon-wrapper">
+                        <span class="n-icon n-icon:rectangle">막대기</span>
+                        <div class="img-wrapper">
+                          <img src="/image/walk.png" alt="이동수단">
+                        </div>
+                      </div>
+                      <div>
+
+                        <div class="transport-detail">
+                          <p>도보</p>
+                          <p>15분</p>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <!--     도착지    -->
+                    <div class="point">
+                      <div class="icon-wrapper">
+                        <span class="n-icon n-icon:rectangle">막대기</span>
+                        <span class="n-icon n-icon:placeholder">위치아이콘</span>
+                      </div>
+                      <div class="point-detail">
+                        <div class="n-panel-tag n-panel-tag:time">
+                                    <span class="n-icon n-icon:clock n-deco">
+                                        23:00
+                                    </span>
+                        </div>
+                        <div>
+                          <span class="point-name">서대문구</span>
+                          <span>(3시간)</span>
+                          <div class="point-info">짤막한 설명입니다.</div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </section>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!--  만나는 장소  -->
+          <section id="meeting-location" class="program">
+            <h1>프로그램 정보 및 정책</h1>
+            <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
+              <div class="id-container" style="border-bottom:0;">
+                <div class="content-header">
+                  <span class="title">만나는 장소</span>
+                </div>
+                <div class="details">
+                  <section style="padding-top: 0;">
+                    <h1>만나는장소</h1>
+                    <div class="info-container">
+                      <p>14:00 헌법재판소 앞</p>
+                      <div style="display:flex; align-items: center; padding: var(--gap-3) 0; color: var(--color-base-7);">
+                                    <span class="n-icon n-icon:placeholder"
+                                          style="margin-right: var(--gap-1);">위치아이콘</span>
+                        <span style="margin-right: var(--gap-1);">서울 종로구 북촌로 15</span>
+                        <button class="copy-btn">주소복사</button>
+                      </div>
+                    </div>
+                    <div class="map-img-wrapper">
+                      <img class="map-img" src="/image/map.png" alt="map">
+                    </div>
+                  </section>
+                </div>
+              </div>
+
+              <div id="inclusions" class="id-container" style="border-bottom:0;">
+                <div class="content-header">
+                  <span class="title">포함사항</span>
+                </div>
+                <div class="details">
+                  <section>
+                    <h1>포함사항</h1>
+                    <div class="list-container">
+                      <ul style="padding-left: 0;">
+                        <li class="info-input n-icon n-icon:success-circle-green">입장권</li>
+                        <li class="info-input n-icon n-icon:success-circle-green">가이드 비용</li>
+                      </ul>
+                    </div>
+                    <div class="list-container">
+                      <ul style="padding-left: 0;">
+                        <li class="info-input n-icon n-icon:error">한복 대여료</li>
+                        <li class="info-input n-icon n-icon:error">카페 음료 비용</li>
+                        <li class="info-input n-icon n-icon:error">개인 경비</li>
+                      </ul>
+                    </div>
+                  </section>
+                </div>
+              </div>
+
+              <div id="things-to-know" class="id-container" style="margin-top: 0; border-bottom:0;">
+                <div class="content-header">
+                  <span class="title">꼭 알아두세요!</span>
+                </div>
+                <div class="details">
+
+                  <section>
+                    <h1>꼭 알아두세요!</h1>
+
+                    <div style="padding: 0 var(--gap-6);">
+                      <h2 class="info-form n-icon n-icon:success-decagon">준비물</h2>
+                      <ul>
+                        <li class="list-content">운동화 착용</li>
+                        <li class="list-content">비상금</li>
+                        <li class="list-content">선글라스</li>
+                      </ul>
+                    </div>
+
+                    <div style="padding: var(--gap-6); padding-bottom: 0;">
+                      <h2 class="info-form n-icon n-icon:caution">주의사항</h2>
+                      <ul>
+                        <li class="list-content">많은 도보</li>
+                        <li class="list-content">음주 예정</li>
+                        <li class="list-content">많은 야외활동</li>
+                        <li class="list-content">여행일 변경 및 타인 양도가 가능한 상품입니다.</li>
+                        <li class="list-content">여행일 변경 및 타인 양도 희망시 상기 연락처를 통해 연락 바랍니다.</li>
+                        <li class="list-content">악천후 관련 취소 시 사전에 연락을 드립니다.</li>
+                        <li class="list-content">악천후 취소 기준은 시간당 강수량 10mm 이상, 기온 -5도 이하이며, 여행 전일
+                          여행시간대
+                          기상청
+                          예보를
+                          기준으로
+                          합니다.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div style="padding: var(--gap-6)">
+                      <h2 class="info-form n-icon n-icon:reset">취소 및 환불정책</h2>
+                      <ul>
+                        <li class="list-content">여행일 기준 24시간 전까지 통보 시: 여행 요금 100% 전액 환불됩니다.</li>
+                        <li class="list-content">여행일 기준 24시간 이내 통보 시: 취소/환불 불가합니다.</li>
+                        <li class="list-content">취소 요청 날짜와 시간은 여행 상품이 진행되는 현지 시간을 따릅니다.</li>
+                        <li class="list-content">여행일은 여행 상품이 진행되는 현지 날짜의 오전 9시를 기준으로 합니다.</li>
+                      </ul>
+                    </div>
+                  </section>
+                </div>
+              </div>
+
+
+            </div>
+          </section>
+
+
+          <!--  리뷰  -->
+
+          <div id="review" class="id-container" style="border-bottom:0;">
+            <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
+              <div class="content-header">
+                <span class="title" style="padding: 0 var(--gap-6);">리뷰</span>
+              </div>
+              <div class="details">
+                <section>
+                  <h1>리뷰 60</h1>
+
+                  <div style="display:flex; justify-content: space-between; align-items: center; padding: 0 var(--gap-6);">
+                    <span style="display:flex; align-items: center; width: auto; height: 30px;">60개 리뷰</span>
+                    <div style="display: flex;">
+                      <a href="" class="n-icon n-icon:arrow_swap">정렬 아이콘</a>
+                      <span>최신순</span>
+                    </div>
+                  </div>
+
+                  <!--   리뷰 게스트 댓글   -->
+                  <section class="review-container">
+                    <h1>리뷰 댓글과 답글</h1>
+
+                    <div class="review">
+
+                      <div class="star-wrapper">
+                        <span class="n-icon n-icon:star">별</span>
+                        <span class="n-icon n-icon:star">별</span>
+                        <span class="n-icon n-icon:star">별</span>
+                        <span class="n-icon n-icon:star">별</span>
+                        <span class="n-icon n-icon:star">별</span>
+                      </div>
+
+
+                      <div class="guest-info">
+                        <img class="profile-img" src="/image/face.jpg" alt="프로필이미지">
+                        <div style="flex-grow: 1;">
+                          <div class="meatball-icon">
+                            <span class="name">김준성</span>
+                            <label class="n-icon n-icon:meatball"><span>똥똥똥</span><input
+                                type="checkbox"></label>
+                          </div>
+                          <span class="date">2024-09-29</span>
+                        </div>
+                      </div>
+
+
+                      <div class="text">
+                        <p class="p-summary">If you wanna take a break from Varanasi you find a
+                          great
+                          location and hospitality in
+                          this rooftop in the heart of the town. Food is really tasty and staff
+                          really
+                          great!
+                          If you wanna take a break from Varanasi you find a great location and
+                          hospitality in
+                          this rooftop in the heart of the town. Food is really tasty and staff
+                          really
+                          great!</p>
+                        <button>더보기</button>
+                      </div>
+
+
+                      <ul>
+                        <li><img src="/image/face.jpg" alt="reviewPhoto"></li>
+                        <li><img src="/image/face.jpg" alt="reviewPhoto"></li>
+                        <li><img src="/image/face.jpg" alt="reviewPhoto"></li>
+                        <li><img src="/image/face.jpg" alt="reviewPhoto"></li>
+                        <li><img src="/image/face.jpg" alt="reviewPhoto"></li>
+                        <li><img src="/image/face.jpg" alt="reviewPhoto"></li>
+                      </ul>
+
+
+                    </div>
+
+                    <!--  리뷰 호스트 답글   -->
+                    <div style="display: flex; justify-content: center;">
+                      <div class="reply">
+                        <div class="host-info">
+                          <img class="profile-img" src="/image/face.jpg" alt="프로필이미지">
+                          <div style="flex-grow: 1;">
+                            <div class="meatball-icon">
+                              <span class="name">김민지</span>
+                              <label class="n-icon n-icon:meatball"><span>똥똥똥</span><input
+                                  type="checkbox"></label>
+                            </div>
+                            <span class="date">2024-09-30</span>
+                          </div>
+                        </div>
+                        <div class="text">
+                          <p class="p-summary">If you wanna take a break from Varanasi you find a
+                            great
+                            location and hospitality
+                            in this rooftop in the heart of the town. Food is really tasty and
+                            staff
+                            really
+                            great! If you wanna take a break from Varanasi you find a great
+                            location
+                            and
+                            hospitality in this rooftop in the heart of the town. Food is really
+                            tasty
+                            and
+                            staff really great!</p>
+                          <button>더보기</button>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </section>
+                <div style="display: flex; justify-content: center; align-items: center; margin-bottom: var(--gap-6);">
+                  <a href="#" class="n-btn n-btn:hover"
+                     style="padding: var(--gap-3) var(--height-4p); border: 1px solid var(--color-base-8);">리뷰
+                    더
+                    보기</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!--        &lt;!&ndash; 리뷰사진 목록 어사이드 &ndash;&gt;-->
+          <!--        <aside id="reviewList">-->
+          <!--            <h1>리뷰 사진</h1>-->
+          <!--            <span>X</span>-->
+
+          <!--            <ul>-->
+          <!--                <li><a href="#reviewListDetail"><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+          <!--            </ul>-->
+          <!--        </aside>-->
+
+
+          <!--        &lt;!&ndash;  리뷰사진 목록 디테일 어사이드   &ndash;&gt;-->
+          <!--        <aside id="reviewListDetail">-->
+          <!--            <h1>1/6</h1>-->
+          <!--            <span>X</span>-->
+
+          <!--            <div><img src="" alt="리뷰 사진 큰 화면"></div>-->
+          <!--            <ul>-->
+          <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
+          <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
+          <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
+          <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
+          <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
+          <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
+          <!--            </ul>-->
+
+        </section>
+
+        <!-- 찜 -->
+        <div class="floating-bar">
+          <button class="n-btn picked"><span class="n-icon n-icon:bookmark_simple">찜</span></button>
+          <label class="n-btn book"><span>예약하기</span><input type="checkbox" id="bookCheckbox"/></label>
+        </div>
+      </section>
+      <!--  예약하기 캘린더 모바일 버전  -->
+<!--      <aside id="book" class="n-calender">-->
+<!--        <h1>예약 캘린더</h1>-->
+
+<!--        <div class="calender-header">-->
+<!--          <span class="title">예약하기</span>-->
+<!--          <button class="n-btn" id="closeBtn"><span class="n-icon n-icon:exit">나가기 버튼</span></button>-->
+<!--        </div>-->
+
+<!--        <p>진행일 선택</p>-->
+<!--        <section class="calender-wrapper">-->
+<!--          <h1>캘린더</h1>-->
+<!--          <div class="calender-date">-->
+<!--            <button class="n-btn" id="prev-month">&lt;</button>-->
+<!--            <div>-->
+<!--              <span class="n-btn n-deco" id="year">2024</span>-->
+<!--              <span class="n-btn" id="month">9</span>-->
+<!--            </div>-->
+<!--            <button class="n-btn" id="next-month">&gt;</button>-->
+<!--          </div>-->
+
+<!--          <section class="calender-body">-->
+<!--            <form method="post">-->
+<!--              <h1>달력</h1>-->
+
+<!--              <div style="display: flex; justify-content: center; align-items: center;">-->
+<!--                <span class="n-panel-tag n-panel-tag:week">Mo</span>-->
+<!--                <span class="n-panel-tag n-panel-tag:week">Tu</span>-->
+<!--                <span class="n-panel-tag n-panel-tag:week">We</span>-->
+<!--                <span class="n-panel-tag n-panel-tag:week">Th</span>-->
+<!--                <span class="n-panel-tag n-panel-tag:week">Fr</span>-->
+<!--                <span class="n-panel-tag n-panel-tag:week">Sa</span>-->
+<!--                <span class="n-panel-tag n-panel-tag:week">Su</span>-->
+<!--              </div>-->
+
+<!--              &lt;!&ndash; 첫째 주 &ndash;&gt;-->
+<!--              <div style="display: flex; justify-content: center; align-items: center;">-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox" disabled>29</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox" disabled>30</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox" disabled>31</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox"-->
+<!--                                                                        disabled>1</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox"-->
+<!--                                                                        disabled>2</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox"-->
+<!--                                                                        disabled>3</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox"-->
+<!--                                                                        disabled>4</label></span>-->
+<!--              </div>-->
+
+<!--              &lt;!&ndash; 둘째 주 &ndash;&gt;-->
+<!--              <div style="display: flex; justify-content: center; align-items: center;">-->
+<!--                            <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox"-->
+<!--                                                                                    disabled>5</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox"-->
+<!--                                                                        disabled>6</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox"-->
+<!--                                                                        disabled>7</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox"-->
+<!--                                                                        disabled>8</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox"-->
+<!--                                                                        disabled>9</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox" disabled>10</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox" disabled>11</label></span>-->
+<!--              </div>-->
+
+<!--              &lt;!&ndash; 셋째 주부터 활성화 &ndash;&gt;-->
+<!--              <div style="display: flex; justify-content: center; align-items: center;">-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">12</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">13</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">14</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">16</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">17</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">18</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">19</label></span>-->
+<!--              </div>-->
+
+<!--              <div style="display: flex; justify-content: center; align-items: center;">-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">20</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">21</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">22</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">23</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">24</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">25</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">26</label></span>-->
+<!--              </div>-->
+
+<!--              <div style="display: flex; justify-content: center; align-items: center;">-->
+<!--                        <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox"-->
+<!--                                                                                disabled>27</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">28</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">29</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox">30</label></span>-->
+<!--                <span class="n-panel-tag n-panel-tag:day"><label><input type="checkbox"-->
+<!--                                                                        disabled>31</label></span>-->
+<!--              </div>-->
+<!--            </form>-->
+<!--          </section>-->
+<!--        </section>-->
+
+<!--        <section>-->
+<!--          <h1>인원수 고르기</h1>-->
+<!--          <button type="button" id="decrease">-</button>-->
+<!--          <div><label><input type="text" value="" min="1" max="5" readonly></label></div>-->
+<!--          <button type="button" id="increase">+</button>-->
+<!--        </section>-->
+<!--      </aside>-->
+    </section>
+  </main>
+</template>
+
+<style scoped>
+@import url("/css/program/detail.css");
+</style>
