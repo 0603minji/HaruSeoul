@@ -1,6 +1,7 @@
 package com.m2j2.haruseoul.repository;
 
 import com.m2j2.haruseoul.entity.Program;
+import com.m2j2.haruseoul.host.program.dto.ProgramTitle;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,6 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
             "and (:pIds is null or p.id in :pIds)")
     Page<Program> findAll(@Param("pIds") List<Long> programIds, List<String> statuses, Pageable pageable);
 
+    @Query("SELECT new com.m2j2.haruseoul.host.program.dto.ProgramTitle(p.id, p.title) FROM Program p ORDER BY p.title")
+    List<ProgramTitle> findAllByOrderByTitle();
 }
