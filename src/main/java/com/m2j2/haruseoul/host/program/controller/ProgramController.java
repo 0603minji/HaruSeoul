@@ -1,19 +1,20 @@
 package com.m2j2.haruseoul.host.program.controller;
 
+import com.m2j2.haruseoul.anonymous.service.DefaultCategoryService;
 import com.m2j2.haruseoul.entity.Program;
 import com.m2j2.haruseoul.host.program.dto.ProgramCreateDto;
 import com.m2j2.haruseoul.host.program.dto.ProgramResponseDto;
-
-import com.m2j2.haruseoul.anonymous.service.DefaultCategoryService;
 import com.m2j2.haruseoul.host.program.dto.ProgramTitle;
 import com.m2j2.haruseoul.host.program.dto.ProgramUpdateDto;
 import com.m2j2.haruseoul.host.program.service.DefaultProgramService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
+@Slf4j
 @RestController("hostProgramController")
 @RequestMapping("host/programs")
 public class ProgramController {
@@ -31,6 +32,7 @@ public class ProgramController {
             @RequestParam(name = "c", required = false) List<Long> cIds,
             @RequestParam(name = "pg", required = false) List<Long> pIds,
             @RequestParam(name = "s", required = false) List<String> statuses) {
+        log.info("cIds: {}, pIds: {}, statuses: {}", cIds, pIds, statuses);
         ProgramResponseDto programResponseDto = service.getList(pIds, cIds, statuses);
 
         return ResponseEntity.ok(programResponseDto);

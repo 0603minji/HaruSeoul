@@ -8,7 +8,7 @@ const programs = ref([]);
 const totalRowCount = ref(0);
 const totalPageCount = ref(0);
 const programTitles = ref([]);
-
+const selectedPrograms = ref([]);
 //============= Lifecycle Functions ================
 onMounted(() => {
   fetchPrograms();
@@ -16,16 +16,31 @@ onMounted(() => {
 });
 
 //============= Data Functions =======================
-const fetchPrograms = async () => {
+const fetchPrograms = async (cIds, pIds, statuses, pageNum) => {
+  const params = {};
+  if (cIds) {
+    params.c = cIds;
+  }
+  if (pIds) {
+    params.pg = pIds;
+  }
+  if (statuses) {
+    params.s = statuses;
+  }
+  if (pageNum) {
+    params.pageNum = pageNum;
+  }
+
+
   const response = await axios.get(
-      "http://localhost:8080/api/v1/host/programs"
+      "http://localhost:8080/api/v1/host/programs",{
+        params: params
+      }
   );
 
   programs.value = response.data.programs;
   totalRowCount.value = response.data.totalRowCount;
   totalPageCount.value = response.data.totalPageCount;
-
-  console.log(programs.value);
 };
 
 const fetchProgramIds = async () => {
@@ -35,6 +50,40 @@ const fetchProgramIds = async () => {
   programTitles.value = response.data.map(p => ({id: p.id, title: p.title}));
 };
 
+const selectProgramAll = async () => {
+  // 모든 선택된 체크박스를 초기화
+  selectedPrograms.value = [];
+  const checkboxes = document.querySelectorAll('.programids');
+  checkboxes.forEach((checkbox) => {
+    checkbox.checked = false;
+  });
+  try {
+    await fetchPrograms(null, null, null, null);
+  } catch (error) {
+    console.error("Error fetching all programs:", error);
+  }
+};
+
+const selectProgram = async () => {
+  const checkboxes = document.querySelectorAll('.programidAll');
+  checkboxes.forEach((checkbox) => {
+    checkbox.checked = false;
+  });
+
+  // 선택된 체크박스의 ID를 배열로 가져옵니다.
+  const selectedIds = selectedPrograms.value;
+
+  if (selectedIds.length > 0) {
+    try {
+      // 선택된 ID들을 쿼리 파라미터로 전송 (예: ?type=1,2,3)
+      await fetchPrograms(null, selectedIds.join(','), null, null);
+    } catch (error) {
+      console.error("Error fetching selected programs:", error);
+    }
+  } else {
+    console.log("No programs selected.");
+  }
+};
 </script>
 
 <template>
@@ -194,9 +243,9 @@ const fetchProgramIds = async () => {
 
               <form action="" class="form">
                 <div class="modal-checkbox">
-                  <label><input type="checkbox"/>All</label>
+                  <label><input class="programidAll" type="checkbox" @change="selectProgramAll"/>All</label>
                   <label v-for="p in programTitles" :key="p.id">
-                    <input type="checkbox" :value="p.title">{{ p.title }}
+                    <input class="programids" type="checkbox" @change="selectProgram" :value="p.id" v-model="selectedPrograms">{{ p.title }}
                   </label>
                 </div>
               </form>
