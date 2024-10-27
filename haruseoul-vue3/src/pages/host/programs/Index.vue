@@ -7,10 +7,12 @@ import Category from "@/components/filter/Category.vue";
 const programs = ref([]);
 const totalRowCount = ref(0);
 const totalPageCount = ref(0);
+const programTitles = ref([]);
 
 //============= Lifecycle Functions ================
 onMounted(() => {
   fetchPrograms();
+  fetchProgramIds();
 });
 
 //============= Data Functions =======================
@@ -24,6 +26,13 @@ const fetchPrograms = async () => {
   totalPageCount.value = response.data.totalPageCount;
 
   console.log(programs.value);
+};
+
+const fetchProgramIds = async () => {
+  const response = await axios.get(
+      "http://localhost:8080/api/v1/host/programs/titles"
+  );
+  programTitles.value = response.data.map(p => ({id: p.id, title: p.title}));
 };
 
 </script>
@@ -186,38 +195,9 @@ const fetchPrograms = async () => {
               <form action="" class="form">
                 <div class="modal-checkbox">
                   <label><input type="checkbox"/>All</label>
-                  <label
-                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
-                    Wearing Han-bok</label
-                  >
-                  <label
-                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
-                    Wearing Han-bok</label
-                  >
-                  <label
-                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
-                    Wearing Han-bok</label
-                  >
-                  <label
-                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
-                    Wearing Han-bok</label
-                  >
-                  <label
-                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
-                    Wearing Han-bok</label
-                  >
-                  <label
-                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
-                    Wearing Han-bok</label
-                  >
-                  <label
-                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
-                    Wearing Han-bok</label
-                  >
-                  <label
-                  ><input type="checkbox"/>Gyeong-bok-gung Palace Tour With
-                    Wearing Han-bok</label
-                  >
+                  <label v-for="p in programTitles" :key="p.id">
+                    <input type="checkbox" :value="p.title">{{ p.title }}
+                  </label>
                 </div>
               </form>
             </details>

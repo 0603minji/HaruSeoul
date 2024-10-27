@@ -1,17 +1,12 @@
 package com.m2j2.haruseoul.host.program.service;
 
-import com.m2j2.haruseoul.config.ModelMapperConfig;
 import com.m2j2.haruseoul.entity.Category;
-import com.m2j2.haruseoul.entity.Member;
-import com.m2j2.haruseoul.host.program.dto.ProgramCreateDto;
-import com.m2j2.haruseoul.host.program.dto.ProgramListDto;
-import com.m2j2.haruseoul.host.program.dto.ProgramResponseDto;
 import com.m2j2.haruseoul.entity.CategoryProgram;
+import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.entity.Program;
-import com.m2j2.haruseoul.host.program.dto.ProgramUpdateDto;
+import com.m2j2.haruseoul.host.program.dto.*;
 import com.m2j2.haruseoul.host.program.mapper.ProgramMapper;
 import com.m2j2.haruseoul.repository.*;
-import org.apache.catalina.mapper.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -88,6 +83,10 @@ public class DefaultProgramService implements ProgramService {
                 .build();
 
         return programResponseDto;
+    }
+
+    public List<ProgramTitle> getProgramTitles() {
+        return programRepository.findAllByOrderByTitle();
     }
 
 
