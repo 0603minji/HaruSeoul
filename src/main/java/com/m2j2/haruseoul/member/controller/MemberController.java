@@ -13,7 +13,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    public MemberController(MemberService memberService ) {
+    public MemberController(MemberService memberService) {
         this.memberService = memberService;
 
     }
@@ -25,9 +25,12 @@ public class MemberController {
 
     @PutMapping("{id}")
     public ResponseEntity<String> update(@PathVariable Long id, @RequestBody MemberUpdateDto memberUpdateDto) {
-        memberUpdateDto.setId(id);
-        memberService.update(memberUpdateDto);
-        return ResponseEntity.ok("비밀번호 변경완료");
+
+        Member member = memberService.validatePwd(id, memberUpdateDto.getCurrentPwd());
+
+        memberService.update(member, memberUpdateDto.getNewPwd());
+
+        return ResponseEntity.ok("비밀번호 변경 완료");
     }
 
     @DeleteMapping("{id}")

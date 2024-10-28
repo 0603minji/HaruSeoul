@@ -9,7 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 public interface MemberService {
     Member save(MemberCreateDto memberCreateDto);
 
-    void update(MemberUpdateDto memberUpdateDto);
+    void update(Member member,String newPwd);
+    Member validatePwd(Long memberId,String currentPwd);
 
     void delete(Long id);
 }
