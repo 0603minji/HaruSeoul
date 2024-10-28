@@ -7,15 +7,16 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 @Entity
 @Table(name = "published_program")
 public class PublishedProgram {
@@ -36,6 +37,7 @@ public class PublishedProgram {
     @Column(name = "group_size_current", nullable = false, columnDefinition = "int default 0")
     private Integer groupSizeCurrent;
 
+    // 진행일 ( 공개한 시간 x )
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
@@ -47,5 +49,4 @@ public class PublishedProgram {
     @OneToMany(mappedBy = "publishedProgram")
     @JsonManagedReference
     private List<Reservation> reservations;
-
 }
