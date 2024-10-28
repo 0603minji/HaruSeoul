@@ -1,3 +1,12 @@
+<!--1. 프로그램 필터에 목록을 db에서 불러오기-->
+<!--2. 프로그램으로 필터링 (체크박스 선택)-->
+<!--3. 카테고리 필터링-->
+<!--4. 상태 필터링-->
+<!--5. 페이지 네이션 구현-->
+<!--6. programs/new에서 값 입력받으면 새로운 프로그램 조회 가능 구현-->
+<!--7. status를 db에서는 integer로 저장해두고 프론트에서 if status==1 이면 "작성중"으로 구현-->
+<!--8. route 테이블 생성-->
+
 <script setup>
 import {onMounted, ref} from "vue";
 import axios from "axios";
