@@ -13,7 +13,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReservationListDto {
-    // 문의를 위해서 hostId 를 받아야할듯
+    
+    private Long hostId; // host 문의
+
     private String statusName;
 
     private String programTitle;
