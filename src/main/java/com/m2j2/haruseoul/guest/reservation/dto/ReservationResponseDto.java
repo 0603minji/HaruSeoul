@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReservationResponseDto {
-    private String sort;
     private Long totalRowCount;
     private Long totalPageCount;
     private List<ReservationListDto> reservations;

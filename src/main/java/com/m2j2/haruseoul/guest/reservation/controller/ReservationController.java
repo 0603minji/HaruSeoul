@@ -23,8 +23,11 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<ReservationResponseDto> getList(
-            @RequestParam(name = "s", required = false)Long sId){
-        ReservationResponseDto reservationResponseDto = reservationService.getReservationByStatus(sId);
+            @RequestParam(name = "s", required = false)List<Long> sIds,
+            @RequestParam(name = "m", required = false)List<Long> mIds){
+        System.out.println(sIds);
+        System.out.println(mIds);
+        ReservationResponseDto reservationResponseDto = reservationService.getList(sIds, mIds);
 
         return ResponseEntity.ok(reservationResponseDto);
     }
