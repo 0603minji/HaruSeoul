@@ -28,6 +28,8 @@ public class DefaultReservationService implements ReservationService {
         this.statusRepository = statusRepository;
     }
 
+
+    //매퍼를 모델매퍼로 바꾸기
     @Override
     public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds) {
         Sort sort = Sort.by("regDate").descending();
