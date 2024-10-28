@@ -268,7 +268,7 @@ const selectProgram = async () => {
           </header>
           <div class="filters">
             <!-- 카테고리 필터 -->
-          <Category/>
+            <Category/>
             <!-- 프로그램 필터 -->
             <details open class="filter">
               <summary class="collapse">
