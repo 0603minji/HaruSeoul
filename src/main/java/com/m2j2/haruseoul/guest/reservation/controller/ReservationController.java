@@ -1,13 +1,11 @@
 package com.m2j2.haruseoul.guest.reservation.controller;
 
 import com.m2j2.haruseoul.entity.Reservation;
+import com.m2j2.haruseoul.guest.reservation.dto.ReservationDetailDto;
 import com.m2j2.haruseoul.guest.reservation.dto.ReservationResponseDto;
 import com.m2j2.haruseoul.guest.reservation.service.DefaultReservationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,10 +23,16 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> getList(
             @RequestParam(name = "s", required = false)List<Long> sIds,
             @RequestParam(name = "m", required = false)List<Long> mIds){
-        System.out.println(sIds);
-        System.out.println(mIds);
         ReservationResponseDto reservationResponseDto = reservationService.getList(sIds, mIds);
 
         return ResponseEntity.ok(reservationResponseDto);
+    }
+
+    @GetMapping("{rid}")
+    public ResponseEntity<ReservationDetailDto> getDetail(
+            @PathVariable("rid") Long rId){
+        ReservationDetailDto reservationDetailDto = reservationService.getDetail(rId);
+
+        return ResponseEntity.ok(reservationDetailDto);
     }
 }

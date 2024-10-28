@@ -9,6 +9,7 @@ public class ReservationMapper {
 
     public static ReservationListDto mapToDto(Reservation reservation) {
         return ReservationListDto.builder()
+                .hostId(reservation.getPublishedProgram().getProgram().getMember().getId())
                 .statusName(reservation.getPublishedProgram().getStatus().getName())
                 .programTitle(reservation.getPublishedProgram().getProgram().getTitle())
                 .date(reservation.getPublishedProgram().getDate())
