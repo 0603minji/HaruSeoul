@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class MemberUpdateDto {
 
     private Long id;
-    private String userPwd;
+    private String currentPwd;
+    private String newPwd;
 
 }
