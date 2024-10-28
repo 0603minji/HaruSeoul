@@ -9,11 +9,10 @@ public class ReservationMapper {
 
     public static ReservationListDto mapToDto(Reservation reservation) {
         return ReservationListDto.builder()
-                .programId(reservation.getPublishedProgram().getProgram().getId())
                 .statusName(reservation.getPublishedProgram().getStatus().getName())
-                .title(reservation.getPublishedProgram().getProgram().getTitle())
+                .programTitle(reservation.getPublishedProgram().getProgram().getTitle())
                 .date(reservation.getPublishedProgram().getDate())
-                .groupSizeCurrent(reservation.getPublishedProgram().getGroupSizeCurrent())
+                .groupSize(reservation.getPublishedProgram().getGroupSizeCurrent())
                 .build();
     }
 }

@@ -13,16 +13,14 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReservationListDto {
-
-    private Long programId;
     
     private String statusName;
 
-    private String title;
+    private String programTitle;
 
     private LocalDate date;
 
-    private Integer groupSizeCurrent;
+    private Integer groupSize;
 
 //    private String src;
 }

@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     @Query("from Reservation r " +
-            "where (:sId = null or r.publishedProgram.status.id = :sId)")
-    Page<Reservation> findReservationsByStatusId(@Param("sId") Long sId, Pageable pageable);
-
+            "where (:sIds is null or r.publishedProgram.status.id in :sIds)" +
+            "and (:mIds is null or r.member.id in :mIds)")
+    Page<Reservation> findAll(@Param("sIds") List<Long> sIds, @Param("mIds") List<Long> mIds, Pageable pageable);
 }

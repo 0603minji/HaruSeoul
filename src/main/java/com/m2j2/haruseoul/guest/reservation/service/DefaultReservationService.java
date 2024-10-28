@@ -18,39 +18,31 @@ import java.util.Optional;
 
 @Service
 public class DefaultReservationService implements ReservationService {
-    private final PublishedProgramRepository publishedProgramRepository;
     private ReservationRepository reservationRepository;
     private MemberRepository memberRepository;
     private StatusRepository statusRepository;
 
-    public DefaultReservationService(ReservationRepository reservationRepository, MemberRepository memberRepository, StatusRepository statusRepository, PublishedProgramRepository publishedProgramRepository) {
+    public DefaultReservationService(ReservationRepository reservationRepository, MemberRepository memberRepository, StatusRepository statusRepository) {
         this.reservationRepository = reservationRepository;
         this.memberRepository = memberRepository;
         this.statusRepository = statusRepository;
-        this.publishedProgramRepository = publishedProgramRepository;
     }
 
     @Override
-    public ReservationResponseDto getReservationByStatus(Long sId) {
+    public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds) {
         Sort sort = Sort.by("regDate").descending();
         Pageable pageable = PageRequest.of(0, 10, sort);
 
-        // Status ID가 없는 경우 전체 조회 수행
-        Page<Reservation> reservationPage;
-        if (sId == null) {
-            reservationPage = reservationRepository.findAll(pageable);
-        } else {
-            reservationPage = reservationRepository.findReservationsByStatusId(sId, pageable);
-        }
+        // Status ID가 없는 경우 해당 회원의 전체 예약 조회, Status ID가 있으면
+        Page<Reservation> reservations = reservationRepository.findAll(sIds, mIds, pageable);
 
-
-        List<ReservationListDto> reservationListDtos = reservationPage.getContent()
+        List<ReservationListDto> reservationListDtos = reservations.getContent()
                 .stream()
                 .map(ReservationMapper::mapToDto)
                 .toList();
 
-        long totalRowCount = reservationPage.getTotalElements();
-        long totalPageCount = reservationPage.getTotalPages();
+        long totalRowCount = reservations.getTotalElements();
+        long totalPageCount = reservations.getTotalPages();
 
         return ReservationResponseDto.builder()
                 .reservations(reservationListDtos)
@@ -63,18 +55,19 @@ public class DefaultReservationService implements ReservationService {
     @Transactional
     public Reservation create(ReservationCreateDto reservationCreateDto) {
 
-        Optional<PublishedProgram> regPublishedProgram = publishedProgramRepository.findById(reservationCreateDto.getPublishedProgramId());
-        Optional<Member> regMember = memberRepository.findById(reservationCreateDto.getRegMemberId());
-
-        Reservation reservation = Reservation.builder()
-                .publishedProgram(regPublishedProgram.get())
-                .member(regMember.get())
-                .regDate(reservationCreateDto.getProgramDate())
-                .groupSize(reservationCreateDto.getGroupSize())
-                .build();
-
-
-        return reservationRepository.save(reservation);
+//        Optional<PublishedProgram> regPublishedProgram = publishedProgramRepository.findById(reservationCreateDto.getPublishedProgramId());
+//        Optional<Member> regMember = memberRepository.findById(reservationCreateDto.getRegMemberId());
+//
+//        Reservation reservation = Reservation.builder()
+//                .publishedProgram(regPublishedProgram.get())
+//                .member(regMember.get())
+//                .regDate(reservationCreateDto.getProgramDate())
+//                .groupSize(reservationCreateDto.getGroupSize())
+//                .build();
+//
+//
+//        return reservationRepository.save(reservation);
+        return null;
     }
 
     @Override

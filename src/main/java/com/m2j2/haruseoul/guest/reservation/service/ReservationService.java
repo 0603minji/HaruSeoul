@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ReservationService {
-    ReservationResponseDto getReservationByStatus(Long sId);
+    ReservationResponseDto getList(List<Long> sIds, List<Long> mIds);
 
     Reservation create(ReservationCreateDto reservationCreateDto);
 
