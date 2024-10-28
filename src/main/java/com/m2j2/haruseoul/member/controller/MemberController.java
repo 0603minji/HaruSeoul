@@ -15,13 +15,13 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService ) {
         this.memberService = memberService;
+
     }
 
-    @PostMapping
+    @PostMapping("signup")
     public ResponseEntity<Member> create(@RequestBody MemberCreateDto memberCreateDto) {
         return ResponseEntity.ok(memberService.save(memberCreateDto));
-
     }
 }

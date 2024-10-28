@@ -16,7 +16,7 @@ public class MemberCreateDto {
     private String name;
     private String userId;
     private String userPwd;
-    private String nickName;
+    private String nickname;
     private String email;
     private LocalDate birthday;
 
