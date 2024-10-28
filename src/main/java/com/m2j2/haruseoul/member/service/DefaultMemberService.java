@@ -31,19 +31,23 @@ public class DefaultMemberService implements MemberService {
         return memberRepository.save(member);
     }
 
-    @Transactional
     @Override
-    public void update(MemberUpdateDto memberUpdateDto) {
-        Member member = memberRepository.findById(memberUpdateDto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
-
-        if(!memberUpdateDto.getCurrentPwd().equals(member.getUserPwd())) {
-            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다");
-        }
-        member.setUserPwd(memberUpdateDto.getNewPwd());
+    @Transactional
+    public void update(Member member,String newPwd) {
+        member.setUserPwd(newPwd);
         memberRepository.save(member);
     }
 
+    @Override
+    public Member validatePwd(Long memberId, String currentPwd) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+
+        if (!currentPwd.equals(member.getUserPwd())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+        return member;
+    }
 
     @Override
     public void delete(Long id) {
