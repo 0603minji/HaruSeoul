@@ -52,4 +52,8 @@ public class Member {
     @OneToMany(mappedBy = "member")
     @JsonManagedReference
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "member")
+    @JsonManagedReference
+    private List<Reservation> reservations;
 }

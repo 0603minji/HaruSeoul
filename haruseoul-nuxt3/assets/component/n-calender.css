@@ -1,0 +1,142 @@
+.n-calender {
+    /*display: none;*/
+    position: fixed;
+    top: 56%;
+    left: 50%;
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    /*opacity: 1; !* 기본적으로 보임 *!*/
+    /*visibility: hidden; !* 기본적으로 숨김 *!*/
+    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    transition: opacity 0.3s ease, visibility 0s 0.3s; /* opacity 전환 효과 */
+    z-index: 1000; /* 최상위 z-index 설정 */
+
+    h1 {
+        display: none;
+    }
+
+    .calender-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .title {
+            font-size: var(--font-size-9);
+        }
+
+        .n-btn {
+            border: none;
+            position: absolute;
+            right: 15px;
+        }
+    }
+
+    .calender-wrapper {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        width: auto;
+        height: 600px;
+        background-color: var(--color-base-3);
+        border-radius: var(--btn-border-radius, 8px);
+        box-sizing: content-box;
+        font-size: var(--btn-font-size, 14px);
+        font-weight: 400;
+        line-height: 1em;
+        padding: 0 16px;
+        position: relative;
+        transition: border-color .3s, background-color .3s, box-shadow .3s;
+
+        .calender-date {
+            display: flex;
+            height: 60px;
+            justify-content: center;
+            align-items: center;
+
+            #year,
+            #month {
+                font-size: 18px;
+                font-weight: bold;
+                cursor: unset;
+            }
+        }
+
+        .calender-body {
+            display: grid;
+
+            input {
+                appearance: none;
+            }
+
+            .n-panel-tag {
+                --tag-border-color: none;
+                cursor: pointer;
+            }
+
+            .n-panel-tag\:week {
+                --tag-border-color:none;
+            }
+
+            .n-panel-tag\:day {
+            }
+        }
+
+        .n-panel-tag {
+            padding: 21px;
+        }
+    }
+
+
+}
+
+.n-calender.active {
+    visibility: visible; /* active 클래스가 있을 때 보이기 */
+    opacity: 1; /* 모달이 보일 때 */
+    transition: opacity 0.3s ease; /* active일 때만 opacity 전환 효과 */
+}
+
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 100%); /* 초기 위치는 화면 아래 */
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%); /* 최종 위치는 화면 중앙 */
+    }
+}
+
+@keyframes fadeOutDown {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%); /* 시작 위치에서 보이기 */
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, 100%); /* 종료 위치는 화면 아래로 이동 */
+    }
+}
+
+/* 반응형 */
+
+@media (min-width: 1060px) {
+    .n-calender {
+        display: inline-flex;
+        padding: 0;
+        padding-left: 24px;
+        position: sticky;
+        top: 10%;
+        height: 100%;
+        flex-direction: column;
+        justify-content: center;
+        z-index: 0;
+        transform: unset;
+
+        .calender-header {
+            display: none;
+        }
+    }
+}
