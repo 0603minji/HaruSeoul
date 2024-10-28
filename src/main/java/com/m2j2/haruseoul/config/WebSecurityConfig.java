@@ -1,28 +1,46 @@
-package com.m2j2.haruseoul.config;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-@Configuration
-@EnableWebSecurity
-@RequiredArgsConstructor
-
-public class WebSecurityConfig {
-
-    @Bean
-    public WebSecurityCustomizer configure() {
-        return (web) -> web.ignoring()
-                .requestMatchers(new AntPathRequestMatcher("/static/**"));
-    }
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-}
+//package com.m2j2.haruseoul.config;
+//
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+//import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.web.SecurityFilterChain;
+//
+//@Configuration
+//@EnableWebSecurity
+//public class WebSecurityConfig {
+//
+//    @Bean
+//    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+//
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//
+//        http
+//                .authorizeHttpRequests(
+//                        (auth) -> auth
+//                                .requestMatchers("/", "/login","/signup","/api/v1/members/signup").permitAll()
+//                                .requestMatchers("/api/v1/**").authenticated()
+//
+//                );
+////        http
+////                .formLogin(
+////                        (auth) -> auth
+////                                .loginPage("/login")
+//////                                .loginProcessingUrl("/loginProc")
+////                                .permitAll()
+////                );
+//        http
+//                .csrf(
+//                        AbstractHttpConfigurer::disable
+//                );
+//
+//        return http.build();
+//    }
+////
+////
+//}

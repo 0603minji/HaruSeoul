@@ -10,6 +10,8 @@ import GuestReservationDetail from "./pages/guest/reservation/Detail.vue";
 import Anonymous from "./layouts/Anonymous.vue";
 import ProgramList from "@/pages/anonymous//List.vue";
 import ProgramDetail from "@/pages/anonymous//Detail.vue";
+import SignUp from "@/pages/anonymous/SignUp.vue";
+import Login from "@/pages/anonymous/Login.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -27,7 +29,10 @@ const router = createRouter({
             children:
                 [
                     {path: "list", component: ProgramList},
-                    {path: "detail", component: ProgramDetail}
+                    {path: "detail", component: ProgramDetail},
+                    {path: "signup", component: SignUp},
+                    {path: "login" , component: Login}
+
                 ]
         }
     ]

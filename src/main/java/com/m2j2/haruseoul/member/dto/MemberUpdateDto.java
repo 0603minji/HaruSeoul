@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberUpdateDto {
 
+    private Long id;
     private String userPwd;
 
 }
