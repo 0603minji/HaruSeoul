@@ -11,6 +11,7 @@ import ProgramList from "@/pages/anonymous//List.vue";
 import ProgramDetail from "@/pages/anonymous//Detail.vue";
 import SignUp from "@/pages/anonymous/SignUp.vue";
 import Login from "@/pages/anonymous/Login.vue";
+import SignUpSuccess from "@/pages/anonymous/SignUpSuccess.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -24,7 +25,8 @@ const router = createRouter({
                     {path: "list", component: ProgramList},
                     {path: "detail", component: ProgramDetail},
                     {path: "signup", component: SignUp},
-                    {path: "login" , component: Login}
+                    {path: "login" , component: Login},
+                    {path: "success",component:SignUpSuccess}
 
                 ]
         }
