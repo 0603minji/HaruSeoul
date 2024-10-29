@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReservationDetailDto {
 
-    private Long reservationId; // 이게 예약 번호?
+    private Long reservationId;
 
     //memberName, memberEmail
-    private String guestName;
+    private String memberName;
 
-    private String guestEmail;
+    private String memberEmail;
 
       // member 테이블에 없는데 만들어야 할듯
 //    private String guestPhoneNumber; // +82- 이런식이라 String 으로 담아야 하나?
@@ -31,7 +31,7 @@ public class ReservationDetailDto {
 
     private Long reviewsCount; // 평점 개수
 
-    private String programStartTime; //
+    private String programStartTime;
 
     private String routeTitle; // 만나는 장소 요약 제목
 
@@ -45,6 +45,5 @@ public class ReservationDetailDto {
 
     private String programCaution;
 
-    private String programRequirement;
-    // guest 가 예약하기 누를때 팝업 창을 띄운다고 했었는데, detail 페이지에서는 어디에 표시할 것인지
+    private String reservationRequirement;
 }

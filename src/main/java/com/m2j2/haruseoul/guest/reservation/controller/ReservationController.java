@@ -1,9 +1,7 @@
 package com.m2j2.haruseoul.guest.reservation.controller;
 
 import com.m2j2.haruseoul.entity.Reservation;
-import com.m2j2.haruseoul.guest.reservation.dto.ReservationDetailDto;
-import com.m2j2.haruseoul.guest.reservation.dto.ReservationDetailResponseDto;
-import com.m2j2.haruseoul.guest.reservation.dto.ReservationResponseDto;
+import com.m2j2.haruseoul.guest.reservation.dto.*;
 import com.m2j2.haruseoul.guest.reservation.service.DefaultReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

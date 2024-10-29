@@ -4,6 +4,7 @@ import com.m2j2.haruseoul.entity.*;
 import com.m2j2.haruseoul.guest.reservation.dto.*;
 import com.m2j2.haruseoul.guest.reservation.mapper.ReservationMapper;
 import com.m2j2.haruseoul.repository.*;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +50,7 @@ public class DefaultReservationService implements ReservationService {
         // Status ID가 없는 경우 해당 회원의 전체 예약 조회, Status ID가 있으면
         Page<Reservation> reservations = reservationRepository.findAll(sIds, mIds, pageable);
 
-        List<ReservationListDto> reservationListDtos = reservations.getContent()
+        List<ReservationListDto> reservationListDto = reservations.getContent()
                 .stream()
                 .map(ReservationMapper::mapToDto)
                 .toList();
@@ -56,24 +59,28 @@ public class DefaultReservationService implements ReservationService {
         long totalPageCount = reservations.getTotalPages();
 
         return ReservationResponseDto.builder()
-                .reservations(reservationListDtos)
+                .reservations(reservationListDto)
                 .totalRowCount(totalRowCount)
                 .totalPageCount(totalPageCount)
                 .build();
     }
 
     @Override
+    @Transactional
     public ReservationDetailResponseDto getDetail(Long rid) {
-
         // 예약 테이블에서 reservationId 가 일치하는 것을 담는다.
-        Reservation reservation = reservationRepository.findById(rid).orElse(null);
+        Reservation reservation = reservationRepository.findById(rid)
+                .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+
+        // 명시적으로 초기화 (지연 로딩 해결)
+        Hibernate.initialize(reservation.getMember());
 
         // 예약한 공개 프로그램의 프로그램 Id
         Long pId = reservation.getPublishedProgram().getProgram().getId();
         // ratingCount: review 의 개수 담기 - memberId 로 가져오기
         Long reviewsCount = reviewRepository.countByProgramId(pId);
         // ratingAverage 를 따로 담아오기
-        
+
         // routeTitle: route 의 이름 담기
         String routeTitle = routeRepository.titleByProgramId(pId);
         // routeAddress: route 의 주소 담기
@@ -87,7 +94,7 @@ public class DefaultReservationService implements ReservationService {
                     mapper.map(src -> src.getPublishedProgram().getProgram().getMember().getId(), ReservationListDto::setHostId);
                     mapper.map(src -> src.getPublishedProgram().getStatus().getName(), ReservationListDto::setStatusName);
                     mapper.map(src -> src.getPublishedProgram().getProgram().getTitle(), ReservationListDto::setProgramTitle);
-                    mapper.map(Reservation::getRegDate, ReservationListDto::setDate);
+                    mapper.map(src -> src.getPublishedProgram().getDate(), ReservationListDto::setDate);
                     mapper.map(Reservation::getGroupSize, ReservationListDto::setGroupSize);
                 });
 
@@ -98,8 +105,6 @@ public class DefaultReservationService implements ReservationService {
         modelMapper.typeMap(Reservation.class, ReservationDetailDto.class)
                 .addMappings(mapper -> {
                     mapper.map(Reservation::getId, ReservationDetailDto::setReservationId);
-                    mapper.map(src -> src.getMember().getName(), ReservationDetailDto::setGuestName);
-                    mapper.map(src -> src.getMember().getEmail(), ReservationDetailDto::setGuestEmail);
 
                     // 호스트 정보와 프로그램 관련 매핑
                     mapper.map(src -> src.getPublishedProgram().getProgram().getMember().getName(),
@@ -117,12 +122,12 @@ public class DefaultReservationService implements ReservationService {
                     mapper.map(src -> String.valueOf(src.getPublishedProgram().getProgram().getCaution()),
                             ReservationDetailDto::setProgramCaution);
                     mapper.map(src -> String.valueOf(src.getPublishedProgram().getProgram().getRequirement()),
-                            ReservationDetailDto::setProgramRequirement);
+                            ReservationDetailDto::setReservationRequirement);
                 });
         reservationDetailDto.setReviewsCount(reviewsCount);
         reservationDetailDto.setRouteTitle(routeTitle);
         reservationDetailDto.setRouteAddress(routeAddress);
-        
+
 
         return ReservationDetailResponseDto.builder()
                 .reservation(reservationListDto)
@@ -134,19 +139,17 @@ public class DefaultReservationService implements ReservationService {
     @Transactional
     public Reservation create(ReservationCreateDto reservationCreateDto) {
 
-//        Optional<PublishedProgram> regPublishedProgram = publishedProgramRepository.findById(reservationCreateDto.getPublishedProgramId());
-//        Optional<Member> regMember = memberRepository.findById(reservationCreateDto.getRegMemberId());
-//
-//        Reservation reservation = Reservation.builder()
-//                .publishedProgram(regPublishedProgram.get())
-//                .member(regMember.get())
-//                .regDate(reservationCreateDto.getProgramDate())
-//                .groupSize(reservationCreateDto.getGroupSize())
-//                .build();
-//
-//
-//        return reservationRepository.save(reservation);
-        return null;
+        Reservation reservation = modelMapper.map(reservationCreateDto, Reservation.class);
+
+        modelMapper.typeMap(Reservation.class, ReservationCreateDto.class)
+                .addMappings(mapper -> {
+                        mapper.map(src -> src.getPublishedProgram().getId(), ReservationCreateDto::setPublishedProgramId);
+                        mapper.map(src -> src.getMember().getId(), ReservationCreateDto::setRegMemberId);
+                        mapper.map(src -> src.getPublishedProgram().getDate(), ReservationCreateDto::setProgramDate);
+                        mapper.map(Reservation::getGroupSize, ReservationCreateDto::setReservationGroupSize);
+        });
+
+    return null;
     }
 
     @Override

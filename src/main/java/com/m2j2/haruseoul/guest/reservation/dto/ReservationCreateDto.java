@@ -20,6 +20,6 @@ public class ReservationCreateDto {
 
     private Instant programDate;
 
-    private Integer groupSize;
+    private Integer reservationGroupSize;
 
 }
