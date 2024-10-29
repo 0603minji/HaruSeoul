@@ -2,6 +2,7 @@ package com.m2j2.haruseoul.guest.reservation.controller;
 
 import com.m2j2.haruseoul.entity.Reservation;
 import com.m2j2.haruseoul.guest.reservation.dto.ReservationDetailDto;
+import com.m2j2.haruseoul.guest.reservation.dto.ReservationDetailResponseDto;
 import com.m2j2.haruseoul.guest.reservation.dto.ReservationResponseDto;
 import com.m2j2.haruseoul.guest.reservation.service.DefaultReservationService;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +30,10 @@ public class ReservationController {
     }
 
     @GetMapping("{rid}")
-    public ResponseEntity<ReservationDetailDto> getDetail(
+    public ResponseEntity<ReservationDetailResponseDto> getDetail(
             @PathVariable("rid") Long rId){
-        ReservationDetailDto reservationDetailDto = reservationService.getDetail(rId);
+        ReservationDetailResponseDto reservationDetailResponseDto = reservationService.getDetail(rId);
 
-        return ResponseEntity.ok(reservationDetailDto);
+        return ResponseEntity.ok(reservationDetailResponseDto);
     }
 }

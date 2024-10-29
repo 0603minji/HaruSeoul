@@ -98,7 +98,7 @@ public class Program {
     @Column(name = "exclusion")
     private String exclusion;
 
-    @Column(name = "packing_list")
+    @Column(name = "packing_list") 
     private String packingList;
 
     @Column(name = "caution")
