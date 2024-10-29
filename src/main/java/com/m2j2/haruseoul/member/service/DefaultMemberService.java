@@ -33,8 +33,12 @@ public class DefaultMemberService implements MemberService {
 
     @Override
     @Transactional
-    public void update(Member member,String newPwd) {
-        member.setUserPwd(newPwd);
+    public void update(MemberUpdateDto memberUpdateDto) {
+
+        Member member = memberRepository.findById(memberUpdateDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+
+        member.setUserPwd(memberUpdateDto.getNewPwd());
         memberRepository.save(member);
     }
 
@@ -52,7 +56,7 @@ public class DefaultMemberService implements MemberService {
     @Override
     public void delete(Long id) {
         if (!memberRepository.existsById(id)) {
-            throw new IllegalArgumentException("해당 ID가 존재하지 않습니다.이미 삭제되었거나 없는 계정입니다.");
+            throw new IllegalArgumentException("해당 ID가 존재하지 않습니다. 이미 삭제되었거나 없는 계정입니다.");
         }
         memberRepository.deleteById(id);
     }
