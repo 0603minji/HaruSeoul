@@ -40,4 +40,7 @@ public class Reservation {
 
     @Column(name = "group_size", nullable = false)
     private int groupSize;
+
+    @Column(name = "requirement")
+    private String requirement;
 }

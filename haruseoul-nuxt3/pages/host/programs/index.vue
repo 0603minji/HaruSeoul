@@ -27,11 +27,12 @@ const fetchPrograms = async () => {
 };
 
 </script>
+
+
+<template>
   <Head>
     <Title> Host Program List 페이지 </Title>
   </Head>
-
-<template>
   <main>
     <section class="n-layout-mj">
       <!--=== heading ==========================================-->
