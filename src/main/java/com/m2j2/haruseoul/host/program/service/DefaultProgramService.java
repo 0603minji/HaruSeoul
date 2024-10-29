@@ -7,6 +7,7 @@ import com.m2j2.haruseoul.entity.Program;
 import com.m2j2.haruseoul.host.program.dto.*;
 import com.m2j2.haruseoul.host.program.mapper.ProgramMapper;
 import com.m2j2.haruseoul.repository.*;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class DefaultProgramService implements ProgramService {
 
@@ -95,6 +97,11 @@ public class DefaultProgramService implements ProgramService {
     public Program create(ProgramCreateDto programCreateDto) {
         //Program program = mapper.map(programCreateDto, Program.class);
         Optional<Member> regMember = memberRepository.findById(programCreateDto.getRegMemberId());
+        if(regMember.isPresent() == false){
+            log.error("등록되지 않은 사용자 입니다. 에러 발생!");
+            return null;
+        }
+
 
         Program program = Program.builder()
                 .title(programCreateDto.getTitle())
@@ -115,21 +122,12 @@ public class DefaultProgramService implements ProgramService {
         //  ** category, route, image 빌드 실패 **
 
         Program savedProgram = programRepository.save(program);
-
-
-        List<Long> categoryIds = programCreateDto.getCategoryIds();
-        List<CategoryProgram> categoryPrograms = new ArrayList<>();
-
-        for (Long categoryId : categoryIds) {
-            Category category = categoryRepository.findById(categoryId).get();
-            CategoryProgram categoryProgram = CategoryProgram.builder()
-                    .program(savedProgram)
-                    .category(category)
-                    .build();
-            categoryPrograms.add(categoryProgram);
-        }
-        categoryProgramRepository.saveAll(categoryPrograms);
-
+        /**
+         * todo.
+         *      1. category_program 테이블에 카테고리 정보 저장
+         *      2. route 테이블 생성 및 데이터 저장
+         *      3. 이미지 저장
+         */
         return savedProgram;
     }
 
