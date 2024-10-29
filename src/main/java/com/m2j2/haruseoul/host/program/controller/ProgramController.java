@@ -48,6 +48,8 @@ public class ProgramController {
     public ResponseEntity<Program> create(
             @RequestBody ProgramCreateDto programCreateDto
     ) {
+        log.info("{}", programCreateDto);
+        service.create(programCreateDto);
         return ResponseEntity.ok(service.create(programCreateDto));
     }
 

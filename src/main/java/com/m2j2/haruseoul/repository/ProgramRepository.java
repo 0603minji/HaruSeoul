@@ -14,8 +14,7 @@ import java.util.List;
 public interface ProgramRepository extends JpaRepository<Program, Long> {
     @Query("from Program p " +
             "where (:statuses is null or p.status in :statuses)" +
-            "and (:pIds is null or p.id in :pIds) " +
-            "and (:hostId is null or p.member.id = :hostId)")
+            "and (:pIds is null or p.id in :pIds) ")
     //  host 1사람에 대한 프로그램만 나와야함
     //  예) p=3 선택시 3페이지가 나오기
     Page<Program> findAll(@Param("pIds") List<Long> programIds, List<String> statuses, Pageable pageable);
