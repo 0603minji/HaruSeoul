@@ -11,10 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReservationDetailDto {
 
-    // ReservationListDto 에 담겨있는걸 가져온다면 여기에서는 다시 안담아도 되는건가?
-
     private Long reservationId; // 이게 예약 번호?
 
+    //memberName, memberEmail
     private String guestName;
 
     private String guestEmail;

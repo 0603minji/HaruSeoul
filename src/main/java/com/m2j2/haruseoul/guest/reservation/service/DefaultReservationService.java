@@ -70,8 +70,10 @@ public class DefaultReservationService implements ReservationService {
 
         // 예약한 공개 프로그램의 프로그램 Id
         Long pId = reservation.getPublishedProgram().getProgram().getId();
-        // ratingCount: review 의 개수 담기
+        // ratingCount: review 의 개수 담기 - memberId 로 가져오기
         Long reviewsCount = reviewRepository.countByProgramId(pId);
+        // ratingAverage 를 따로 담아오기
+        
         // routeTitle: route 의 이름 담기
         String routeTitle = routeRepository.titleByProgramId(pId);
         // routeAddress: route 의 주소 담기
