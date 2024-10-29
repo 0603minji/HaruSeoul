@@ -1,10 +1,7 @@
 package com.m2j2.haruseoul.guest.reservation.service;
 
 import com.m2j2.haruseoul.entity.Reservation;
-import com.m2j2.haruseoul.guest.reservation.dto.ReservationCreateDto;
-import com.m2j2.haruseoul.guest.reservation.dto.ReservationDetailDto;
-import com.m2j2.haruseoul.guest.reservation.dto.ReservationDetailResponseDto;
-import com.m2j2.haruseoul.guest.reservation.dto.ReservationResponseDto;
+import com.m2j2.haruseoul.guest.reservation.dto.*;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
