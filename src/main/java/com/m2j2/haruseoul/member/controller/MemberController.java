@@ -26,11 +26,16 @@ public class MemberController {
     @PutMapping("{id}")
     public ResponseEntity<String> update(@PathVariable Long id, @RequestBody MemberUpdateDto memberUpdateDto) {
 
-        Member member = memberService.validatePwd(id, memberUpdateDto.getCurrentPwd());
-
-        memberService.update(member, memberUpdateDto.getNewPwd());
+        memberUpdateDto.setId(id);
+        memberService.update(memberUpdateDto);
 
         return ResponseEntity.ok("비밀번호 변경 완료");
+    }
+
+    @PostMapping("checkPwd")
+    public ResponseEntity<String> validate(@RequestBody MemberUpdateDto memberUpdateDto) {
+        memberService.validatePwd(memberUpdateDto.getId(),memberUpdateDto.getCurrentPwd());
+        return ResponseEntity.ok("비밀번호가 일치합니다");
     }
 
     @DeleteMapping("{id}")
