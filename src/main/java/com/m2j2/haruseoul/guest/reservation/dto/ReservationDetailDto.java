@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -33,7 +30,7 @@ public class ReservationDetailDto {
 
     private String programRating; // 프로그램 평점 합계
 
-    private String ratingCount; // 평점 개수
+    private Long reviewsCount; // 평점 개수
 
     private String programStartTime; //
 
