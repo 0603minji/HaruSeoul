@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import {ref, computed} from "vue";
+import {ref, computed, watch} from "vue";
 import axios from "axios";
 
 // 리액티브 변수 선언
@@ -85,6 +85,11 @@ const nickname = ref("");
 const email = ref("");
 const birth = ref("");
 const isChecked = ref(false);
+
+
+watch(userId, () => {
+  isChecked.value = false;
+});
 
 
 // 비밀번호 일치 여부 계산 속성
