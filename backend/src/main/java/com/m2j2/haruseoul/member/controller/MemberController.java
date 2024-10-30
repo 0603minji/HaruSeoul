@@ -7,6 +7,8 @@ import com.m2j2.haruseoul.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController("memberController")
 @RequestMapping("members")
 public class MemberController {
@@ -19,12 +21,17 @@ public class MemberController {
     }
 
     @PostMapping("idvalid")
-    public void idvalid(String userId) {
-         memberService.validateId(userId);
+    public ResponseEntity<Void> idvalid(@RequestBody Map<String, String> userIdMap) {
+        String userId = userIdMap.get("userId");
+        memberService.validateId(userId);
+        return ResponseEntity.ok().build();
     }
-
     @PostMapping("signup")
     public ResponseEntity<Member> create(@RequestBody MemberCreateDto memberCreateDto) {
+        if (!memberCreateDto.getIsChecked()) { // 중복 확인 여부 검사
+            throw new IllegalArgumentException("아이디 중복 확인이 필요합니다.");
+        }
+
         return ResponseEntity.ok(memberService.save(memberCreateDto));
     }
 

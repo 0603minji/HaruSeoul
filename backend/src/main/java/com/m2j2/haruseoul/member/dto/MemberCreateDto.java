@@ -20,5 +20,6 @@ public class MemberCreateDto {
     private String nickname;
     private String email;
     private LocalDate birth;
+    private Boolean isChecked;
 
 }
