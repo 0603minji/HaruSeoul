@@ -43,7 +43,6 @@ public class ProgramController {
 
     @PostMapping
     public ResponseEntity<Program> create(@RequestBody ProgramCreateDto programCreateDto) {
-        service.create(programCreateDto);
         return ResponseEntity.ok(service.create(programCreateDto));
     }
 

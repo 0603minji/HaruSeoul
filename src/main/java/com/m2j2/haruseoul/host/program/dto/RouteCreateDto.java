@@ -6,11 +6,11 @@ import java.time.LocalTime;
 
 @Data
 public class RouteCreateDto {
+    private Long transportationId;
     private Integer order;
     private String title;
     private String address;
     private String description;
     private LocalTime duration;
-    private String transportation;
     private LocalTime transportationDuration;
 }
