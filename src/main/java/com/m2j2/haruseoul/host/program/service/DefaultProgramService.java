@@ -95,7 +95,7 @@ public class DefaultProgramService implements ProgramService {
         //Program program = mapper.map(programCreateDto, Program.class);
         Optional<Member> regMember = memberRepository.findById(programCreateDto.getRegMemberId());
         if(regMember.isPresent() == false){
-            log.error("등록되지 않은 사용자 입니다. 에러 발생!");
+            log.error("[ 에러 ] 등록되지 않은 사용자 입니다");
             return null;
         }
 
@@ -116,13 +116,22 @@ public class DefaultProgramService implements ProgramService {
                 .caution(programCreateDto.getCaution())
                 .build();
 
-        //  ** category, route, image 빌드 실패 **
+
         Program savedProgram = programRepository.save(program);
+        
+        
+        //  programCreateDto에 입력받은 routes 필드 데이터(List<RouteCreateDto>)를 routeCreateDto 객체에 저장
         List<RouteCreateDto> routeCreateDtos = programCreateDto.getRoutes();
+        //  routeCreateDtos를 변환해서 담을 Route 엔티티가 여러개인 List routes 생성
         ArrayList<Route> routes = new ArrayList<>();
+
+        //  routeCreateDtos(List)에 담긴 routeCreateDto 하나하나를 Route객체로 변환하고
+        //  그 객체들을 리스트 routes에 add하여 누적
         for(RouteCreateDto routeCreateDto : routeCreateDtos){
+            //  이동수단
             Transportation newTransportation = new Transportation();
             newTransportation.setName(routeCreateDto.getTransportation());
+            //  이동수단 제외 나머지 속성들
             Route build = Route.builder()
                     .program(savedProgram)
                     .title(routeCreateDto.getTitle())
@@ -130,18 +139,21 @@ public class DefaultProgramService implements ProgramService {
                     .description(routeCreateDto.getDescription())
                     .duration(routeCreateDto.getDuration())
                     .order(routeCreateDto.getOrder())
+                    .transportationDuration(routeCreateDto.getTransportationDuration())
                     .build();
             routes.add(build);
         }
+
         log.info("{}",routes.size());
-        List<Route> routes1 = routeRepository.saveAll(routes);
-        /**
-         * todo.
-         *      1. category_program 테이블에 카테고리 정보 저장
-         *      2. route 테이블 생성 및 데이터 저장
-         *      3. 이미지 저장
-         */
+        routeRepository.saveAll(routes);
+
         return savedProgram;
+
+        /**
+         * todo
+         *  1. category_program 테이블에 새로운 프로그램에 대한 category_id 저장
+         *  2. image 테이블에 저장
+         */
     }
 
     @Override
@@ -190,6 +202,4 @@ public class DefaultProgramService implements ProgramService {
     public void delete(Long programId) {
         programRepository.deleteById(programId);
     }
-
-
 }
