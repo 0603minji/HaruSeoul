@@ -121,8 +121,20 @@ public class DefaultProgramService implements ProgramService {
 
 
         Program savedProgram = programRepository.save(program);
-        
-        
+
+        List<Long> categoryIds = programCreateDto.getCategoryIds();
+        List<CategoryProgram> categoryPrograms = new ArrayList<>();
+
+        for (Long categoryId : categoryIds) {
+            Category category = categoryRepository.findById(categoryId).get();
+            CategoryProgram categoryProgram = CategoryProgram.builder()
+                    .program(savedProgram)
+                    .category(category)
+                    .build();
+            categoryPrograms.add(categoryProgram);
+        }
+        categoryProgramRepository.saveAll(categoryPrograms);
+
         //  programCreateDto에 입력받은 routes 필드 데이터(List<RouteCreateDto>)를 routeCreateDto 객체에 저장
         List<RouteCreateDto> routeCreateDtos = programCreateDto.getRoutes();
         //  routeCreateDtos를 변환해서 담을 Route 엔티티가 여러개인 List routes 생성
