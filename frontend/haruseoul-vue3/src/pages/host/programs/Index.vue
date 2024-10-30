@@ -19,6 +19,7 @@ const programTitles = ref([]);  //  프로그램 id, title들을 저장할 배�
 const selectedProgramIds = ref([]); // 프로그램 필터에서 선택된 프로그램의 id를 저장할 배열
 const categories = ref([]);
 const selectedCategories = ref([]);
+const selectedStatus = ref([]);
 //  ref : 반응형 변수 (데이터 변경시 ui도 자동 업데이트
 //  const : javascript에서 상수값 선언시 사용하는 키워드
 //          변수의 값이 변하지 않을때 사용하는 키워드
@@ -34,6 +35,13 @@ onMounted(() => {
   fetchPrograms();  //  프로그램 목록을 가져오는 함수
   fetchProgramIds();  //  프로그램의 제목과 ID 목록을 가져오는 함수
   fetchCategories();
+
+  const CategoryCheckbox = document.querySelector('.categoryAll');
+  CategoryCheckbox.checked=true;
+  const programCheckbox = document.querySelector('.programidAll');
+  programCheckbox.checked=true;
+  const statusCheckbox = document.querySelector('.statusCheckboxAll');
+  statusCheckbox.checked=true;
 });
 
 //============= Data Functions =======================
@@ -93,7 +101,7 @@ const selectCategoryAll = async () => {
   });
 
   try {
-    await fetchPrograms(null, null, null, null);
+    await fetchPrograms(null, selectedProgramIds.value.join(','), selectedProgramIds.value.join(','), null);
   } catch (error) {
     console.error("Error fetching all categories:", error);
   }
@@ -107,7 +115,7 @@ const selectCategory = async () => {
   
   if (selectedCategories.value.length > 0) {
     try {
-      await fetchPrograms(selectedCategories.value.join(','), null, null, null);
+      await fetchPrograms(selectedCategories.value.join(','), selectedProgramIds.value.join(','), selectedProgramIds.value.join(','), null);
     } catch (error) {
       console.error("Error fetching selected categories:", error);
     }
@@ -127,7 +135,7 @@ const selectProgramAll = async () => {
   });
   //  .programids 클래스를 가진 모든 체크박스를 찾아서 선택 해제
   try {
-    await fetchPrograms(null, null, null, null);
+    await fetchPrograms(selectedCategories.value.join(','), null, selectedProgramIds.value.join(','), null);
     //  fetchPrograms를 호출하여 모든 프로그램을 서버에서 다시 가져오기
     //  파라미터를 모두 null로 전달하여 필터 없이 전체 목록 가져오기
   } catch (error) {
@@ -147,7 +155,7 @@ const selectProgram = async () => {
   if (selectedProgramIds.value.length > 0) {
     try {
       // 선택된 id들을 ','로 연결해서 쿼리 파라미터로 전송 (pg=1,2,3)
-      await fetchPrograms(null, selectedProgramIds.value.join(','), null, null);
+      await fetchPrograms(selectedCategories.value.join(','), selectedProgramIds.value.join(','), selectedProgramIds.value.join(','), null);
     } catch (error) {
       console.error("Error fetching selected programs:", error);
     }
@@ -155,6 +163,38 @@ const selectProgram = async () => {
     console.log("No programs selected.");
   }
 };
+
+const selectStatusAll = async () => {
+  selectedStatus.value = [];
+  const checkboxes  = document.querySelectorAll('.statusCheckbox');
+  checkboxes .forEach((checkbox) => {
+    // 상태 조건 필터링 모두를 unCheck 한다.
+    checkbox.checked = false;
+  });
+
+  try {
+    await fetchPrograms(selectedCategories.value.join(','), selectedProgramIds.value.join(','), null, null);
+    //  fetchPrograms를 호출하여 모든 프로그램을 서버에서 다시 가져오기
+    //  파라미터를 모두 null로 전달하여 필터 없이 전체 목록 가져오기
+  } catch (error) {
+    console.error("Error fetching all programs:", error);
+  }
+}
+
+const selectStatus = async () => {
+  const checkboxes  = document.querySelector('.statusCheckboxAll');
+  if(checkboxes) {
+    checkboxes.checked = false;
+  }
+  console.log(`Selected status: ${selectedStatus.value}`);
+  try {
+    await fetchPrograms(selectedCategories.value.join(','), selectedProgramIds.value.join(','), selectedStatus.value.join(','), null);
+    //  fetchPrograms를 호출하여 모든 프로그램을 서버에서 다시 가져오기
+    //  파라미터를 모두 null로 전달하여 필터 없이 전체 목록 가져오기
+  } catch (error) {
+    console.error("Error fetching all programs:", error);
+  }
+}
 </script>
 
 <template>
@@ -323,10 +363,10 @@ const selectProgram = async () => {
 
               <form action="" class="form">
                 <div class="modal-checkbox">
-                  <label><input type="checkbox" />전체</label>
-                  <label><input type="checkbox" />작성중</label>
-                  <label><input type="checkbox" />작성완료</label>
-                  <label><input type="checkbox" />모집중</label>
+                  <label><input class="statusCheckboxAll" type="checkbox" @change="selectStatusAll"/>전체</label>
+                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus" :value="'In Progress'" v-model="selectedStatus"/>작성중</label>
+                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus" :value="'Unpublished'" v-model="selectedStatus"/>작성완료</label>
+                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus" :value="'Published'" v-model="selectedStatus"/>모집중</label>
                 </div>
               </form>
             </details>
