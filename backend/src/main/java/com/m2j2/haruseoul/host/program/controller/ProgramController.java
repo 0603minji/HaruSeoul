@@ -35,12 +35,6 @@ public class ProgramController {
         return ResponseEntity.ok(programResponseDto);
     }
 
-    @GetMapping("/titles")
-    public ResponseEntity<List<ProgramTitle>> getProgramTitles() {
-        List<ProgramTitle> programTitles = service.getProgramTitles();
-        return ResponseEntity.ok(programTitles);
-    }
-
     @PostMapping
     public ResponseEntity<Program> create(@RequestBody ProgramCreateDto programCreateDto) {
         return ResponseEntity.ok(service.create(programCreateDto));
