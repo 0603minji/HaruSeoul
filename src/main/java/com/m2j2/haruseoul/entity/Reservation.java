@@ -1,16 +1,19 @@
 package com.m2j2.haruseoul.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.util.List;
 
-@Getter
-@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
 @Entity
 @Table(name = "reservation")
 public class Reservation {
@@ -19,6 +22,7 @@ public class Reservation {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    // 프로그램 ID = 날짜가 정해진 프로그램
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "published_program_id", nullable = false)
     @JsonBackReference
@@ -34,4 +38,9 @@ public class Reservation {
     @CreationTimestamp
     private Instant regDate;
 
+    @Column(name = "group_size", nullable = false)
+    private int groupSize;
+
+    @Column(name = "requirement")
+    private String requirement;
 }
