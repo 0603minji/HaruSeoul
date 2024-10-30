@@ -1,6 +1,5 @@
 package com.m2j2.haruseoul.repository;
 
-import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.entity.Program;
 import com.m2j2.haruseoul.host.program.dto.ProgramTitle;
 import org.springframework.data.domain.Page;
