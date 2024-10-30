@@ -12,7 +12,7 @@
         <label for="id">ID</label>
         <div class="button-container">
         <input v-model="userId" type="text" id="id" placeholder="ID" required>
-        <button type="button" class="n-btn n-btn-pg-filter active">Verify</button>
+        <button @submit.prevent="validHandler" type="button" class="n-btn n-btn-pg-filter active">Verify</button>
         </div>
       </div>
 
@@ -55,7 +55,7 @@
 
       <div class="form-group">
         <label for="birth">Birth</label>
-        <input v-model="birthday" type="date" id="birth" placeholder="birth" required>
+        <input v-model="birth" type="date" id="birth" placeholder="birth" required>
       </div>
 
       <button type="submit" class="n-btn n-btn-background-color:main n-btn-size:3" :disabled="!isMatch">Register</button>
@@ -76,7 +76,8 @@ const name = ref("");
 const userId = ref("");
 const nickname = ref("");
 const email = ref("");
-const birthday = ref("");
+const birth = ref("");
+const isValid = ref(false); // ID 중복 확인 여부
 
 
 // 비밀번호 일치 여부 계산 속성
@@ -97,7 +98,7 @@ const submitHandler = async () => {
     userPwd: password.value,
     nickname: nickname.value,
     email: email.value,
-    birthday: birthday.value,
+    birth: birth.value,
   };
 
   try {
@@ -109,6 +110,21 @@ const submitHandler = async () => {
     // 실패 시 처리 로직 추가 가능
   }
 };
+
+const validHandler = async () => {
+
+  const userIdData = {
+    userId: userId.value
+  };
+  try {
+    const response = await axios.post('http://localhost:8080/api/v1/members/idvalid', userIdData);
+    alert("중복확인 완료");
+    isValid.value = true;
+  } catch (error) {
+    alert("이미 존재하는 ID입니다.");
+    isValid.value = false;
+  }
+}
 </script>
 
 

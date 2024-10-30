@@ -18,6 +18,11 @@ public class MemberController {
 
     }
 
+    @PostMapping("idvalid")
+    public void idvalid(String userId) {
+         memberService.validateId(userId);
+    }
+
     @PostMapping("signup")
     public ResponseEntity<Member> create(@RequestBody MemberCreateDto memberCreateDto) {
         return ResponseEntity.ok(memberService.save(memberCreateDto));
