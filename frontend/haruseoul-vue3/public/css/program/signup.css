@@ -70,6 +70,20 @@ label {
     box-sizing: border-box;
     width: 100%;
 }
+
+.success-message {
+    color: blue;
+    font-size: 1em;
+    margin: 5px;
+}
+
+.fail-message {
+    color: red;
+    font-size: 1em;
+    margin: 5px;
+}
+
+
 @media (min-width: 768px) {
     .container {
         max-width: 1096px;

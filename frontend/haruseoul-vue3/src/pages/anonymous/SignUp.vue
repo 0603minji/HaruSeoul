@@ -5,15 +5,19 @@
     <form @submit.prevent="submitHandler">
       <div class="form-group">
         <label for="name">Name</label>
-        <input v-model="name" type="text" id="name" placeholder="Name" required>
+        <input v-model="name" type="text" id="name" placeholder="Name" pattern="[A-Za-z]+"
+               title="Please enter English letters only." required>
       </div>
 
       <div class="form-group">
         <label for="id">ID</label>
         <div class="button-container">
-        <input v-model="userId" type="text" id="id" placeholder="ID" required>
-        <button @submit.prevent="validHandler" type="button" class="n-btn n-btn-pg-filter active">Verify</button>
+          <input v-model="userId" type="text" id="id" placeholder="ID" pattern="[A-Za-z0-9]+"
+                 title="Please enter English letters and numbers only." required>
+          <button @click="validHandler" type="button" class="n-btn n-btn-pg-filter active">Verify</button>
         </div>
+        <p v-if="isChecked" class="success-message">중복확인 완료</p>
+        <p v-if="!(isChecked)" class="fail-message">중복확인을 해주세요.</p>
       </div>
 
       <div class="form-group">
@@ -23,6 +27,8 @@
             id="password"
             placeholder="Password"
             v-model="password"
+            pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+"
+            title="Password must contain English letters, numbers, and special characters."
             required
         />
       </div>
@@ -46,7 +52,8 @@
 
       <div class="form-group">
         <label for="nickname">Nickname</label>
-        <input v-model="nickname" type="text" id="nickname" placeholder="Nickname" required>
+        <input v-model="nickname" type="text" id="nickname" placeholder="Nickname" pattern="[A-Za-z0-9]+"
+               title="Please enter English letters and numbers only." required>
       </div>
       <div class="form-group">
         <label for="email">Email</label>
@@ -58,7 +65,7 @@
         <input v-model="birth" type="date" id="birth" placeholder="birth" required>
       </div>
 
-      <button type="submit" class="n-btn n-btn-background-color:main n-btn-size:3" :disabled="!isMatch">Register</button>
+      <button type="submit" class="n-btn n-btn-background-color:main n-btn-size:3">Register</button>
     </form>
   </main>
 
@@ -77,7 +84,7 @@ const userId = ref("");
 const nickname = ref("");
 const email = ref("");
 const birth = ref("");
-const isValid = ref(false); // ID 중복 확인 여부
+const isChecked = ref(false);
 
 
 // 비밀번호 일치 여부 계산 속성
@@ -90,7 +97,10 @@ const message = computed(() => {
 });
 
 const submitHandler = async () => {
-  if (!isMatch.value) return;
+  if (!isMatch.value || !isChecked.value) { // 중복 확인을 완료하지 않았다면 진행 불가
+    alert("아이디 중복 확인을 해주세요.");
+    return;
+  }
 
   const memberData = {
     name: name.value,
@@ -99,6 +109,7 @@ const submitHandler = async () => {
     nickname: nickname.value,
     email: email.value,
     birth: birth.value,
+    isChecked: isChecked.value
   };
 
   try {
@@ -112,19 +123,23 @@ const submitHandler = async () => {
 };
 
 const validHandler = async () => {
+  const userIdData = {userId: userId.value};
 
-  const userIdData = {
-    userId: userId.value
-  };
   try {
     const response = await axios.post('http://localhost:8080/api/v1/members/idvalid', userIdData);
     alert("중복확인 완료");
-    isValid.value = true;
+    isChecked.value = true;
   } catch (error) {
-    alert("이미 존재하는 ID입니다.");
-    isValid.value = false;
+    if (error.response && error.response.status === 409) { // 상태 코드 409이면 중복된 ID임을 표시
+      alert("이미 존재하는 ID입니다.");
+      isChecked.value = false;
+    } else {
+      alert("오류가 발생했습니다. 다시 시도해주세요.");
+    }
   }
-}
+};
+
+
 </script>
 
 
