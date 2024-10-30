@@ -5,556 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2244f67b-1f0c-4a13-8e49-6f42bfeece31" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HaruSeoul.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/app.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/card-shadow.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/card-shadow.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/card.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/card.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-aside.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-aside.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-bar.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-bar.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-btn-ms.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-btn-ms.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-btn.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-btn.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-calender.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-calender.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-card-column.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-card-column.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-card.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-card.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-collapse.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-collapse.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-deco.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-deco.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-filter.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-filter.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-footer.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-footer.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-global-header.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-global-header.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-icon.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-icon.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-list-header.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-list-header.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-location.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-location.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-modal.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-modal.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-panel.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-panel.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-profile-card.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-profile-card.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-review.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-review.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/n-title.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/n-title.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/component/title.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/component/title.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/guest/reservation/detail.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/guest/reservation/detail.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/guest/reservation/list.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/guest/reservation/list.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/host/program/create.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/host/program/create.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/host/program/list.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/host/program/list.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/host/reservation/list.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/host/reservation/list.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/alert.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/alert.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/arrow-swap.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/arrow-swap.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/arrow_down.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/arrow_down.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/arrow_left.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/arrow_left.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/arrow_right.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/arrow_right.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/arrow_swap.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/arrow_swap.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/arrow_up.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/arrow_up.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/bookmark.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/bookmark.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/bus.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/bus.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/calendar.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/calendar.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/calendar_month.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/calendar_month.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/category.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/category.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/caution.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/caution.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/chat.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/chat.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/check_doc.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/check_doc.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/circle.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/circle.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/clock.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/clock.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/clock_sand.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/clock_sand.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/create.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/create.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/credit_card.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/credit_card.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/dashboard.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/dashboard.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/error.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/error.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/exit.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/exit.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/faq.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/faq.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/globe.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/globe.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/globe_2.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/globe_2.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/group.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/group.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/instagram.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/instagram.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/list.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/list.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/location.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/location.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/logout.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/logout.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/meatball.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/meatball.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/more.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/more.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/more_vertical.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/more_vertical.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/notice.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/notice.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/number1.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/number1.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/number2.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/number2.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/number3.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/number3.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/number4.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/number4.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/number5.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/number5.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/pending.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/pending.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/people.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/people.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/placeholder.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/placeholder.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/plus.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/plus.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/price.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/price.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/programs.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/programs.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/rectangle.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/rectangle.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/reset.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/reset.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/review.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/review.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/search.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/search.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/setting.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/setting.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/share.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/share.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/star.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/star.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/subway.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/subway.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/success-circle-green.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/success-circle-green.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/success-decagon.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/success-decagon.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/ticket.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/ticket.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/walk.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/walk.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/image/icon/wishlist.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/image/icon/wishlist.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/newtil.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/newtil.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/program/detail.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/program/detail.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/program/list.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/program/list.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/reset.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/reset.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/components/AsideLogin.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/components/AsideLogin.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/components/AsideLogout.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/components/AsideLogout.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/components/GuestHeader.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/components/HostHeader.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/components/RootFooter.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/components/RootHeader.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/components/filter/Category.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/components/filter/Category.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/layouts/anonymous.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/layouts/guest.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/layouts/host.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/nuxt.config.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/pages/anonymous/programs/[id]/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/pages/anonymous/programs/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/pages/guest/reservations/[id]/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/pages/guest/reservations/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/pages/host/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/pages/host/programs/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/pages/host/programs/new.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/pages/host/reservations/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/pages/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/bus.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/bus.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/face.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/face.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/guest/map.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/guest/map.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/guest/profile.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/guest/profile.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/guest/program_01.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/guest/program_01.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/guest/program_02.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/guest/program_02.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/guest/program_03.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/guest/program_03.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/home-guest.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/home-guest.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/home-host.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/home-host.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/home02.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/home02.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/host/chat-all.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/host/chat-all.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/host/chat-updated.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/host/chat-updated.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/host/chat.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/host/chat.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/host/close.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/host/close.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/host/dropdown.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/host/dropdown.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/host/guest-profileimg.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/host/guest-profileimg.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/host/init.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/host/init.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/host/profile.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/host/profile.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/host/reject.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/host/reject.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/host/search.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/host/search.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/logo.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/logo.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/main.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/main.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/map.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/map.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/navi.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/navi.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/pen.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/pen.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/pin.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/pin.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/profile.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/profile.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/profile_cat.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/profile_cat.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/subway.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/subway.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/thumbnail.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/thumbnail.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/public/image/walk.png" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/image/walk.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/server/tsconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-nuxt3/tsconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/jsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/jsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/card-shadow.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/card-shadow.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/card.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/card.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-aside.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-aside.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-bar.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-bar.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-btn-ms.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-btn-ms.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-btn.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-btn.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-calender.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-calender.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-card-column.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-card-column.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-card.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-card.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-collapse.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-collapse.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-deco.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-deco.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-filter.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-filter.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-footer.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-footer.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-global-header.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-global-header.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-icon.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-icon.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-list-header.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-list-header.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-location.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-location.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-modal.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-modal.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-panel.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-panel.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-profile-card.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-profile-card.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-review.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-review.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/n-title.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/n-title.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/component/title.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/component/title.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/guest/reservation/detail.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/guest/reservation/detail.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/guest/reservation/list.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/guest/reservation/list.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/host/program/create.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/host/program/create.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/host/program/list.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/host/reservation/list.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/host/reservation/list.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/alert.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/alert.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/arrow-swap.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/arrow-swap.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/arrow_down.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/arrow_down.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/arrow_left.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/arrow_left.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/arrow_right.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/arrow_right.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/arrow_swap.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/arrow_swap.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/arrow_up.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/arrow_up.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/bookmark.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/bookmark.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/bus.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/bus.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/calendar.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/calendar.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/calendar_month.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/calendar_month.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/category.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/category.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/caution.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/caution.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/chat.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/chat.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/check_doc.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/check_doc.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/circle.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/circle.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/clock.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/clock.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/clock_sand.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/clock_sand.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/create.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/create.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/credit_card.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/credit_card.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/dashboard.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/dashboard.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/error.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/error.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/exit.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/exit.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/faq.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/faq.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/globe.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/globe.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/globe_2.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/globe_2.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/group.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/group.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/instagram.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/instagram.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/list.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/list.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/location.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/location.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/logout.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/logout.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/meatball.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/meatball.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/more.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/more.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/more_vertical.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/more_vertical.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/notice.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/notice.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/number1.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/number1.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/number2.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/number2.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/number3.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/number3.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/number4.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/number4.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/number5.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/number5.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/pending.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/pending.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/people.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/people.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/placeholder.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/placeholder.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/plus.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/plus.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/price.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/price.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/programs.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/programs.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/rectangle.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/rectangle.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/reset.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/reset.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/review.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/review.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/search.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/search.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/setting.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/setting.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/share.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/share.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/star.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/star.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/subway.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/subway.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/success-circle-green.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/success-circle-green.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/success-decagon.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/success-decagon.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/ticket.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/ticket.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/walk.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/walk.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/image/icon/wishlist.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/image/icon/wishlist.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/newtil.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/newtil.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/program/detail.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/program/list.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/program/list.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/program/signup.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/program/signup.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/program/signupsuccess.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/program/signupsuccess.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/reset.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/css/reset.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/css/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/bus.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/bus.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/checked.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/checked.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/face.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/face.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/guest/map.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/guest/map.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/guest/profile.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/guest/profile.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/guest/program_01.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/guest/program_01.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/guest/program_02.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/guest/program_02.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/guest/program_03.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/guest/program_03.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/home-guest.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/home-guest.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/home-host.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/home-host.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/home02.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/home02.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/host/chat-all.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/host/chat-all.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/host/chat-updated.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/host/chat-updated.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/host/chat.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/host/chat.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/host/close.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/host/close.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/host/dropdown.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/host/dropdown.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/host/guest-profileimg.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/host/guest-profileimg.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/host/init.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/host/init.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/host/profile.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/host/profile.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/host/reject.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/host/reject.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/host/search.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/host/search.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/logo.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/logo.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/main.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/main.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/map.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/map.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/navi.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/navi.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/pen.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/pen.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/pin.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/pin.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/profile.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/profile.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/profile_cat.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/profile_cat.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/subway.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/subway.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/thumbnail.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/thumbnail.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/public/image/walk.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/public/image/walk.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/components/AsideLogin.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/components/AsideLogout.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/components/HaruseoulFooter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/components/HaruseoulFooter.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/components/HaruseoulHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/components/HaruseoulHeader.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/components/filter/Category.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/components/filter/Status.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/components/filter/Status.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/components/guest/HeaderGuest.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/components/guest/HeaderGuest.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/components/host/HeaderHost.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/components/host/HeaderHost.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/layouts/Anonymous.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/layouts/Anonymous.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/layouts/Guest.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/layouts/Guest.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/layouts/Host.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/layouts/Host.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/anonymous/Detail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/anonymous/Detail.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/anonymous/List.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/anonymous/List.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/anonymous/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/anonymous/Login.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/anonymous/SignUp.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/anonymous/SignUp.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/anonymous/SignUpSuccess.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/anonymous/SignUpSuccess.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/guest/Index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/guest/Index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/guest/reservations/Detail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/guest/reservations/Detail.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/guest/reservations/Index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/guest/reservations/Index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/guest/reservations/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/guest/reservations/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/guest/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/guest/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/host/Index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/host/Index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/host/programs/Index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/host/programs/Index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/host/programs/New.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/host/programs/New.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/host/programs/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/host/programs/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/host/reservations/Index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/host/reservations/Index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/host/reservations/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/host/reservations/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/src/pages/host/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/host/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/haruseoul-vue3/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/vite.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mvnw" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mvnw.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/HaruSeoulApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/HaruSeoulApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/anonymous/controller/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/anonymous/controller/CategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/anonymous/dto/CategoryDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/anonymous/dto/CategoryDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/anonymous/service/CategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/anonymous/service/CategoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/anonymous/service/DefaultCategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/anonymous/service/DefaultCategoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/config/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/config/CorsConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/config/ModelMapperConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/config/ModelMapperConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/config/WebSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/entity/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/entity/Category.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/entity/CategoryProgram.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/entity/CategoryProgram.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/entity/Image.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/entity/Image.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/entity/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/entity/Member.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/entity/Program.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/entity/Program.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/entity/PublishedProgram.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/entity/PublishedProgram.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/entity/Reservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/entity/Reservation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/entity/Review.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/entity/Review.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/entity/Route.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/entity/Route.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/entity/Status.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/entity/Status.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/entity/Transportation.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/entity/Transportation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/guest/reservation/controller/ReservationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/guest/reservation/controller/ReservationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/guest/reservation/dto/ReservationCreateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/guest/reservation/dto/ReservationCreateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/guest/reservation/dto/ReservationDetailDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/guest/reservation/dto/ReservationDetailDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/guest/reservation/dto/ReservationDetailResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/guest/reservation/dto/ReservationDetailResponseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/guest/reservation/dto/ReservationListDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/guest/reservation/dto/ReservationListDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/guest/reservation/dto/ReservationResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/guest/reservation/dto/ReservationResponseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/guest/reservation/mapper/ReservationMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/guest/reservation/mapper/ReservationMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/guest/reservation/service/DefaultReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/guest/reservation/service/DefaultReservationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/guest/reservation/service/ReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/guest/reservation/service/ReservationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/program/controller/ProgramController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/program/controller/ProgramController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/program/dto/ProgramCreateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/program/dto/ProgramCreateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/program/dto/ProgramDetailDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/program/dto/ProgramDetailDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/program/dto/ProgramListDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/program/dto/ProgramListDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/program/dto/ProgramResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/program/dto/ProgramResponseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/program/dto/ProgramTitle.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/program/dto/ProgramTitle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/program/dto/ProgramUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/program/dto/ProgramUpdateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/program/dto/RouteCreateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/program/dto/RouteCreateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/program/mapper/ProgramMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/program/mapper/ProgramMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/program/service/DefaultProgramService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/program/service/DefaultProgramService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/program/service/ProgramService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/program/service/ProgramService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/publishedProgram/controller/PublishedProgramController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/publishedProgram/controller/PublishedProgramController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/publishedProgram/dto/PublishedProgramCreateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/publishedProgram/dto/PublishedProgramCreateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/publishedProgram/dto/PublishedProgramCreatedDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/publishedProgram/dto/PublishedProgramCreatedDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/publishedProgram/dto/PublishedProgramListDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/publishedProgram/dto/PublishedProgramListDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/publishedProgram/dto/PublishedProgramResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/publishedProgram/dto/PublishedProgramResponseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/publishedProgram/dto/PublishedProgramUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/publishedProgram/dto/PublishedProgramUpdateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/publishedProgram/dto/PublishedProgramUpdatedDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/publishedProgram/dto/PublishedProgramUpdatedDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/publishedProgram/service/DefaultPublishedProgramService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/publishedProgram/service/DefaultPublishedProgramService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/host/publishedProgram/service/PublishedProgramService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/host/publishedProgram/service/PublishedProgramService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/member/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/member/controller/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/member/controller/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/member/dto/MemberCreateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/member/dto/MemberCreateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/member/dto/MemberUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/member/dto/MemberUpdateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/member/service/DefaultMemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/member/service/DefaultMemberService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/member/service/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/member/service/MemberService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/repository/CategoryProgramRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/repository/CategoryProgramRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/repository/CategoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/repository/CategoryRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/repository/MemberRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/repository/MemberRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/repository/ProgramRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/repository/ProgramRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/repository/PublishedProgramRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/repository/PublishedProgramRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/repository/ReservationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/repository/ReservationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/repository/ReviewRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/repository/ReviewRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/repository/RouteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/repository/RouteRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/repository/StatusRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/repository/StatusRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/m2j2/haruseoul/repository/TransportationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/repository/TransportationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application-test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application-test.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/card-shadow.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/card.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-aside.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-bar.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-btn-ms.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-btn.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-calender.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-card-column.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-card.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-collapse.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-deco.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-filter.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-footer.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-global-header.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-icon.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-list-header.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-location.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-modal.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-panel.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-profile-card.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-review.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/n-title.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/component/title.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/guest/reservation/detail.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/guest/reservation/list.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/host/program/create.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/host/program/list.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/host/program/list.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/host/reservation/list.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/hstil-ms.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/hstil-ms.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/hstil.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/hstil.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/alert.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/arrow-swap.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/arrow_down.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/arrow_left.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/arrow_right.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/arrow_swap.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/arrow_up.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/bookmark.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/bus.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/calendar.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/calendar_month.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/category.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/caution.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/chat.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/check_doc.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/circle.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/clock.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/clock_sand.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/create.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/credit_card.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/dashboard.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/error.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/exit.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/faq.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/globe.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/globe_2.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/group.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/instagram.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/list.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/location.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/logout.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/meatball.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/more.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/more_vertical.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/notice.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/number1.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/number2.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/number3.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/number4.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/number5.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/pending.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/people.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/placeholder.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/plus.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/price.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/programs.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/rectangle.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/reset.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/review.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/search.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/setting.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/share.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/star.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/subway.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/success-circle-green.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/success-decagon.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/ticket.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/walk.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/image/icon/wishlist.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/newtil.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/newtil2.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/newtil2.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/program/detail.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/program/detail.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/program/list.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/reset.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/style-ms.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/style-ms.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/bus.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/face.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/guest/map.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/guest/profile.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/guest/program_01.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/guest/program_02.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/guest/program_03.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/home-guest.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/home-host.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/home02.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/host/chat-all.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/host/chat-updated.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/host/chat.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/host/close.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/host/dropdown.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/host/guest-profileimg.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/host/init.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/host/profile.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/host/reject.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/host/search.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/main.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/map.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/navi.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/pen.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/pin.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/profile.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/profile_cat.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/subway.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/thumbnail.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/image/walk.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/filter.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/filter.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/guest/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/guest/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/guest/my/account.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/guest/my/account.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/guest/reservation/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/guest/reservation/detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/guest/reservation/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/guest/reservation/list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/guest/reservation/review.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/guest/reservation/review.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/my/account.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/my/account.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/program/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/program/create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/program/create/cost.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/program/create/cost.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/program/create/image.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/program/create/image.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/program/create/info.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/program/create/info.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/program/create/parties.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/program/create/parties.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/program/create/schedule.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/program/create/schedule.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/program/create/spots.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/program/create/spots.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/program/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/program/list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/reservation/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/reservation/calendar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/host/reservation/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/host/reservation/list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/inc/footer.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/inc/footer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/inc/header-guest.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/inc/header-guest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/inc/header-host.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/inc/header-host.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/inc/layout-guest.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/inc/layout-guest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/inc/layout-host.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/inc/layout-host.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/n-bar.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/n-bar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/n-btn.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/n-btn.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/program/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/program/detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/program/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/program/list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/program/pay.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/program/pay.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/m2j2/haruseoul/HaruSeoulApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/m2j2/haruseoul/HaruSeoulApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/m2j2/haruseoul/repository/ProgramRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/com/m2j2/haruseoul/repository/ProgramRepositoryTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -569,18 +21,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "0603minji"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;0603minji&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/0603minji/HaruSeoul.git",
-    "accountId": "e15e677c-22b5-4774-8a22-5067ac7b0489"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/0603minji/HaruSeoul.git&quot;,
+    &quot;accountId&quot;: &quot;e15e677c-22b5-4774-8a22-5067ac7b0489&quot;
   }
-}]]></component>
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -588,27 +40,28 @@
       </MavenGeneralSettings>
     </option>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2o9Nu8u4pGeVbSfRLGJQ08Bd1HV" />
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "dev",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;frontend&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/qs101/Desktop/2024/HaruSeoul&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="HaruSeoulApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
@@ -636,6 +89,9 @@
       <option name="presentableId" value="Default" />
       <updated>1730278054043</updated>
       <workItem from="1730278057534" duration="240000" />
+      <workItem from="1730278893911" duration="79000" />
+      <workItem from="1730278992402" duration="23000" />
+      <workItem from="1730279057511" duration="16000" />
     </task>
     <servers />
   </component>
