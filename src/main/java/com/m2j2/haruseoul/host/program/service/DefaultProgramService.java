@@ -1,9 +1,6 @@
 package com.m2j2.haruseoul.host.program.service;
 
-import com.m2j2.haruseoul.entity.Category;
-import com.m2j2.haruseoul.entity.CategoryProgram;
-import com.m2j2.haruseoul.entity.Member;
-import com.m2j2.haruseoul.entity.Program;
+import com.m2j2.haruseoul.entity.*;
 import com.m2j2.haruseoul.host.program.dto.*;
 import com.m2j2.haruseoul.host.program.mapper.ProgramMapper;
 import com.m2j2.haruseoul.repository.*;
@@ -102,7 +99,6 @@ public class DefaultProgramService implements ProgramService {
             return null;
         }
 
-
         Program program = Program.builder()
                 .title(programCreateDto.getTitle())
                 .detail(programCreateDto.getDetail())
@@ -119,9 +115,26 @@ public class DefaultProgramService implements ProgramService {
                 .requirement(programCreateDto.getRequirement())
                 .caution(programCreateDto.getCaution())
                 .build();
-        //  ** category, route, image 빌드 실패 **
 
+        //  ** category, route, image 빌드 실패 **
         Program savedProgram = programRepository.save(program);
+        List<RouteCreateDto> routeCreateDtos = programCreateDto.getRoutes();
+        ArrayList<Route> routes = new ArrayList<>();
+        for(RouteCreateDto routeCreateDto : routeCreateDtos){
+            Transportation newTransportation = new Transportation();
+            newTransportation.setName(routeCreateDto.getTransportation());
+            Route build = Route.builder()
+                    .program(savedProgram)
+                    .title(routeCreateDto.getTitle())
+                    .address(routeCreateDto.getAddress())
+                    .description(routeCreateDto.getDescription())
+                    .duration(routeCreateDto.getDuration())
+                    .order(routeCreateDto.getOrder())
+                    .build();
+            routes.add(build);
+        }
+        log.info("{}",routes.size());
+        List<Route> routes1 = routeRepository.saveAll(routes);
         /**
          * todo.
          *      1. category_program 테이블에 카테고리 정보 저장
