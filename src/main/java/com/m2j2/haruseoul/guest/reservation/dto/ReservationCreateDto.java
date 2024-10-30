@@ -22,4 +22,6 @@ public class ReservationCreateDto {
 
     private Integer reservationGroupSize;
 
+    private String reservationRequirement;
+
 }

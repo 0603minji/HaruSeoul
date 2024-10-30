@@ -26,6 +26,7 @@ public class DefaultReservationService implements ReservationService {
     private StatusRepository statusRepository;
     private ReviewRepository reviewRepository;
     private RouteRepository routeRepository;
+    private PublishedProgramRepository publishedProgramRepository;
     ModelMapper modelMapper;
 
     public DefaultReservationService(ReservationRepository reservationRepository,
@@ -33,12 +34,14 @@ public class DefaultReservationService implements ReservationService {
                                      StatusRepository statusRepository,
                                      ReviewRepository reviewRepository,
                                      RouteRepository routeRepository,
+                                     PublishedProgramRepository publishedProgramRepository,
                                      ModelMapper modelMapper) {
         this.reservationRepository = reservationRepository;
         this.memberRepository = memberRepository;
         this.statusRepository = statusRepository;
         this.reviewRepository = reviewRepository;
         this.routeRepository = routeRepository;
+        this.publishedProgramRepository = publishedProgramRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -139,17 +142,37 @@ public class DefaultReservationService implements ReservationService {
     @Transactional
     public Reservation create(ReservationCreateDto reservationCreateDto) {
 
-        Reservation reservation = modelMapper.map(reservationCreateDto, Reservation.class);
+//        modelMapper.typeMap(Reservation.class, ReservationCreateDto.class)
+//                .addMappings(mapper -> {
+//                        mapper.map(src -> src.getPublishedProgram().getId(), ReservationCreateDto::setPublishedProgramId);
+//                        mapper.map(src -> src.getMember().getId(), ReservationCreateDto::setRegMemberId);
+//                        mapper.map(src -> src.getPublishedProgram().getDate(), ReservationCreateDto::setProgramDate);
+//                        mapper.map(Reservation::getGroupSize, ReservationCreateDto::setReservationGroupSize);
+//        });
+//
+//        Reservation reservation = modelMapper.map(reservationCreateDto, Reservation.class);
 
-        modelMapper.typeMap(Reservation.class, ReservationCreateDto.class)
-                .addMappings(mapper -> {
-                        mapper.map(src -> src.getPublishedProgram().getId(), ReservationCreateDto::setPublishedProgramId);
-                        mapper.map(src -> src.getMember().getId(), ReservationCreateDto::setRegMemberId);
-                        mapper.map(src -> src.getPublishedProgram().getDate(), ReservationCreateDto::setProgramDate);
-                        mapper.map(Reservation::getGroupSize, ReservationCreateDto::setReservationGroupSize);
-        });
+        // 예약할때 PublishedProgramId 로 PublishedProgram 가져오기
+        Long publishedProgramId = reservationCreateDto.getPublishedProgramId();
+        Optional<PublishedProgram> optPublishedProgram = publishedProgramRepository.findById(publishedProgramId);
+        PublishedProgram publishedProgram = optPublishedProgram.orElseThrow(() ->
+                new IllegalArgumentException("PublishedProgram not found with id: " + publishedProgramId)
+        );
 
-    return null;
+        Long memberId = reservationCreateDto.getRegMemberId();
+        Optional<Member> optMember = memberRepository.findById(memberId);
+        Member member = optMember.orElseThrow(() ->
+            new IllegalArgumentException("MemberId not found with id: " + memberId)
+        );
+
+
+
+        return Reservation.builder()
+                .publishedProgram(publishedProgram)
+                .member(member)
+                .groupSize(reservationCreateDto.getReservationGroupSize())
+                .requirement(reservationCreateDto.getReservationRequirement())
+                .build();
     }
 
     @Override
