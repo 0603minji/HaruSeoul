@@ -142,37 +142,25 @@ public class DefaultReservationService implements ReservationService {
     @Transactional
     public Reservation create(ReservationCreateDto reservationCreateDto) {
 
-//        modelMapper.typeMap(Reservation.class, ReservationCreateDto.class)
-//                .addMappings(mapper -> {
-//                        mapper.map(src -> src.getPublishedProgram().getId(), ReservationCreateDto::setPublishedProgramId);
-//                        mapper.map(src -> src.getMember().getId(), ReservationCreateDto::setRegMemberId);
-//                        mapper.map(src -> src.getPublishedProgram().getDate(), ReservationCreateDto::setProgramDate);
-//                        mapper.map(Reservation::getGroupSize, ReservationCreateDto::setReservationGroupSize);
-//        });
-//
-//        Reservation reservation = modelMapper.map(reservationCreateDto, Reservation.class);
-
-        // 예약할때 PublishedProgramId 로 PublishedProgram 가져오기
-        Long publishedProgramId = reservationCreateDto.getPublishedProgramId();
-        Optional<PublishedProgram> optPublishedProgram = publishedProgramRepository.findById(publishedProgramId);
-        PublishedProgram publishedProgram = optPublishedProgram.orElseThrow(() ->
-                new IllegalArgumentException("PublishedProgram not found with id: " + publishedProgramId)
+        Long reservationPublishedProgramId = reservationCreateDto.getPublishedProgramId();
+        PublishedProgram reservationPublishedProgram = publishedProgramRepository.findById(reservationPublishedProgramId).orElseThrow(() ->
+                new IllegalArgumentException("PublishedProgram not found")
         );
 
         Long memberId = reservationCreateDto.getRegMemberId();
-        Optional<Member> optMember = memberRepository.findById(memberId);
-        Member member = optMember.orElseThrow(() ->
-            new IllegalArgumentException("MemberId not found with id: " + memberId)
+        Member reservationMember = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("MemberId not found with id: " + memberId)
         );
 
-
-
-        return Reservation.builder()
-                .publishedProgram(publishedProgram)
-                .member(member)
+        Reservation reservation = Reservation.builder()
+                .publishedProgram(reservationPublishedProgram)
+                .member(reservationMember)
                 .groupSize(reservationCreateDto.getReservationGroupSize())
                 .requirement(reservationCreateDto.getReservationRequirement())
                 .build();
+
+
+        return reservationRepository.save(reservation);
     }
 
     @Override
