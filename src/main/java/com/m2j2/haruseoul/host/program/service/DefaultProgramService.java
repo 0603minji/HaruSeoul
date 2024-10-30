@@ -28,17 +28,20 @@ public class DefaultProgramService implements ProgramService {
     private final ModelMapper mapper;
     private MemberRepository memberRepository;
     private CategoryRepository categoryRepository;
+    private TransportationRepository transportationRepository;
 
     //  생성자 주입
     public DefaultProgramService(ProgramRepository programRepository, CategoryProgramRepository categoryProgramRepository,
                                  RouteRepository routeRepository, ModelMapper mapper, MemberRepository memberRepository,
-                                 CategoryRepository categoryRepository) {
+                                 CategoryRepository categoryRepository,
+                                 TransportationRepository transportationRepository) {
         this.programRepository = programRepository;
         this.categoryProgramRepository = categoryProgramRepository;
         this.routeRepository = routeRepository;
         this.mapper = mapper;
         this.memberRepository = memberRepository;
         this.categoryRepository = categoryRepository;
+        this.transportationRepository = transportationRepository;
     }
 
     @Override
@@ -129,19 +132,19 @@ public class DefaultProgramService implements ProgramService {
         //  그 객체들을 리스트 routes에 add하여 누적
         for(RouteCreateDto routeCreateDto : routeCreateDtos){
             //  이동수단
-            Transportation newTransportation = new Transportation();
-            newTransportation.setName(routeCreateDto.getTransportation());
+            Transportation newTransportation = transportationRepository.findById(routeCreateDto.getTransportationId()).orElse(null);
             //  이동수단 제외 나머지 속성들
-            Route build = Route.builder()
+            Route route = Route.builder()
                     .program(savedProgram)
                     .title(routeCreateDto.getTitle())
                     .address(routeCreateDto.getAddress())
                     .description(routeCreateDto.getDescription())
                     .duration(routeCreateDto.getDuration())
                     .order(routeCreateDto.getOrder())
+                    .transportation(newTransportation)
                     .transportationDuration(routeCreateDto.getTransportationDuration())
                     .build();
-            routes.add(build);
+            routes.add(route);
         }
 
         log.info("{}",routes.size());
