@@ -1,6 +1,7 @@
 <!--1. 페이지 네이션 구현-->
 <!--2. programs/new에서 값 입력받으면 새로운 프로그램 조회 가능 구현-->
-<!-- 3. 프로그램 상태에 따라 버튼 변경 : 작성하기 / 개설하기 / 예약관리 -->
+<!--3. 프로그램 상태에 따라 버튼 변경 : 작성하기 / 개설하기 / 예약관리 -->
+<!--4. 로그인 되어있는 해당 호스트에 대한 프로그램만 조회 -->
 
 <script setup>
 import { onMounted, ref } from "vue";
@@ -15,13 +16,8 @@ const selectedProgramIds = ref([]); // 프로그램 필터에서 선택된 프�
 const categories = ref([]);
 const selectedCategories = ref([]);
 const selectedStatus = ref([]);
-//  ref : 반응형 변수 (데이터 변경시 ui도 자동 업데이트
-//  const : javascript에서 상수값 선언시 사용하는 키워드
-//          변수의 값이 변하지 않을때 사용하는 키워드
-//          재선언, 재할당 불가능
-//          블록 스코프
-//  let : 재선언 불가능, 재할당 가능
-//        블록 스코프
+const currentPage = ref(1); //  현재 페이지 번호
+const cardsPerPage = 6; //  한페이지당 표시할 프로그램 카드 수
 
 //============= Lifecycle Functions ================
 onMounted(() => {
@@ -59,7 +55,12 @@ const fetchProgramIds = async () => {
 };
 
 //  서버에서 프로그램 데이터를 가져오는 비동기 함수
-const fetchPrograms = async (cIds, pIds, statuses, pageNum) => {
+const fetchPrograms = async (
+  cIds,
+  pIds,
+  statuses,
+  pageNum = currentPage.value
+) => {
   const params = {};
   //  params 객체 생성
   //  조건(cIds, pIds, statuses, pageNum)이 존재하는 경우에만 해당 값을 params에 추가
@@ -75,6 +76,10 @@ const fetchPrograms = async (cIds, pIds, statuses, pageNum) => {
   if (pageNum) {
     params.pageNum = pageNum;
   }
+  if (cardsPerPage) {
+    params.cardsPerPage = cardsPerPage;
+  }
+
   const response = await axios.get(
     //  axios.get : 비동기적으로 서버의 API로 GET 요청 보냄
     "http://localhost:8080/api/v1/host/programs",
@@ -88,7 +93,7 @@ const fetchPrograms = async (cIds, pIds, statuses, pageNum) => {
   //  서버로 부터 받은 응답 response
   programs.value = response.data.programs; // response에서 프로그램 목록을 추출해서 저장
   totalRowCount.value = response.data.totalRowCount; //  response에서 총 프로그램수 추출해서 저장
-  totalPageCount.value = response.data.totalPageCount; //  response에서 총 페이지 갯수 추출해서 저장
+  totalPageCount.value = Math.ceil(totalRowCount.value / cardsPerPage); //response.data.totalPageCount; //  response에서 총 페이지 갯수 추출해서 저장
 };
 
 const selectCategoryAll = async () => {
@@ -103,7 +108,7 @@ const selectCategoryAll = async () => {
       null,
       selectedProgramIds.value.join(","),
       selectedStatus.value.join(","),
-      null
+      page
     );
   } catch (error) {
     console.error("Error fetching all categories:", error);
@@ -220,6 +225,18 @@ const selectStatus = async () => {
     //  파라미터를 모두 null로 전달하여 필터 없이 전체 목록 가져오기
   } catch (error) {
     console.error("Error fetching all programs:", error);
+  }
+};
+
+const goToPage = async (page) => {
+  if (page >= 1 && page <= totalPageCount.value) {
+    currentPage.value = page;
+    await fetchPrograms(
+      selectedCategories.value.join(","),
+      selectedProgramIds.value.join(","),
+      selectedStatus.value.join(","),
+      page
+    );
   }
 };
 </script>
@@ -386,6 +403,32 @@ const selectStatus = async () => {
                 </div>
               </li>
             </ul>
+
+            <!-- 페이지네이션 버튼 -->
+            <div class="pagination">
+              <button
+                @click="goToPage(currentPage - 1)"
+                :disabled="currentPage === 1"
+              >
+                〈
+              </button>
+
+              <button
+                v-for="page in totalPageCount"
+                :key="page"
+                @click="goToPage(page)"
+                :class="{ active: page === currentPage }"
+              >
+                {{ page }}
+              </button>
+
+              <button
+                @click="goToPage(currentPage + 1)"
+                :disabled="currentPage === totalPageCount"
+              >
+                〉
+              </button>
+            </div>
           </section>
         </section>
         <!--=== 필터 반응형 ==========================================-->

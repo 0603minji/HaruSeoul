@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProgramService {
     ProgramResponseDto getList(List<Long> programIds, List<Long> categoryIds,
-                               List<String> statuses);
+                               List<String> statuses, int pageNum, int cardsPerPage);
 
     Program create(ProgramCreateDto programCreateDto);
 
