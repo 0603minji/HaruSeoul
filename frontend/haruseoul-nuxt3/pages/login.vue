@@ -1,83 +1,152 @@
 <template>
-  <main>
-    <h1>로그인</h1>
-    <form class="login-form">
+  <main class="container">
+    <div class="title">Welcome</div>
 
-      <fieldset class="input-group">
-        <legend>호스트 로그인</legend>
-        <label>
-          아이디
-          <input type="text" name="hostId" placeholder="아이디 입력">
-        </label>
-
-        <label>
-          비밀번호
-          <input type="password" name="hostPwd" placeholder="비밀번호 입력">
-        </label>
-      </fieldset>
-
-      <div class="options">
-        <label>
-          <input type="checkbox" name="rememberMe">
-          로그인 유지
-        </label>
-        <a href="#">아이디 찾기</a>
-        <a href="#">비밀번호 찾기</a>
+    <form>
+      <div class="form-group">
+        <label for="id">ID</label>
+        <div class="button-container">
+          <input type="text" id="id" placeholder="Enter your ID" required>
+        </div>
       </div>
 
-      <button>호스트 로그인</button>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="button-container">
+          <input type="password" id="password" placeholder="Enter your Password" required>
+        </div>
+      </div>
 
+      <div class="additional-options">
+        <div class="remember-me">
+          <input type="checkbox" id="remember-me">
+          <label for="remember-me">Remember me</label>
+        </div>
+        <div class="links">
+          <a href="#">Forgot ID</a>
+          <a href="#">Forgot Password</a>
+        </div>
+      </div>
+
+      <button type="submit" class="n-btn n-btn-background-color:main n-btn-size:3">Login</button>
+
+      <div class="divider">
+        <span>or</span>
+      </div>
+
+      <RouterLink to="/signup" class="n-btn n-btn-background-color:sub n-btn-size:3">Create an account</RouterLink>
     </form>
-    <div class="separator">또는</div>
-
-    <nav>
-      <h1>소셜 로그인</h1>
-      <ul class="social-login">
-        <li><a href="" class="social-btn google"><img src="" alt="google"/></a></li>
-        <li><a href="" class="social-btn kakao"><img src="" alt="kakao"/></a></li>
-        <li><a href="" class="social-btn naver"><img src="" alt="naver"/></a></li>
-      </ul>
-    </nav>
-
-    <div><a href="" class="signup-button">호스트로 가입하기</a></div>
   </main>
+
 </template>
 
 <style scoped>
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  margin: 0;
-  padding: 0;
-}
-
-h1 {
-  font-size: 24px;
-  margin: 0;
-}
-
-.login-form {
-  margin-top: 20px;
-}
-
-.input-group {
-  margin-bottom: 15px;
-}
-
-.input-group label {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-.input-group input {
+.container {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  text-align: center;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    text-align: left;
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+  }
+
+  .additional-options {
+    padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 50px;
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+
+      input[type="checkbox"] {
+        margin-right: 5px;
+      }
+    }
+
+    .links {
+      display: flex;
+      gap: 15px;
+
+      a {
+        color: #888;
+        text-decoration: none;
+        font-size: 0.9em;
+      }
+    }
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    font-size: 0.9em;
+    color: #888;
+
+    span {
+      padding: 0 10px;
+    }
+
+    &::before,
+    &::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background-color: #ddd;
+    }
+  }
 }
 
-.options {
-  display: flex;
+.title {
+  margin-bottom: 40px;
+  font-weight: bold;
+  font-size: 2em;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.n-btn-background-color\:main {
+  margin: 20px 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+.n-btn-background-color\:sub {
+  margin: 20px 0;
+  box-sizing: border-box;
+  width: 100%;
+  background-color: white;
+  border-color: var(--color-main-1);
+  color: var(--color-base-9);
+
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 1096px;
+    margin: 0 auto;
+  }
 }
 </style>
