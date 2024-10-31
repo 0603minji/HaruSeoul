@@ -2,6 +2,7 @@ package com.m2j2.haruseoul.member.service;
 
 import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.member.dto.MemberCreateDto;
+import com.m2j2.haruseoul.member.dto.MemberListDto;
 import com.m2j2.haruseoul.member.dto.MemberUpdateDto;
 import com.m2j2.haruseoul.repository.MemberRepository;
 import org.modelmapper.ModelMapper;
@@ -43,6 +44,14 @@ public class DefaultMemberService implements MemberService {
         }
         return "아이디확인필요";
     }
+
+
+    @Override
+    public MemberListDto getList(Long id) {
+        Member member = memberRepository.findById(id).orElse(null);
+        return modelMapper.map(member, MemberListDto.class);
+    }
+
 
     @Override
     @Transactional
