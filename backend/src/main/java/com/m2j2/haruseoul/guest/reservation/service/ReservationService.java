@@ -11,7 +11,7 @@ public interface ReservationService {
 
     ReservationDetailResponseDto getDetail(Long rid);
 
-    Reservation create(ReservationCreateDto reservationCreateDto);
+    void create(ReservationCreateDto reservationCreateDto);
 
     void delete(Long reservationId);
 }
