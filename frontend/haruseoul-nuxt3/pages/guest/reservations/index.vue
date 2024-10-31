@@ -55,7 +55,7 @@ const fetchReservations = async () => {
 
                     <div class="card-main">
                         <div class="img-wrapper">
-                            <img src="/image/guest/program_02.png" alt="대표사진" />
+                            <img src="/public/image/program_02.png" alt="대표사진" />
                         </div>
                         <div class="card-info-wrapper">
                             <div class="card-header-responsive">

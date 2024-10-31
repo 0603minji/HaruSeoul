@@ -25,7 +25,7 @@
 
                 <div class="card-main">
                     <div class="img-wrapper">
-                        <img src="/image/guest/program_01.png" alt="대표사진" />
+                        <img src="/public/image/program_01.png" alt="대표사진" />
                     </div>
 
                     <div class="card-info-wrapper">
@@ -145,7 +145,7 @@
                                 <h1>프로필 카드</h1>
                                 <div class="overview">
                                     <div class="img-wrapper">
-                                        <img src="/image/guest/profile.png" alt="호스트프사" />
+                                        <img src="/public/image/profile.png" alt="호스트프사" />
                                     </div>
                                     <div>
                                         <div>Jasmin</div>
@@ -197,7 +197,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="map-img-wrapper">
-                                                        <img class="map-img" src="/image/map.png" alt="map" />
+                                                        <img class="map-img" src="/public/image/map.png" alt="map" />
                                                     </div>
                                                 </section>
                                             </div>
@@ -554,7 +554,6 @@
     main {
         display: flex;
         align-items: center;
-        justify-content: center;
         flex-direction: column;
 
         .reservation-detail {
