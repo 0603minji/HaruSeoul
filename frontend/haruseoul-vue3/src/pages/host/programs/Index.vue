@@ -101,7 +101,7 @@ const selectCategoryAll = async () => {
   });
 
   try {
-    await fetchPrograms(null, selectedProgramIds.value.join(','), selectedProgramIds.value.join(','), null);
+    await fetchPrograms(null, selectedProgramIds.value.join(','), selectedStatus.value.join(','), null);
   } catch (error) {
     console.error("Error fetching all categories:", error);
   }
@@ -115,7 +115,7 @@ const selectCategory = async () => {
   
   if (selectedCategories.value.length > 0) {
     try {
-      await fetchPrograms(selectedCategories.value.join(','), selectedProgramIds.value.join(','), selectedProgramIds.value.join(','), null);
+      await fetchPrograms(selectedCategories.value.join(','), selectedProgramIds.value.join(','), selectedStatus.value.join(','), null);
     } catch (error) {
       console.error("Error fetching selected categories:", error);
     }
@@ -135,7 +135,7 @@ const selectProgramAll = async () => {
   });
   //  .programids 클래스를 가진 모든 체크박스를 찾아서 선택 해제
   try {
-    await fetchPrograms(selectedCategories.value.join(','), null, selectedProgramIds.value.join(','), null);
+    await fetchPrograms(selectedCategories.value.join(','), null, selectedStatus.value.join(','), null);
     //  fetchPrograms를 호출하여 모든 프로그램을 서버에서 다시 가져오기
     //  파라미터를 모두 null로 전달하여 필터 없이 전체 목록 가져오기
   } catch (error) {
@@ -155,7 +155,7 @@ const selectProgram = async () => {
   if (selectedProgramIds.value.length > 0) {
     try {
       // 선택된 id들을 ','로 연결해서 쿼리 파라미터로 전송 (pg=1,2,3)
-      await fetchPrograms(selectedCategories.value.join(','), selectedProgramIds.value.join(','), selectedProgramIds.value.join(','), null);
+      await fetchPrograms(selectedCategories.value.join(','), selectedProgramIds.value.join(','), selectedStatus.value.join(','), null);
     } catch (error) {
       console.error("Error fetching selected programs:", error);
     }
