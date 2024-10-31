@@ -1,0 +1,131 @@
+/* 전체 리뷰 컨테이너 */
+.review-container {
+    width: var(--width-10p);
+    margin-top: var(--gap-1);
+    margin-bottom: var(--gap-7);
+    border: 1px solid var(--color-base-1);
+    border-radius: var(--border-radius-3);
+    padding: var(--gap-6);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: var(--font-size-6);
+
+    .star-wrapper {
+        display: flex;
+        flex-direction: row;
+        padding: var(--gap-3) 0;
+        padding-top: 0;
+    }
+
+    /* 사용자 정보 (프로필 이미지와 이름/날짜) */
+
+    .guest-info,
+    .host-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: var(--gap-3);
+
+        .profile-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+
+            .date {
+                font-size: 12px;
+                color: #999;
+            }
+        }
+
+        .meatball-icon {
+            display: flex;
+            justify-content: space-between;
+
+            label {
+                display: flex;
+                cursor: pointer;
+                text-indent: -999px;
+            }
+        }
+
+    }
+
+
+    /* 글 내용 */
+
+    .text {
+        line-height: 1.5;
+
+        .p-summary {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .p-full {
+            display: block;
+        }
+
+
+        /* 더보기 버튼 */
+
+        button {
+            padding: 5px 0;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-color: var(--color-base-9); /* 밑줄 색상 */
+            border-radius: 5px;
+        }
+
+        button:hover {
+            font-weight: bold;
+        }
+
+    }
+
+    /* 리뷰 게스트 댓글 */
+
+    .review {
+        margin: var(--gap-2);
+        align-items: center;
+
+        /* 리뷰 사진 리스트 */
+
+        ul {
+            display: flex;
+            gap: 5px;
+            overflow: hidden;
+
+            li {
+                list-style: none;
+
+                img {
+                    width: 80px;
+                    height: 80px;
+                    object-fit: cover;
+                    border-radius: 5px;
+                }
+            }
+        }
+    }
+
+    /* 리뷰 호스트 답글 */
+
+    .reply {
+        padding: var(--gap-6);
+        border-radius: var(--border-radius-4);
+        background-color: var(--color-base-2);
+    }
+
+    input[type="checkbox"] {
+        opacity: 0;
+        position: absolute;
+    }
+}
