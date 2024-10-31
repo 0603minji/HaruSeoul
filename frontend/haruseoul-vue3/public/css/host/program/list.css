@@ -127,6 +127,32 @@
   }
 }
 
+/* ============== 페이지 네이션 ================ */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 4px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--color-base-3);
+  cursor: pointer;
+}
+
+.pagination button.active {
+  color: var(--color-base-1);
+  background-color: var(--color-sub-1);
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 /*===================== 반응형 구현 ====================*/
 
 /*필터 어사이드*/

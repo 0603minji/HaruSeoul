@@ -28,9 +28,12 @@ public class ProgramController {
     public ResponseEntity<ProgramResponseDto> getList(
             @RequestParam(name = "c", required = false) List<Long> cIds,
             @RequestParam(name = "pg", required = false) List<Long> pIds,
-            @RequestParam(name = "s", required = false) List<String> statuses) {
+            @RequestParam(name = "s", required = false) List<String> statuses,
+            @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
+            @RequestParam(name = "cardsPerPage", defaultValue = "6") int cardsPerPage)
+    {
 
-        ProgramResponseDto programResponseDto = service.getList(pIds, cIds, statuses);
+        ProgramResponseDto programResponseDto = service.getList(pIds, cIds, statuses, pageNum, cardsPerPage);
 
         return ResponseEntity.ok(programResponseDto);
     }
