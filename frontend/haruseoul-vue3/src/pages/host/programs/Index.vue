@@ -1,21 +1,16 @@
-<!--1. 프로그램 필터에 목록을 db에서 불러오기-->
-<!--2. 프로그램으로 필터링 (체크박스 선택)-->
-<!--3. 카테고리 필터링-->
-<!--4. 상태 필터링-->
-<!--5. 페이지 네이션 구현-->
-<!--6. programs/new에서 값 입력받으면 새로운 프로그램 조회 가능 구현-->
-<!--7. status를 db에서는 integer로 저장해두고 프론트에서 if status==1 이면 "작성중"으로 구현-->
-<!--8. route 테이블 생성-->
+<!--1. 페이지 네이션 구현-->
+<!--2. programs/new에서 값 입력받으면 새로운 프로그램 조회 가능 구현-->
+<!-- 3. 프로그램 상태에 따라 버튼 변경 : 작성하기 / 개설하기 / 예약관리 -->
 
 <script setup>
 import { onMounted, ref } from "vue";
 import axios from "axios";
 
 //============= 변수 영역 ====================
-const programs = ref([]);     //  서버에서 가져온 프로그램 목록 저장 배열
+const programs = ref([]); //  서버에서 가져온 프로그램 목록 저장 배열
 const totalRowCount = ref(0); // 서버에서 가져온 총 프로그램 개수 저장
-const totalPageCount = ref(0);  //  서버에서 가져온 총 페이지 개수 저장
-const programTitles = ref([]);  //  프로그램 id, title들을 저장할 배열
+const totalPageCount = ref(0); //  서버에서 가져온 총 페이지 개수 저장
+const programTitles = ref([]); //  프로그램 id, title들을 저장할 배열
 const selectedProgramIds = ref([]); // 프로그램 필터에서 선택된 프로그램의 id를 저장할 배열
 const categories = ref([]);
 const selectedCategories = ref([]);
@@ -28,27 +23,26 @@ const selectedStatus = ref([]);
 //  let : 재선언 불가능, 재할당 가능
 //        블록 스코프
 
-
 //============= Lifecycle Functions ================
 onMounted(() => {
   //  컴포넌트가 화면에 마운트(렌더링)된 후에 실행
-  fetchPrograms();  //  프로그램 목록을 가져오는 함수
-  fetchProgramIds();  //  프로그램의 제목과 ID 목록을 가져오는 함수
+  fetchPrograms(); //  프로그램 목록을 가져오는 함수
+  fetchProgramIds(); //  프로그램의 제목과 ID 목록을 가져오는 함수
   fetchCategories();
 
-  const CategoryCheckbox = document.querySelector('.categoryAll');
-  CategoryCheckbox.checked=true;
-  const programCheckbox = document.querySelector('.programidAll');
-  programCheckbox.checked=true;
-  const statusCheckbox = document.querySelector('.statusCheckboxAll');
-  statusCheckbox.checked=true;
+  const CategoryCheckbox = document.querySelector(".categoryAll");
+  CategoryCheckbox.checked = true;
+  const programCheckbox = document.querySelector(".programidAll");
+  programCheckbox.checked = true;
+  const statusCheckbox = document.querySelector(".statusCheckboxAll");
+  statusCheckbox.checked = true;
 });
 
 //============= Data Functions =======================
 const fetchCategories = async () => {
   const response = await axios.get("http://localhost:8080/api/v1/categories");
   categories.value = response.data;
-}
+};
 
 //  서버에서 프로그램 id와 title을 가져와서 programTitles에 저장
 const fetchProgramIds = async () => {
@@ -57,7 +51,10 @@ const fetchProgramIds = async () => {
     //  이 url로 서버에 get 요청 보냄
     //  응답 결과를 response 변수에 담기
   );
-  programTitles.value = response.data.map(p => ({ id: p.id, title: p.title }));
+  programTitles.value = response.data.map((p) => ({
+    id: p.id,
+    title: p.title,
+  }));
   //response.data에서 id와 title만 추출하여 programTitles 배열 객체에 저장
 };
 
@@ -80,42 +77,53 @@ const fetchPrograms = async (cIds, pIds, statuses, pageNum) => {
   }
   const response = await axios.get(
     //  axios.get : 비동기적으로 서버의 API로 GET 요청 보냄
-    "http://localhost:8080/api/v1/host/programs", {
-    params: params
-    //  이 URL에 params 객체를 함께 전송하여 필터링된 결과를
-    //  response 변수에 받기
-  }
+    "http://localhost:8080/api/v1/host/programs",
+    {
+      params: params,
+      //  이 URL에 params 객체를 함께 전송하여 필터링된 결과를
+      //  response 변수에 받기
+    }
   );
 
   //  서버로 부터 받은 응답 response
-  programs.value = response.data.programs;  // response에서 프로그램 목록을 추출해서 저장
-  totalRowCount.value = response.data.totalRowCount;  //  response에서 총 프로그램수 추출해서 저장
-  totalPageCount.value = response.data.totalPageCount;  //  response에서 총 페이지 갯수 추출해서 저장
+  programs.value = response.data.programs; // response에서 프로그램 목록을 추출해서 저장
+  totalRowCount.value = response.data.totalRowCount; //  response에서 총 프로그램수 추출해서 저장
+  totalPageCount.value = response.data.totalPageCount; //  response에서 총 페이지 갯수 추출해서 저장
 };
 
 const selectCategoryAll = async () => {
   selectedCategories.value = [];
-  const checkboxes = document.querySelectorAll('.categoryIds');
+  const checkboxes = document.querySelectorAll(".categoryIds");
   checkboxes.forEach((checkbox) => {
     checkbox.checked = false;
   });
 
   try {
-    await fetchPrograms(null, selectedProgramIds.value.join(','), selectedStatus.value.join(','), null);
+    await fetchPrograms(
+      null,
+      selectedProgramIds.value.join(","),
+      selectedStatus.value.join(","),
+      null
+    );
   } catch (error) {
     console.error("Error fetching all categories:", error);
   }
 };
 
 const selectCategory = async () => {
-  const allCheckbox = document.querySelector('.categoryAll');
-  if(allCheckbox) {
-    allCheckbox.checked=false;
+  const allCheckbox = document.querySelector(".categoryAll");
+  if (allCheckbox) {
+    allCheckbox.checked = false;
   }
-  
+
   if (selectedCategories.value.length > 0) {
     try {
-      await fetchPrograms(selectedCategories.value.join(','), selectedProgramIds.value.join(','), selectedStatus.value.join(','), null);
+      await fetchPrograms(
+        selectedCategories.value.join(","),
+        selectedProgramIds.value.join(","),
+        selectedStatus.value.join(","),
+        null
+      );
     } catch (error) {
       console.error("Error fetching selected categories:", error);
     }
@@ -124,18 +132,22 @@ const selectCategory = async () => {
   }
 };
 
-
 //  선택된 모든 체크박스를 초기화 (All 선택시)
 const selectProgramAll = async () => {
   selectedProgramIds.value = [];
   // 프로그램 필터에서 선택된 프로그램 id들을 담은 selectedPrograms 배열 객체를 비움
-  const checkboxes = document.querySelectorAll('.programids');
+  const checkboxes = document.querySelectorAll(".programids");
   checkboxes.forEach((checkbox) => {
     checkbox.checked = false;
   });
   //  .programids 클래스를 가진 모든 체크박스를 찾아서 선택 해제
   try {
-    await fetchPrograms(selectedCategories.value.join(','), null, selectedStatus.value.join(','), null);
+    await fetchPrograms(
+      selectedCategories.value.join(","),
+      null,
+      selectedStatus.value.join(","),
+      null
+    );
     //  fetchPrograms를 호출하여 모든 프로그램을 서버에서 다시 가져오기
     //  파라미터를 모두 null로 전달하여 필터 없이 전체 목록 가져오기
   } catch (error) {
@@ -145,8 +157,8 @@ const selectProgramAll = async () => {
 
 //  선택된 프로그램들만 서버에서 가져와 목록을 업데이트하는 함수
 const selectProgram = async () => {
-  const allCheckbox = document.querySelector('.programidAll');
-  if(allCheckbox){
+  const allCheckbox = document.querySelector(".programidAll");
+  if (allCheckbox) {
     allCheckbox.checked = false;
   }
   //  .programidAll 클래스를 가진 모든 체크박스를 찾아 선택을 해제
@@ -155,7 +167,12 @@ const selectProgram = async () => {
   if (selectedProgramIds.value.length > 0) {
     try {
       // 선택된 id들을 ','로 연결해서 쿼리 파라미터로 전송 (pg=1,2,3)
-      await fetchPrograms(selectedCategories.value.join(','), selectedProgramIds.value.join(','), selectedStatus.value.join(','), null);
+      await fetchPrograms(
+        selectedCategories.value.join(","),
+        selectedProgramIds.value.join(","),
+        selectedStatus.value.join(","),
+        null
+      );
     } catch (error) {
       console.error("Error fetching selected programs:", error);
     }
@@ -166,70 +183,90 @@ const selectProgram = async () => {
 
 const selectStatusAll = async () => {
   selectedStatus.value = [];
-  const checkboxes  = document.querySelectorAll('.statusCheckbox');
-  checkboxes .forEach((checkbox) => {
+  const checkboxes = document.querySelectorAll(".statusCheckbox");
+  checkboxes.forEach((checkbox) => {
     // 상태 조건 필터링 모두를 unCheck 한다.
     checkbox.checked = false;
   });
 
   try {
-    await fetchPrograms(selectedCategories.value.join(','), selectedProgramIds.value.join(','), null, null);
+    await fetchPrograms(
+      selectedCategories.value.join(","),
+      selectedProgramIds.value.join(","),
+      null,
+      null
+    );
     //  fetchPrograms를 호출하여 모든 프로그램을 서버에서 다시 가져오기
     //  파라미터를 모두 null로 전달하여 필터 없이 전체 목록 가져오기
   } catch (error) {
     console.error("Error fetching all programs:", error);
   }
-}
+};
 
 const selectStatus = async () => {
-  const checkboxes  = document.querySelector('.statusCheckboxAll');
-  if(checkboxes) {
+  const checkboxes = document.querySelector(".statusCheckboxAll");
+  if (checkboxes) {
     checkboxes.checked = false;
   }
   console.log(`Selected status: ${selectedStatus.value}`);
   try {
-    await fetchPrograms(selectedCategories.value.join(','), selectedProgramIds.value.join(','), selectedStatus.value.join(','), null);
+    await fetchPrograms(
+      selectedCategories.value.join(","),
+      selectedProgramIds.value.join(","),
+      selectedStatus.value.join(","),
+      null
+    );
     //  fetchPrograms를 호출하여 모든 프로그램을 서버에서 다시 가져오기
     //  파라미터를 모두 null로 전달하여 필터 없이 전체 목록 가져오기
   } catch (error) {
     console.error("Error fetching all programs:", error);
   }
-}
+};
 </script>
 
 <template>
   <main>
     <section class="n-layout-mj">
-      <!--=== heading ==========================================-->
-      <!--    프로그램 관리           +프로그램 등록-->
+      <!--=== 헤더 ==========================================-->
       <header class="n-title">
         <h1 class="">프로그램 관리</h1>
         <div>
-          <a href="" class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록</a>
+          <a
+            href=""
+            class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco"
+            >프로그램 등록</a
+          >
         </div>
       </header>
 
       <section class="d:flex">
         <section class="layout-list">
-          <!--=== 필터 .filter ==========================================-->
-          <!--프로그램, 카테고리, 프로그램 상태 필터-->
+          <!--=== 필터 ==========================================-->
           <section class="n-filter bg-color:base-1 padding-x:6">
             <h1 class="d:none">필터</h1>
 
             <div class="overflow-x:auto">
               <ul class="item-wrapper padding-y:5">
                 <li>
-                  <a href=""
-                    class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1">프로그램</a>
+                  <a
+                    href=""
+                    class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1"
+                    >프로그램</a
+                  >
                 </li>
                 <li>
-                  <a href=""
-                    class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
-                    상태</a>
+                  <a
+                    href=""
+                    class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1"
+                    >프로그램 상태</a
+                  >
                 </li>
                 <li>
-                  <a href=""
-                    class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a>
+                  <a
+                    href=""
+                    class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1"
+                    >카테고리</a
+                  >
                 </li>
               </ul>
             </div>
@@ -242,34 +279,52 @@ const selectStatus = async () => {
             </div>
           </section>
 
-          <!--=== 목록 ==========================================-->
+          <!--=== 프로그램 카드 목록 + 정렬 ==========================================-->
           <section>
-            <!--=== 정렬 .list-header ==========================================-->
+            <!--정렬-->
             <header class="list-header bg-color:base-1">
               <h1 class="d:none">프로그램 목록</h1>
               <div>
                 <span>{{ totalRowCount }} Result</span>
-                <!--            <button type="button" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">-->
-                <!--                정렬-->
-                <!--            </button>-->
                 <a href="" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">
                   정렬
                 </a>
               </div>
             </header>
 
-            <!--프로그램 카드 목록. (작성 중) (작성 완료) (모집 중)-->
+            <!--프로그램 카드 목록 (작성 중) (작성 완료) (모집 중)-->
             <ul class="n-card-container bg-color:base-1 padding:7">
-              <!-- =================================== 작성 중 예약 카드 1개 =================================== -->
-              <li v-for="p in programs" :key="p.id" class="n-card bg-color:base-1 padding:6">
+              <li
+                v-for="p in programs"
+                :key="p.id"
+                class="n-card bg-color:base-1 padding:6"
+              >
                 <h2 class="d:none">프로그램 카드</h2>
 
                 <div class="card-header">
                   <div class="left">
-                    <span class="n-panel-tag not-submitted">{{ p.status }}</span>
+                    <span
+                      v-if="p.status === 'In Progress'"
+                      class="n-panel-tag not-submitted"
+                      >작성중</span
+                    >
+                    <span
+                      v-else-if="p.status === 'Published'"
+                      class="n-panel-tag not-submitted"
+                      >모집중</span
+                    >
+                    <span
+                      v-else-if="p.status === 'Unpublished'"
+                      class="n-panel-tag not-submitted"
+                      >작성완료</span
+                    >
                   </div>
                   <div class="right">
-                    <a href="" class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
+                    <a
+                      href=""
+                      class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9"
+                      >더보기</a
+                    >
                   </div>
                 </div>
 
@@ -289,13 +344,38 @@ const selectStatus = async () => {
                           <span>0.0 (0)</span>
                         </div>
                         <div class="card-info gap:1">
-                          <span class="category" v-for="(c, index) in p.categoryNames" :key="index">
-                            {{ c }}<span v-if="index < p.categoryNames.length - 1"> ·</span>
+                          <span
+                            class="category"
+                            v-for="(c, index) in p.categoryNames"
+                            :key="index"
+                          >
+                            {{ c
+                            }}<span v-if="index < p.categoryNames.length - 1"
+                              >·</span
+                            >
                           </span>
                         </div>
                       </div>
+
                       <div class="card-footer-responsive">
-                        <a href="aa" class="n-btn create">작성하기</a>
+                        <a
+                          v-if="p.status === 'In Progress'"
+                          href=""
+                          class="n-btn create"
+                          >작성하기</a
+                        >
+                        <a
+                          v-else-if="p.status === 'Published'"
+                          href=""
+                          class="n-btn manage"
+                          >예약 관리</a
+                        >
+                        <a
+                          v-else-if="p.status === 'Unpublished'"
+                          href=""
+                          class="n-btn open"
+                          >개설하기</a
+                        >
                       </div>
                     </div>
                   </div>
@@ -313,7 +393,10 @@ const selectStatus = async () => {
           <header class="n-title">
             <h1 class="">Filter</h1>
             <div>
-              <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)">
+              <button
+                class="n-icon n-icon:reset"
+                style="--icon-color: var(--color-sub-1)"
+              >
                 초기화
               </button>
             </div>
@@ -328,10 +411,21 @@ const selectStatus = async () => {
 
               <form action="" class="form">
                 <div class="modal-checkbox">
-                  <label><input class="categoryAll" type="checkbox" @change="selectCategoryAll" />All</label>
+                  <label
+                    ><input
+                      class="categoryAll"
+                      type="checkbox"
+                      @change="selectCategoryAll"
+                    />All</label
+                  >
                   <label v-for="c in categories" :key="c.id">
-                    <input class="categoryIds" type="checkbox" @change="selectCategory" :value="c.id"
-                    v-model="selectedCategories"/>{{ c.name }}
+                    <input
+                      class="categoryIds"
+                      type="checkbox"
+                      @change="selectCategory"
+                      :value="c.id"
+                      v-model="selectedCategories"
+                    />{{ c.name }}
                   </label>
                 </div>
               </form>
@@ -345,10 +439,21 @@ const selectStatus = async () => {
 
               <form action="" class="form">
                 <div class="modal-checkbox">
-                  <label><input class="programidAll" type="checkbox" @change="selectProgramAll" />All</label>
+                  <label
+                    ><input
+                      class="programidAll"
+                      type="checkbox"
+                      @change="selectProgramAll"
+                    />All</label
+                  >
                   <label v-for="p in programTitles" :key="p.id">
-                    <input class="programids" type="checkbox" @change="selectProgram" :value="p.id"
-                      v-model="selectedProgramIds">{{ p.title }}
+                    <input
+                      class="programids"
+                      type="checkbox"
+                      @change="selectProgram"
+                      :value="p.id"
+                      v-model="selectedProgramIds"
+                    />{{ p.title }}
                   </label>
                 </div>
               </form>
@@ -363,10 +468,40 @@ const selectStatus = async () => {
 
               <form action="" class="form">
                 <div class="modal-checkbox">
-                  <label><input class="statusCheckboxAll" type="checkbox" @change="selectStatusAll"/>전체</label>
-                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus" :value="'In Progress'" v-model="selectedStatus"/>작성중</label>
-                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus" :value="'Unpublished'" v-model="selectedStatus"/>작성완료</label>
-                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus" :value="'Published'" v-model="selectedStatus"/>모집중</label>
+                  <label
+                    ><input
+                      class="statusCheckboxAll"
+                      type="checkbox"
+                      @change="selectStatusAll"
+                    />전체</label
+                  >
+                  <label
+                    ><input
+                      class="statusCheckbox"
+                      type="checkbox"
+                      @change="selectStatus"
+                      :value="'In Progress'"
+                      v-model="selectedStatus"
+                    />작성중</label
+                  >
+                  <label
+                    ><input
+                      class="statusCheckbox"
+                      type="checkbox"
+                      @change="selectStatus"
+                      :value="'Unpublished'"
+                      v-model="selectedStatus"
+                    />작성완료</label
+                  >
+                  <label
+                    ><input
+                      class="statusCheckbox"
+                      type="checkbox"
+                      @change="selectStatus"
+                      :value="'Published'"
+                      v-model="selectedStatus"
+                    />모집중</label
+                  >
                 </div>
               </form>
             </details>
