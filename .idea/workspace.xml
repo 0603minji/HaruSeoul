@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7d8a9d5f-912b-4e2d-9781-f8861414e263" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/member/controller/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/member/dto/MemberCreateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/m2j2/haruseoul/member/dto/MemberCreateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/anonymous/SignUp.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/haruseoul-vue3/src/pages/anonymous/SignUp.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +78,8 @@
       <updated>1730286721667</updated>
       <workItem from="1730286722744" duration="4206000" />
       <workItem from="1730295459003" duration="1865000" />
-      <workItem from="1730356666524" duration="1033000" />
+      <workItem from="1730356666524" duration="4648000" />
+      <workItem from="1730363795628" duration="2864000" />
     </task>
     <servers />
   </component>
