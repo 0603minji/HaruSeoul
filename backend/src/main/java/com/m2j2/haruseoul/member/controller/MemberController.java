@@ -26,11 +26,12 @@ public class MemberController {
         memberService.validateId(userId);
         return ResponseEntity.ok().build();
     }
+
     @PostMapping("signup")
     public ResponseEntity<Member> create(@RequestBody MemberCreateDto memberCreateDto) {
-        if (!memberCreateDto.getIsChecked()) { // 중복 확인 여부 검사
-            throw new IllegalArgumentException("아이디 중복 확인이 필요합니다.");
-        }
+//        if (!memberCreateDto.getIsChecked()) { // 중복 확인 여부 검사
+//            throw new IllegalArgumentException("아이디 중복 확인이 필요합니다.");
+//        }
 
         return ResponseEntity.ok(memberService.save(memberCreateDto));
     }
