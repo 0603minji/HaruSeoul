@@ -39,5 +39,6 @@ public class ReservationController {
     @PostMapping
     public void create(
             @RequestBody ReservationCreateDto reservationCreateDto){
+        reservationService.create(reservationCreateDto);
     }
 }
