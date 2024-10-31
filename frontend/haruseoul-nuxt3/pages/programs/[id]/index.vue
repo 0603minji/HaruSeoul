@@ -76,7 +76,7 @@
                             <button class="n-btn thumbnail-btn thumbnail-btn:left"><span
                                     class="n-icon n-icon:arrow_left"></span>
                             </button>
-                            <img src="/image/thumbnail.png" alt="대표사진" class="thumbnail-img">
+                            <img src="/public/image/thumbnail.png" alt="대표사진" class="thumbnail-img">
                             <button class="n-btn thumbnail-btn thumbnail-btn:right"><span
                                     class="n-icon n-icon:arrow_right"></span>
                             </button>
@@ -167,7 +167,8 @@
                                 <section class="profile-card">
                                     <h1>프로필 카드</h1>
                                     <div class="overview">
-                                        <div class="img-wrapper"><img src="/image/guest/profile.png" alt="호스트프사"></div>
+                                        <div class="img-wrapper"><img src="/public/image/profile.png" alt="호스트프사">
+                                        </div>
                                         <div>
                                             <div>Jasmin</div>
                                             <div class="n-icon n-icon:star n-deco">
@@ -226,7 +227,7 @@
                                 </div>
                                 <div class="details">
                                     <div class="map-img-wrapper">
-                                        <img class="map-img" src="/image/map.png" alt="코스지도">
+                                        <img class="map-img" src="/public/image/map.png" alt="코스지도">
                                     </div>
 
                                     <section class="n-course-flow">
@@ -393,7 +394,7 @@
                                             </div>
                                         </div>
                                         <div class="map-img-wrapper">
-                                            <img class="map-img" src="/image/map.png" alt="map">
+                                            <img class="map-img" src="/public/image/map.png" alt="map">
                                         </div>
                                     </section>
                                 </div>
@@ -515,7 +516,7 @@
 
 
                                             <div class="guest-info">
-                                                <img class="profile-img" src="/image/face.jpg" alt="프로필이미지">
+                                                <img class="profile-img" src="/public/image/face.jpg" alt="프로필이미지">
                                                 <div style="flex-grow: 1;">
                                                     <div class="meatball-icon">
                                                         <span class="name">김준성</span>
@@ -547,12 +548,12 @@
 
 
                                             <ul>
-                                                <li><img src="/image/face.jpg" alt="reviewPhoto"></li>
-                                                <li><img src="/image/face.jpg" alt="reviewPhoto"></li>
-                                                <li><img src="/image/face.jpg" alt="reviewPhoto"></li>
-                                                <li><img src="/image/face.jpg" alt="reviewPhoto"></li>
-                                                <li><img src="/image/face.jpg" alt="reviewPhoto"></li>
-                                                <li><img src="/image/face.jpg" alt="reviewPhoto"></li>
+                                                <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>
+                                                <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>
+                                                <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>
+                                                <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>
+                                                <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>
+                                                <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>
                                             </ul>
 
 
@@ -562,7 +563,7 @@
                                         <div style="display: flex; justify-content: center;">
                                             <div class="reply">
                                                 <div class="host-info">
-                                                    <img class="profile-img" src="/image/face.jpg" alt="프로필이미지">
+                                                    <img class="profile-img" src="/public/image/face.jpg" alt="프로필이미지">
                                                     <div style="flex-grow: 1;">
                                                         <div class="meatball-icon">
                                                             <span class="name">김민지</span>
@@ -818,6 +819,16 @@
 
 .n-icon\:placeholder:before {
     background-size: var(--icon-size);
+}
+
+.n-icon\:rectangle:after,
+.n-icon\:rectangle:before {
+    background-color: var(--color-base-5);
+}
+
+.n-icon\:clock:after,
+.n-icon\:clock:before {
+    background-color: var(--color-base-7);
 }
 
 /* n-deco */
@@ -1225,7 +1236,7 @@
 @media (min-width: 768px) {
     main {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
 
         .main-wrapper {

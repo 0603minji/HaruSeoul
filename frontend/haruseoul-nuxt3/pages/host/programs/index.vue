@@ -192,7 +192,7 @@ const selectProgram = async () => {
                                     <div class="left">
                                         <span class="n-panel-tag not-submitted">{{
                                             p.status
-                                            }}</span>
+                                        }}</span>
                                     </div>
                                     <div class="right">
                                         <a href=""
@@ -202,7 +202,7 @@ const selectProgram = async () => {
 
                                 <div class="card-main">
                                     <div class="img-wrapper">
-                                        <img src="/image/guest/program_01.png" alt="대표사진" />
+                                        <img src="/public/image/program_01.png" alt="대표사진" />
                                     </div>
 
                                     <div class="card-info-wrapper">
@@ -428,59 +428,61 @@ const selectProgram = async () => {
 
 
 /*필터 어사이드*/
-.filter {
-    border-bottom: 1px solid var(--color-base-3);
+.filters {
+    .filter {
+        border-bottom: 1px solid var(--color-base-3);
 
-    .collapse {
-        --collapse-padding: 24px 0 24px 0;
-        display: flex;
-        align-items: center;
-        padding: var(--collapse-padding);
-        list-style-type: none;
-
-        .title {
-            /*justify-content: space-between;*/
-            /*align-items: center;*/
-            font-size: 16px;
-            font-weight: 600;
-            /*flex-grow: 1;*/
-            margin-right: auto;
-        }
-
-        .n-icon {
-            cursor: pointer;
-            /*border: none;*/
-            /*position: absolute;*/
-            /*right: var(--gap-7);*/
-        }
-    }
-
-    .form {
-        margin-bottom: 24px;
-    }
-
-
-    /*카테고리, 프로그램, 프로그램 상태 필터*/
-    .modal-checkbox {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-        background-color: transparent;
-        gap: 6px;
-        padding: 0 8px;
-        overflow-y: auto;
-        max-height: 250px;
-
-        label {
+        .collapse {
+            --collapse-padding: 24px 0 24px 0;
             display: flex;
             align-items: center;
-            font-size: 14px;
-            width: 100%;
+            padding: var(--collapse-padding);
+            list-style-type: none;
 
-            input[type="checkbox"] {
-                margin-right: 8px;
-                /* 체크박스와 텍스트 사이 간격 */
+            .title {
+                /*justify-content: space-between;*/
+                /*align-items: center;*/
+                font-size: 16px;
+                font-weight: 600;
+                /*flex-grow: 1;*/
+                margin-right: auto;
+            }
+
+            .n-icon {
+                cursor: pointer;
+                /*border: none;*/
+                /*position: absolute;*/
+                /*right: var(--gap-7);*/
+            }
+        }
+
+        .form {
+            margin-bottom: 24px;
+        }
+
+
+        /*카테고리, 프로그램, 프로그램 상태 필터*/
+        .modal-checkbox {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            background-color: transparent;
+            gap: 6px;
+            padding: 0 8px;
+            overflow-y: auto;
+            max-height: 250px;
+
+            label {
+                display: flex;
+                align-items: center;
+                font-size: 14px;
+                width: 100%;
+
+                input[type="checkbox"] {
+                    margin-right: 8px;
+                    /* 체크박스와 텍스트 사이 간격 */
+                }
             }
         }
     }
@@ -491,7 +493,7 @@ const selectProgram = async () => {
         --collapse-padding: 24px 0 12px 0;
 
         .n-icon\:arrow_up:before {
-            --icon: url(/css/image/icon/arrow_down.svg);
+            --icon: url(/assets/image/icon/arrow_down.svg);
         }
     }
 }
@@ -502,6 +504,10 @@ const selectProgram = async () => {
     flex-direction: column;
     min-width: 300px;
     max-width: 1092px;
+
+    .layout-list {
+        flex-grow: 1;
+    }
 
     .n-filter-aside {
         display: none;
@@ -514,7 +520,7 @@ const selectProgram = async () => {
             /* 18 */
             --title-font-weight: 600;
             /* semi bold */
-            --title-padding: 10px 4px;
+            --title-padding: 16px 4px;
 
             .n-icon {
                 --icon-size: var(--icon-size-4);
@@ -540,7 +546,7 @@ const selectProgram = async () => {
 @media (min-width: 768px) {
     .n-layout-mj {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: center;
         gap: 8px;
         padding-bottom: 16px;
@@ -638,7 +644,7 @@ const selectProgram = async () => {
 @media (min-width: 1092px) {
     .n-layout-mj {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: center;
         max-width: 1092px;
         margin: 0 auto;

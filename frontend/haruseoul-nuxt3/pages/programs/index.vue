@@ -66,7 +66,7 @@
 
                                 <div class="card-main">
                                     <div class="img-wrapper">
-                                        <img src="/image/guest/program_01.png" alt="대표사진">
+                                        <img src="/public/image/program_01.png" alt="대표사진">
                                     </div>
 
                                     <div class="card-info-wrapper">
@@ -595,7 +595,7 @@
         --collapse-padding: 24px 0 12px 0;
 
         .n-icon\:arrow_up:before {
-            --icon: url(/css/image/icon/arrow_down.svg);
+            --icon: url(/assets/image/icon/arrow_down.svg);
         }
     }
 }

@@ -101,7 +101,7 @@
 
                                 <div class="card-main">
                                     <div class="img-wrapper">
-                                        <img src="/image/guest/program_01.png" alt="대표사진">
+                                        <img src="/public/image/program_01.png" alt="대표사진">
                                     </div>
 
                                     <div class="card-info-wrapper">
@@ -116,13 +116,13 @@
                                     <div class="applicant-status lg:show">
                                         <div class="guest-profile-container">
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_01.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_01.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
                                                 <img src="/image/profile.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_02.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_02.png" alt="게스트 프로필">
                                             </div>
                                         </div>
                                         <span
@@ -135,13 +135,13 @@
                                     <div class="applicant-status margin-left:auto">
                                         <div class="guest-profile-container">
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_01.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_01.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
                                                 <img src="/image/profile.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_02.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_02.png" alt="게스트 프로필">
                                             </div>
                                         </div>
                                         <span
@@ -173,7 +173,7 @@
                                 <div class="card-main">
                                     <a class="n-link-box" href="detail?id=1"></a>
                                     <div class="img-wrapper">
-                                        <img src="/image/guest/program_01.png" alt="대표사진">
+                                        <img src="/public/image/program_01.png" alt="대표사진">
                                     </div>
 
                                     <div class="card-info-wrapper">
@@ -188,13 +188,13 @@
                                     <div class="applicant-status lg:show">
                                         <div class="guest-profile-container">
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_01.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_01.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
                                                 <img src="/image/profile.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_02.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_02.png" alt="게스트 프로필">
                                             </div>
                                         </div>
                                         <span
@@ -207,13 +207,13 @@
                                     <div class="applicant-status margin-left:auto">
                                         <div class="guest-profile-container">
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_01.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_01.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
                                                 <img src="/image/profile.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_02.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_02.png" alt="게스트 프로필">
                                             </div>
                                         </div>
                                         <span
@@ -245,7 +245,7 @@
                                 <div class="card-main">
                                     <a class="n-link-box" href="detail?id=1"></a>
                                     <div class="img-wrapper">
-                                        <img src="/image/guest/program_01.png" alt="대표사진">
+                                        <img src="/public/image/program_01.png" alt="대표사진">
                                     </div>
 
                                     <div class="card-info-wrapper">
@@ -260,13 +260,13 @@
                                     <div class="applicant-status lg:show">
                                         <div class="guest-profile-container">
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_01.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_01.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
                                                 <img src="/image/profile.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_02.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_02.png" alt="게스트 프로필">
                                             </div>
                                         </div>
                                         <span
@@ -279,13 +279,13 @@
                                     <div class="applicant-status margin-left:auto">
                                         <div class="guest-profile-container">
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_01.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_01.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
                                                 <img src="/image/profile.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_02.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_02.png" alt="게스트 프로필">
                                             </div>
                                         </div>
                                         <span
@@ -317,7 +317,7 @@
                                 <div class="card-main">
                                     <a class="n-link-box" href="detail?id=1"></a>
                                     <div class="img-wrapper">
-                                        <img src="/image/guest/program_01.png" alt="대표사진">
+                                        <img src="/public/image/program_01.png" alt="대표사진">
                                     </div>
 
                                     <div class="card-info-wrapper">
@@ -332,13 +332,13 @@
                                     <div class="applicant-status lg:show">
                                         <div class="guest-profile-container">
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_01.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_01.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
                                                 <img src="/image/profile.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_02.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_02.png" alt="게스트 프로필">
                                             </div>
                                         </div>
                                         <span
@@ -351,13 +351,13 @@
                                     <div class="applicant-status margin-left:auto">
                                         <div class="guest-profile-container">
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_01.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_01.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
                                                 <img src="/image/profile.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_02.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_02.png" alt="게스트 프로필">
                                             </div>
                                         </div>
                                         <span
@@ -389,7 +389,7 @@
                                 <div class="card-main">
                                     <a class="n-link-box" href="detail?id=1"></a>
                                     <div class="img-wrapper">
-                                        <img src="/image/guest/program_01.png" alt="대표사진">
+                                        <img src="/public/image/program_01.png" alt="대표사진">
                                     </div>
 
                                     <div class="card-info-wrapper">
@@ -404,13 +404,13 @@
                                     <div class="applicant-status lg:show">
                                         <div class="guest-profile-container">
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_01.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_01.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
                                                 <img src="/image/profile.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_02.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_02.png" alt="게스트 프로필">
                                             </div>
                                         </div>
                                         <span
@@ -423,13 +423,13 @@
                                     <div class="applicant-status margin-left:auto">
                                         <div class="guest-profile-container">
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_01.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_01.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
                                                 <img src="/image/profile.png" alt="게스트 프로필">
                                             </div>
                                             <div class="guest-profile-wrapper">
-                                                <img src="/image/guest/program_02.png" alt="게스트 프로필">
+                                                <img src="/public/image/program_02.png" alt="게스트 프로필">
                                             </div>
                                         </div>
                                         <span

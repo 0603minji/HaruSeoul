@@ -54,9 +54,9 @@ body {
   font-size: 14px;
   color: var(--color-base-9);
   /*
-    --n-aside-w: 250px;
-    --n-aside-ml: 0;
-    --n-aside-mr: 0; */
+      --n-aside-w: 250px;
+      --n-aside-ml: 0;
+      --n-aside-mr: 0; */
   background-color: var(--color-base-1);
 
   .layout-root {

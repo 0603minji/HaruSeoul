@@ -239,7 +239,7 @@ onMounted(() => {
     --collapse-padding: 24px 0 12px 0;
 
     .n-icon\:arrow_up:before {
-      --icon: url(/css/image/icon/arrow_down.svg);
+      --icon: url(/assets/image/icon/arrow_down.svg);
     }
   }
 }

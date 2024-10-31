@@ -225,14 +225,14 @@ onMounted(() => {
                     <div class="course-input-area">
 
                         <div class="input-with-icon">
-                            <img src="/image/pen.svg" alt="아이콘">
+                            <img src="/public/image/pen.svg" alt="아이콘">
                             <label>
                                 <input type="text" class="input-text" placeholder="제목">
                             </label>
                         </div>
 
                         <div class="input-with-icon">
-                            <img src="/image/pen.svg" alt="아이콘">
+                            <img src="/public/image/pen.svg" alt="아이콘">
                             <label>
                                 <input type="text" class="input-text" placeholder="주소">
                             </label>
@@ -240,7 +240,7 @@ onMounted(() => {
 
                         <div class="input-with-icon">
                             <label>
-                                <img src="/image/pin.svg" alt="아이콘">
+                                <img src="/public/image/pin.svg" alt="아이콘">
                                 <input type="text" class="input-text" placeholder="장소 설명">
                             </label>
                         </div>
@@ -248,7 +248,7 @@ onMounted(() => {
 
                         <div class="course-select-time">
                             <div class="time-label">
-                                <img src="/image/pin.svg" alt="아이콘">
+                                <img src="/public/image/pin.svg" alt="아이콘">
                                 <span>시작시각</span>
                             </div>
                             <div class="time-select-wrapper">
@@ -299,7 +299,7 @@ onMounted(() => {
 
                         <div class="duration-wrapper">
                             <div class="time-label">
-                                <img src="/image/pin.svg" alt="아이콘">
+                                <img src="/public/image/pin.svg" alt="아이콘">
                                 <span>소요시간</span>
                             </div>
                             <div class="duration-pm-wrapper">
@@ -435,7 +435,7 @@ onMounted(() => {
                             </div>
                             <div class="image">
                                 <div>
-                                    <div><img src="/image/profile_cat.png" alt="이미지"></div>
+                                    <div><img src="/public/image/profile_cat.png" alt="이미지"></div>
                                     <div>
                                         <button>X</button>
                                     </div>
@@ -451,7 +451,7 @@ onMounted(() => {
                             </div>
                             <div class="image">
                                 <div>
-                                    <div><img src="/image/home-guest.png" alt="이미지"></div>
+                                    <div><img src="/public/image/home-guest.png" alt="이미지"></div>
                                     <div>
                                         <button>X</button>
                                     </div>
@@ -465,7 +465,7 @@ onMounted(() => {
                             </div>
                             <div class="image">
                                 <div>
-                                    <div><img src="/image/home-host.png" alt="이미지"></div>
+                                    <div><img src="/public/image/home-host.png" alt="이미지"></div>
                                     <div>
                                         <button>X</button>
                                     </div>
