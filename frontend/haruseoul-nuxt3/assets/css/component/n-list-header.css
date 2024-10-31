@@ -1,0 +1,62 @@
+.list-header {
+    padding: 16px 20px;
+    font-size: var(--font-size-6);
+
+    div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .list-item-count {
+            font-size: var(--font-size-8);
+            font-weight: 500;
+        }
+
+        /*=== 뷰전환, 정렬버튼 호버 ===============================================*/
+        .option {
+            border-radius: 6px;
+            height: fit-content;
+            padding: 4px 8px;
+        }
+        .option:hover {
+            background-color: var(--color-base-2);
+        }
+        /*======================================================================*/
+
+        .sort-expanded {
+            display: none;
+            gap: 8px;
+            color: var(--color-base-6);
+
+            .active {
+                color: var(--color-base-9);
+            }
+        }
+
+        .sort-expanded > li {
+            list-style-type: disc;
+            list-style-position: inside;
+
+            > a {
+                font-size: 14px;
+                position: relative;
+                left: -8px;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .list-header {
+        div {
+            .sort.sort-hidden {
+                display: none;
+            }
+
+            .sort-expanded {
+                display: flex;
+            }
+        }
+    }
+}
