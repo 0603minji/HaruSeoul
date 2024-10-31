@@ -2,6 +2,7 @@ package com.m2j2.haruseoul.member.controller;
 
 import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.member.dto.MemberCreateDto;
+import com.m2j2.haruseoul.member.dto.MemberListDto;
 import com.m2j2.haruseoul.member.dto.MemberUpdateDto;
 import com.m2j2.haruseoul.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,11 @@ public class MemberController {
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
 
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<MemberListDto> getList(@PathVariable Long id){
+        return ResponseEntity.ok(memberService.getList(id));
     }
 
     @PostMapping("idvalid")
