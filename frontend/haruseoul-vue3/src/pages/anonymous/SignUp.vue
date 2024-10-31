@@ -114,7 +114,6 @@ const submitHandler = async () => {
     nickname: nickname.value,
     email: email.value,
     birth: birth.value,
-    isChecked: isChecked.value
   };
 
   try {
