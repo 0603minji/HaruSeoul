@@ -21,6 +21,7 @@ import java.util.Optional;
 
 @Service
 public class DefaultReservationService implements ReservationService {
+    private final ProgramRepository programRepository;
     private ReservationRepository reservationRepository;
     private MemberRepository memberRepository;
     private StatusRepository statusRepository;
@@ -35,7 +36,7 @@ public class DefaultReservationService implements ReservationService {
                                      ReviewRepository reviewRepository,
                                      RouteRepository routeRepository,
                                      PublishedProgramRepository publishedProgramRepository,
-                                     ModelMapper modelMapper) {
+                                     ModelMapper modelMapper, ProgramRepository programRepository) {
         this.reservationRepository = reservationRepository;
         this.memberRepository = memberRepository;
         this.statusRepository = statusRepository;
@@ -43,6 +44,7 @@ public class DefaultReservationService implements ReservationService {
         this.routeRepository = routeRepository;
         this.publishedProgramRepository = publishedProgramRepository;
         this.modelMapper = modelMapper;
+        this.programRepository = programRepository;
     }
 
     @Override
@@ -78,21 +80,13 @@ public class DefaultReservationService implements ReservationService {
         // 명시적으로 초기화 (지연 로딩 해결)
         Hibernate.initialize(reservation.getMember());
 
-        // 예약한 공개 프로그램의 프로그램 Id
-        Long pId = reservation.getPublishedProgram().getProgram().getId();
-        // ratingCount: review 의 개수 담기 - memberId 로 가져오기
-        Long reviewsCount = reviewRepository.countByProgramId(pId);
         // ratingAverage 를 따로 담아오기
 
-        // routeTitle: route 의 이름 담기
-        String routeTitle = routeRepository.titleByProgramId(pId);
-        // routeAddress: route 의 주소 담기
-        String routeAddress = routeRepository.addressByProgramId(pId);
 
-        // ReservationListDto 만들기
+        // ReservationListDto reservationCard
         ReservationListDto reservationListDto = modelMapper.map(reservation, ReservationListDto.class);
 
-        modelMapper.typeMap(Reservation.class, ReservationListDto.class)
+        modelMapper.typeMap(reservation.getClass(), ReservationListDto.class)
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getPublishedProgram().getProgram().getMember().getId(), ReservationListDto::setHostId);
                     mapper.map(src -> src.getPublishedProgram().getStatus().getName(), ReservationListDto::setStatusName);
@@ -101,47 +95,54 @@ public class DefaultReservationService implements ReservationService {
                     mapper.map(Reservation::getGroupSize, ReservationListDto::setGroupSize);
                 });
 
+        // ReservationDetailProgramDto program;
+        // 예약한 공개 프로그램
+        Program reservationProgram = programRepository.findById(reservation.getId()).orElse(null);
+        // routeTitle: route 의 이름 담기
+        String routeTitle = routeRepository.titleByProgramId(reservationProgram.getId());
+        // routeAddress: route 의 주소 담기
+        String routeAddress = routeRepository.addressByProgramId(reservationProgram.getId());
+        ReservationDetailProgramDto reservationDetailProgramDto = ReservationDetailProgramDto.builder()
+                .programStartTime(String.valueOf(reservationProgram.getStartTime()))
+                // 경로 List 로 담아야해 !! 다시하기 reservations/64 로 검토하기
+                .routeTitle(routeTitle)
+                .routeAddress(routeAddress)
+                .programInclusion(String.valueOf(reservationProgram.getInclusion()))
+                .programExclusion(String.valueOf(reservationProgram.getExclusion()))
+                .programPackingList(String.valueOf(reservationProgram.getPackingList()))
+                .programCaution(String.valueOf(reservationProgram.getCaution()))
+                .reservationRequirement(String.valueOf(reservationProgram.getRequirement()))
+                .build();
 
-        // ReservationDetailDto 만들기
-        ReservationDetailDto reservationDetailDto = modelMapper.map(reservation, ReservationDetailDto.class);
 
-        modelMapper.typeMap(Reservation.class, ReservationDetailDto.class)
-                .addMappings(mapper -> {
-                    mapper.map(Reservation::getId, ReservationDetailDto::setReservationId);
+        // ReservationDetailGuestDto guest;
+        ReservationDetailGuestDto reservationDetailGuestDto = ReservationDetailGuestDto.builder()
+                .memberName(reservation.getMember().getName())
+                .memberEmail(String.valueOf(reservation.getMember().getEmail()))
+                .build();
 
-                    // 호스트 정보와 프로그램 관련 매핑
-                    mapper.map(src -> src.getPublishedProgram().getProgram().getMember().getName(),
-                            ReservationDetailDto::setHostName);
-                    mapper.map(src -> String.valueOf(src.getPublishedProgram().getProgram().getRating()),
-                            ReservationDetailDto::setProgramRating);
-                    mapper.map(src -> String.valueOf(src.getPublishedProgram().getProgram().getStartTime()),
-                            ReservationDetailDto::setProgramStartTime);
-                    mapper.map(src -> String.valueOf(src.getPublishedProgram().getProgram().getInclusion()),
-                            ReservationDetailDto::setProgramInclusion);
-                    mapper.map(src -> String.valueOf(src.getPublishedProgram().getProgram().getExclusion()),
-                            ReservationDetailDto::setProgramExclusion);
-                    mapper.map(src -> String.valueOf(src.getPublishedProgram().getProgram().getPackingList()),
-                            ReservationDetailDto::setProgramPackingList);
-                    mapper.map(src -> String.valueOf(src.getPublishedProgram().getProgram().getCaution()),
-                            ReservationDetailDto::setProgramCaution);
-                    mapper.map(src -> String.valueOf(src.getPublishedProgram().getProgram().getRequirement()),
-                            ReservationDetailDto::setReservationRequirement);
-                });
-        reservationDetailDto.setReviewsCount(reviewsCount);
-        reservationDetailDto.setRouteTitle(routeTitle);
-        reservationDetailDto.setRouteAddress(routeAddress);
-
+        // ReservationDetailHostDto Host;
+        // ratingCount: 특정 memberId 에 해당하는 review 의 개수 담기
+        Long ratingCount = reviewRepository.countByMemberId(reservation.getPublishedProgram().getProgram().getMember().getId());
+        ReservationDetailHostDto reservationDetailHostDto = ReservationDetailHostDto.builder()
+                .memberName(reservation.getPublishedProgram().getProgram().getMember().getName())
+                .programRating(String.valueOf(reservationProgram.getRating()))
+                .ratingCount(ratingCount)
+                .build();
 
         return ReservationDetailResponseDto.builder()
-                .reservation(reservationListDto)
-                .reservationDetail(reservationDetailDto)
+                .reservationId(reservation.getId())
+                .reservationCard(reservationListDto)
+                .program(reservationDetailProgramDto)
+                .guest(reservationDetailGuestDto)
+                .host(reservationDetailHostDto)
                 .build();
     }
 
     @Override
     @Transactional
     public void create(ReservationCreateDto reservationCreateDto) {
-        
+
         // 예약할때 받은 공개 프로그램 ID로 공개 프로그램 가져오기
         PublishedProgram publishedProgram = publishedProgramRepository.findById(reservationCreateDto.getPublishedProgramId()).orElseThrow(() ->
                 new IllegalArgumentException("PublishedProgram not found")
@@ -152,17 +153,6 @@ public class DefaultReservationService implements ReservationService {
                 new IllegalArgumentException("MemberId not found with id")
         );
 
-//        ReservationCreatedDto reservationCreatedDto = modelMapper.map(ReservationCreateDto.class, ReservationCreatedDto.class);
-//
-//        modelMapper.typeMap(ReservationCreateDto.class, ReservationCreatedDto.class)
-//                .addMappings(mapper -> {
-//                    mapper.map(ReservationCreateDto::getRegMemberId, ReservationCreatedDto::setRegMemberId);
-//                    mapper.map(ReservationCreateDto::getReservationDate, ReservationCreatedDto::setReservationDate);
-//                    mapper.map(ReservationCreateDto::getReservationGroupSize, ReservationCreatedDto::setReservationGroupSize);
-//                    mapper.map(ReservationCreateDto::getReservationRequirement, ReservationCreatedDto::setReservationRequirement);
-//                });
-//        reservationCreatedDto.setProgramId(programId);
-
         Reservation reservation = Reservation.builder()
                 .publishedProgram(publishedProgram)
                 .member(member)
@@ -171,6 +161,24 @@ public class DefaultReservationService implements ReservationService {
                 .build();
 
         reservationRepository.save(reservation);
+
+        // reservation 의 group_size 들로 해당 publishedProgram 의 group_size_current 합산
+        int groupSizeCurrent = publishedProgram.getGroupSizeCurrent(); // 공개된 프로그램의 현재 진행 인원 수
+        int reservationGroupSize = reservationCreateDto.getReservationGroupSize(); // 예약 인원 수
+
+        Program reservationProgram = programRepository.findById(publishedProgram.getProgram().getId()).orElse(null);
+        assert reservationProgram != null;
+        int programGroupMaxSize = reservationProgram.getGroupSizeMax(); // 프로그램의 지정된 최대 인원 수
+
+        // 혹시나 0명 예약할 수도 있으니, 합계가 0 보다 크거나 프로그램 지정 최대 인원 수보다 작은 경우에만 publishedProgram 에 값이 저장되고 , 예약이 진행된다.
+        if (0 < groupSizeCurrent + reservationGroupSize && groupSizeCurrent + reservationGroupSize < programGroupMaxSize) {
+            publishedProgramRepository.save(publishedProgram);  // 갱신된 값 저장
+            int updatedGroupSize = groupSizeCurrent + reservationGroupSize;
+            publishedProgram.setGroupSizeCurrent(updatedGroupSize);
+        }
+        else {
+            throw new IllegalStateException("예약 불가: 총 그룹 인원이 " + programGroupMaxSize + " 명을 초과할 수 없습니다.");
+        }
     }
 
     @Override
