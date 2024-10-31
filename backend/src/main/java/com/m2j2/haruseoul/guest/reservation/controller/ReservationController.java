@@ -37,9 +37,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> create(
+    public void create(
             @RequestBody ReservationCreateDto reservationCreateDto){
-
-        return ResponseEntity.ok(reservationService.create(reservationCreateDto));
     }
 }

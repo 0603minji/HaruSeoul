@@ -140,27 +140,37 @@ public class DefaultReservationService implements ReservationService {
 
     @Override
     @Transactional
-    public Reservation create(ReservationCreateDto reservationCreateDto) {
-
-        Long reservationPublishedProgramId = reservationCreateDto.getPublishedProgramId();
-        PublishedProgram reservationPublishedProgram = publishedProgramRepository.findById(reservationPublishedProgramId).orElseThrow(() ->
+    public void create(ReservationCreateDto reservationCreateDto) {
+        
+        // 예약할때 받은 공개 프로그램 ID로 공개 프로그램 가져오기
+        PublishedProgram publishedProgram = publishedProgramRepository.findById(reservationCreateDto.getPublishedProgramId()).orElseThrow(() ->
                 new IllegalArgumentException("PublishedProgram not found")
         );
 
-        Long memberId = reservationCreateDto.getRegMemberId();
-        Member reservationMember = memberRepository.findById(memberId).orElseThrow(() ->
-                new IllegalArgumentException("MemberId not found with id: " + memberId)
+        // 예약하는 멤버 ID로 멤버 가져오기
+        Member member = memberRepository.findById(reservationCreateDto.getRegMemberId()).orElseThrow(() ->
+                new IllegalArgumentException("MemberId not found with id")
         );
 
+//        ReservationCreatedDto reservationCreatedDto = modelMapper.map(ReservationCreateDto.class, ReservationCreatedDto.class);
+//
+//        modelMapper.typeMap(ReservationCreateDto.class, ReservationCreatedDto.class)
+//                .addMappings(mapper -> {
+//                    mapper.map(ReservationCreateDto::getRegMemberId, ReservationCreatedDto::setRegMemberId);
+//                    mapper.map(ReservationCreateDto::getReservationDate, ReservationCreatedDto::setReservationDate);
+//                    mapper.map(ReservationCreateDto::getReservationGroupSize, ReservationCreatedDto::setReservationGroupSize);
+//                    mapper.map(ReservationCreateDto::getReservationRequirement, ReservationCreatedDto::setReservationRequirement);
+//                });
+//        reservationCreatedDto.setProgramId(programId);
+
         Reservation reservation = Reservation.builder()
-                .publishedProgram(reservationPublishedProgram)
-                .member(reservationMember)
+                .publishedProgram(publishedProgram)
+                .member(member)
                 .groupSize(reservationCreateDto.getReservationGroupSize())
                 .requirement(reservationCreateDto.getReservationRequirement())
                 .build();
 
-
-        return reservationRepository.save(reservation);
+        reservationRepository.save(reservation);
     }
 
     @Override
