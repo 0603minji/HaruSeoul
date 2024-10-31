@@ -1,0 +1,5 @@
+/* ==== <component/card.css 아래에 link 넣기> ==== */
+
+.card {
+    box-shadow: 5px 5px 10px 0.5px var(--color-base-3);
+}

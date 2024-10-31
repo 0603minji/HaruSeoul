@@ -73,6 +73,7 @@ local.properties
 .idea/
 
 backend/.idea/
+frontend/.idea/
 
 # User-specific stuff
 backend/.idea/**/workspace.xml
