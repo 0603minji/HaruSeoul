@@ -1,24 +1,25 @@
 <script setup>
 
+
 import {onMounted, ref} from "vue";
 import axios from "axios";
-
 
 const categories = ref([]);
 
 
 //================Fetch Function==========
 const fetchCategories = async () => {
+
   const response = await axios.get("http://localhost:8080/api/v1/categories");
 
   categories.value = response.data;
 
   // console.log(categories.value);
+
 }
 
 //=======================LifeCycle Functions==========
 onMounted(() => {
-
   if (!window.location.hash) {
     window.location.hash = '#intro';
   }
@@ -526,6 +527,8 @@ onMounted(() => {
       </section>
     </form>
   </main>
+
+
 </template>
 <style scoped>
 .intro,
@@ -877,7 +880,6 @@ onMounted(() => {
   padding: 0 10px;
   width: 100%;
   font-size: 1rem;
-
 }
 
 .time-label {
@@ -1049,7 +1051,6 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   margin-top: 30px;
-
 }
 
 .image-container {
@@ -1173,7 +1174,6 @@ textarea {
 
 
 @media (min-width: 768px) {
-
   .intro,
   .detail,
   .course,
@@ -1322,7 +1322,6 @@ textarea {
 }
 
 @media (max-width: 768px) {
-
   .item-wrapper {
     display: flex;
     justify-content: center;
