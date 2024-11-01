@@ -44,8 +44,8 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
 
     @Override
     public PublishedProgramResponseDto getList(List<LocalDate> dates, List<Long> statusIds, List<Long> programIds) {
-        LocalDate start = dates == null ? null : dates.getFirst();
-        LocalDate end = dates == null ? null : dates.getLast();
+        LocalDate start = dates == null ? null : dates.get(0);
+        LocalDate end = dates == null ? null : dates.get(dates.size()-1);
         List<PublishedProgram> publishedPrograms = publishedProgramRepository.findAll(start, end, statusIds, programIds);
 
         modelMapper.typeMap(PublishedProgram.class, PublishedProgramListDto.class)
