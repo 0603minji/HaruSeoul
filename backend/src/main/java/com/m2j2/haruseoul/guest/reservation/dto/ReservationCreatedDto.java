@@ -6,15 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReservationCreateDto {
+public class ReservationCreatedDto {
 
-    private Long publishedProgramId;
+    private Long programId;
 
     private Long regMemberId;
 
@@ -23,5 +22,4 @@ public class ReservationCreateDto {
     private Integer reservationGroupSize;
 
     private String reservationRequirement;
-
 }

@@ -39,7 +39,7 @@ public class Reservation {
     private Instant regDate;
 
     @Column(name = "group_size", nullable = false)
-    private int groupSize;
+    private Integer groupSize;
 
     @Column(name = "requirement")
     private String requirement;
