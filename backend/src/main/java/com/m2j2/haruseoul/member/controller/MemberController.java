@@ -2,10 +2,13 @@ package com.m2j2.haruseoul.member.controller;
 
 import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.member.dto.MemberCreateDto;
+import com.m2j2.haruseoul.member.dto.MemberListDto;
 import com.m2j2.haruseoul.member.dto.MemberUpdateDto;
 import com.m2j2.haruseoul.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController("memberController")
 @RequestMapping("members")
@@ -18,13 +21,24 @@ public class MemberController {
 
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<MemberListDto> getList(@PathVariable Long id){
+        return ResponseEntity.ok(memberService.getList(id));
+    }
+
     @PostMapping("idvalid")
-    public void idvalid(String userId) {
-         memberService.validateId(userId);
+    public ResponseEntity<Void> idvalid(@RequestBody Map<String, String> userIdMap) {
+        String userId = userIdMap.get("userId");
+        memberService.validateId(userId);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("signup")
     public ResponseEntity<Member> create(@RequestBody MemberCreateDto memberCreateDto) {
+//        if (!memberCreateDto.getIsChecked()) { // 중복 확인 여부 검사
+//            throw new IllegalArgumentException("아이디 중복 확인이 필요합니다.");
+//        }
+
         return ResponseEntity.ok(memberService.save(memberCreateDto));
     }
 
