@@ -18,6 +18,8 @@ public class ReservationDetailResponseDto {
 
     private ReservationListDto reservationCard;
 
+    private ReservationDetailRequirementDto requirement;
+
     private ReservationDetailProgramDto program;
 
     private ReservationDetailGuestDto guest;

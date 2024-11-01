@@ -77,14 +77,7 @@ public class DefaultReservationService implements ReservationService {
         Reservation reservation = reservationRepository.findById(rid)
                 .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
 
-        // 명시적으로 초기화 (지연 로딩 해결)
-        Hibernate.initialize(reservation.getMember());
-
         // ratingAverage 를 따로 담아오기
-
-
-        // ReservationListDto reservationCard
-        ReservationListDto reservationListDto = modelMapper.map(reservation, ReservationListDto.class);
 
         modelMapper.typeMap(reservation.getClass(), ReservationListDto.class)
                 .addMappings(mapper -> {
@@ -95,18 +88,25 @@ public class DefaultReservationService implements ReservationService {
                     mapper.map(Reservation::getGroupSize, ReservationListDto::setGroupSize);
                 });
 
+        // ReservationListDto reservationCard
+        ReservationListDto reservationListDto = modelMapper.map(reservation, ReservationListDto.class);
+
         // ReservationDetailProgramDto program;
         // 예약한 공개 프로그램
-        Program reservationProgram = programRepository.findById(reservation.getId()).orElse(null);
-        // routeTitle: route 의 이름 담기
-        String routeTitle = routeRepository.titleByProgramId(reservationProgram.getId());
-        // routeAddress: route 의 주소 담기
-        String routeAddress = routeRepository.addressByProgramId(reservationProgram.getId());
+        Program reservationProgram = programRepository.findById(reservation.getPublishedProgram().getProgram().getId()).orElse(null);
+
+        // 프로그램 ID 에 해당하는 Route 가져오기
+        Route meetingSpot = routeRepository.meetingSpotTitleByProgramId(reservationProgram.getId());
+        // meetingSpotTitle: meetingSpot 의 이름 담기
+        String meetingSpotTitle = meetingSpot.getTitle();
+        System.out.println(meetingSpotTitle);
+        // meetingSpotAddress: meetingSpot 의 주소 담기
+        String meetingSpotAddress = meetingSpot.getAddress();
+        System.out.println(meetingSpotAddress);
         ReservationDetailProgramDto reservationDetailProgramDto = ReservationDetailProgramDto.builder()
                 .programStartTime(String.valueOf(reservationProgram.getStartTime()))
-                // 경로 List 로 담아야해 !! 다시하기 reservations/64 로 검토하기
-                .routeTitle(routeTitle)
-                .routeAddress(routeAddress)
+                .meetingSpotTitle(meetingSpotTitle)
+                .meetingSpotAddress(meetingSpotAddress)
                 .programInclusion(String.valueOf(reservationProgram.getInclusion()))
                 .programExclusion(String.valueOf(reservationProgram.getExclusion()))
                 .programPackingList(String.valueOf(reservationProgram.getPackingList()))
@@ -130,12 +130,22 @@ public class DefaultReservationService implements ReservationService {
                 .ratingCount(ratingCount)
                 .build();
 
+        // ReservationDetailRequirementDto guest
+        ReservationDetailRequirementDto reservationDetailRequirementDto =
+                ReservationDetailRequirementDto.builder()
+                        .guestRequirement(reservation.getRequirement())
+                        .hostRequirement(reservation.getPublishedProgram().getProgram().getRequirement())
+                        .build();
+
+        // ReservationDetailRequirementDto host
+
         return ReservationDetailResponseDto.builder()
                 .reservationId(reservation.getId())
                 .reservationCard(reservationListDto)
                 .program(reservationDetailProgramDto)
                 .guest(reservationDetailGuestDto)
                 .host(reservationDetailHostDto)
+                .requirement(reservationDetailRequirementDto)
                 .build();
     }
 
@@ -171,7 +181,7 @@ public class DefaultReservationService implements ReservationService {
         int programGroupMaxSize = reservationProgram.getGroupSizeMax(); // 프로그램의 지정된 최대 인원 수
 
         // 혹시나 0명 예약할 수도 있으니, 합계가 0 보다 크거나 프로그램 지정 최대 인원 수보다 작은 경우에만 publishedProgram 에 값이 저장되고 , 예약이 진행된다.
-        if (0 < groupSizeCurrent + reservationGroupSize && groupSizeCurrent + reservationGroupSize < programGroupMaxSize) {
+        if (0 < groupSizeCurrent + reservationGroupSize && groupSizeCurrent + reservationGroupSize < programGroupMaxSize + 1) {
             publishedProgramRepository.save(publishedProgram);  // 갱신된 값 저장
             int updatedGroupSize = groupSizeCurrent + reservationGroupSize;
             publishedProgram.setGroupSizeCurrent(updatedGroupSize);

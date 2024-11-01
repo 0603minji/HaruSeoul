@@ -13,9 +13,9 @@ public class ReservationDetailProgramDto {
 
     private String programStartTime;
 
-    private String routeTitle; // 만나는 장소 요약 제목
+    private String meetingSpotTitle; // 만나는 장소 요약 제목
 
-    private String routeAddress;
+    private String meetingSpotAddress;
 
     private String programInclusion;
 
