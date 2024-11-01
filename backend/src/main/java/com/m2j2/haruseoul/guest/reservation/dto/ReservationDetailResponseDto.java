@@ -1,5 +1,6 @@
 package com.m2j2.haruseoul.guest.reservation.dto;
 
+import com.m2j2.haruseoul.entity.Reservation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReservationDetailResponseDto {
-    private ReservationListDto reservation;
-    private ReservationDetailDto reservationDetail;
+
+    private Long reservationId;
+
+    private ReservationListDto reservationCard;
+
+    private ReservationDetailRequirementDto requirement;
+
+    private ReservationDetailProgramDto program;
+
+    private ReservationDetailGuestDto guest;
+
+    private ReservationDetailHostDto host;
+
+//    private ReservationDetailPaymentDto payment;
+
 }

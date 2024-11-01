@@ -3,6 +3,7 @@ package com.m2j2.haruseoul.guest.reservation.controller;
 import com.m2j2.haruseoul.entity.Reservation;
 import com.m2j2.haruseoul.guest.reservation.dto.*;
 import com.m2j2.haruseoul.guest.reservation.service.DefaultReservationService;
+import com.m2j2.haruseoul.host.program.dto.ProgramCreateDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,5 +34,12 @@ public class ReservationController {
         ReservationDetailResponseDto reservationDetailResponseDto = reservationService.getDetail(rId);
 
         return ResponseEntity.ok(reservationDetailResponseDto);
+    }
+
+    @PostMapping
+    @RequestMapping("/new")
+    public void create(
+            @RequestBody ReservationCreateDto reservationCreateDto){
+        reservationService.create(reservationCreateDto);
     }
 }
