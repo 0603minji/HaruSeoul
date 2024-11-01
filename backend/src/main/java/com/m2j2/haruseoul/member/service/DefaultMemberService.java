@@ -2,11 +2,14 @@ package com.m2j2.haruseoul.member.service;
 
 import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.member.dto.MemberCreateDto;
+import com.m2j2.haruseoul.member.dto.MemberListDto;
 import com.m2j2.haruseoul.member.dto.MemberUpdateDto;
 import com.m2j2.haruseoul.repository.MemberRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class DefaultMemberService implements MemberService {
@@ -36,11 +39,19 @@ public class DefaultMemberService implements MemberService {
 
     @Override
     public String validateId(String userId) {
-        if(memberRepository.existsByUserId(userId))
-            throw new IllegalArgumentException("아이디 중복");
+        if (memberRepository.existsByUserId(userId)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT); // 중복된 경우 409 에러 전송
+        }
         return "아이디확인필요";
-
     }
+
+
+    @Override
+    public MemberListDto getList(Long id) {
+        Member member = memberRepository.findById(id).orElse(null);
+        return modelMapper.map(member, MemberListDto.class);
+    }
+
 
     @Override
     @Transactional

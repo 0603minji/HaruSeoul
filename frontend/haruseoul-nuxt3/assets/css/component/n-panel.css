@@ -1,0 +1,50 @@
+/* 폐지임박 모집중 예약확정 */
+.n-panel-tag {
+    --tag-font-size: 14px;
+    --tag-border-color: var(--color-base-9);
+    --tag-border-radius: 4px;
+    --tag-bg-color: transparent;
+    --tag-padding: 4px 6px;
+    align-items: center;
+    background-color: var(--tag-bg-color);
+    border: 1px solid var(--tag-border-color);
+    border-radius: var(--tag-border-radius);
+    box-sizing: content-box;
+    color: inherit;
+    display: inline-flex;
+    font-family: inherit;
+    font-size: var(--tag-font-size, 14px);
+    font-weight: 400; /* regular */
+    justify-content: center;
+    line-height: 1em;
+    padding: var(--tag-padding);
+    position: relative;
+    transition: border-color .3s, background-color .3s;
+    user-select: none;
+    white-space: nowrap;
+    width: auto
+}
+
+.n-panel-tag\:blue {
+    --tag-border-color: var(--color-sub-1);
+    --tag-bg-color: var(--color-sub-1);
+    color: var(--color-base-1);
+}
+
+.n-panel-tag\:red {
+    --tag-border-color: var(--color-red-1);
+    --tag-bg-color: var(--color-red-1);
+    color: var(--color-base-1);
+}
+
+.n-panel-tag\:green {
+    --tag-border-color: var(--color-green-1);
+    --tag-bg-color: var(--color-green-1);
+    color: var(--color-base-1);
+}
+
+.n-panel-tag\:gray {
+    --tag-border-color: var(--color-base-8);
+    --tag-bg-color: var(--color-base-8);
+    color: var(--color-base-1);
+}

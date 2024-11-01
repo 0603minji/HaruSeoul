@@ -1,0 +1,107 @@
+.n-bar {
+    --bar-gap: 8px;
+    align-items: center;
+    display: inline-flex;
+    gap: var(--bar-gap);
+
+    > * {
+        display: inline-flex;
+        transition: transform .5s ease
+    }
+
+    > :hover {
+        transform: scale(1.0)
+    }
+
+    .active {
+        background-color: var(--color-main-2);
+        color: #fff
+    }
+
+    .active:hover {
+        background-color: var(--color-main-1)
+    }
+
+    .active\:bottom {
+        border-bottom: 4px dotted rgba(var(--rgb-accent-1), .5);
+        padding-bottom: 5px
+    }
+
+    .active\:border {
+        border: 4px dotted rgba(var(--rgb-accent-1), .5)
+    }
+
+}
+
+/* === hover, active 시 underlined ========================================================================== */
+.n-bar-underline {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 0;
+
+    .item-wrapper {
+        --bar-gap: 16px;
+        align-items: center;
+        display: flex;
+        justify-content: flex-start;
+        gap: var(--bar-gap);
+        color: var(--color-base-6);
+        overflow-x: auto;
+        padding: 0 16px;
+
+        > * {
+            position: relative;
+        }
+        /*=============== hover, active상태 ================================*/
+        .n-btn {
+            --btn-bg-hover: transparent;
+        }
+
+        > *::after {
+            content: "";
+            width: 100%;
+            height: 3px;
+            background-color: var(--color-main-4);
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            z-index: 1;
+
+            visibility: hidden;
+        }
+
+        > *:hover {
+            color: var(--color-base-9);
+        }
+
+        > *:hover::after {
+            background-color: var(--color-main-4);
+            visibility: visible;
+        }
+
+        > .active {
+            color: var(--color-base-9);
+        }
+
+        > .active::after {
+            background-color: var(--color-main-1);
+            visibility: visible;
+        }
+
+        > .active:hover::after {
+            background-color: var(--color-main-1);
+            visibility: visible;
+        }
+    }
+}
+
+.n-bar-underline::after {
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-base-5);
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*bottom: 0;*/
+    /*z-index: 1;*/
+}
