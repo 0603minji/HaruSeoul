@@ -46,10 +46,10 @@ public class DefaultProgramService implements ProgramService {
 
     @Override
     @Transactional
-    public ProgramResponseDto getList(List<Long> pIds, List<Long> cIds, List<String> statuses) {
+    public ProgramResponseDto getList(List<Long> pIds, List<Long> cIds, List<String> statuses, int pageNum, int cardsPerPage) {
 
         Sort sort = Sort.by("regDate").descending();
-        Pageable pageable = PageRequest.of(0, 10, sort);
+        Pageable pageable = PageRequest.of(pageNum-1, cardsPerPage, sort);
 
 
         List<Long> pIdsFromCategory = null;
