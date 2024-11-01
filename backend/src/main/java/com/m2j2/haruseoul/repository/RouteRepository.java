@@ -6,13 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface RouteRepository extends JpaRepository<Route, Long> {
-    @Query("select rt.title " +
-            "from Route rt " +
-            "where rt.program.id = :pId")
-    String titleByProgramId(@Param("pId") Long pId);
-
-    @Query("select rt.address " +
-            "from Route rt " +
-            "WHERE rt.program.id = :pId")
-    String addressByProgramId(@Param("pId") Long pId);
+    @Query("from Route rt " +
+            "where rt.program.id = :pId and rt.order = 1")
+    Route meetingSpotTitleByProgramId(@Param("pId") Long pId);
 }
