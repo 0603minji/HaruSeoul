@@ -8,12 +8,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig {
     @Bean
-    WebMvcConfigurer configurer(){
+    WebMvcConfigurer configurer() {
         return new WebMvcConfigurer() {
+            @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("*")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE");
+                        .allowedOrigins("http://localhost:3000") // 특정 출처 명시
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                        .allowCredentials(true); // withCredentials: true 사용 시 필요
             }
         };
     }

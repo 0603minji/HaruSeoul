@@ -2,6 +2,7 @@ package com.m2j2.haruseoul.member.controller;
 
 import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.member.dto.MemberCreateDto;
+import com.m2j2.haruseoul.member.dto.MemberIdValidDto;
 import com.m2j2.haruseoul.member.dto.MemberListDto;
 import com.m2j2.haruseoul.member.dto.MemberUpdateDto;
 import com.m2j2.haruseoul.member.service.MemberService;
@@ -27,9 +28,9 @@ public class MemberController {
     }
 
     @PostMapping("idvalid")
-    public ResponseEntity<Void> idvalid(@RequestBody Map<String, String> userIdMap) {
-        String userId = userIdMap.get("userId");
-        memberService.validateId(userId);
+    public ResponseEntity<Void> idvalid(@RequestBody MemberIdValidDto idValidDto) {
+
+        memberService.validateId(idValidDto.getUserId());
         return ResponseEntity.ok().build();
     }
 
@@ -38,7 +39,6 @@ public class MemberController {
 //        if (!memberCreateDto.getIsChecked()) { // 중복 확인 여부 검사
 //            throw new IllegalArgumentException("아이디 중복 확인이 필요합니다.");
 //        }
-
         return ResponseEntity.ok(memberService.save(memberCreateDto));
     }
 
