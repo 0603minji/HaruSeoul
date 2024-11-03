@@ -1,46 +1,48 @@
 <script setup>
-
-
 import { onMounted, ref, reactive } from "vue";
 import axios from "axios";
+import RouteTemplete from "./routeTemplete.vue";
 
 const categories = ref([]);
 const routeComponentCount = ref(1);
 const programCreateDto = reactive({
-  categoryIds: [], // 빈 배열로 초기화
+  categoryIds: [], 
   startTime: [],
   endTime: [],
-  routes: [],
+  routes: [], // route 객체를 여러개 가진 List
   images: []
 });
 
 
-//================Fetch Function==========
+
+//================Fetch Functions==============
 const fetchCategories = async () => {
-
   const response = await axios.get("http://localhost:8080/api/v1/categories");
-
   categories.value = response.data;
-
-  // console.log(categories.value);
-
 }
 
-//=======================LifeCycle Functions==========
+//================LifeCycle Functions==================
 onMounted(() => {
   if (!window.location.hash) {
     window.location.hash = '#intro';
   }
-
   fetchCategories();
 })
 
-const createProgram = async () => {
-  console.log("#createProgram 호출==================s")
-  console.log(programCreateDto)
-}
+//==================Data Functions=====================
+//  자식 컴포넌트로부터 데이터를 받아 업데이트하는 함수
+//  자식 컴포넌트가 emit으로 발생시킨 이벤트
+const updateRoute = (index, data) => {
+  programCreateDto.routes[index] = data;
+};
 
+//  호출될 때마다 routeComponentCount 값을 증가
+const addRouteFunction = () => {
+  routeComponentCount.value++;
+}
 </script>
+
+
 <template>
   <main>
     <nav class="n-bar-underline-create">
@@ -83,9 +85,23 @@ const createProgram = async () => {
           <div class="form-label">카테고리</div>
           <div class="d:flex flex-wrap:wrap gap:2 bg-color:base-2 bd-radius:4 p:2 jc:space-between">
             <label v-for="c in categories" :key="c.id" class="d:flex al-items:center w:1/3">
-              <input type="checkbox" class="mr:2" :value="c.id" v-model="programCreateDto.categoryIds"
-                :disabled="programCreateDto.categoryIds.length >= 2 && !programCreateDto.categoryIds.includes(c.id)">{{
-                  c.name }}
+              <!-- 
+              v-model : 양방향 바인딩
+              programCreateDto.categoryIds 배열과 이 체크박스가 연결
+              체크박스가 선택되면 해당 카테고리 ID가 programCreateDto.categoryIds 배열에 추가
+              해제되면 배열에서 제거
+              -->
+              <!-- 
+              :value
+              체크박스가 선택될 때 v-model로 연결된 데이터(programCreateDto.categoryIds)에 저장되는 값을 지정
+              -->
+              <input type="checkbox" class="mr:2"
+              :value="c.id" v-model="programCreateDto.categoryIds"
+              :disabled="programCreateDto.categoryIds.length >= 2 && 
+              //  2개 카테고리 선택한 경우, 더 이상 추가할 수 없도록 체크박스를 비활성화
+              // 이미 선택한 카테고리(현재 체크된 카테고리)는 비활성화되지 않음 (체크 해제 가능)
+              !programCreateDto.categoryIds.includes(c.id)">
+                {{ c.name }}
             </label>
           </div>
         </div>
@@ -235,136 +251,33 @@ const createProgram = async () => {
         </div>
 
       </section>
-      <!-- rout 시작 =========================================================== -->
-      <section id="course" class="course">
-        <h1>코스</h1>
-
-        <div class="course-card">
-          <div class="card-header">출발지</div>
-
-          <div class="course-input-area">
-
-            <div class="input-with-icon">
-              <img src="/public/image/pen.svg" alt="아이콘">
-              <label>
-                <input type="text" class="input-text" placeholder="제목">
-              </label>
-            </div>
-
-            <div class="input-with-icon">
-              <img src="/public/image/pen.svg" alt="아이콘">
-              <label>
-                <input type="text" class="input-text" placeholder="주소">
-              </label>
-            </div>
-
-            <div class="input-with-icon">
-              <label>
-                <img src="/public/image/pin.svg" alt="아이콘">
-                <input type="text" class="input-text" placeholder="장소 설명">
-              </label>
-            </div>
-            <div class="course-select-time">
-              <div class="time-label">
-                <img src="/public/image/pin.svg" alt="아이콘">
-                <span>시작시각</span>
-              </div>
-              <div class="time-select-wrapper">
-                <label><select id="start-hour" class="input-select" name="start-hour">
-                    <option value="00">00</option>
-                    <option value="01">01</option>
-                    <option value="02">02</option>
-                    <option value="03">03</option>
-                    <option value="04">04</option>
-                    <option value="05">05</option>
-                    <option value="06">06</option>
-                    <option value="07">07</option>
-                    <option value="08">08</option>
-                    <option value="09">09</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option>
-                    <option value="16">16</option>
-                    <option value="17">17</option>
-                    <option value="18">18</option>
-                    <option value="19">19</option>
-                    <option value="20">20</option>
-                    <option value="21">21</option>
-                    <option value="22">22</option>
-                    <option value="23">23</option>
-                  </select>
-                </label>
-                <p>시</p>
-              </div>
-              <div class="time-select-wrapper">
-                <label>
-                  <select id="start-minute" class="input-select" name="start-minute">
-                    <option value="00">00</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                    <option value="50">50</option>
-                  </select>
-                </label>
-                <p>분</p>
-              </div>
-            </div>
-
-
-            <div class="duration-wrapper">
-              <div class="time-label">
-                <img src="/public/image/pin.svg" alt="아이콘">
-                <span>소요시간</span>
-              </div>
-              <div class="duration-pm-wrapper">
-                <button class="n-btn btn-minus">-</button>
-                <input type="number" id="duration" class="duration-input" name="duration" value="0.0">
-                <button class="n-btn btn-plus">+</button>
-              </div>
-            </div>
-
-          </div>
+      <section>
+        <!-- ======================= route 시작 ========================== -->
+        <div id="course" class="course">
+          <h1>코스</h1>
+          <RouteTemplete v-for="index in routeComponentCount" 
+          :order="index"
+          @updateRoute="updateRoute(index, $event)"
+          />
+          <!--
+          자식 컴포넌트인 RouteTemplete에 order라는 props를 전달
+          @updateRoute : 이벤트 리스너
+          자식 컴포넌트에서 updateRoute라는 커스텀 이벤트가 발생하면 부모 컴포넌트가 이를 감지하여 updateRoute라는 메서드를 실행
+          $event: 자식 컴포넌트에서 전달된 데이터. 이벤트가 발생할 때 자동으로 $event라는 객체에 해당 데이터를 담아서 전달
+          -->
         </div>
-        <div class="divider"></div>
-
-        <div class="course-moving-wrapper">
-          <div class="d:flex al-items:center">
-            <p class="p:1">이동수단</p>
-            <label>
-              <select class="input-select">
-                <option value=""></option>
-              </select>
-            </label>
-          </div>
-          <div class="d:flex al-items:center">
-            <p class="p:1">이동시간</p>
-            <label>
-              <select class="input-select">
-                <option value=""></option>
-              </select>
-            </label>
-          </div>
-        </div>
-
-
-        <div class="d:flex jc:end m-top:5">
-          <button class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center">+ 경유지</button>
-        </div>
-
         <div class="map">지도</div>
-
+        <div class="d:flex jc:end m-top:5">
+          <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center" @click="addRouteFunction">+ 경유지</button>
+        </div>
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#detail">이전</a></div>
           <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">다음</a></div>
         </div>
-
+        <!-- =================== route 종료 ======================== -->
       </section>
-      <!-- rout 종료 =========================================================== -->
+      
 
       <section id="inclusion" class="inclusion">
         <h1 class="d:none">포함 사항</h1>
