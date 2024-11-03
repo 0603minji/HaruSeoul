@@ -11,8 +11,6 @@ const programCreateDto = reactive({
   images: []
 });
 
-
-
 //================Fetch Functions==============
 const fetchCategories = async () => {
   const response = await axios.get("http://localhost:8080/api/v1/categories");
@@ -58,13 +56,42 @@ const sendCreateRequest = async (regMemberId, status) => {
       }
     });
     console.log("Program created successfully:", response.data);
-     // 요청 성공 후 페이지 이동
-     window.location.href = "/host/programs";
+
+    const formData = new FormData();
+    // programId를 application/json으로 설정하여 전송
+    const programIdBlob = new Blob([JSON.stringify(response.data.id)], { type: 'application/json' });
+    formData.append("programId", programIdBlob);
+    formData.append("images", programCreateDto.images);
+
+  
+    // 요청 전송
+    const saveImageResponse = await axios.post("http://localhost:8080/api/v1/host/programs/images", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    console.log("Image saved successfully:", saveImageResponse.data);
+
+    // 요청 성공 후 페이지 이동
+    window.location.href = "/host/programs";
 
   } catch (error) {
     console.error("Error creating program:", error);
   }
 }
+
+// 이미지 파일 선택시 호출되는 함수
+const handleFileChange = (event) => {
+  const files = Array.from(event.target.files); // FileList를 배열로 변환
+
+  // 파일 배열을 순회하며 각 파일과 인덱스 처리
+  files.forEach((file, index) => {
+    programCreateDto.images.push({ order: index, src: file });
+  });
+
+  console.log(programCreateDto.images);
+};
+
 
 </script>
 
@@ -377,7 +404,8 @@ const sendCreateRequest = async (regMemberId, status) => {
       <section id="image" class="images-upload-container">
         <header>
           <h1>사진 업로드</h1>
-          <label class="n-btn n-btn-border:sub n-btn-size:1"><input type="file" id="fileInput">+ 파일 추가</label>
+          <label class="n-btn n-btn-border:sub n-btn-size:1"><input type="file" id="fileInput"
+              @change="handleFileChange">+ 파일 추가</label>
         </header>
         <div style="border: 1px solid; border-radius: 10px; padding: 0 20px 20px 20px">
           <div class="upload-images">

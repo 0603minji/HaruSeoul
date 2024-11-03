@@ -12,11 +12,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -29,12 +32,14 @@ public class DefaultProgramService implements ProgramService {
     private MemberRepository memberRepository;
     private CategoryRepository categoryRepository;
     private TransportationRepository transportationRepository;
+    private ImageRepository imageRepository;
 
     //  생성자 주입
     public DefaultProgramService(ProgramRepository programRepository, CategoryProgramRepository categoryProgramRepository,
                                  RouteRepository routeRepository, ModelMapper mapper, MemberRepository memberRepository,
                                  CategoryRepository categoryRepository,
-                                 TransportationRepository transportationRepository) {
+                                 TransportationRepository transportationRepository,
+                                 ImageRepository imageRepository) {
         this.programRepository = programRepository;
         this.categoryProgramRepository = categoryProgramRepository;
         this.routeRepository = routeRepository;
@@ -42,6 +47,7 @@ public class DefaultProgramService implements ProgramService {
         this.memberRepository = memberRepository;
         this.categoryRepository = categoryRepository;
         this.transportationRepository = transportationRepository;
+        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -161,14 +167,37 @@ public class DefaultProgramService implements ProgramService {
 
         log.info("{}", routes.size());
         routeRepository.saveAll(routes);
-
         return savedProgram;
+    }
 
-        /**
-         * todo
-         *  1. category_program 테이블에 새로운 프로그램에 대한 category_id 저장
-         *  2. image 테이블에 저장
-         */
+    public List<Image> saveImages(Long programId, List<MultipartFile> multipartFiles) {
+        // 1. 프로그램이 실재하는 프로그램인지 확인한다.
+        Optional<Program> programById = programRepository.findById(programId);
+        if (programById.isEmpty()) {
+            log.error("[에러] 등록되지 않은 프로그램 입니다", programId);
+            return null;
+        }
+        Program savedProgram = programById.get();
+
+        AtomicInteger index = new AtomicInteger(0);
+        List<Image> images = multipartFiles.stream()
+                .map(multipartFile -> {
+                    try {
+                        return Image.builder()
+                                .order(index.getAndIncrement())  // AtomicInteger로 인덱스 증가
+                                .src(multipartFile.getBytes())
+                                .program(savedProgram)
+                                .build();
+                    } catch (IOException e) {
+                        log.error("Error Message: {}", e.getMessage());
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toList();
+
+        List<Image> savedImages = imageRepository.saveAll(images);
+        log.info("{} 개의 이미지가 정상 저장되었습니다.", savedImages.size());
+        return savedImages;
     }
 
     private LocalTime getLocalTimeByDuration(Integer duration) {
