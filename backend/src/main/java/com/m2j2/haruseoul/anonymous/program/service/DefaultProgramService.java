@@ -9,6 +9,9 @@ import com.m2j2.haruseoul.repository.MemberRepository;
 import com.m2j2.haruseoul.repository.ProgramRepository;
 import com.m2j2.haruseoul.repository.PublishedProgramRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +42,9 @@ public class DefaultProgramService implements ProgramService {
 
     @Override
     @Transactional
-    public ProgramResponseDto getList(List<Long> programIds, List<Long> categoryIds, LocalDate startDate, LocalDate endDate, Integer minPrice, Integer maxPrice, Integer groupSizeMax, Integer groupSizeMin, Integer duration, LocalTime startTime, String language) {
+    public ProgramResponseDto getList(List<Long> programIds, List<Long> categoryIds, LocalDate startDate, LocalDate endDate, Integer minPrice, Integer maxPrice, Integer groupSizeMax, Integer groupSizeMin, Integer duration, LocalTime startTime, String language, Integer page, Integer pageSize) {
 
+        Pageable pageable = PageRequest.of(page-1, pageSize);
 
         List<Long> filterdProgramIds = publishedProgramRepository.findProgramIdsByDateRange(startDate, endDate);
 
@@ -48,16 +52,17 @@ public class DefaultProgramService implements ProgramService {
             filterdProgramIds.retainAll(programIds);
         }
 
-        List<Program> programs = programRepository.findProgramsByFilters(
+        Page<Program> programs = programRepository.findProgramsByFilters(
                 filterdProgramIds, categoryIds, minPrice, maxPrice, groupSizeMin, groupSizeMax,
-                 startTime, language);
+                 startTime, language,pageable);
+
+        List<Program> filteredPrograms = programs.getContent();
 
         if (duration != null) {
-            programs = programs.stream()
+            filteredPrograms = filteredPrograms.stream()
                     .filter(p -> Duration.between(p.getStartTime(), p.getEndTime()).toMinutes() <= duration)
                     .toList();
         }
-
 
         List<ProgramListDto> programDtos = programs.stream()
                 .map(program -> ProgramListDto.builder()
@@ -74,11 +79,9 @@ public class DefaultProgramService implements ProgramService {
                         .build())
                 .toList();
 
-
-        long totalCount = programs.size();
         return ProgramResponseDto.builder()
                 .programs(programDtos)
-                .totalRowCount((int) totalCount)
+                .totalRowCount((int) programs.getTotalElements())
                 .build();
 
     }

@@ -4,10 +4,7 @@ import com.m2j2.haruseoul.anonymous.program.dto.ProgramFilterDto;
 import com.m2j2.haruseoul.anonymous.program.dto.ProgramResponseDto;
 import com.m2j2.haruseoul.anonymous.program.service.ProgramService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController("anonymousProgramController")
 @RequestMapping("programs")
@@ -21,7 +18,9 @@ public class ProgramController {
 
 
     @GetMapping
-    public ResponseEntity<ProgramResponseDto> getList(@ModelAttribute ProgramFilterDto programFilterDto) {
+    public ResponseEntity<ProgramResponseDto> getList(@ModelAttribute ProgramFilterDto programFilterDto,
+                                                      @RequestParam(defaultValue = "1") Integer page,
+                                                      @RequestParam(defaultValue = "10") Integer pageSize) {
         return ResponseEntity.ok(programService.getList(programFilterDto.getProgramIds(),
                 programFilterDto.getCategoryIds(),
                 programFilterDto.getStartDate(),
@@ -32,7 +31,8 @@ public class ProgramController {
                 programFilterDto.getGroupSizeMin(),
                 programFilterDto.getDuration(),
                 programFilterDto.getStartTime(),
-                programFilterDto.getLanguage()));
+                programFilterDto.getLanguage(),
+                page,pageSize));
     }
 
 }
