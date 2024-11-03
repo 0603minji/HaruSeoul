@@ -109,61 +109,68 @@ const isDateInRange = (date) => {
   return startRange <= date && date < endRange;
 };
 
-watchEffect(() => console.log(selectedYear.value));
-watchEffect(() => console.log(prevMonthLastDate.value));
-watchEffect(() => console.log(selectedMonth.value + 1, thisMonthLastDate.value));
-watchEffect(() => console.log(dates.value));
-watchEffect(() => console.log(selectedDates.value));
+// watchEffect(() => console.log(selectedYear.value));
+// watchEffect(() => console.log(prevMonthLastDate.value));
+// watchEffect(() => console.log(selectedMonth.value + 1, thisMonthLastDate.value));
+// watchEffect(() => console.log(dates.value));
+// watchEffect(() => console.log(selectedDates.value));
 </script>
 <template>
-
-  <section class="calendar-new">
-    <header class="calendar-header">
-      <h1 class="d:none">May 2024</h1>
-      <button @click.prevent="toPrevMonth"
-              class="to-prev-month n-btn border-radius:full n-icon n-icon:arrow_left n-icon-size:3" type="button">이전
+  <div class="date-picker">
+    <div class="title">
+      <p class="font-size:8">진행일 선택</p>
+      <button
+          class="margin-left:auto n-btn n-btn:hover n-btn-bd:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-deco color:sub-1">
+        초기화
       </button>
-      <div class="year-month-wrapper font-size:9 font-weight:bold">
-        <select class="year" v-model="selectedYear">
-          <option v-for="year in getYearOptions(initialYear, yearRange)" :value="year">{{ year }}</option>
-        </select>
+    </div>
+    <section class="calendar-new">
+      <header class="calendar-header">
+        <h1 class="d:none">May 2024</h1>
+        <button @click.prevent="toPrevMonth"
+                class="to-prev-month n-btn border-radius:full n-icon n-icon:arrow_left n-icon-size:3" type="button">이전
+        </button>
+        <div class="year-month-wrapper font-size:9 font-weight:bold">
+          <select class="year" v-model="selectedYear">
+            <option v-for="year in getYearOptions(initialYear, yearRange)" :value="year">{{ year }}</option>
+          </select>
 
-        <select class="month" v-model="selectedMonth">
-          <option v-for="(month, index) in 12" :value="index">{{ index + 1 }}</option>
-        </select>
-      </div>
-      <button @click.prevent="toNextMonth"
-              class="to-next-month n-btn border-radius:full n-icon n-icon:arrow_right n-icon-size:3" type="button">다음
-      </button>
-    </header>
+          <select class="month" v-model="selectedMonth">
+            <option v-for="(month, index) in 12" :value="index">{{ index + 1 }}</option>
+          </select>
+        </div>
+        <button @click.prevent="toNextMonth"
+                class="to-next-month n-btn border-radius:full n-icon n-icon:arrow_right n-icon-size:3" type="button">다음
+        </button>
+      </header>
 
-    <ul class="weekdays">
-      <li>
-        <abbr title="Sunday">S</abbr>
-      </li>
-      <li>
-        <abbr title="Monday">M</abbr>
-      </li>
-      <li>
-        <abbr title="Tuesday">T</abbr>
-      </li>
-      <li>
-        <abbr title="Wednesday">W</abbr>
-      </li>
-      <li>
-        <abbr title="Thursday">T</abbr>
-      </li>
-      <li>
-        <abbr title="Friday">F</abbr>
-      </li>
-      <li>
-        <abbr title="Saturday">S</abbr>
-      </li>
-    </ul>
+      <ul class="weekdays">
+        <li>
+          <abbr title="Sunday">S</abbr>
+        </li>
+        <li>
+          <abbr title="Monday">M</abbr>
+        </li>
+        <li>
+          <abbr title="Tuesday">T</abbr>
+        </li>
+        <li>
+          <abbr title="Wednesday">W</abbr>
+        </li>
+        <li>
+          <abbr title="Thursday">T</abbr>
+        </li>
+        <li>
+          <abbr title="Friday">F</abbr>
+        </li>
+        <li>
+          <abbr title="Saturday">S</abbr>
+        </li>
+      </ul>
 
-    <ol class="day-grid">
-      <li v-for="date in dates"
-          :class="{
+      <ol class="day-grid">
+        <li v-for="date in dates"
+            :class="{
             'month-prev': date.getMonth() === (selectedMonth-1<0 ? 11 : selectedMonth-1),
             'month-next': date.getMonth() === (selectedMonth+1>11 ? 0 : selectedMonth+1),
             'today': date.toDateString() === new Date().toDateString(),
@@ -171,180 +178,197 @@ watchEffect(() => console.log(selectedDates.value));
             'selected': selectedDates.includes(date)
             // 'occupied':
           }"
-      >
-        <label>
-          <input type="checkbox"
-                 :disabled="!isDateInRange(date)"
-                 v-model="selectedDates"
-                 :value="date">
-          <span>{{ date.getDate() }}</span>
-        </label>
-      </li>
-    </ol>
-  </section>
-
+        >
+          <label>
+            <input type="checkbox"
+                   :disabled="!isDateInRange(date)"
+                   v-model="selectedDates"
+                   :value="date">
+            <span>{{ date.getDate() }}</span>
+          </label>
+        </li>
+      </ol>
+    </section>
+  </div>
 </template>
 
 <style scoped>
-.calendar-new {
-  //max-width: 768px;
-  //min-width: 250px;
-  width: 100%;
+.date-picker {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 14px;
-  box-shadow: 0 1.88px 2px 0 rgba(0, 14, 51, 0.05);
 
-
-  .calendar-header {
+  .title {
     display: flex;
-    justify-content: center;
+    height: 32px;
+    padding: 0 0 0 10px;
     align-items: center;
-    padding-bottom: 8px;
-
-    .year-month-wrapper {
-      display: flex;
-      //box-shadow: 0 1.88px 0.88px 0 rgba(0, 14, 51, 0.05);
-
-      .year, .month {
-        font-size: 1rem;
-      }
-    }
+    margin-bottom: 8px;
 
     button {
-      background-color: var(--color-base-1);
-      --btn-border-color: transparent;
-      box-shadow: 0 1.88px 0.88px 0 rgba(0, 14, 51, 0.05);
-    }
-
-    .to-prev-month {
-      margin-left: auto;
-      margin-right: 16px;
-    }
-
-    .to-next-month {
-      margin-right: auto;
-      margin-left: 16px;
+      --btn-padding: 8px 10px;
     }
   }
 
-  .weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    font-weight: 500;
-    font-size: 0.75rem;
-    justify-items: center;
-
-    li {
-      abbr {
-        text-decoration: none;
-      }
-    }
-  }
-
-  .day-grid {
+  .calendar-new {
+    //max-width: 768px;
+    //min-width: 250px;
     width: 100%;
-    display: grid;
-    gap: 8px;
-    grid-template-columns: repeat(7, 1fr);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 14px;
+    box-shadow: 0 1.88px 2px 0 rgba(0, 14, 51, 0.05);
 
 
-    li {
-      min-width: 0;
-      overflow: hidden;
+    .calendar-header {
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
+      padding-bottom: 8px;
 
-      height: 6vh;
-      /* background-color: var(--color-base-1); */
-      border-radius: 4px;
-      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+      .year-month-wrapper {
+        display: flex;
+        //box-shadow: 0 1.88px 0.88px 0 rgba(0, 14, 51, 0.05);
 
-      > label {
-        flex-grow: 1;
-        width: 100%;
+        .year, .month {
+          font-size: 1rem;
+        }
+      }
+
+      button {
+        background-color: var(--color-base-1);
+        --btn-border-color: transparent;
+        box-shadow: 0 1.88px 0.88px 0 rgba(0, 14, 51, 0.05);
+      }
+
+      .to-prev-month {
+        margin-left: auto;
+        margin-right: 16px;
+      }
+
+      .to-next-month {
+        margin-right: auto;
+        margin-left: 16px;
+      }
+    }
+
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      font-weight: 500;
+      font-size: 0.75rem;
+      justify-items: center;
+
+      li {
+        abbr {
+          text-decoration: none;
+        }
+      }
+    }
+
+    .day-grid {
+      width: 100%;
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(7, 1fr);
+
+
+      li {
+        min-width: 0;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
 
-        /* 체크박스 숨김 */
-        input[type="checkbox"] {
-          display: none;
-          width: 100%; /* Make input take full width of li */
-          height: 100%; /* Make input take full height of li */
-          cursor: pointer; /* Change cursor to pointer on hover */
-          appearance: none; /* Remove default checkbox appearance (optional) */
-        }
+        height: 6vh;
+        /* background-color: var(--color-base-1); */
+        border-radius: 4px;
+        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 
-        span {
+        > label {
+          flex-grow: 1;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+
+          /* 체크박스 숨김 */
+          input[type="checkbox"] {
+            display: none;
+            width: 100%; /* Make input take full width of li */
+            height: 100%; /* Make input take full height of li */
+            cursor: pointer; /* Change cursor to pointer on hover */
+            appearance: none; /* Remove default checkbox appearance (optional) */
+          }
+
+          span {
+            color: rgba(0, 23, 84, 0.15);
+            font-size: 0.75rem;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .today {
+        border: 2px solid var(--color-sub-1);
+
+        label span {
+          color: var(--color-base-9);
+        }
+      }
+
+      :is(.month-prev, .month-next) {
+        visibility: hidden;
+        background-color: transparent;
+      }
+
+      /* 개설가능한 날짜 */
+
+      .available {
+        background-color: var(--color-base-1);
+        box-shadow: 0 1.88px 0.88px 0 rgba(0, 14, 51, 0.05);
+        /* position x, y, blur, spread, color */
+
+        > label span {
+          color: var(--color-base-9);
+        }
+      }
+
+      .available:not(.selected):hover {
+        background-color: var(--color-base-4);
+      }
+
+      /* 선택된 개설가능한 날짜 */
+
+      .selected {
+        background-color: var(--color-sub-1);
+
+        > label span {
+          color: var(--color-base-1);
+        }
+      }
+
+      /* 이미 개설된 프로그램 존재하는 날짜 */
+
+      .occupied {
+        background-color: var(--color-base-3);
+        box-shadow: none;
+
+        > label span {
           color: rgba(0, 23, 84, 0.15);
-          font-size: 0.75rem;
-          font-weight: 500;
         }
-      }
-    }
-
-    .today {
-      border: 2px solid var(--color-sub-1);
-
-      label span {
-        color: var(--color-base-9);
-      }
-    }
-
-    :is(.month-prev, .month-next) {
-      visibility: hidden;
-      background-color: transparent;
-    }
-
-    /* 개설가능한 날짜 */
-
-    .available {
-      background-color: var(--color-base-1);
-      box-shadow: 0 1.88px 0.88px 0 rgba(0, 14, 51, 0.05);
-      /* position x, y, blur, spread, color */
-
-      > label span {
-        color: var(--color-base-9);
-      }
-    }
-
-    .available:not(.selected):hover {
-      background-color: var(--color-base-4);
-    }
-
-    /* 선택된 개설가능한 날짜 */
-
-    .selected {
-      background-color: var(--color-sub-1);
-
-      > label span {
-        color: var(--color-base-1);
-      }
-    }
-
-    /* 이미 개설된 프로그램 존재하는 날짜 */
-
-    .occupied {
-      background-color: var(--color-base-3);
-      box-shadow: none;
-
-      > label span {
-        color: rgba(0, 23, 84, 0.15);
       }
     }
   }
-}
 
-@media (min-width: 768px) {
-  .calendar-new {
+  @media (min-width: 768px) {
+    .calendar-new {
 
+    }
   }
 }
 </style>
