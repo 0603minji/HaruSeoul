@@ -189,7 +189,7 @@ watchEffect(() => console.log(selectedDates.value));
 .calendar-new {
   //max-width: 768px;
   //min-width: 250px;
-  width: 373px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 12px;

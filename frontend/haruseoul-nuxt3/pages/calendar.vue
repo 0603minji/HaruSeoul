@@ -1,12 +1,14 @@
 <script setup>
 import CalendarV2 from "~/components/filter/CalendarV2.vue";
+import PublishedProgram from "~/components/PublishProgram.vue"
 </script>
 <template>
   <main>
     calendar
     <div class="container">
-      <FilterCalendar/>
       <CalendarV2 />
+
+      <PublishedProgram />
     </div>
     <br>
     <br>
