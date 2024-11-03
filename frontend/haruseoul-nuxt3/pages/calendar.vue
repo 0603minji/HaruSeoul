@@ -1,6 +1,7 @@
 <script setup>
 import CalendarV2 from "~/components/filter/CalendarV2.vue";
-import PublishedProgram from "~/components/PublishProgram.vue"
+import PublishedProgram from "~/components/modal/PublishProgramModal.vue"
+import ProgramFilterModal from "~/components/modal/ProgramFilterModal.vue";
 </script>
 <template>
   <main>
@@ -9,6 +10,8 @@ import PublishedProgram from "~/components/PublishProgram.vue"
       <CalendarV2 />
 
       <PublishedProgram />
+
+      <ProgramFilterModal />
     </div>
     <br>
     <br>
