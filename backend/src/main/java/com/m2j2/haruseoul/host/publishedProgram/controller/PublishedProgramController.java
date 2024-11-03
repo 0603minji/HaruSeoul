@@ -21,10 +21,11 @@ public class PublishedProgramController {
     }
 
     @GetMapping
-    public ResponseEntity<PublishedProgramResponseDto> getAll(@RequestParam(name = "d", required = false) List<LocalDate> dates,
+    public ResponseEntity<PublishedProgramResponseDto> getAll(@RequestParam(name = "mIds", required = false) List<Long> memberIds,
+                                                              @RequestParam(name = "d", required = false) List<LocalDate> dates,
                                                               @RequestParam(name = "s", required = false) List<Long> statusIds,
-                                                              @RequestParam(name = "pId", required = false) List<Long> programIds) {
-        return ResponseEntity.ok(service.getList(dates, statusIds, programIds));
+                                                              @RequestParam(name = "pIds", required = false) List<Long> programIds) {
+        return ResponseEntity.ok(service.getList(memberIds, dates, statusIds, programIds));
     }
 
     @PostMapping
