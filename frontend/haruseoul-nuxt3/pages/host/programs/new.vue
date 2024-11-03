@@ -6,9 +6,7 @@ import RouteTemplete from "./routeTemplete.vue";
 const categories = ref([]);
 const routeComponentCount = ref(1);
 const programCreateDto = reactive({
-  categoryIds: [], 
-  startTime: [],
-  endTime: [],
+  categoryIds: [],
   routes: [], // route 객체를 여러개 가진 List
   images: []
 });
@@ -33,13 +31,19 @@ onMounted(() => {
 //  자식 컴포넌트로부터 데이터를 받아 업데이트하는 함수
 //  자식 컴포넌트가 emit으로 발생시킨 이벤트
 const updateRoute = (index, data) => {
-  programCreateDto.routes[index] = data;
+  programCreateDto.routes[index - 1] = data;
 };
 
 //  호출될 때마다 routeComponentCount 값을 증가
 const addRouteFunction = () => {
   routeComponentCount.value++;
 }
+
+
+const createProgram = () => {
+  console.log(programCreateDto);
+}
+
 </script>
 
 
@@ -95,13 +99,11 @@ const addRouteFunction = () => {
               :value
               체크박스가 선택될 때 v-model로 연결된 데이터(programCreateDto.categoryIds)에 저장되는 값을 지정
               -->
-              <input type="checkbox" class="mr:2"
-              :value="c.id" v-model="programCreateDto.categoryIds"
-              :disabled="programCreateDto.categoryIds.length >= 2 && 
-              //  2개 카테고리 선택한 경우, 더 이상 추가할 수 없도록 체크박스를 비활성화
-              // 이미 선택한 카테고리(현재 체크된 카테고리)는 비활성화되지 않음 (체크 해제 가능)
-              !programCreateDto.categoryIds.includes(c.id)">
-                {{ c.name }}
+              <input type="checkbox" class="mr:2" :value="c.id" v-model="programCreateDto.categoryIds" :disabled="programCreateDto.categoryIds.length >= 2 &&
+                //  2개 카테고리 선택한 경우, 더 이상 추가할 수 없도록 체크박스를 비활성화
+                // 이미 선택한 카테고리(현재 체크된 카테고리)는 비활성화되지 않음 (체크 해제 가능)
+                !programCreateDto.categoryIds.includes(c.id)">
+              {{ c.name }}
             </label>
           </div>
         </div>
@@ -251,14 +253,12 @@ const addRouteFunction = () => {
         </div>
 
       </section>
-      <section>
+      <section id="course" class="course">
         <!-- ======================= route 시작 ========================== -->
-        <div id="course" class="course">
+        <div>
           <h1>코스</h1>
-          <RouteTemplete v-for="index in routeComponentCount" 
-          :order="index"
-          @updateRoute="updateRoute(index, $event)"
-          />
+          <RouteTemplete v-for="index in routeComponentCount" :order="index"
+            @updateRoute="updateRoute(index, $event)" />
           <!--
           자식 컴포넌트인 RouteTemplete에 order라는 props를 전달
           @updateRoute : 이벤트 리스너
@@ -268,7 +268,8 @@ const addRouteFunction = () => {
         </div>
         <div class="map">지도</div>
         <div class="d:flex jc:end m-top:5">
-          <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center" @click="addRouteFunction">+ 경유지</button>
+          <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center" @click="addRouteFunction">+
+            경유지</button>
         </div>
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#detail">이전</a></div>
@@ -277,7 +278,7 @@ const addRouteFunction = () => {
         </div>
         <!-- =================== route 종료 ======================== -->
       </section>
-      
+
 
       <section id="inclusion" class="inclusion">
         <h1 class="d:none">포함 사항</h1>
