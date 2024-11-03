@@ -52,5 +52,6 @@ public class ProgramCreateDto {
 
     private String requirement; // 요청사항
 
+    private String status;
     //private List<Image> images;
 }

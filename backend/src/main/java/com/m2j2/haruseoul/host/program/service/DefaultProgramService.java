@@ -49,7 +49,7 @@ public class DefaultProgramService implements ProgramService {
     public ProgramResponseDto getList(List<Long> pIds, List<Long> cIds, List<String> statuses, int pageNum, int cardsPerPage) {
 
         Sort sort = Sort.by("regDate").descending();
-        Pageable pageable = PageRequest.of(pageNum-1, cardsPerPage, sort);
+        Pageable pageable = PageRequest.of(pageNum - 1, cardsPerPage, sort);
 
 
         List<Long> pIdsFromCategory = null;
@@ -97,7 +97,7 @@ public class DefaultProgramService implements ProgramService {
     public Program create(ProgramCreateDto programCreateDto) {
         //Program program = mapper.map(programCreateDto, Program.class);
         Optional<Member> regMember = memberRepository.findById(programCreateDto.getRegMemberId());
-        if(regMember.isPresent() == false){
+        if (regMember.isPresent() == false) {
             log.error("[ 에러 ] 등록되지 않은 사용자 입니다");
             return null;
         }
@@ -116,6 +116,7 @@ public class DefaultProgramService implements ProgramService {
                 .packingList(programCreateDto.getPackingList())
                 .requirement(programCreateDto.getRequirement())
                 .caution(programCreateDto.getCaution())
+                .status(programCreateDto.getStatus())
                 .build();
 
 
@@ -141,7 +142,7 @@ public class DefaultProgramService implements ProgramService {
 
         //  routeCreateDtos(List)에 담긴 routeCreateDto 하나하나를 Route객체로 변환하고
         //  그 객체들을 리스트 routes에 add하여 누적
-        for(RouteCreateDto routeCreateDto : routeCreateDtos){
+        for (RouteCreateDto routeCreateDto : routeCreateDtos) {
             //  이동수단
             Transportation newTransportation = transportationRepository.findById(routeCreateDto.getTransportationId()).orElse(null);
             //  이동수단 제외 나머지 속성들
@@ -158,7 +159,7 @@ public class DefaultProgramService implements ProgramService {
             routes.add(route);
         }
 
-        log.info("{}",routes.size());
+        log.info("{}", routes.size());
         routeRepository.saveAll(routes);
 
         return savedProgram;
@@ -171,7 +172,7 @@ public class DefaultProgramService implements ProgramService {
     }
 
     private LocalTime getLocalTimeByDuration(Integer duration) {
-        if(duration == null) return LocalTime.of(0, 0);
+        if (duration == null) return LocalTime.of(0, 0);
 
         int hour = duration / 60;
         int minute = duration % 60;
@@ -182,11 +183,26 @@ public class DefaultProgramService implements ProgramService {
      * String 타입의 시간, 분 정보를 받아서 LocalTime 으로 변경해주는 함수.
      * 왜 변경 할까?
      * ㄴ DB 에 저장하는 entity 의 자료형이 LocalTime 이기 때문에 변환한다.
-     *
      */
     private LocalTime getLocalTime(String timeHour, String timeMinute) {
-        String timeString = timeHour + ":" + timeMinute; // 문자열로 결합
+        String timeString = timeFormatter(timeHour) + ":" + timeFormatter(timeMinute); // 문자열로 결합
         return LocalTime.parse(timeString); // "HH:mm" 형식이어야 함
+    }
+
+    /**
+     * 시간이 한 자리 수 일때, 두 자리 수로 변경해주는 함수.
+     * 왜 해줘야 해?
+     * ㄴ LocalTime 자료형으로 파싱되려면 00:00 형태이어야하기 때문에 시, 분을 각각 두자리로 표현 필요
+     */
+
+    private String timeFormatter(String time) { // 0, 5, 10, 15, 23
+        if (time == null || time.length() == 0) {
+            return "00";
+        }
+        if (time.length() == 1) {
+            return "0" + time;
+        }
+        return time;
     }
 
 
