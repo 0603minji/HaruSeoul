@@ -287,7 +287,7 @@ const closeMore = () => {
             <header class="n-title">
                 <h1 class="">프로그램 관리</h1>
                 <div>
-                    <a href="" class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록</a>
+                    <nuxt-link to="/host/programs/new" class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록</nuxt-link>
                 </div>
             </header>
 
