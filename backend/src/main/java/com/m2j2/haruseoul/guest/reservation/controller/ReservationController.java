@@ -21,9 +21,11 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<ReservationResponseDto> getList(
-            @RequestParam(name = "s", required = false)List<Long> sIds,
-            @RequestParam(name = "m", required = false)List<Long> mIds){
-        ReservationResponseDto reservationResponseDto = reservationService.getList(sIds, mIds);
+            @RequestParam(name = "s", required = false)List<Long> statusIds,
+            @RequestParam(name = "m", required = false)List<Long> memberIds,
+            @RequestParam(name = "pageNumber", defaultValue = "1") int pageNumber,
+            @RequestParam(name = "cardsPerPage", defaultValue = "6") int cardsPerPage){
+        ReservationResponseDto reservationResponseDto = reservationService.getList(statusIds, memberIds, pageNumber, cardsPerPage);
 
         return ResponseEntity.ok(reservationResponseDto);
     }

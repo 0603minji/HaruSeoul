@@ -13,6 +13,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReservationListDto {
+
+    private Long id;
     
     private Long hostId; // host 문의
 
