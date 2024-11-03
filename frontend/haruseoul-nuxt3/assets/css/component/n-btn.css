@@ -193,9 +193,9 @@
 
 .n-btn-bg-color\:sub, .n-btn-background-color\:sub {
     --btn-border-color: var(--color-sub-1);
-    --btn-border-hover: var(--color-sub-2);
+    --btn-border-hover: var(--color-sub-0);
     --btn-bg-color: var(--color-sub-1);
-    --btn-bg-hover: var(--color-sub-2);
+    --btn-bg-hover: var(--color-sub-0);
     color: var(--color-base-1);
 }
 
