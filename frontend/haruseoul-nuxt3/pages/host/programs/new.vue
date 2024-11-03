@@ -1,10 +1,18 @@
 <script setup>
 
 
-import {onMounted, ref} from "vue";
+import { onMounted, ref, reactive } from "vue";
 import axios from "axios";
 
 const categories = ref([]);
+const routeComponentCount = ref(1);
+const programCreateDto = reactive({
+  categoryIds: [], // 빈 배열로 초기화
+  startTime: [],
+  endTime: [],
+  routes: [],
+  images: []
+});
 
 
 //================Fetch Function==========
@@ -26,6 +34,12 @@ onMounted(() => {
 
   fetchCategories();
 })
+
+const createProgram = async () => {
+  console.log("#createProgram 호출==================s")
+  console.log(programCreateDto)
+}
+
 </script>
 <template>
   <main>
@@ -50,7 +64,8 @@ onMounted(() => {
           <div class="label-wrapper">
             <label for="title" class="form-label">제목</label>
           </div>
-          <input class="input-text" id="title" type="text" name="title" placeholder="Enter title">
+          <input class="input-text" id="title" type="text" name="title" placeholder="Enter title"
+            v-model="programCreateDto.title">
           <div class="char-counter">
             <span>0/60</span>
           </div>
@@ -60,15 +75,17 @@ onMounted(() => {
           <div class="label-wrapper">
             <label for="description" class="form-label">상세 설명</label>
           </div>
-          <textarea class="input-textarea" id="description" name="description" rows="8" cols="50"
-                    placeholder=""></textarea>
+          <textarea class="input-textarea" id="description" name="description" rows="8" cols="50" placeholder=""
+            v-model="programCreateDto.detail"></textarea>
           <p class="char-counter">0/1000</p>
         </div>
         <div class="form-group">
           <div class="form-label">카테고리</div>
           <div class="d:flex flex-wrap:wrap gap:2 bg-color:base-2 bd-radius:4 p:2 jc:space-between">
             <label v-for="c in categories" :key="c.id" class="d:flex al-items:center w:1/3">
-              <input type="checkbox" :value="c.id" class="mr:2">{{ c.name }}
+              <input type="checkbox" class="mr:2" :value="c.id" v-model="programCreateDto.categoryIds"
+                :disabled="programCreateDto.categoryIds.length >= 2 && !programCreateDto.categoryIds.includes(c.id)">{{
+                  c.name }}
             </label>
           </div>
         </div>
@@ -87,7 +104,7 @@ onMounted(() => {
         <div class="form-group">
           <div class="form-label">진행언어</div>
 
-          <select name="language" class="input-select">
+          <select name="language" class="input-select" v-model="programCreateDto.language">
             <option>English</option>
             <option>Japanese</option>
             <option>Chinese</option>
@@ -97,7 +114,7 @@ onMounted(() => {
         <div class="form-group">
           <div class="form-label">시작 시각</div>
           <div class="time-select-wrapper">
-            <select id="" name="" class="input-select">
+            <select id="" name="" class="input-select" v-model="programCreateDto.startTimeHour">
               <option value="00">00</option>
               <option value="01">01</option>
               <option value="02">02</option>
@@ -125,7 +142,7 @@ onMounted(() => {
               <option value="24">24</option>
             </select>
             <p class="time-unit">시</p>
-            <select id="" name="" class="input-select">
+            <select id="" name="" class="input-select" v-model="programCreateDto.startTimeMinute">
               <option value="00">00</option>
               <option value="10">10</option>
               <option value="20">20</option>
@@ -139,7 +156,7 @@ onMounted(() => {
         <div class="form-group">
           <div class="form-label">종료 시각</div>
           <div class="time-select-wrapper">
-            <select id="" name="" class="input-select">
+            <select id="" name="" class="input-select" v-model="programCreateDto.endTimeHour">
               <option value="00">00</option>
               <option value="01">01</option>
               <option value="02">02</option>
@@ -167,7 +184,7 @@ onMounted(() => {
               <option value="24">24</option>
             </select>
             <p class="time-unit">시</p>
-            <select id="" name="" class="input-select">
+            <select id="" name="" class="input-select" v-model="programCreateDto.endTimeMinute">
               <option value="00">00</option>
               <option value="10">10</option>
               <option value="20">20</option>
@@ -183,7 +200,8 @@ onMounted(() => {
             <div class="form-label">최대 인원</div>
             <div class="counter-wrapper">
               <button class="n-btn n-btn-color:main-2">-</button>
-              <input type="number" name="max-count" class="counter-input" min="1" max="5" value="0">
+              <input type="number" name="max-count" class="counter-input" min="1" max="5"
+                v-model="programCreateDto.groupSizeMax">
               <button class="n-btn n-btn-color:main-2">+</button>
               <p class="people-unit">명</p>
             </div>
@@ -193,7 +211,8 @@ onMounted(() => {
             <div class="form-label">최소 인원</div>
             <div class="counter-wrapper">
               <button class="n-btn n-btn-color:main-2">-</button>
-              <input type="number" name="min-count" class="counter-input" min="1" max="5" value="0">
+              <input type="number" name="min-count" class="counter-input" min="1" max="5"
+                v-model="programCreateDto.groupSizeMin">
               <button class="n-btn n-btn-color:main-2">+</button>
               <p class="people-unit">명</p>
             </div>
@@ -205,7 +224,7 @@ onMounted(() => {
 
         <div class="form-group d:flex">
           <div class="form-label">총 비용</div>
-          <input type="number" name="cost" class="input-text" min="0" max="1000000">
+          <input type="number" name="cost" class="input-text" min="0" max="1000000" v-model="programCreateDto.price">
           <p class="currency-unit">원</p>
         </div>
 
@@ -216,6 +235,7 @@ onMounted(() => {
         </div>
 
       </section>
+      <!-- rout 시작 =========================================================== -->
       <section id="course" class="course">
         <h1>코스</h1>
 
@@ -244,8 +264,6 @@ onMounted(() => {
                 <input type="text" class="input-text" placeholder="장소 설명">
               </label>
             </div>
-
-
             <div class="course-select-time">
               <div class="time-label">
                 <img src="/public/image/pin.svg" alt="아이콘">
@@ -253,31 +271,31 @@ onMounted(() => {
               </div>
               <div class="time-select-wrapper">
                 <label><select id="start-hour" class="input-select" name="start-hour">
-                  <option value="00">00</option>
-                  <option value="01">01</option>
-                  <option value="02">02</option>
-                  <option value="03">03</option>
-                  <option value="04">04</option>
-                  <option value="05">05</option>
-                  <option value="06">06</option>
-                  <option value="07">07</option>
-                  <option value="08">08</option>
-                  <option value="09">09</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                  <option value="13">13</option>
-                  <option value="14">14</option>
-                  <option value="15">15</option>
-                  <option value="16">16</option>
-                  <option value="17">17</option>
-                  <option value="18">18</option>
-                  <option value="19">19</option>
-                  <option value="20">20</option>
-                  <option value="21">21</option>
-                  <option value="22">22</option>
-                  <option value="23">23</option>
-                </select>
+                    <option value="00">00</option>
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                  </select>
                 </label>
                 <p>시</p>
               </div>
@@ -346,7 +364,7 @@ onMounted(() => {
         </div>
 
       </section>
-
+      <!-- rout 종료 =========================================================== -->
 
       <section id="inclusion" class="inclusion">
         <h1 class="d:none">포함 사항</h1>
@@ -357,7 +375,7 @@ onMounted(() => {
             your activity. Start a new line for each one.</p>
           <label for="included" class="d:none">포함 항목을 작성하세요</label>
           <textarea id="included" name="included" rows="4" cols="50" class="input-textarea"
-                    placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.inclusion"></textarea>
 
           <p class="text-align:end p-bottom:4">0 / 1000</p>
 
@@ -371,7 +389,7 @@ onMounted(() => {
             price. This allows customers to appropriately set their expectations.</p>
           <label for="not-included" class="d:none">미포함 항목을 작성하세요</label>
           <textarea id="not-included" name="not-included" rows="4" cols="50" class="input-textarea"
-                    placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.exclusion"></textarea>
           <p class="text-align:end p-bottom:4">0 / 1000</p>
         </div>
 
@@ -391,7 +409,7 @@ onMounted(() => {
             This information appears on the activity details page & voucher.</p>
           <label for="preparation" class="d:none">준비 항목을 작성하세요</label>
           <textarea id="preparation" name="preparation" rows="4" cols="50" class="input-textarea"
-                    placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.packingList"></textarea>
           <p class="text-align:end p-bottom:4">0 / 1000</p>
         </div>
         <div class="form-group">
@@ -401,7 +419,7 @@ onMounted(() => {
             This information appears on the activity details page.</p>
           <label for="notice" class="d:none">주의사항을 작성하세요</label>
           <textarea id="notice" name="notice" rows="4" class="input-textarea" cols="50"
-                    placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.caution"></textarea>
           <p class="text-align:end p-bottom:4">0 / 1000</p>
         </div>
         <div class="form-group">
@@ -410,7 +428,7 @@ onMounted(() => {
             이 정보는 다른 사람과 공유되지 않으며 활동 종료 후 삭제됩니다. 식단 제한 관련 정보 또한 입력해주세요.</p>
           <label for="request" class="d:none">요청 사항을 작성하세요</label>
           <textarea id="request" name="request" class="input-textarea" rows="4" cols="50"
-                    placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.requirement"></textarea>
           <p class="text-align:end p-bottom:4">0 / 1000</p>
         </div>
         <div class="button-group">
@@ -521,7 +539,7 @@ onMounted(() => {
           <div><a class="n-btn n-btn-bg-color:main" href="#caution">이전</a></div>
           <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
           <div>
-            <button type="submit" class="n-btn n-btn-bg-color:main">작성완료</button>
+            <button type="button" class="n-btn n-btn-bg-color:main" @click="createProgram">작성완료</button>
           </div>
         </div>
       </section>
@@ -574,13 +592,13 @@ onMounted(() => {
     display: inline-flex;
     gap: var(--bar-gap);
 
-    > * {
+    >* {
       position: relative;
     }
 
     /*=============== hover, active상태 ================================*/
 
-    > *::after {
+    >*::after {
       content: "";
       width: 100%;
       height: 3px;
@@ -593,17 +611,17 @@ onMounted(() => {
       visibility: hidden;
     }
 
-    > *:hover::after {
+    >*:hover::after {
       background-color: var(--color-main-4);
       visibility: visible;
     }
 
-    > .active::after {
+    >.active::after {
       background-color: var(--color-main-1);
       visibility: visible;
     }
 
-    > .active:hover::after {
+    >.active:hover::after {
       background-color: var(--color-main-1);
       visibility: visible;
     }
@@ -1110,7 +1128,7 @@ onMounted(() => {
   margin-top: 10px;
   width: 25%;
 
-  > span {
+  >span {
     display: block;
     width: 100%;
     text-align: center;
@@ -1174,6 +1192,7 @@ textarea {
 
 
 @media (min-width: 768px) {
+
   .intro,
   .detail,
   .course,
@@ -1244,13 +1263,13 @@ textarea {
     border-radius: 10px;
   }
 
-  .item-wrapper > * {
+  .item-wrapper>* {
     position: relative;
     align-items: center;
     display: flex;
   }
 
-  .item-wrapper > *::before {
+  .item-wrapper>*::before {
     content: "";
     width: 5px;
     /* 줄의 너비를 3px로 설정 */
@@ -1265,20 +1284,20 @@ textarea {
     visibility: hidden;
   }
 
-  .item-wrapper > *:hover::before {
+  .item-wrapper>*:hover::before {
     /*display: none;*/
     visibility: visible;
   }
 
   /* 활성화된 상태에서 줄 색상 변경 */
-  .item-wrapper > .active::before {
+  .item-wrapper>.active::before {
     background-color: var(--color-main-1);
     /* 활성화된 항목의 줄 색상 (원하는 색상으로 변경 가능) */
     visibility: visible;
   }
 
 
-  .item-wrapper > *::after {
+  .item-wrapper>*::after {
     display: none;
     /*content: "";*/
     /*width: 3px; !* 줄의 너비를 3px로 설정 *!*/
@@ -1291,13 +1310,13 @@ textarea {
   }
 
   /* hover 시 왼쪽에 줄이 나타나도록 설정 */
-  .item-wrapper > *:hover::after {
+  .item-wrapper>*:hover::after {
     display: none;
     /*visibility: visible;*/
   }
 
   /* active 상태에서 줄 색상을 변경 */
-  .item-wrapper > .active::after {
+  .item-wrapper>.active::after {
     display: none;
     /*background-color: var(--color-main-1); !* 활성화된 항목의 줄 색상 *!*/
     /*visibility: visible;*/
