@@ -6,8 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public interface ProgramRepository extends JpaRepository<Program, Long> {
@@ -28,4 +30,28 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
             "and (:statuses is null or p.status in :statuses)" +
             "and (:pIds is null or p.id in :pIds)")
     List<Program> findAll2(Long hostId, @Param("pIds") List<Long> programIds, List<String> statuses);
+
+
+    @Query("SELECT p FROM Program p " +
+            "WHERE p.id IN :programIds " +
+            "AND (:categoryIds IS NULL OR EXISTS " +
+            "(SELECT 1 FROM CategoryProgram cp WHERE cp.program.id = p.id AND cp.category.id IN :categoryIds)) " +
+            "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
+            "AND (:maxPrice IS NULL OR p.price <= :maxPrice) " +
+            "AND (:groupSizeMin IS NULL OR p.groupSizeMin >= :groupSizeMin) " +
+            "AND (:groupSizeMax IS NULL OR p.groupSizeMax <= :groupSizeMax) " +
+            "AND (:startTime IS NULL OR p.startTime >= :startTime) " +
+            "AND (:language IS NULL OR p.language = :language)")
+    List<Program> findProgramsByFilters(@Param("programIds") List<Long> programIds,
+                                        @Param("categoryIds") List<Long> categoryIds,
+                                        @Param("minPrice") Integer minPrice,
+                                        @Param("maxPrice") Integer maxPrice,
+                                        @Param("groupSizeMin") Integer groupSizeMin,
+                                        @Param("groupSizeMax") Integer groupSizeMax,
+                                        @Param("startTime") LocalTime startTime,
+                                        @Param("language") String language);
+
 }
+
+
+
