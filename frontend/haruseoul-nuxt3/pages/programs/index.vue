@@ -268,28 +268,61 @@
 
   </main>
 </template>
-<script setup>
 
-import axios from "axios";
-import {onMounted, ref} from "vue";
+
+<script setup>
+import {ref, onMounted, onUnmounted} from 'vue';
+import axios from 'axios';
 
 const programs = ref([]);
 const totalRowCount = ref(0);
-
-onMounted(() => {
-  fetchPrograms();
-})
-
+const page = ref(1);
+const pageSize = ref(15);
+const fetching = ref(false);
 
 const fetchPrograms = async () => {
-  const response = await axios.get('http://localhost:8080/api/v1/programs')
-  programs.value = response.data.programs;
-  totalRowCount.value = response.data.totalRowCount;
-  console.log(programs.value);
-}
+  if (fetching.value) return; // 중복 호출 방지
+  fetching.value = true;
 
+  try {
+    console.log("Fetching page:", page.value); // 디버깅 로그: 현재 페이지 번호
+    const response = await axios.get('http://localhost:8080/api/v1/programs', {
+      params: {page: page.value, pageSize: pageSize.value},
+    });
 
+    // 데이터 추가 및 페이지 값 증가
+    programs.value = [...programs.value, ...response.data.programs];
+    totalRowCount.value = response.data.totalRowCount;
+    page.value += 1; // 다음 페이지로 증가
+    console.log("Next page to fetch:", page.value); // 디버깅 로그: 증가된 페이지 값
+
+  } catch (error) {
+    console.error("프로그램 목록을 가져오는 데 실패했습니다:", error);
+  } finally {
+    fetching.value = false; // 데이터 로드가 완료되면 fetching 상태 해제
+    console.log("Fetching completed, fetching set to:", fetching.value); // 디버깅 로그: fetching 상태
+  }
+};
+
+// 스크롤 이벤트 감지
+const handleScroll = () => {
+  const bottomReached = window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 200;
+  console.log("Scroll detected. bottomReached:", bottomReached); // 디버그용
+  if (bottomReached && programs.value.length < totalRowCount.value && !fetching.value) {
+    fetchPrograms();
+  }
+};
+
+onMounted(() => {
+  fetchPrograms(); // 첫 번째 페이지 데이터 로드
+  window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 </script>
+
 
 <style scoped>
 .layout-body {

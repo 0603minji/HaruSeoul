@@ -24,4 +24,6 @@ public class ProgramFilterDto {
     private Integer duration;
     private LocalTime startTime;
     private String language;
+
+
 }

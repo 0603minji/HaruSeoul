@@ -42,14 +42,15 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
             "AND (:groupSizeMax IS NULL OR p.groupSizeMax <= :groupSizeMax) " +
             "AND (:startTime IS NULL OR p.startTime >= :startTime) " +
             "AND (:language IS NULL OR p.language = :language)")
-    List<Program> findProgramsByFilters(@Param("programIds") List<Long> programIds,
+    Page<Program> findProgramsByFilters(@Param("programIds") List<Long> programIds,
                                         @Param("categoryIds") List<Long> categoryIds,
                                         @Param("minPrice") Integer minPrice,
                                         @Param("maxPrice") Integer maxPrice,
                                         @Param("groupSizeMin") Integer groupSizeMin,
                                         @Param("groupSizeMax") Integer groupSizeMax,
                                         @Param("startTime") LocalTime startTime,
-                                        @Param("language") String language);
+                                        @Param("language") String language,
+                                        Pageable pageable);
 
 }
 
