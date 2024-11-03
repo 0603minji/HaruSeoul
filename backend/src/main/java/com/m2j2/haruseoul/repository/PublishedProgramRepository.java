@@ -20,5 +20,12 @@ public interface PublishedProgramRepository extends JpaRepository<PublishedProgr
             "and (:statusIds is null or pp.status.id in :statusIds) " +
             "and (:programIds is null or pp.program.id in :programIds)")
     public List<PublishedProgram> findAll(LocalDate start, LocalDate end, List<Long> statusIds, List<Long> programIds);
+
+
+    @Query("SELECT pp.program.id FROM PublishedProgram pp " +
+            "WHERE (:startDate IS NULL AND :endDate IS NULL OR (pp.date BETWEEN :startDate AND :endDate))")
+    List<Long> findProgramIdsByDateRange(@Param("startDate") LocalDate startDate,
+                                         @Param("endDate") LocalDate endDate);
+
 }
 
