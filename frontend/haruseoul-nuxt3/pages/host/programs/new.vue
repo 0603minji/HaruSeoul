@@ -8,7 +8,10 @@ const routeComponentCount = ref(1);
 const programCreateDto = reactive({
   categoryIds: [],
   routes: [], // route 객체를 여러개 가진 List
-  images: []
+  images: [],
+  groupSizeMin: 1,
+  groupSizeMax: 1
+
 });
 
 //================Fetch Functions==============
@@ -92,7 +95,29 @@ const handleFileChange = (event) => {
   console.log(programCreateDto.images);
 };
 
+const minusGroupSizeMax = () => {
+  if (programCreateDto.groupSizeMax > 1) {
+    programCreateDto.groupSizeMax -= 1;
+  }
+};
 
+const plusGroupSizeMax = () => {
+  if (programCreateDto.groupSizeMax < 10) {
+    programCreateDto.groupSizeMax += 1;
+  }
+};
+
+const minusGroupSizeMin = () => {
+  if (programCreateDto.groupSizeMin > 1) {
+    programCreateDto.groupSizeMin -= 1;
+  }
+};
+
+const plusGroupSizeMin = () => {
+  if (programCreateDto.groupSizeMin < 10) {
+    programCreateDto.groupSizeMin += 1;
+  }
+};
 </script>
 
 
@@ -266,10 +291,10 @@ const handleFileChange = (event) => {
           <div class="d:flex form-group gap:6">
             <div class="form-label">최대 인원</div>
             <div class="counter-wrapper">
-              <button class="n-btn n-btn-color:main-2">-</button>
-              <input type="number" name="max-count" class="counter-input" min="1" max="5"
+              <button class="n-btn n-btn-color:main-2" @click.prevent="minusGroupSizeMax">-</button>
+              <input type="number" name="max-count" class="counter-input no-spinner" min="1" max="10"
                 v-model="programCreateDto.groupSizeMax">
-              <button class="n-btn n-btn-color:main-2">+</button>
+              <button class="n-btn n-btn-color:main-2" @click.prevent="plusGroupSizeMax">+</button>
               <p class="people-unit">명</p>
             </div>
           </div>
@@ -277,10 +302,10 @@ const handleFileChange = (event) => {
           <div class="d:flex form-group gap:6">
             <div class="form-label">최소 인원</div>
             <div class="counter-wrapper">
-              <button class="n-btn n-btn-color:main-2">-</button>
-              <input type="number" name="min-count" class="counter-input" min="1" max="5"
+              <button class="n-btn n-btn-color:main-2" @click.prevent="minusGroupSizeMin">-</button>
+              <input type="number" name="min-count" class="counter-input no-spinner" min="1" max="10"
                 v-model="programCreateDto.groupSizeMin">
-              <button class="n-btn n-btn-color:main-2">+</button>
+              <button class="n-btn n-btn-color:main-2" @click.prevent="plusGroupSizeMin">+</button>
               <p class="people-unit">명</p>
             </div>
           </div>
@@ -1321,5 +1346,18 @@ textarea {
       padding: 10px;
     }
   }
+}
+
+/*========== input 태그의 증감버튼 없애기 ==========*/
+/* Chrome, Safari, Edge, Opera */
+input[type="number"].no-spinner::-webkit-outer-spin-button,
+input[type="number"].no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"].no-spinner {
+    -moz-appearance: textfield;
 }
 </style>
