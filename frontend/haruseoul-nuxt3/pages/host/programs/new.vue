@@ -40,8 +40,30 @@ const addRouteFunction = () => {
 }
 
 
-const createProgram = () => {
-  console.log(programCreateDto);
+const createProgram = async () => {
+  sendCreateRequest(1, "Unpublished");
+}
+
+const tempSave = async () => {
+  sendCreateRequest(1, "In Progress");
+}
+
+const sendCreateRequest = async (regMemberId, status) => {
+  try {
+    programCreateDto.regMemberId = regMemberId;
+    programCreateDto.status = status
+    const response = await axios.post("http://localhost:8080/api/v1/host/programs", programCreateDto, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    console.log("Program created successfully:", response.data);
+     // 요청 성공 후 페이지 이동
+     window.location.href = "/host/programs";
+
+  } catch (error) {
+    console.error("Error creating program:", error);
+  }
 }
 
 </script>
@@ -110,7 +132,7 @@ const createProgram = () => {
         <p class="category-note">**최대 2개까지 선택 가능합니다.</p>
 
         <div class="button-group">
-          <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
           <a class="n-btn n-btn-bg-color:main" href="#detail">다음</a>
         </div>
       </section>
@@ -248,7 +270,7 @@ const createProgram = () => {
 
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#intro">이전</a></div>
-          <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#course">다음</a></div>
         </div>
 
@@ -273,7 +295,7 @@ const createProgram = () => {
         </div>
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#detail">이전</a></div>
-          <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">다음</a></div>
         </div>
         <!-- =================== route 종료 ======================== -->
@@ -309,7 +331,7 @@ const createProgram = () => {
 
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#course">이전</a></div>
-          <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#caution">다음</a></div>
         </div>
       </section>
@@ -347,7 +369,7 @@ const createProgram = () => {
         </div>
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">이전</a></div>
-          <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#image">다음</a></div>
         </div>
       </section>
@@ -451,7 +473,7 @@ const createProgram = () => {
         </div>
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#caution">이전</a></div>
-          <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
           <div>
             <button type="button" class="n-btn n-btn-bg-color:main" @click="createProgram">작성완료</button>
           </div>
