@@ -101,14 +101,13 @@ public class DefaultProgramService implements ProgramService {
             log.error("[ 에러 ] 등록되지 않은 사용자 입니다");
             return null;
         }
-
         Program program = Program.builder()
                 .title(programCreateDto.getTitle())
                 .detail(programCreateDto.getDetail())
                 .member(regMember.get())
                 .language(programCreateDto.getLanguage())
-                .startTime(LocalTime.parse(programCreateDto.getStartTime()))
-                .endTime(LocalTime.parse(programCreateDto.getEndTime()))
+                .startTime(getLocalTime(programCreateDto.getStartTimeHour(), programCreateDto.getStartTimeMinute()))
+                .endTime(getLocalTime(programCreateDto.getEndTimeHour(), programCreateDto.getEndTimeMinute()))
                 .groupSizeMin(programCreateDto.getGroupSizeMin())
                 .groupSizeMax(programCreateDto.getGroupSizeMax())
                 .price(programCreateDto.getPrice())
@@ -151,10 +150,10 @@ public class DefaultProgramService implements ProgramService {
                     .title(routeCreateDto.getTitle())
                     .address(routeCreateDto.getAddress())
                     .description(routeCreateDto.getDescription())
-                    .duration(routeCreateDto.getDuration())
+                    .duration(getLocalTimeByDuration(routeCreateDto.getDuration()))
                     .order(routeCreateDto.getOrder())
                     .transportation(newTransportation)
-                    .transportationDuration(routeCreateDto.getTransportationDuration())
+                    .transportationDuration(getLocalTime("00", routeCreateDto.getTransportationDuration()))
                     .build();
             routes.add(route);
         }
@@ -170,6 +169,26 @@ public class DefaultProgramService implements ProgramService {
          *  2. image 테이블에 저장
          */
     }
+
+    private LocalTime getLocalTimeByDuration(Integer duration) {
+        if(duration == null) return LocalTime.of(0, 0);
+
+        int hour = duration / 60;
+        int minute = duration % 60;
+        return LocalTime.of(hour, minute);
+    }
+
+    /**
+     * String 타입의 시간, 분 정보를 받아서 LocalTime 으로 변경해주는 함수.
+     * 왜 변경 할까?
+     * ㄴ DB 에 저장하는 entity 의 자료형이 LocalTime 이기 때문에 변환한다.
+     *
+     */
+    private LocalTime getLocalTime(String timeHour, String timeMinute) {
+        String timeString = timeHour + ":" + timeMinute; // 문자열로 결합
+        return LocalTime.parse(timeString); // "HH:mm" 형식이어야 함
+    }
+
 
     @Override
     @Transactional

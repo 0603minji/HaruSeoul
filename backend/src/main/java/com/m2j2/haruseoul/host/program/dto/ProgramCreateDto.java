@@ -26,9 +26,13 @@ public class ProgramCreateDto {
 
     private String language;
 
-    private String startTime;
+    private String startTimeHour;
 
-    private String endTime;
+    private String startTimeMinute;
+
+    private String endTimeHour;
+
+    private String endTimeMinute;
 
     private Integer groupSizeMax;
 

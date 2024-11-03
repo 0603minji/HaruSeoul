@@ -41,8 +41,6 @@ const route = reactive({
 const fetchTransportationIds = async () => {
   const response = await axios.get("http://localhost:8080/api/v1/transportation");
   transportationIds.value = response.data;
-  console.log(response.data);
-  console.log(transportationIds);
 }
 
 
@@ -66,14 +64,14 @@ const minusDuration = () => {
     if(route.duration == 0) {
         return;
     }
-    route.duration -= 0.5
+    route.duration -= 10
 }
 
 const plusDuration = () => {
-    if(route.duration == 10) {
+    if(route.duration == 600) {
         return;
     }
-    route.duration += 0.5
+    route.duration += 10
 }
 </script>
 
@@ -165,6 +163,7 @@ const plusDuration = () => {
                         <input type="number" id="duration" class="duration-input no-spinner" name="duration" min="0" v-model="route.duration">
                         <button class="n-btn btn-plus" @click.prevent="plusDuration">+</button>
                     </div>
+                    <span>분</span>
                 </div>
 
             </div>
