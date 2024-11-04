@@ -60,7 +60,7 @@
             <ul class="n-card-container-column bg-color:base-1">
               <!-- =================================== 예약 카드 1개 =================================== -->
               <li v-for="p in programs" class="n-card n-card-column bg-color:base-1">
-                <a class="n-link-box" href="detail"></a>
+                <NuxtLink :to="`/programs/${p.id}`" class="n-link-box"></NuxtLink>
                 <h2 class="d:none">프로그램 카드</h2>
 
                 <div class="card-main">

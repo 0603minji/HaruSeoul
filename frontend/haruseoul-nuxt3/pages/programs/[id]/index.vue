@@ -256,7 +256,7 @@
                                             <div class="icon-wrapper">
                                                 <span class="n-icon n-icon:rectangle">막대기</span>
                                                 <div class="img-wrapper">
-                                                    <img src="/image/bus.png" alt="이동수단">
+                                                    <img src="assets/image/icon/bus.svg" alt="이동수단">
                                                 </div>
                                             </div>
                                             <div>
@@ -294,7 +294,7 @@
                                             <div class="icon-wrapper">
                                                 <span class="n-icon n-icon:rectangle">막대기</span>
                                                 <div class="img-wrapper">
-                                                    <img src="/image/subway.png" alt="이동수단">
+                                                    <img src="assets/image/icon/bus.svg" alt="이동수단">
                                                 </div>
                                             </div>
                                             <div>
@@ -332,7 +332,7 @@
                                             <div class="icon-wrapper">
                                                 <span class="n-icon n-icon:rectangle">막대기</span>
                                                 <div class="img-wrapper">
-                                                    <img src="/image/walk.png" alt="이동수단">
+                                                    <img src="assets/image/icon/bus.svg" alt="이동수단">
                                                 </div>
                                             </div>
                                             <div>
