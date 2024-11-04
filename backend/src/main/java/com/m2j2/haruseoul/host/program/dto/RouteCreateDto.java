@@ -11,6 +11,8 @@ public class RouteCreateDto {
     private String title;
     private String address;
     private String description;
-    private LocalTime duration;
-    private LocalTime transportationDuration;
+    private Integer duration;
+    private String transportationDuration;
+    private String startTimeHour;
+    private String startTimeMinute;
 }

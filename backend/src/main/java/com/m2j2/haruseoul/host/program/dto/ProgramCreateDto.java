@@ -26,9 +26,13 @@ public class ProgramCreateDto {
 
     private String language;
 
-    private String startTime;
+    private String startTimeHour;
 
-    private String endTime;
+    private String startTimeMinute;
+
+    private String endTimeHour;
+
+    private String endTimeMinute;
 
     private Integer groupSizeMax;
 
@@ -48,5 +52,7 @@ public class ProgramCreateDto {
 
     private String requirement; // 요청사항
 
-    //private List<Image> images;
+    private String status;
+
+//    private List<ImageCreateDto> images;
 }
