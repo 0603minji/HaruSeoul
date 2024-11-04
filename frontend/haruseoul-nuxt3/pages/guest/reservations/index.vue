@@ -1,8 +1,8 @@
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import { onMounted, ref, watch } from "vue";
 import axios from "axios";
 import Status from "~/components/filter/Status.vue";
-import {useRoute, useRouter} from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Pager from "~/components/Pager.vue";
 
 let reservations = ref([]);
@@ -23,7 +23,7 @@ let currentPage = ref(parseInt(route.query.p) || 1);
 
 // 쿼리 스트링을 생성하는 함수
 const buildQueryString = () => {
-  return {s: selectedStatus.value || '', p: currentPage.value};
+  return { s: selectedStatus.value || '', p: currentPage.value };
 };
 
 // 예약 목록을 가져오는 함수
@@ -34,7 +34,7 @@ const fetchReservations = async () => {
       p: currentPage.value
     };
 
-    const response = await axios.get("http://localhost:8080/api/v1/guest/reservations", {params});
+    const response = await axios.get("http://localhost:8080/api/v1/guest/reservations", { params });
 
     console.log("API 응답:", response.data);
 
@@ -45,7 +45,7 @@ const fetchReservations = async () => {
     hasPreviousPage.value = currentPage.value > 1;
     hasNextPage.value = currentPage.value < totalPageCount.value;
 
-    pageNumbers.value = Array.from({length: totalPageCount.value}, (_, i) => i + 1);
+    pageNumbers.value = Array.from({ length: totalPageCount.value }, (_, i) => i + 1);
 
   } catch (error) {
     console.error("예약 목록을 가져오는 중 오류 발생:", error);
@@ -61,22 +61,22 @@ const handleStatusChange = (status) => {
 
 // 페이지 클릭 핸들러
 const pageClickHandler = (page) => {
-    if (page < 1) {
-        alert("이전 페이지가 없습니다.")
-        return;
-    }
+  if (page < 1) {
+    alert("이전 페이지가 없습니다.")
+    return;
+  }
 
-    if (page > totalPages) {
-        alert("다음 페이지가 없습니다.")
-        return;
-    }
+  if (page > totalPages) {
+    alert("다음 페이지가 없습니다.")
+    return;
+  }
 
-    if (page == null)
-        delete query.page;
+  if (page == null)
+    delete query.page;
 
-    query.page = page;
+  query.page = page;
 
-    refresh();
+  refresh();
 }
 
 // 페이지가 변경될 때 쿼리 문자열을 업데이트
@@ -104,10 +104,86 @@ onMounted(() => {
         <h1>예약 내역 ({{ totalRowCount }})</h1>
       </header>
 
-      <Status @selectStatusIds="handleStatusChange"/>
+      <Status @selectStatusIds="handleStatusChange" />
 
-      <ul class="n-card-container bg-color:base-1">
-        <li v-for="r in reservations" :key="r.id" class="n-card bg-color:base-1 padding:6">
+      <div class="n-card-container bg-color:base-1">
+        <div class="n-card bg-color:base-1 padding:6" v-for="r in reservations" :key="r.id">
+          <RouterLink :to="`/guest/reservations/${r.id}`" class="n-link-box" href="detail?id=1"></RouterLink>
+          <div class="card-header">
+            <div class="left">
+              <span v-if="['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
+                결제완료
+              </span>
+
+              <span v-else-if="r.statusName === 'Finished'" class="n-panel-tag not-submitted">
+                이용완료
+              </span>
+
+              <span v-else-if="r.statusName === 'Confirmed'" class="n-panel-tag not-submitted">
+                예약확정
+              </span>
+
+              <span v-else-if="r.statusName === 'Canceled'" class="n-panel-tag not-submitted">
+                취소됨
+              </span>
+            </div>
+          </div>
+
+          <div class="card-main">
+            <div class="img-wrapper">
+              <img src="/public/image/program_01.png" alt="대표사진" />
+            </div>
+
+            <div class="card-info-wrapper">
+              <div class="card-header-responsive">
+                <div class="left">
+                  <span v-if="['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
+                    결제완료
+                  </span>
+
+                  <span v-else-if="r.statusName === 'Finished'" class="n-panel-tag not-submitted">
+                    이용완료
+                  </span>
+
+                  <span v-else-if="r.statusName === 'Confirmed'" class="n-panel-tag not-submitted">
+                    예약확정
+                  </span>
+
+                  <span v-else-if="r.statusName === 'Canceled'" class="n-panel-tag not-submitted">
+                    취소됨
+                  </span>
+                </div>
+              </div>
+              <p class="title">
+                {{ r.programTitle }}
+              </p>
+              <div class="card-info-responsive">
+                <div class="d:flex flex-direction:column">
+                  <div class="card-info">
+                    <span class="n-icon n-icon:calendar n-deco">진행일</span>
+                    <span>{{ r.date }}</span>
+                  </div>
+                  <div class="card-info">
+                    <span class="n-icon n-icon:group n-deco">예약인원</span>
+                    <span>{{ r.groupSize }}</span>
+                  </div>
+                </div>
+                <div class="card-footer-responsive">
+                  <a href="aa" class="n-btn bg-color:main-1 color:base-1">Host 문의</a>
+                  <a href="aa" class="n-btn">예약 취소</a>
+                  <a href="aa"
+                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer margin-top:2">
+            <a href="aa" class="n-btn bg-color:main-1 color:base-1">Host 문의</a>
+            <a href="aa" class="n-btn">예약 취소</a>
+            <a href="aa" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+          </div>
+        </div>
+        <!-- <li v-for="r in reservations" :key="r.id" class="n-card bg-color:base-1 padding:6">
           <RouterLink :to="`/guest/reservations/${r.id}`" class="n-link-box"></RouterLink>
           <h1 class="d:none">예약 카드</h1>
 
@@ -170,16 +246,11 @@ onMounted(() => {
             <RouterLink to="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기
             </RouterLink>
           </div>
-        </li>
-      </ul>
-          <!-- Pager 부분 -->
-      <Pager class="mb:4" 
-      :page-numbers="pageNumbers"
-      :start-number="startNum"
-      :total-page-count="totalPageCount"
-      :href="`reservations`"
-      @page-change="pageClickHandler"
-      />
+        </li>-->
+      </div>
+      <!-- Pager 부분 -->
+      <Pager class="mb:4" :page-numbers="pageNumbers" :start-number="startNum" :total-page-count="totalPageCount"
+        :href="`reservations`" @page-change="pageClickHandler" />
     </section>
   </main>
 </template>
@@ -220,7 +291,7 @@ onMounted(() => {
     z-index: 1;
   }
 
-  .card-footer > .n-btn {
+  .card-footer>.n-btn {
     z-index: 2;
   }
 
