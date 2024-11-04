@@ -141,18 +141,18 @@
 
 }
 
-.n-modal::before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 16px;
-    background-color: var(--color-base-1);
-    border-bottom-left-radius: 0; /* 하단 좌우 radius 제거 */
-    border-bottom-right-radius: 0;
-}
+/*.n-modal::before {*/
+/*    content: '';*/
+/*    display: block;*/
+/*    position: absolute;*/
+/*    left: 0;*/
+/*    right: 0;*/
+/*    bottom: 0;*/
+/*    height: 16px;*/
+/*    background-color: var(--color-base-1);*/
+/*    border-bottom-left-radius: 0; !* 하단 좌우 radius 제거 *!*/
+/*    border-bottom-right-radius: 0;*/
+/*}*/
 
 
 aside.n-modal {
