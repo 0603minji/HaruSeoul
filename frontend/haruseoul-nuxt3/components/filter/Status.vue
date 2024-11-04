@@ -4,6 +4,7 @@ import axios from "axios";
 
 //=======================변수영역==========
 const statuses = ref([]);
+const selectedStatus = ref(0);
 const selectedReservations = ref([]);  // 선택된 예약 목록
 const emit = defineEmits(['selectStatusIds']);
 
@@ -40,6 +41,7 @@ const fetchReservations = async (statusIds) => {
 //  All 선택시 예약 목록을 모두 선택 해제
 const selectStatusAll = async () => {
   selectedReservations.value = [];
+  selectedStatus.value = null; // status 필터링이 안된 상태
   try {
     await fetchReservations([1,2,3,4,5,6], null);
     emit('selectStatusIds', [1,2,3,4,5,6]);
@@ -50,7 +52,7 @@ const selectStatusAll = async () => {
 
 //  예약 상태 선택시 서버에서 목록을 업데이트
 const selectReservations = async (statusIds) => {
-  console.log("Selected status IDs:", statusIds);
+  selectedStatus.value = statusIds.length === 1 ? statusIds[0]: '결제완료';
   if (statusIds.length > 0) {
     try {
       await fetchReservations(statusIds.join(','), null);  // ID를 통해 예약 목록을 가져옵니다.
@@ -84,18 +86,22 @@ const getDisplayValue = (statusId) => {
     <div class="overflow-x:auto">
       <ul class="item-wrapper padding-y:6">
         <li>
-          <a href="" class="active n-btn n-btn-rv-filter n-btn:hover"
-             @click.prevent="(e) => { e.preventDefault(); selectStatusAll(); }">전체</a>
+          <a href="" class="n-btn n-btn-rv-filter n-btn:hover"
+          :class="{ active: selectedStatus === null }"
+             @click.prevent="(e) => { e.preventDefault(); selectStatusAll(); }"
+             >전체</a>
         </li>
         <!-- 결제완료 버튼을 1개로 고정 -->
         <li>
           <a @click.prevent="(e) => { e.preventDefault(); selectReservations([1, 2, 5]); }" href=""
-             class="n-btn n-btn n-btn-rv-filter n-btn:hover">결제완료</a>
+             class="n-btn n-btn n-btn-rv-filter n-btn:hover"
+             :class="{ active: selectedStatus === '결제완료' }">결제완료</a>
         </li>
         <!-- 나머지 상태 버튼들 -->
         <li v-for="s in statuses" :key="s.id">
           <a @click.prevent="(e) => { e.preventDefault(); selectReservations([s.id]); }" href=""
-             class="n-btn n-btn n-btn-rv-filter n-btn:hover">{{ getDisplayValue(s.id) }}</a>
+             class="n-btn n-btn n-btn-rv-filter n-btn:hover"
+             :class="{ active: selectedStatus === s.id }">{{ getDisplayValue(s.id) }}</a>
         </li>
       </ul>
     </div>
