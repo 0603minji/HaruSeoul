@@ -42,11 +42,11 @@ const addRouteFunction = () => {
 
 
 const createProgram = async () => {
-  sendCreateRequest(1, "Unpublished");
+  sendCreateRequest(2, "Unpublished");
 }
 
 const tempSave = async () => {
-  sendCreateRequest(1, "In Progress");
+  sendCreateRequest(2, "In Progress");
 }
 
 const sendCreateRequest = async (regMemberId, status) => {
@@ -60,20 +60,20 @@ const sendCreateRequest = async (regMemberId, status) => {
     });
     console.log("Program created successfully:", response.data);
 
-    const formData = new FormData();
-    // programId를 application/json으로 설정하여 전송
-    const programIdBlob = new Blob([JSON.stringify(response.data.id)], { type: 'application/json' });
-    formData.append("programId", programIdBlob);
-    formData.append("images", programCreateDto.images);
+    // const formData = new FormData();
+    // // programId를 application/json으로 설정하여 전송
+    // const programIdBlob = new Blob([JSON.stringify(response.data.id)], { type: 'application/json' });
+    // formData.append("programId", programIdBlob);
+    // formData.append("images", programCreateDto.images);
 
   
-    // 요청 전송
-    const saveImageResponse = await axios.post("http://localhost:8080/api/v1/host/programs/images", formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-    console.log("Image saved successfully:", saveImageResponse.data);
+    // // 요청 전송
+    // const saveImageResponse = await axios.post("http://localhost:8080/api/v1/host/programs/images", formData, {
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data'
+    //   }
+    // });
+    // console.log("Image saved successfully:", saveImageResponse.data);
 
     // 요청 성공 후 페이지 이동
     window.location.href = "/host/programs";
@@ -83,17 +83,17 @@ const sendCreateRequest = async (regMemberId, status) => {
   }
 }
 
-// 이미지 파일 선택시 호출되는 함수
-const handleFileChange = (event) => {
-  const files = Array.from(event.target.files); // FileList를 배열로 변환
+// // 이미지 파일 선택시 호출되는 함수
+// const handleFileChange = (event) => {
+//   const files = Array.from(event.target.files); // FileList를 배열로 변환
 
-  // 파일 배열을 순회하며 각 파일과 인덱스 처리
-  files.forEach((file, index) => {
-    programCreateDto.images.push({ order: index, src: file });
-  });
+//   // 파일 배열을 순회하며 각 파일과 인덱스 처리
+//   files.forEach((file, index) => {
+//     programCreateDto.images.push({ order: index, src: file });
+//   });
 
-  console.log(programCreateDto.images);
-};
+//   console.log(programCreateDto.images);
+// };
 
 const minusGroupSizeMax = () => {
   if (programCreateDto.groupSizeMax > 1) {
@@ -412,8 +412,8 @@ const plusGroupSizeMin = () => {
         </div>
         <div class="form-group">
           <div class="font-size:9 fw:bold p-bottom:4">요청사항 <span class="font-size:6 fw:1">(선택사항)</span></div>
-          <p class="fw:100 p-bottom:2">항구 규정에 따라 그룹에 포함된 모든 참가자의 이름, 성별, 생년월일, 국적, 연락/신분 정보를 제공해야 합니다.
-            이 정보는 다른 사람과 공유되지 않으며 활동 종료 후 삭제됩니다. 식단 제한 관련 정보 또한 입력해주세요.</p>
+          <p class="fw:100 p-bottom:2">
+            Pls enter any requests the guest may have (ex : vegetarian meal requests can be accommodated).</p>
           <label for="request" class="d:none">요청 사항을 작성하세요</label>
           <textarea id="request" name="request" class="input-textarea" rows="4" cols="50"
             placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.requirement"></textarea>

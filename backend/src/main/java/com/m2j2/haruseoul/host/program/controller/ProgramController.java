@@ -46,15 +46,15 @@ public class ProgramController {
         return ResponseEntity.ok(service.create(programCreateDto));
     }
 
-    @PostMapping("/images")
-    public ResponseEntity<List<Image>> saveImage(
-            @RequestPart("programId") Long programId,
-            @RequestPart("images") List<MultipartFile> images
-    ) {
-        log.info("programId: {}", programId);
-        log.info("images size: {}", images.size());
-        return ResponseEntity.ok(service.saveImages(programId, images));
-    }
+//    @PostMapping("/images")
+//    public ResponseEntity<List<Image>> saveImage(
+//            @RequestPart("programId") Long programId,
+//            @RequestPart("images") List<MultipartFile> images
+//    ) {
+//        log.info("programId: {}", programId);
+//        log.info("images size: {}", images.size());
+//        return ResponseEntity.ok(service.saveImages(programId, images));
+//    }
 
     @PutMapping("{id}")
     public ResponseEntity<Program> update(
