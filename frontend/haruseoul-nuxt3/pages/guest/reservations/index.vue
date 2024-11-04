@@ -82,13 +82,13 @@ const pageClickHandler = (page) => {
 // 페이지가 변경될 때 쿼리 문자열을 업데이트
 watch(
   () => route.query.p,
-  (newValue) => {
-    const newPage = parseInt(newValue);
-    if (!isNaN(newPage) && newPage !== currentPage.value) {
-      currentPage.value = newPage;
-      fetchReservations(); // 새로운 페이지에 맞는 예약 목록을 가져옵니다.
-    }
-  }
+  // (newValue) => {
+  //   const newPage = parseInt(newValue);
+  //   if (!isNaN(newPage) && newPage !== currentPage.value) {
+  //     currentPage.value = newPage;
+  //     fetchReservations(); // 새로운 페이지에 맞는 예약 목록을 가져옵니다.
+  //   }
+  // }
 );
 
 // 초기 예약 데이터 로드
