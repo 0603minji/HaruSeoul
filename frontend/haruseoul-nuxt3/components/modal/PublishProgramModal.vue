@@ -7,20 +7,45 @@ import SearchableSelect from "~/components/filter/SearchableSelect.vue";
 // submit -> emit 'publishProgram'
 
 // Props
-// const props = defineProps({
-//   defaultProgram: {
-//     type: Object,
-//     required: true,
-//   },
+const props = defineProps({
+  defaultProgramId: {
+    type: Number,
+    required: true,
+  },
+  hostId: {
+    type: Number,
+    required: true
+  }
 //   programOptions: {
 //     type: Array,
 //   },
 //   publishedPrograms: {
 //     type: Array,
 //   }
-// });
+});
 
+// query ?mIds=props.hostId&s=1,2,5,6&d=개설가능첫날,끝날
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const startRange = new Date(today);
+const endRange = new Date(today);
 
+startRange.setDate(today.getDate() + 3); // today + 3 days
+endRange.setDate(today.getDate() + 3 + 21); // startRange + 21 days
+
+let query = {
+  mIds: props.hostId,
+  s: [1, 2, 5, 6],
+  d: [startRange.toISOString().split("T")[0], endRange.toISOString().split("T")[0]]
+};
+
+const config = useRuntimeConfig();
+const {data, refresh} = useFetch(`host/published-programs`, {
+  baseURL: config.public.apiBase,
+  params: query
+});
+
+/*=======================================================================================================================*/
 // Sample options for the select box
 const programs = ref([
   {id: 1, name: 'Program A'},
@@ -77,7 +102,7 @@ watchEffect(() => console.log(selectedProgram.value));
       <SearchableSelect :options="programs" :initial-option="initial"
                         @selection-changed="updateSelection"/>
 
-      <FilterCalendarV2 />
+      <FilterCalendarV2/>
 
       <div class="submit">
         <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>
