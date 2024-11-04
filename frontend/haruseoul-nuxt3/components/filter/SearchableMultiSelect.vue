@@ -8,7 +8,7 @@ const props = defineProps({
     type: Array,
     required: true,
   },
-  selectedOptions: {
+  initialOptions: {
     type: Array,
   }
 });
@@ -16,7 +16,7 @@ const props = defineProps({
 // State
 const isDropdownVisible = ref(false);
 const searchTerm = ref('');
-const selectedOptions = ref([...props.selectedOptions]);
+const selectedOptions = ref([...props.initialOptions]);
 const filteredOptions = ref([...props.options]);
 
 // Methods
@@ -42,6 +42,7 @@ const toggleOption = (option) => {
   selectedOptions.value.sort((option1, option2) => {
     return option1.id - option2.id;
   });
+  emit('selectionChanged', selectedOptions.value);
 };
 
 const clearSearch = () => {
@@ -50,7 +51,8 @@ const clearSearch = () => {
 };
 
 const programFilterResetHandler = () => {
-  selectedOptions.value = [...props.selectedOptions];
+  selectedOptions.value = [...props.initialOptions];
+  emit('selectionChanged', selectedOptions.value);
 };
 
 // Watcher to reset the filtered options when options prop changes
