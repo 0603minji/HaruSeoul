@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -48,12 +49,18 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
-    public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds) {
+    public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, int pageNum, int cardsPerPage) {
         Sort sort = Sort.by("regDate").descending();
-        Pageable pageable = PageRequest.of(0, 10, sort);
+        Pageable pageable = PageRequest.of(pageNum-1, cardsPerPage, sort);
+
+        // 요청 페이지 번호 확인
+        System.out.println("Requesting page number: " + (pageNum - 1));
 
         // Status ID가 없는 경우 해당 회원의 전체 예약 조회, Status ID가 있으면
         Page<Reservation> reservations = reservationRepository.findAll(sIds, mIds, pageable);
+
+        // 결과 확인
+        System.out.println("Total reservations fetched: " + reservations.getTotalElements());
 
         List<ReservationListDto> reservationListDto = reservations.getContent()
                 .stream()
@@ -81,6 +88,7 @@ public class DefaultReservationService implements ReservationService {
 
         modelMapper.typeMap(reservation.getClass(), ReservationListDto.class)
                 .addMappings(mapper -> {
+                    mapper.map(Reservation::getId, ReservationListDto::setId);
                     mapper.map(src -> src.getPublishedProgram().getProgram().getMember().getId(), ReservationListDto::setHostId);
                     mapper.map(src -> src.getPublishedProgram().getStatus().getName(), ReservationListDto::setStatusName);
                     mapper.map(src -> src.getPublishedProgram().getProgram().getTitle(), ReservationListDto::setProgramTitle);
