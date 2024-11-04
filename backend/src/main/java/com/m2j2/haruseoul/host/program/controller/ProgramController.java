@@ -33,8 +33,7 @@ public class ProgramController {
             @RequestParam(name = "pg", required = false) List<Long> pIds,
             @RequestParam(name = "s", required = false) List<String> statuses,
             @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-            @RequestParam(name = "cardsPerPage", defaultValue = "6") int cardsPerPage)
-    {
+            @RequestParam(name = "cardsPerPage", defaultValue = "6") int cardsPerPage) {
 
         ProgramResponseDto programResponseDto = service.getList(pIds, cIds, statuses, pageNum, cardsPerPage);
 
@@ -68,4 +67,9 @@ public class ProgramController {
         service.delete(id);
     }
 
+    @GetMapping("user/{id}")
+    public ResponseEntity<List<ProgramFilterDto>> getList(@PathVariable(name = "id") Long hostId,
+                                                    @RequestParam(name = "s", required = false) List<String> statuses) {
+        return ResponseEntity.ok(service.getList(hostId, statuses));
+    }
 }
