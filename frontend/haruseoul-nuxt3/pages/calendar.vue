@@ -9,7 +9,7 @@ import ProgramFilterModal from "~/components/modal/ProgramFilterModal.vue";
     <div class="container">
 <!--      <CalendarV2 />-->
 
-      <PublishedProgram :default-program-id=""/>
+<!--      <PublishedProgram :default-program-id=""/>-->
 
       <ProgramFilterModal />
     </div>
