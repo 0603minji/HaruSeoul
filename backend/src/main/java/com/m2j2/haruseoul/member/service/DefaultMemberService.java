@@ -4,6 +4,7 @@ import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.member.dto.MemberCreateDto;
 import com.m2j2.haruseoul.member.dto.MemberListDto;
 import com.m2j2.haruseoul.member.dto.MemberUpdateDto;
+import com.m2j2.haruseoul.member.dto.SigninDto;
 import com.m2j2.haruseoul.repository.MemberRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -72,6 +73,13 @@ public class DefaultMemberService implements MemberService {
         if (!currentPwd.equals(member.getUserPwd())) {
             throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
         }
+        return member;
+    }
+
+    @Override
+    public Member signin(SigninDto signinDto) {
+        Member member = memberRepository
+                .findByUserIdAndUserPwd(signinDto.getUserId(),signinDto.getUserPwd());
         return member;
     }
 
