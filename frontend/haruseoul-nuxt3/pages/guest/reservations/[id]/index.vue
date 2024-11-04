@@ -15,6 +15,71 @@
                 예약번호 2024091149827
             </div>
 
+            <!-- <div class="n-card bg-color:base-1 padding:6"
+            v-for="r in reservations" :key="r.id">
+                <RouterLink :to="`/guest/reservations/${r.id}`" class="n-link-box" href="detail?id=1"></RouterLink>
+                <div class="card-header">
+                    <div class="left">
+                        <span 
+                        :class="['n-panel-tag', r.status === 'completed' ? 'completed' : 'canceled']">
+                            {{ r.statusName }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-main">
+                    <div class="img-wrapper">
+                        <img src="/public/image/program_01.png" alt="대표사진" />
+                    </div>
+
+                    <div class="card-info-wrapper">
+                        <div class="card-header-responsive">
+                            <div class="left">
+                                <span v-if="['On Going', 'Urgent', 'Wait Confirm']. includes(r.statusName)"
+                                class="n-panel-tag">
+                                결제완료
+                                </span>
+
+                                <span v-else-if="r.statusName === 'Finished'"
+                                class="n-panel-tag not-submitted">
+                                이용완료
+                                </span>
+
+                                <span v-else-if="r.statusName === 'Confirmed'"
+                                class="n-panel-tag not-submitted">
+                                예약확정
+                                </span>
+
+                                <span v-else-if="r.statusName === 'Canceled'"
+                                class="n-panel-tag not-submitted">
+                                취소됨
+                                </span>
+                            </div>
+                        </div>
+                        <p class="title">
+                            {{ r.programTitle }}
+                        </p>
+                        <div class="card-info-responsive">
+                            <div class="d:flex flex-direction:column">
+                                <div class="card-info">
+                                    <span class="n-icon n-icon:calendar n-deco">진행일</span>
+                                    <span>{{ r.date }}</span>
+                                </div>
+                                <div class="card-info">
+                                    <span class="n-icon n-icon:group n-deco">예약인원</span>
+                                    <span>3</span>
+                                </div>
+                            </div>
+                            <div class="card-footer-responsive">
+                                <a href="aa" class="n-btn bg-color:main-1 color:base-1">Host 문의</a>
+                                <a href="aa" class="n-btn">예약 취소</a>
+                                <a href="aa"
+                                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
             <div class="n-card bg-color:base-1 padding:6">
                 <a class="n-link-box" href="detail?id=1"></a>
                 <div class="card-header">
