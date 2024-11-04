@@ -3,12 +3,13 @@ import {onMounted, ref, watch} from "vue";
 import axios from "axios";
 import Status from "~/components/filter/Status.vue";
 import {useRoute, useRouter} from "vue-router";
+import Pager from "~/components/Pager.vue";
 
 let reservations = ref([]);
 let selectedStatus = ref(0);
 
 const route = useRoute();
-const router = useRouter();
+let startNum = ref(1);
 let pageNumbers = ref([]);
 let totalRowCount = ref(0);
 let totalPageCount = ref(0);
@@ -59,30 +60,40 @@ const handleStatusChange = (status) => {
 };
 
 // 페이지 클릭 핸들러
-const handlePageClick = (page) => {
-  if (page < 1 || page > totalPageCount.value) return;
+const pageClickHandler = (page) => {
+    if (page < 1) {
+        alert("이전 페이지가 없습니다.")
+        return;
+    }
 
-  currentPage.value = page;
-  console.log(`페이지 클릭: ${page}`); // 페이지 클릭 로그
-  console.log(`현재 페이지: ${currentPage.value}`); // 현재 페이지 확인
-  fetchReservations(); // 페이지가 변경될 때마다 데이터를 가져옴
-  const queryString = buildQueryString();
-  console.log("쿼리 문자열 업데이트:", queryString); // 쿼리 문자열 확인
-  router.push(queryString); // 쿼리 문자열 업데이트
-};
+    if (page > totalPages) {
+        alert("다음 페이지가 없습니다.")
+        return;
+    }
+
+    if (page == null)
+        delete query.page;
+
+    query.page = page;
+
+    refresh();
+}
+
+// 페이지가 변경될 때 쿼리 문자열을 업데이트
+watch(
+  () => route.query.p,
+  (newValue) => {
+    const newPage = parseInt(newValue);
+    if (!isNaN(newPage) && newPage !== currentPage.value) {
+      currentPage.value = newPage;
+      fetchReservations(); // 새로운 페이지에 맞는 예약 목록을 가져옵니다.
+    }
+  }
+);
 
 // 초기 예약 데이터 로드
 onMounted(() => {
   fetchReservations();
-});
-
-// 페이지가 변경될 때 쿼리 문자열을 업데이트
-watch(() => route.query.p, (newValue) => {
-  const newPage = parseInt(newValue);
-  if (!isNaN(newPage) && newPage !== currentPage.value) {
-    currentPage.value = newPage;
-    fetchReservations(); // 새로운 페이지에 맞는 예약 목록을 가져옵니다.
-  }
 });
 </script>
 
@@ -90,7 +101,7 @@ watch(() => route.query.p, (newValue) => {
   <main>
     <section class="bg-color:base-1 n-layout-mj">
       <header class="n-title">
-        <h1>예약 내역 [{{ totalRowCount }}]</h1>
+        <h1>예약 내역 ({{ totalRowCount }})</h1>
       </header>
 
       <Status @selectStatusIds="handleStatusChange"/>
@@ -161,24 +172,14 @@ watch(() => route.query.p, (newValue) => {
           </div>
         </li>
       </ul>
-
-      <div class="mb:4 text-align:center">
-        <ul class="n-bar">
-          <li>
-            <button class="n-btn" @click="handlePageClick(currentPage.value - 1)" :disabled="!hasPreviousPage">이전
-            </button>
-          </li>
-          <li v-for="page in pageNumbers" :key="page">
-            <button class="n-btn" :class="{ active: page === currentPage.value }" @click="handlePageClick(page)">{{
-                page
-              }}
-            </button>
-          </li>
-          <li>
-            <button class="n-btn" @click="handlePageClick(currentPage.value + 1)" :disabled="!hasNextPage">다음</button>
-          </li>
-        </ul>
-      </div>
+          <!-- Pager 부분 -->
+      <Pager class="mb:4" 
+      :page-numbers="pageNumbers"
+      :start-number="startNum"
+      :total-page-count="totalPageCount"
+      :href="`reservations`"
+      @page-change="pageClickHandler"
+      />
     </section>
   </main>
 </template>
