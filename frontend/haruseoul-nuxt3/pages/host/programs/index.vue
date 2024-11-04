@@ -278,6 +278,19 @@ const openMore = () => {
 const closeMore = () => {
     moreIsOpen.value = false;
 };
+
+// 필터 초기화
+const filterInit = () => {
+    selectCategoryAll();
+    selectProgramAll();
+    selectStatusAll();
+    const CategoryCheckbox = document.querySelector(".categoryAll");
+    CategoryCheckbox.checked = true;
+    const programCheckbox = document.querySelector(".programidAll");
+    programCheckbox.checked = true;
+    const statusCheckbox = document.querySelector(".statusCheckboxAll");
+    statusCheckbox.checked = true;
+}
 </script>
 
 <template>
@@ -429,7 +442,7 @@ const closeMore = () => {
                     <header class="n-title">
                         <h1 class="">Filter</h1>
                         <div>
-                            <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)">
+                            <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)" @click="filterInit">
                                 초기화
                             </button>
                         </div>
@@ -727,7 +740,7 @@ const closeMore = () => {
         --collapse-padding: 24px 0 12px 0;
 
         .n-icon\:arrow_up:before {
-            --icon: url(/css/image/icon/arrow_down.svg);
+            --icon: url(/assets/image/icon/arrow_down.svg);
         }
     }
 }
