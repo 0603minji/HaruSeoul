@@ -1,32 +1,126 @@
 <script setup>
-
-
-import {onMounted, ref} from "vue";
+import { onMounted, ref, reactive } from "vue";
 import axios from "axios";
+import RouteTemplete from "./routeTemplete.vue";
 
 const categories = ref([]);
+const routeComponentCount = ref(1);
+const programCreateDto = reactive({
+  categoryIds: [],
+  routes: [], // route 객체를 여러개 가진 List
+  images: [],
+  groupSizeMin: 1,
+  groupSizeMax: 1
 
+});
 
-//================Fetch Function==========
+//================Fetch Functions==============
 const fetchCategories = async () => {
-
   const response = await axios.get("http://localhost:8080/api/v1/categories");
-
   categories.value = response.data;
-
-  // console.log(categories.value);
-
 }
 
-//=======================LifeCycle Functions==========
+//================LifeCycle Functions==================
 onMounted(() => {
   if (!window.location.hash) {
     window.location.hash = '#intro';
   }
-
   fetchCategories();
 })
+
+//==================Data Functions=====================
+//  자식 컴포넌트로부터 데이터를 받아 업데이트하는 함수
+//  자식 컴포넌트가 emit으로 발생시킨 이벤트
+const updateRoute = (index, data) => {
+  programCreateDto.routes[index - 1] = data;
+};
+
+//  호출될 때마다 routeComponentCount 값을 증가
+const addRouteFunction = () => {
+  routeComponentCount.value++;
+}
+
+
+const createProgram = async () => {
+  sendCreateRequest(2, "Unpublished");
+}
+
+const tempSave = async () => {
+  sendCreateRequest(2, "In Progress");
+}
+
+const sendCreateRequest = async (regMemberId, status) => {
+  try {
+    programCreateDto.regMemberId = regMemberId;
+    programCreateDto.status = status
+    const response = await axios.post("http://localhost:8080/api/v1/host/programs", programCreateDto, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    console.log("Program created successfully:", response.data);
+
+    // const formData = new FormData();
+    // // programId를 application/json으로 설정하여 전송
+    // const programIdBlob = new Blob([JSON.stringify(response.data.id)], { type: 'application/json' });
+    // formData.append("programId", programIdBlob);
+    // formData.append("images", programCreateDto.images);
+
+  
+    // // 요청 전송
+    // const saveImageResponse = await axios.post("http://localhost:8080/api/v1/host/programs/images", formData, {
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data'
+    //   }
+    // });
+    // console.log("Image saved successfully:", saveImageResponse.data);
+
+    // 요청 성공 후 페이지 이동
+    window.location.href = "/host/programs";
+
+  } catch (error) {
+    console.error("Error creating program:", error);
+  }
+}
+
+// // 이미지 파일 선택시 호출되는 함수
+// const handleFileChange = (event) => {
+//   const files = Array.from(event.target.files); // FileList를 배열로 변환
+
+//   // 파일 배열을 순회하며 각 파일과 인덱스 처리
+//   files.forEach((file, index) => {
+//     programCreateDto.images.push({ order: index, src: file });
+//   });
+
+//   console.log(programCreateDto.images);
+// };
+
+const minusGroupSizeMax = () => {
+  if (programCreateDto.groupSizeMax > 1) {
+    programCreateDto.groupSizeMax -= 1;
+  }
+};
+
+const plusGroupSizeMax = () => {
+  if (programCreateDto.groupSizeMax < 10) {
+    programCreateDto.groupSizeMax += 1;
+  }
+};
+
+const minusGroupSizeMin = () => {
+  if (programCreateDto.groupSizeMin > 1) {
+    programCreateDto.groupSizeMin -= 1;
+  }
+};
+
+const plusGroupSizeMin = () => {
+  if (programCreateDto.groupSizeMin < 10) {
+    programCreateDto.groupSizeMin += 1;
+  }
+};
 </script>
+
+
 <template>
   <main>
     <nav class="n-bar-underline-create">
@@ -50,7 +144,8 @@ onMounted(() => {
           <div class="label-wrapper">
             <label for="title" class="form-label">제목</label>
           </div>
-          <input class="input-text" id="title" type="text" name="title" placeholder="Enter title">
+          <input class="input-text" id="title" type="text" name="title" placeholder="Enter title"
+            v-model="programCreateDto.title">
           <div class="char-counter">
             <span>0/60</span>
           </div>
@@ -60,22 +155,36 @@ onMounted(() => {
           <div class="label-wrapper">
             <label for="description" class="form-label">상세 설명</label>
           </div>
-          <textarea class="input-textarea" id="description" name="description" rows="8" cols="50"
-                    placeholder=""></textarea>
+          <textarea class="input-textarea" id="description" name="description" rows="8" cols="50" placeholder=""
+            v-model="programCreateDto.detail"></textarea>
           <p class="char-counter">0/1000</p>
         </div>
         <div class="form-group">
           <div class="form-label">카테고리</div>
           <div class="d:flex flex-wrap:wrap gap:2 bg-color:base-2 bd-radius:4 p:2 jc:space-between">
             <label v-for="c in categories" :key="c.id" class="d:flex al-items:center w:1/3">
-              <input type="checkbox" :value="c.id" class="mr:2">{{ c.name }}
+              <!-- 
+              v-model : 양방향 바인딩
+              programCreateDto.categoryIds 배열과 이 체크박스가 연결
+              체크박스가 선택되면 해당 카테고리 ID가 programCreateDto.categoryIds 배열에 추가
+              해제되면 배열에서 제거
+              -->
+              <!-- 
+              :value
+              체크박스가 선택될 때 v-model로 연결된 데이터(programCreateDto.categoryIds)에 저장되는 값을 지정
+              -->
+              <input type="checkbox" class="mr:2" :value="c.id" v-model="programCreateDto.categoryIds" :disabled="programCreateDto.categoryIds.length >= 2 &&
+                //  2개 카테고리 선택한 경우, 더 이상 추가할 수 없도록 체크박스를 비활성화
+                // 이미 선택한 카테고리(현재 체크된 카테고리)는 비활성화되지 않음 (체크 해제 가능)
+                !programCreateDto.categoryIds.includes(c.id)">
+              {{ c.name }}
             </label>
           </div>
         </div>
         <p class="category-note">**최대 2개까지 선택 가능합니다.</p>
 
         <div class="button-group">
-          <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
           <a class="n-btn n-btn-bg-color:main" href="#detail">다음</a>
         </div>
       </section>
@@ -87,7 +196,7 @@ onMounted(() => {
         <div class="form-group">
           <div class="form-label">진행언어</div>
 
-          <select name="language" class="input-select">
+          <select name="language" class="input-select" v-model="programCreateDto.language">
             <option>English</option>
             <option>Japanese</option>
             <option>Chinese</option>
@@ -97,7 +206,7 @@ onMounted(() => {
         <div class="form-group">
           <div class="form-label">시작 시각</div>
           <div class="time-select-wrapper">
-            <select id="" name="" class="input-select">
+            <select id="" name="" class="input-select" v-model="programCreateDto.startTimeHour">
               <option value="00">00</option>
               <option value="01">01</option>
               <option value="02">02</option>
@@ -125,7 +234,7 @@ onMounted(() => {
               <option value="24">24</option>
             </select>
             <p class="time-unit">시</p>
-            <select id="" name="" class="input-select">
+            <select id="" name="" class="input-select" v-model="programCreateDto.startTimeMinute">
               <option value="00">00</option>
               <option value="10">10</option>
               <option value="20">20</option>
@@ -139,7 +248,7 @@ onMounted(() => {
         <div class="form-group">
           <div class="form-label">종료 시각</div>
           <div class="time-select-wrapper">
-            <select id="" name="" class="input-select">
+            <select id="" name="" class="input-select" v-model="programCreateDto.endTimeHour">
               <option value="00">00</option>
               <option value="01">01</option>
               <option value="02">02</option>
@@ -167,7 +276,7 @@ onMounted(() => {
               <option value="24">24</option>
             </select>
             <p class="time-unit">시</p>
-            <select id="" name="" class="input-select">
+            <select id="" name="" class="input-select" v-model="programCreateDto.endTimeMinute">
               <option value="00">00</option>
               <option value="10">10</option>
               <option value="20">20</option>
@@ -182,9 +291,10 @@ onMounted(() => {
           <div class="d:flex form-group gap:6">
             <div class="form-label">최대 인원</div>
             <div class="counter-wrapper">
-              <button class="n-btn n-btn-color:main-2">-</button>
-              <input type="number" name="max-count" class="counter-input" min="1" max="5" value="0">
-              <button class="n-btn n-btn-color:main-2">+</button>
+              <button class="n-btn n-btn-color:main-2" @click.prevent="minusGroupSizeMax">-</button>
+              <input type="number" name="max-count" class="counter-input no-spinner" min="1" max="10"
+                v-model="programCreateDto.groupSizeMax">
+              <button class="n-btn n-btn-color:main-2" @click.prevent="plusGroupSizeMax">+</button>
               <p class="people-unit">명</p>
             </div>
           </div>
@@ -192,9 +302,10 @@ onMounted(() => {
           <div class="d:flex form-group gap:6">
             <div class="form-label">최소 인원</div>
             <div class="counter-wrapper">
-              <button class="n-btn n-btn-color:main-2">-</button>
-              <input type="number" name="min-count" class="counter-input" min="1" max="5" value="0">
-              <button class="n-btn n-btn-color:main-2">+</button>
+              <button class="n-btn n-btn-color:main-2" @click.prevent="minusGroupSizeMin">-</button>
+              <input type="number" name="min-count" class="counter-input no-spinner" min="1" max="10"
+                v-model="programCreateDto.groupSizeMin">
+              <button class="n-btn n-btn-color:main-2" @click.prevent="plusGroupSizeMin">+</button>
               <p class="people-unit">명</p>
             </div>
           </div>
@@ -205,146 +316,41 @@ onMounted(() => {
 
         <div class="form-group d:flex">
           <div class="form-label">총 비용</div>
-          <input type="number" name="cost" class="input-text" min="0" max="1000000">
+          <input type="number" name="cost" class="input-text" min="0" max="1000000" v-model="programCreateDto.price">
           <p class="currency-unit">원</p>
         </div>
 
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#intro">이전</a></div>
-          <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#course">다음</a></div>
         </div>
 
       </section>
       <section id="course" class="course">
-        <h1>코스</h1>
-
-        <div class="course-card">
-          <div class="card-header">출발지</div>
-
-          <div class="course-input-area">
-
-            <div class="input-with-icon">
-              <img src="/public/image/pen.svg" alt="아이콘">
-              <label>
-                <input type="text" class="input-text" placeholder="제목">
-              </label>
-            </div>
-
-            <div class="input-with-icon">
-              <img src="/public/image/pen.svg" alt="아이콘">
-              <label>
-                <input type="text" class="input-text" placeholder="주소">
-              </label>
-            </div>
-
-            <div class="input-with-icon">
-              <label>
-                <img src="/public/image/pin.svg" alt="아이콘">
-                <input type="text" class="input-text" placeholder="장소 설명">
-              </label>
-            </div>
-
-
-            <div class="course-select-time">
-              <div class="time-label">
-                <img src="/public/image/pin.svg" alt="아이콘">
-                <span>시작시각</span>
-              </div>
-              <div class="time-select-wrapper">
-                <label><select id="start-hour" class="input-select" name="start-hour">
-                  <option value="00">00</option>
-                  <option value="01">01</option>
-                  <option value="02">02</option>
-                  <option value="03">03</option>
-                  <option value="04">04</option>
-                  <option value="05">05</option>
-                  <option value="06">06</option>
-                  <option value="07">07</option>
-                  <option value="08">08</option>
-                  <option value="09">09</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                  <option value="13">13</option>
-                  <option value="14">14</option>
-                  <option value="15">15</option>
-                  <option value="16">16</option>
-                  <option value="17">17</option>
-                  <option value="18">18</option>
-                  <option value="19">19</option>
-                  <option value="20">20</option>
-                  <option value="21">21</option>
-                  <option value="22">22</option>
-                  <option value="23">23</option>
-                </select>
-                </label>
-                <p>시</p>
-              </div>
-              <div class="time-select-wrapper">
-                <label>
-                  <select id="start-minute" class="input-select" name="start-minute">
-                    <option value="00">00</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                    <option value="50">50</option>
-                  </select>
-                </label>
-                <p>분</p>
-              </div>
-            </div>
-
-
-            <div class="duration-wrapper">
-              <div class="time-label">
-                <img src="/public/image/pin.svg" alt="아이콘">
-                <span>소요시간</span>
-              </div>
-              <div class="duration-pm-wrapper">
-                <button class="n-btn btn-minus">-</button>
-                <input type="number" id="duration" class="duration-input" name="duration" value="0.0">
-                <button class="n-btn btn-plus">+</button>
-              </div>
-            </div>
-
-          </div>
+        <!-- ======================= route 시작 ========================== -->
+        <div>
+          <h1>코스</h1>
+          <RouteTemplete v-for="index in routeComponentCount" :order="index"
+            @updateRoute="updateRoute(index, $event)" />
+          <!--
+          자식 컴포넌트인 RouteTemplete에 order라는 props를 전달
+          @updateRoute : 이벤트 리스너
+          자식 컴포넌트에서 updateRoute라는 커스텀 이벤트가 발생하면 부모 컴포넌트가 이를 감지하여 updateRoute라는 메서드를 실행
+          $event: 자식 컴포넌트에서 전달된 데이터. 이벤트가 발생할 때 자동으로 $event라는 객체에 해당 데이터를 담아서 전달
+          -->
         </div>
-        <div class="divider"></div>
-
-        <div class="course-moving-wrapper">
-          <div class="d:flex al-items:center">
-            <p class="p:1">이동수단</p>
-            <label>
-              <select class="input-select">
-                <option value=""></option>
-              </select>
-            </label>
-          </div>
-          <div class="d:flex al-items:center">
-            <p class="p:1">이동시간</p>
-            <label>
-              <select class="input-select">
-                <option value=""></option>
-              </select>
-            </label>
-          </div>
-        </div>
-
-
-        <div class="d:flex jc:end m-top:5">
-          <button class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center">+ 경유지</button>
-        </div>
-
         <div class="map">지도</div>
-
+        <div class="d:flex jc:end m-top:5">
+          <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center" @click="addRouteFunction">+
+            경유지</button>
+        </div>
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#detail">이전</a></div>
-          <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">다음</a></div>
         </div>
-
+        <!-- =================== route 종료 ======================== -->
       </section>
 
 
@@ -357,7 +363,7 @@ onMounted(() => {
             your activity. Start a new line for each one.</p>
           <label for="included" class="d:none">포함 항목을 작성하세요</label>
           <textarea id="included" name="included" rows="4" cols="50" class="input-textarea"
-                    placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.inclusion"></textarea>
 
           <p class="text-align:end p-bottom:4">0 / 1000</p>
 
@@ -371,13 +377,13 @@ onMounted(() => {
             price. This allows customers to appropriately set their expectations.</p>
           <label for="not-included" class="d:none">미포함 항목을 작성하세요</label>
           <textarea id="not-included" name="not-included" rows="4" cols="50" class="input-textarea"
-                    placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.exclusion"></textarea>
           <p class="text-align:end p-bottom:4">0 / 1000</p>
         </div>
 
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#course">이전</a></div>
-          <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#caution">다음</a></div>
         </div>
       </section>
@@ -391,7 +397,7 @@ onMounted(() => {
             This information appears on the activity details page & voucher.</p>
           <label for="preparation" class="d:none">준비 항목을 작성하세요</label>
           <textarea id="preparation" name="preparation" rows="4" cols="50" class="input-textarea"
-                    placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.packingList"></textarea>
           <p class="text-align:end p-bottom:4">0 / 1000</p>
         </div>
         <div class="form-group">
@@ -401,21 +407,21 @@ onMounted(() => {
             This information appears on the activity details page.</p>
           <label for="notice" class="d:none">주의사항을 작성하세요</label>
           <textarea id="notice" name="notice" rows="4" class="input-textarea" cols="50"
-                    placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.caution"></textarea>
           <p class="text-align:end p-bottom:4">0 / 1000</p>
         </div>
         <div class="form-group">
           <div class="font-size:9 fw:bold p-bottom:4">요청사항 <span class="font-size:6 fw:1">(선택사항)</span></div>
-          <p class="fw:100 p-bottom:2">항구 규정에 따라 그룹에 포함된 모든 참가자의 이름, 성별, 생년월일, 국적, 연락/신분 정보를 제공해야 합니다.
-            이 정보는 다른 사람과 공유되지 않으며 활동 종료 후 삭제됩니다. 식단 제한 관련 정보 또한 입력해주세요.</p>
+          <p class="fw:100 p-bottom:2">
+            Pls enter any requests the guest may have (ex : vegetarian meal requests can be accommodated).</p>
           <label for="request" class="d:none">요청 사항을 작성하세요</label>
           <textarea id="request" name="request" class="input-textarea" rows="4" cols="50"
-                    placeholder="각 사항들은 enter로 구분해주세요"></textarea>
+            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.requirement"></textarea>
           <p class="text-align:end p-bottom:4">0 / 1000</p>
         </div>
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">이전</a></div>
-          <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#image">다음</a></div>
         </div>
       </section>
@@ -423,7 +429,8 @@ onMounted(() => {
       <section id="image" class="images-upload-container">
         <header>
           <h1>사진 업로드</h1>
-          <label class="n-btn n-btn-border:sub n-btn-size:1"><input type="file" id="fileInput">+ 파일 추가</label>
+          <label class="n-btn n-btn-border:sub n-btn-size:1"><input type="file" id="fileInput"
+              @change="handleFileChange">+ 파일 추가</label>
         </header>
         <div style="border: 1px solid; border-radius: 10px; padding: 0 20px 20px 20px">
           <div class="upload-images">
@@ -519,9 +526,9 @@ onMounted(() => {
         </div>
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#caution">이전</a></div>
-          <button type="submit" class="n-btn n-btn-bg-color:main">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
           <div>
-            <button type="submit" class="n-btn n-btn-bg-color:main">작성완료</button>
+            <button type="button" class="n-btn n-btn-bg-color:main" @click="createProgram">작성완료</button>
           </div>
         </div>
       </section>
@@ -574,13 +581,13 @@ onMounted(() => {
     display: inline-flex;
     gap: var(--bar-gap);
 
-    > * {
+    >* {
       position: relative;
     }
 
     /*=============== hover, active상태 ================================*/
 
-    > *::after {
+    >*::after {
       content: "";
       width: 100%;
       height: 3px;
@@ -593,17 +600,17 @@ onMounted(() => {
       visibility: hidden;
     }
 
-    > *:hover::after {
+    >*:hover::after {
       background-color: var(--color-main-4);
       visibility: visible;
     }
 
-    > .active::after {
+    >.active::after {
       background-color: var(--color-main-1);
       visibility: visible;
     }
 
-    > .active:hover::after {
+    >.active:hover::after {
       background-color: var(--color-main-1);
       visibility: visible;
     }
@@ -1110,7 +1117,7 @@ onMounted(() => {
   margin-top: 10px;
   width: 25%;
 
-  > span {
+  >span {
     display: block;
     width: 100%;
     text-align: center;
@@ -1174,6 +1181,7 @@ textarea {
 
 
 @media (min-width: 768px) {
+
   .intro,
   .detail,
   .course,
@@ -1244,13 +1252,13 @@ textarea {
     border-radius: 10px;
   }
 
-  .item-wrapper > * {
+  .item-wrapper>* {
     position: relative;
     align-items: center;
     display: flex;
   }
 
-  .item-wrapper > *::before {
+  .item-wrapper>*::before {
     content: "";
     width: 5px;
     /* 줄의 너비를 3px로 설정 */
@@ -1265,20 +1273,20 @@ textarea {
     visibility: hidden;
   }
 
-  .item-wrapper > *:hover::before {
+  .item-wrapper>*:hover::before {
     /*display: none;*/
     visibility: visible;
   }
 
   /* 활성화된 상태에서 줄 색상 변경 */
-  .item-wrapper > .active::before {
+  .item-wrapper>.active::before {
     background-color: var(--color-main-1);
     /* 활성화된 항목의 줄 색상 (원하는 색상으로 변경 가능) */
     visibility: visible;
   }
 
 
-  .item-wrapper > *::after {
+  .item-wrapper>*::after {
     display: none;
     /*content: "";*/
     /*width: 3px; !* 줄의 너비를 3px로 설정 *!*/
@@ -1291,13 +1299,13 @@ textarea {
   }
 
   /* hover 시 왼쪽에 줄이 나타나도록 설정 */
-  .item-wrapper > *:hover::after {
+  .item-wrapper>*:hover::after {
     display: none;
     /*visibility: visible;*/
   }
 
   /* active 상태에서 줄 색상을 변경 */
-  .item-wrapper > .active::after {
+  .item-wrapper>.active::after {
     display: none;
     /*background-color: var(--color-main-1); !* 활성화된 항목의 줄 색상 *!*/
     /*visibility: visible;*/
@@ -1338,5 +1346,18 @@ textarea {
       padding: 10px;
     }
   }
+}
+
+/*========== input 태그의 증감버튼 없애기 ==========*/
+/* Chrome, Safari, Edge, Opera */
+input[type="number"].no-spinner::-webkit-outer-spin-button,
+input[type="number"].no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"].no-spinner {
+    -moz-appearance: textfield;
 }
 </style>
