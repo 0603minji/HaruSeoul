@@ -41,7 +41,14 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
             "AND (:groupSizeMin IS NULL OR p.groupSizeMin >= :groupSizeMin) " +
             "AND (:groupSizeMax IS NULL OR p.groupSizeMax <= :groupSizeMax) " +
             "AND (:startTime IS NULL OR p.startTime >= :startTime) " +
-            "AND (:language IS NULL OR p.language = :language)")
+            "AND (:language IS NULL OR p.language = :language) " +
+            "AND (:durationOption IS NULL OR " +
+            "(CASE WHEN :durationOption = 1 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) < 2 " +
+            "WHEN :durationOption = 2 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) BETWEEN 2 AND 4 " +
+            "WHEN :durationOption = 3 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) BETWEEN 4 AND 6 " +
+            "WHEN :durationOption = 4 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) BETWEEN 6 AND 8 " +
+            "WHEN :durationOption = 5 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) > 8 " +
+            "END))")
     Page<Program> findProgramsByFilters(@Param("programIds") List<Long> programIds,
                                         @Param("categoryIds") List<Long> categoryIds,
                                         @Param("minPrice") Integer minPrice,
@@ -50,7 +57,9 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
                                         @Param("groupSizeMax") Integer groupSizeMax,
                                         @Param("startTime") LocalTime startTime,
                                         @Param("language") String language,
+                                        @Param("durationOption") Integer durationOption,
                                         Pageable pageable);
+
 
 }
 

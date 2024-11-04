@@ -57,7 +57,7 @@ public class DefaultProgramService implements ProgramService {
         }
 
         Page<Program> programs = programRepository.findProgramsByFilters(
-                filterdProgramIds, categoryIds, minPrice, maxPrice, groupSizeMin, groupSizeMax, startTime, language, pageable);
+                filterdProgramIds, categoryIds, minPrice, maxPrice, groupSizeMin, groupSizeMax, startTime, language,duration ,pageable);
 
         List<Program> filteredPrograms = programs.getContent();
 
