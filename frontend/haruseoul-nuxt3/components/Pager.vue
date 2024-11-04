@@ -36,7 +36,7 @@ const emit = defineEmits(['pageChange']);
             </li>
             <li>
                 <RouterLink @click.prevent="emit('pageChange', startNum + 5)" class="n-btn"
-                    :to="`${href}?p=${startNum + 5 > totalPages ? totalPages : startNum + 5}`">다음</RouterLink>
+                    :to="`${href}?p=${startNum + 5 > totalPageCount ? totalPageCount : startNum + 5}`">다음</RouterLink>
             </li>
         </ul>
     </div>
