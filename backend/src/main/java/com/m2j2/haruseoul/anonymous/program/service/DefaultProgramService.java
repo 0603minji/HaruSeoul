@@ -42,9 +42,13 @@ public class DefaultProgramService implements ProgramService {
 
     @Override
     @Transactional
-    public ProgramResponseDto getList(List<Long> programIds, List<Long> categoryIds, LocalDate startDate, LocalDate endDate, Integer minPrice, Integer maxPrice, Integer groupSizeMax, Integer groupSizeMin, Integer duration, LocalTime startTime, String language, Integer page, Integer pageSize) {
+    public ProgramResponseDto getList(List<Long> programIds, List<Long> categoryIds, LocalDate startDate,
+                                      LocalDate endDate, Integer minPrice,
+                                      Integer maxPrice, Integer groupSizeMax, Integer groupSizeMin,
+                                      Integer duration, LocalTime startTime, String language,
+                                      Integer page, Integer pageSize) {
 
-        Pageable pageable = PageRequest.of(page-1, pageSize);
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
 
         List<Long> filterdProgramIds = publishedProgramRepository.findProgramIdsByDateRange(startDate, endDate);
 
@@ -53,8 +57,7 @@ public class DefaultProgramService implements ProgramService {
         }
 
         Page<Program> programs = programRepository.findProgramsByFilters(
-                filterdProgramIds, categoryIds, minPrice, maxPrice, groupSizeMin, groupSizeMax,
-                 startTime, language,pageable);
+                filterdProgramIds, categoryIds, minPrice, maxPrice, groupSizeMin, groupSizeMax, startTime, language, pageable);
 
         List<Program> filteredPrograms = programs.getContent();
 

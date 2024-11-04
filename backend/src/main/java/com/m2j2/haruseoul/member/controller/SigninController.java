@@ -30,7 +30,10 @@ public class SigninController {
         Member member = memberService.signin(signinDto);
 
         if (member != null) {
-            session.setAttribute("user", member.getId()); // 세션에 사용자 ID 저장
+            session.setAttribute("userId", member.getId()); // 세션에 사용자 ID 저장
+            Long userId = (Long) session.getAttribute("userId");
+            System.out.println(userId);
+
             return ResponseEntity.ok("로그인 성공");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
