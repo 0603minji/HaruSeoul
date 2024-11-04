@@ -170,35 +170,35 @@ public class DefaultProgramService implements ProgramService {
         return savedProgram;
     }
 
-    public List<Image> saveImages(Long programId, List<MultipartFile> multipartFiles) {
-        // 1. 프로그램이 실재하는 프로그램인지 확인한다.
-        Optional<Program> programById = programRepository.findById(programId);
-        if (programById.isEmpty()) {
-            log.error("[에러] 등록되지 않은 프로그램 입니다", programId);
-            return null;
-        }
-        Program savedProgram = programById.get();
-
-        AtomicInteger index = new AtomicInteger(0);
-        List<Image> images = multipartFiles.stream()
-                .map(multipartFile -> {
-                    try {
-                        return Image.builder()
-                                .order(index.getAndIncrement())  // AtomicInteger로 인덱스 증가
-                                .src(multipartFile.getBytes())
-                                .program(savedProgram)
-                                .build();
-                    } catch (IOException e) {
-                        log.error("Error Message: {}", e.getMessage());
-                        throw new RuntimeException(e);
-                    }
-                })
-                .toList();
-
-        List<Image> savedImages = imageRepository.saveAll(images);
-        log.info("{} 개의 이미지가 정상 저장되었습니다.", savedImages.size());
-        return savedImages;
-    }
+//    public List<Image> saveImages(Long programId, List<MultipartFile> multipartFiles) {
+//        // 1. 프로그램이 실재하는 프로그램인지 확인한다.
+//        Optional<Program> programById = programRepository.findById(programId);
+//        if (programById.isEmpty()) {
+//            log.error("[에러] 등록되지 않은 프로그램 입니다", programId);
+//            return null;
+//        }
+//        Program savedProgram = programById.get();
+//
+//        AtomicInteger index = new AtomicInteger(0);
+//        List<Image> images = multipartFiles.stream()
+//                .map(multipartFile -> {
+//                    try {
+//                        return Image.builder()
+//                                .order(index.getAndIncrement())  // AtomicInteger로 인덱스 증가
+//                                .src(multipartFile.getBytes())
+//                                .program(savedProgram)
+//                                .build();
+//                    } catch (IOException e) {
+//                        log.error("Error Message: {}", e.getMessage());
+//                        throw new RuntimeException(e);
+//                    }
+//                })
+//                .toList();
+//
+//        List<Image> savedImages = imageRepository.saveAll(images);
+//        log.info("{} 개의 이미지가 정상 저장되었습니다.", savedImages.size());
+//        return savedImages;
+//    }
 
     private LocalTime getLocalTimeByDuration(Integer duration) {
         if (duration == null) return LocalTime.of(0, 0);

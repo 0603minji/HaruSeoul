@@ -26,5 +26,5 @@ public class Image {
     private Program program;
 
     @Column(name = "src", nullable = false)
-    private byte[] src;
+    private String src;
 }
