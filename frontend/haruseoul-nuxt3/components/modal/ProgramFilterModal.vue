@@ -31,7 +31,7 @@ const programs = ref([
 ]);
 
 // initial
-const initial = [{id: 4, name: 'Program D'},{id: 9, name: 'Program I'}];
+const initial = [{id: 4, name: 'Program D'}, {id: 9, name: 'Program I'}];
 
 // Selected option
 const selectedPrograms = ref([...initial]);
@@ -39,9 +39,9 @@ const selectedPrograms = ref([...initial]);
 // Handle selection change
 const updateSelection = (selectedOptions) => {
   selectedPrograms.value = selectedOptions;
+  console.log('updateSelection called', selectedPrograms.value);
 };
 
-watchEffect(() => console.log(selectedPrograms.value));
 </script>
 
 <template>
@@ -53,10 +53,10 @@ watchEffect(() => console.log(selectedPrograms.value));
 
     <form class="popup-body" action="">
       <!--프로그램 선택-->
-      <SearchableMultiSelect :options="programs" :selected-options="selectedPrograms"
-                        @selection-changed="updateSelection"/>
+      <SearchableMultiSelect :options="programs" :initial-options="initial"
+                             @selection-changed="updateSelection"/>
 
-      <FilterCalendarV2 />
+      <FilterCalendarV2/>
 
       <div class="submit">
         <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>

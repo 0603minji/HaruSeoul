@@ -8,7 +8,7 @@ const props = defineProps({
     type: Array,
     required: true,
   },
-  selectedOption: {
+  initialOption: {
     type: Object,
   }
 });
@@ -16,13 +16,12 @@ const props = defineProps({
 // State
 const isDropdownVisible = ref(false);
 const searchTerm = ref('');
-const selectedOption = ref(props.selectedOption);
+const selectedOption = ref(props.initialOption);
 const filteredOptions = ref([...props.options]);
 
 // Methods
 const toggleDropdown = () => {
   isDropdownVisible.value = !isDropdownVisible.value;
-  console.log(isDropdownVisible.value);
 };
 
 const filterOptions = () => {

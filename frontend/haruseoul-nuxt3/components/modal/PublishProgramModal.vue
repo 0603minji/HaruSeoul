@@ -1,5 +1,25 @@
 <script setup>
 import SearchableSelect from "~/components/filter/SearchableSelect.vue";
+// 부모로부터 props로 전달받을 것
+// 디폴트 개설할 프로그램 -> SearchableSelect
+// 그 외 호스트가 개설가능한 모든 프로그램들 -> SearchableSelect
+// 개설가능한 기간 내 이미 개설된 프로그램들 -> Calendar
+// submit -> emit 'publishProgram'
+
+// Props
+// const props = defineProps({
+//   defaultProgram: {
+//     type: Object,
+//     required: true,
+//   },
+//   programOptions: {
+//     type: Array,
+//   },
+//   publishedPrograms: {
+//     type: Array,
+//   }
+// });
+
 
 // Sample options for the select box
 const programs = ref([
@@ -54,7 +74,7 @@ watchEffect(() => console.log(selectedProgram.value));
 
     <form class="popup-body" action="">
       <!--프로그램 선택-->
-      <SearchableSelect :options="programs" :selected-option="selectedProgram"
+      <SearchableSelect :options="programs" :initial-option="initial"
                         @selection-changed="updateSelection"/>
 
       <FilterCalendarV2 />
