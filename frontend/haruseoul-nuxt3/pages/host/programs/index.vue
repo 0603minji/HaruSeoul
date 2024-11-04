@@ -1,42 +1,68 @@
-<!--1. 프로그램 필터에 목록을 db에서 불러오기-->
-<!--2. 프로그램으로 필터링 (체크박스 선택)-->
-<!--3. 카테고리 필터링-->
-<!--4. 상태 필터링-->
-<!--5. 페이지 네이션 구현-->
-<!--6. programs/new에서 값 입력받으면 새로운 프로그램 조회 가능 구현-->
-<!--7. status를 db에서는 integer로 저장해두고 프론트에서 if status==1 이면 "작성중"으로 구현-->
-<!--8. route 테이블 생성-->
+<!--1. 페이지 네이션 구현-->
+<!--2. programs/new에서 값 입력받으면 새로운 프로그램 조회 가능 구현-->
+<!--3. 프로그램 상태에 따라 버튼 변경 : 작성하기 / 개설하기 / 예약관리 -->
+<!--4. 로그인 되어있는 해당 호스트에 대한 프로그램만 조회 -->
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import axios from "axios";
-import Category from "~/components/filter/Category.vue";
 
 //============= 변수 영역 ====================
-const programs = ref([]);     //  서버에서 가져온 프로그램 목록 저장 배열
+const programs = ref([]); //  서버에서 가져온 프로그램 목록 저장 배열
 const totalRowCount = ref(0); // 서버에서 가져온 총 프로그램 개수 저장
-const totalPageCount = ref(0);  //  서버에서 가져온 총 페이지 개수 저장
-const programTitles = ref([]);  //  프로그램 id, title들을 저장할 배열
-const selectedPrograms = ref([]); // 프로그램 필터에서 선택된 프로그램의 id를 저장할 배열
-//  ref : 반응형 변수 (데이터 변경시 ui도 자동 업데이트
-//  const : javascript에서 상수값 선언시 사용하는 키워드
-//          변수의 값이 변하지 않을때 사용하는 키워드
-//          재선언, 재할당 불가능
-//          블록 스코프
-//  let : 재선언 불가능, 재할당 가능
-//        블록 스코프
-
+const totalPageCount = ref(0); //  서버에서 가져온 총 페이지 개수 저장
+const programTitles = ref([]); //  프로그램 id, title들을 저장할 배열
+const selectedProgramIds = ref([]); // 프로그램 필터에서 선택된 프로그램의 id를 저장할 배열
+const categories = ref([]);
+const selectedCategories = ref([]);
+const selectedStatus = ref([]);
+const currentPage = ref(1); //  현재 페이지 번호
+const cardsPerPage = 6; //  한페이지당 표시할 프로그램 카드 수
+// 모달 관련 상태
+const moreIsOpen = ref(false);
 
 //============= Lifecycle Functions ================
 onMounted(() => {
     //  컴포넌트가 화면에 마운트(렌더링)된 후에 실행
-    fetchPrograms();  //  프로그램 목록을 가져오는 함수
-    fetchProgramIds();  //  프로그램의 제목과 ID 목록을 가져오는 함수
+    fetchPrograms(); //  프로그램 목록을 가져오는 함수
+    fetchProgramIds(); //  프로그램의 제목과 ID 목록을 가져오는 함수
+    fetchCategories();
+
+    const CategoryCheckbox = document.querySelector(".categoryAll");
+    CategoryCheckbox.checked = true;
+    const programCheckbox = document.querySelector(".programidAll");
+    programCheckbox.checked = true;
+    const statusCheckbox = document.querySelector(".statusCheckboxAll");
+    statusCheckbox.checked = true;
 });
 
 //============= Data Functions =======================
-//  서버에서 프로그터를 가져오는 비동기 함수
-const fetchPrograms = async (cIds, pIds, statuses, pageNum) => {
+const fetchCategories = async () => {
+    const response = await axios.get("http://localhost:8080/api/v1/categories");
+    categories.value = response.data;
+};
+
+//  서버에서 프로그램 id와 title을 가져와서 programTitles에 저장
+const fetchProgramIds = async () => {
+    const response = await axios.get(
+        "http://localhost:8080/api/v1/titles"
+        //  이 url로 서버에 get 요청 보냄
+        //  응답 결과를 response 변수에 담기
+    );
+    programTitles.value = response.data.map((p) => ({
+        id: p.id,
+        title: p.title,
+    }));
+    //response.data에서 id와 title만 추출하여 programTitles 배열 객체에 저장
+};
+
+//  서버에서 프로그램 데이터를 가져오는 비동기 함수
+const fetchPrograms = async (
+    cIds,
+    pIds,
+    statuses,
+    pageNum = currentPage.value
+) => {
     const params = {};
     //  params 객체 생성
     //  조건(cIds, pIds, statuses, pageNum)이 존재하는 경우에만 해당 값을 params에 추가
@@ -52,43 +78,83 @@ const fetchPrograms = async (cIds, pIds, statuses, pageNum) => {
     if (pageNum) {
         params.pageNum = pageNum;
     }
+    if (cardsPerPage) {
+        params.cardsPerPage = cardsPerPage;
+    }
+
     const response = await axios.get(
         //  axios.get : 비동기적으로 서버의 API로 GET 요청 보냄
-        "http://localhost:8080/api/v1/host/programs", {
-        params: params
-        //  이 URL에 params 객체를 함께 전송하여 필터링된 결과를
-        //  response 변수에 받기
-    }
+        "http://localhost:8080/api/v1/host/programs",
+        {
+            params: params,
+            //  이 URL에 params 객체를 함께 전송하여 필터링된 결과를
+            //  response 변수에 받기
+        }
     );
 
     //  서버로 부터 받은 응답 response
-    programs.value = response.data.programs;  // response에서 프로그램 목록을 추출해서 저장
-    totalRowCount.value = response.data.totalRowCount;  //  response에서 총 프로그램수 추출해서 저장
-    totalPageCount.value = response.data.totalPageCount;  //  response에서 총 페이지 갯수 추출해서 저장
+    programs.value = response.data.programs; // response에서 프로그램 목록을 추출해서 저장
+    totalRowCount.value = response.data.totalRowCount; //  response에서 총 프로그램수 추출해서 저장
+    totalPageCount.value = Math.ceil(totalRowCount.value / cardsPerPage); //response.data.totalPageCount; //  response에서 총 페이지 갯수 추출해서 저장
 };
 
-//  서버에서 프로그램 id와 title을 가져와서 programTitles에 저장
-const fetchProgramIds = async () => {
-    const response = await axios.get(
-        "http://localhost:8080/api/v1/host/programs/titles"
-        //  이 url로 서버에 get 요청 보냄
-        //  응답 결과를 response 변수에 담기
-    );
-    programTitles.value = response.data.map(p => ({ id: p.id, title: p.title }));
-    //response.data에서 id와 title만 추출하여 programTitles 배열 객체에 저장
+const selectCategoryAll = async () => {
+    selectedCategories.value = [];
+    const checkboxes = document.querySelectorAll(".categoryIds");
+    checkboxes.forEach((checkbox) => {
+        checkbox.checked = false;
+    });
+
+    try {
+        await fetchPrograms(
+            null,
+            selectedProgramIds.value.join(","),
+            selectedStatus.value.join(","),
+            page
+        );
+    } catch (error) {
+        console.error("Error fetching all categories:", error);
+    }
+};
+
+const selectCategory = async () => {
+    const allCheckbox = document.querySelector(".categoryAll");
+    if (allCheckbox) {
+        allCheckbox.checked = false;
+    }
+
+    if (selectedCategories.value.length > 0) {
+        try {
+            await fetchPrograms(
+                selectedCategories.value.join(","),
+                selectedProgramIds.value.join(","),
+                selectedStatus.value.join(","),
+                null
+            );
+        } catch (error) {
+            console.error("Error fetching selected categories:", error);
+        }
+    } else {
+        console.log("No categories selected.");
+    }
 };
 
 //  선택된 모든 체크박스를 초기화 (All 선택시)
 const selectProgramAll = async () => {
-    selectedPrograms.value = [];
+    selectedProgramIds.value = [];
     // 프로그램 필터에서 선택된 프로그램 id들을 담은 selectedPrograms 배열 객체를 비움
-    const checkboxes = document.querySelectorAll('.programids');
+    const checkboxes = document.querySelectorAll(".programids");
     checkboxes.forEach((checkbox) => {
         checkbox.checked = false;
     });
     //  .programids 클래스를 가진 모든 체크박스를 찾아서 선택 해제
     try {
-        await fetchPrograms(null, null, null, null);
+        await fetchPrograms(
+            selectedCategories.value.join(","),
+            null,
+            selectedStatus.value.join(","),
+            null
+        );
         //  fetchPrograms를 호출하여 모든 프로그램을 서버에서 다시 가져오기
         //  파라미터를 모두 null로 전달하여 필터 없이 전체 목록 가져오기
     } catch (error) {
@@ -98,20 +164,22 @@ const selectProgramAll = async () => {
 
 //  선택된 프로그램들만 서버에서 가져와 목록을 업데이트하는 함수
 const selectProgram = async () => {
-    const checkboxes = document.querySelectorAll('.programidAll');
-    checkboxes.forEach((checkbox) => {
-        checkbox.checked = false;
-    });
+    const allCheckbox = document.querySelector(".programidAll");
+    if (allCheckbox) {
+        allCheckbox.checked = false;
+    }
     //  .programidAll 클래스를 가진 모든 체크박스를 찾아 선택을 해제
 
-    // 선택된 체크박스의 id를 배열로 담기
-    const selectedIds = selectedPrograms.value;
-
     //  선택된 체크박스의 id가 존재하는 경우(프로그램 필터에 선택된 체크박스가 있는 경우)
-    if (selectedIds.length > 0) {
+    if (selectedProgramIds.value.length > 0) {
         try {
             // 선택된 id들을 ','로 연결해서 쿼리 파라미터로 전송 (pg=1,2,3)
-            await fetchPrograms(null, selectedIds.join(','), null, null);
+            await fetchPrograms(
+                selectedCategories.value.join(","),
+                selectedProgramIds.value.join(","),
+                selectedStatus.value.join(","),
+                null
+            );
         } catch (error) {
             console.error("Error fetching selected programs:", error);
         }
@@ -119,24 +187,126 @@ const selectProgram = async () => {
         console.log("No programs selected.");
     }
 };
+
+const selectStatusAll = async () => {
+    selectedStatus.value = [];
+    const checkboxes = document.querySelectorAll(".statusCheckbox");
+    checkboxes.forEach((checkbox) => {
+        // 상태 조건 필터링 모두를 unCheck 한다.
+        checkbox.checked = false;
+    });
+
+    try {
+        await fetchPrograms(
+            selectedCategories.value.join(","),
+            selectedProgramIds.value.join(","),
+            null,
+            null
+        );
+        //  fetchPrograms를 호출하여 모든 프로그램을 서버에서 다시 가져오기
+        //  파라미터를 모두 null로 전달하여 필터 없이 전체 목록 가져오기
+    } catch (error) {
+        console.error("Error fetching all programs:", error);
+    }
+};
+
+const selectStatus = async () => {
+    const checkboxes = document.querySelector(".statusCheckboxAll");
+    if (checkboxes) {
+        checkboxes.checked = false;
+    }
+    console.log(`Selected status: ${selectedStatus.value}`);
+    try {
+        await fetchPrograms(
+            selectedCategories.value.join(","),
+            selectedProgramIds.value.join(","),
+            selectedStatus.value.join(","),
+            null
+        );
+        //  fetchPrograms를 호출하여 모든 프로그램을 서버에서 다시 가져오기
+        //  파라미터를 모두 null로 전달하여 필터 없이 전체 목록 가져오기
+    } catch (error) {
+        console.error("Error fetching all programs:", error);
+    }
+};
+
+const goToPage = async (page) => {
+    if (page >= 1 && page <= totalPageCount.value) {
+        currentPage.value = page;
+        await fetchPrograms(
+            selectedCategories.value.join(","),
+            selectedProgramIds.value.join(","),
+            selectedStatus.value.join(","),
+            page
+        );
+    }
+};
+
+
+const visiblePages = computed(() => {
+    const pages = [];
+    let startPage;
+    let endPage;
+
+    if (currentPage.value <= 3) {
+        // 1, 2, 또는 3 페이지일 경우 항상 1부터 5까지 표시
+        startPage = 1;
+        endPage = Math.min(totalPageCount.value, 5);
+    } else if (currentPage.value > totalPageCount.value - 3) {
+        // 마지막 3개 페이지에 가까울 때는 끝에서 5개 페이지 표시
+        startPage = Math.max(1, totalPageCount.value - 4);
+        endPage = totalPageCount.value;
+    } else {
+        // 그 외의 경우 현재 페이지를 중심으로 앞뒤로 2페이지씩 표시
+        startPage = currentPage.value - 2;
+        endPage = currentPage.value + 2;
+    }
+
+    for (let page = startPage; page <= endPage; page++) {
+        pages.push(page);
+    }
+    return pages;
+});
+
+
+// 모달 열기
+const openMore = () => {
+    moreIsOpen.value = true;
+};
+
+// 모달 닫기
+const closeMore = () => {
+    moreIsOpen.value = false;
+};
+
+// 필터 초기화
+const filterInit = () => {
+    selectCategoryAll();
+    selectProgramAll();
+    selectStatusAll();
+    const CategoryCheckbox = document.querySelector(".categoryAll");
+    CategoryCheckbox.checked = true;
+    const programCheckbox = document.querySelector(".programidAll");
+    programCheckbox.checked = true;
+    const statusCheckbox = document.querySelector(".statusCheckboxAll");
+    statusCheckbox.checked = true;
+}
 </script>
 
 <template>
     <main>
         <section class="n-layout-mj">
-            <!--=== heading ==========================================-->
-            <!--    프로그램 관리           +프로그램 등록-->
+            <!--=== 헤더 ==========================================-->
             <header class="n-title">
                 <h1 class="">프로그램 관리</h1>
                 <div>
-                    <a href="" class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록</a>
+                    <nuxt-link to="/host/programs/new" class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록</nuxt-link>
                 </div>
             </header>
 
             <section class="d:flex">
                 <section class="layout-list">
-                    <!--=== 필터 .filter ==========================================-->
-                    <!--프로그램, 카테고리, 프로그램 상태 필터-->
+                    <!--=== 필터 ==========================================-->
                     <section class="n-filter bg-color:base-1 padding-x:6">
                         <h1 class="d:none">필터</h1>
 
@@ -166,36 +336,35 @@ const selectProgram = async () => {
                         </div>
                     </section>
 
-                    <!--=== 목록 ==========================================-->
-                    <section>
-                        <!--=== 정렬 .list-header ==========================================-->
+                    <!--=== 프로그램 카드 목록 + 정렬 ==========================================-->
+                    <section class="n-layout-mj-cards">
+                        <!--정렬-->
                         <header class="list-header bg-color:base-1">
                             <h1 class="d:none">프로그램 목록</h1>
                             <div>
                                 <span>{{ totalRowCount }} Result</span>
-                                <!--            <button type="button" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">-->
-                                <!--                정렬-->
-                                <!--            </button>-->
                                 <a href="" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">
                                     정렬
                                 </a>
                             </div>
                         </header>
 
-                        <!--프로그램 카드 목록. (작성 중) (작성 완료) (모집 중)-->
+                        <!--프로그램 카드 목록 (작성 중) (작성 완료) (모집 중)-->
                         <ul class="n-card-container bg-color:base-1 padding:7">
-                            <!-- =================================== 작성 중 예약 카드 1개 =================================== -->
-                            <li class="n-card bg-color:base-1 padding:6" v-for="p in programs">
+                            <li v-for="p in programs" :key="p.id" class="n-card bg-color:base-1 padding:6">
                                 <h2 class="d:none">프로그램 카드</h2>
 
                                 <div class="card-header">
                                     <div class="left">
-                                        <span class="n-panel-tag not-submitted">{{
-                                            p.status
-                                        }}</span>
+                                        <span v-if="p.status === 'In Progress'"
+                                            class="n-panel-tag not-submitted">작성중</span>
+                                        <span v-else-if="p.status === 'Published'"
+                                            class="n-panel-tag not-submitted">모집중</span>
+                                        <span v-else-if="p.status === 'Unpublished'"
+                                            class="n-panel-tag not-submitted">작성완료</span>
                                     </div>
                                     <div class="right">
-                                        <a href=""
+                                        <a @click.prevent="openMore()" href=""
                                             class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
                                     </div>
                                 </div>
@@ -218,12 +387,19 @@ const selectProgram = async () => {
                                                 <div class="card-info gap:1">
                                                     <span class="category" v-for="(c, index) in p.categoryNames"
                                                         :key="index">
-                                                        {{ c }}<span v-if="index < p.categoryNames.length - 1"> ·</span>
+                                                        {{ c
+                                                        }}<span v-if="index < p.categoryNames.length - 1">·</span>
                                                     </span>
                                                 </div>
                                             </div>
+
                                             <div class="card-footer-responsive">
-                                                <a href="aa" class="n-btn create">작성하기</a>
+                                                <a v-if="p.status === 'In Progress'" href=""
+                                                    class="n-btn create">작성하기</a>
+                                                <a v-else-if="p.status === 'Published'" href="" class="n-btn manage">예약
+                                                    관리</a>
+                                                <a v-else-if="p.status === 'Unpublished'" href=""
+                                                    class="n-btn open">개설하기</a>
                                             </div>
                                         </div>
                                     </div>
@@ -234,21 +410,62 @@ const selectProgram = async () => {
                                 </div>
                             </li>
                         </ul>
+
+                        <!-- 페이지네이션 버튼 -->
+                        <div class="pagination">
+                            <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
+                                〈
+                            </button>
+
+                            <button v-for="page in visiblePages" :key="page" @click="goToPage(page)"
+                                :class="{ active: page === currentPage }">
+                                {{ page }}
+                            </button>
+
+                            <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPageCount">
+                                〉
+                            </button>
+                        </div>
                     </section>
                 </section>
+
+                <!-- 모달 창 -->
+                <div v-if="moreIsOpen" class="more-overlay" @click="closeMore">
+                    <div class="more" @click.stop>
+                        <div class="more-close"><button @click="closeMore">Ⅹ</button></div>
+                        <a href="#" class="n-btn">수정하기</a>
+                    </div>
+                </div>
+
                 <!--=== 필터 반응형 ==========================================-->
                 <aside class="n-filter-aside">
                     <header class="n-title">
                         <h1 class="">Filter</h1>
                         <div>
-                            <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)">
+                            <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)" @click="filterInit">
                                 초기화
                             </button>
                         </div>
                     </header>
                     <div class="filters">
                         <!-- 카테고리 필터 -->
-                        <Category />
+                        <details open class="filter">
+                            <summary class="collapse">
+                                <span class="title">카테고리</span>
+                                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+                            </summary>
+
+                            <form action="" class="form">
+                                <div class="modal-checkbox">
+                                    <label><input class="categoryAll" type="checkbox"
+                                            @change="selectCategoryAll" />All</label>
+                                    <label v-for="c in categories" :key="c.id">
+                                        <input class="categoryIds" type="checkbox" @change="selectCategory"
+                                            :value="c.id" v-model="selectedCategories" />{{ c.name }}
+                                    </label>
+                                </div>
+                            </form>
+                        </details>
                         <!-- 프로그램 필터 -->
                         <details open class="filter">
                             <summary class="collapse">
@@ -262,7 +479,7 @@ const selectProgram = async () => {
                                             @change="selectProgramAll" />All</label>
                                     <label v-for="p in programTitles" :key="p.id">
                                         <input class="programids" type="checkbox" @change="selectProgram" :value="p.id"
-                                            v-model="selectedPrograms">{{ p.title }}
+                                            v-model="selectedProgramIds" />{{ p.title }}
                                     </label>
                                 </div>
                             </form>
@@ -277,10 +494,14 @@ const selectProgram = async () => {
 
                             <form action="" class="form">
                                 <div class="modal-checkbox">
-                                    <label><input type="checkbox" />전체</label>
-                                    <label><input type="checkbox" />작성중</label>
-                                    <label><input type="checkbox" />작성완료</label>
-                                    <label><input type="checkbox" />모집중</label>
+                                    <label><input class="statusCheckboxAll" type="checkbox"
+                                            @change="selectStatusAll" />전체</label>
+                                    <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
+                                            :value="'In Progress'" v-model="selectedStatus" />작성중</label>
+                                    <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
+                                            :value="'Unpublished'" v-model="selectedStatus" />작성완료</label>
+                                    <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
+                                            :value="'Published'" v-model="selectedStatus" />모집중</label>
                                 </div>
                             </form>
                         </details>
@@ -290,10 +511,12 @@ const selectProgram = async () => {
         </section>
     </main>
 </template>
+
 <style scoped>
 .n-card {
     /* 해당영역 클릭 시 링크로 이동 */
     position: relative;
+    box-shadow: 5px 5px 10px 0.5px var(--color-base-3);
 
     .n-link-box {
         display: block;
@@ -309,7 +532,7 @@ const selectProgram = async () => {
 
     .card-header {
         .n-panel-tag {
-            --tag-border-radius: 14px;
+            --tag-border-radius: 10px;
             --tag-padding: 6px 8px;
             font-weight: 400;
             /* regular */
@@ -398,10 +621,10 @@ const selectProgram = async () => {
             line-height: 1em;
             padding: var(--btn-padding);
             position: relative;
-            transition: border-color .3s, background-color .3s;
+            transition: border-color 0.3s, background-color 0.3s;
             user-select: none;
             white-space: nowrap;
-            width: auto
+            width: auto;
         }
 
         .n-btn.create {
@@ -423,9 +646,34 @@ const selectProgram = async () => {
     }
 }
 
+/* ============== 페이지 네이션 ================ */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.pagination button {
+    padding: 4px 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--color-base-3);
+    cursor: pointer;
+}
+
+.pagination button.active {
+    color: var(--color-base-1);
+    background-color: var(--color-sub-1);
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
 
 /*===================== 반응형 구현 ====================*/
-
 
 /*필터 어사이드*/
 .filters {
@@ -459,7 +707,6 @@ const selectProgram = async () => {
         .form {
             margin-bottom: 24px;
         }
-
 
         /*카테고리, 프로그램, 프로그램 상태 필터*/
         .modal-checkbox {
@@ -612,10 +859,10 @@ const selectProgram = async () => {
             line-height: 1em;
             padding: var(--btn-padding);
             position: relative;
-            transition: border-color .3s, background-color .3s;
+            transition: border-color 0.3s, background-color 0.3s;
             user-select: none;
             white-space: nowrap;
-            width: auto
+            width: auto;
         }
 
         .n-btn.create {
@@ -667,5 +914,41 @@ const selectProgram = async () => {
         flex-shrink: 1;
         flex-grow: 1;
     }
+}
+
+.more-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 7;
+}
+
+.more {
+    .more-close{
+        display: flex;
+        justify-content: right;
+    }
+
+    .n-btn {
+        margin: 10px;
+        --btn-border-color: var(--color-base-7);
+        color: var(--color-base-7);
+    }
+
+    display: flex;
+    flex-direction: column;
+    background: var(--color-base-1);
+    padding: 4px 10px 10px 10px ;
+    gap: 16px;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 </style>
