@@ -23,7 +23,6 @@ const selectedMonth = ref(initialMonth);
 // 선택된 날짜들
 const selectedDates = ref([]);
 
-
 // 이전 달의 마지막 날
 const prevMonthLastDate = computed(() => new Date(selectedYear.value, selectedMonth.value, 0));
 // 이번 달의 마지막 날
@@ -94,12 +93,6 @@ watch(() => publishedProgramQuery.value,
 /*=== fetch ==========================================================================================================*/
 const config = useRuntimeConfig();
 
-// 캘린더에 개설불가능한 날짜 표시를 위한 개설프로그램 목록 fetch
-const {data: publishedData, refresh: publishedRefresh} = useFetch(`host/published-programs`, {
-  baseURL: config.public.apiBase,
-  params: computed(() => publishedProgramQuery.value)
-});
-
 /*
 [
   {
@@ -115,6 +108,23 @@ const datesWithScedules = ref([]);
 
 // Published Programs in date range
 const publishedPrograms = ref([]);
+
+// 캘린더에 개설불가능한 날짜 표시를 위한 개설프로그램 목록 fetch
+const {data: publishedData, refresh: publishedRefresh} = useFetch(`host/published-programs`, {
+  baseURL: config.public.apiBase,
+  params: computed(() => publishedProgramQuery.value)
+});
+
+watch(() => publishedData.value,
+    (newPublishedData) => {
+      console.log('publishedData watch진입')
+      if (newPublishedData) {
+        console.log('   ->  new publishedData: ', newPublishedData.publishedPrograms);
+        publishedPrograms.value = newPublishedData.publishedPrograms;
+        console.log('   ->  publishedData.value fetched. publishedPrograms: ', publishedPrograms.value);
+      }
+    }
+);
 
 watch(() => publishedPrograms.value,
     (newPrograms) => {
@@ -139,19 +149,6 @@ watch(() => publishedPrograms.value,
       console.log('   ->  datesWithSchedules updated', datesWithScedules.value);
     }
 );
-
-watch(() => publishedData.value,
-    (newPublishedData) => {
-      console.log('publishedData watch진입')
-      if (newPublishedData) {
-        console.log('   ->  new publishedData: ', newPublishedData.publishedPrograms);
-        publishedPrograms.value = newPublishedData.publishedPrograms;
-        console.log('   ->  publishedData.value fetched. publishedPrograms: ', publishedPrograms.value);
-      }
-    }
-);
-
-
 
 // --- 개설가능일 계산용 -------------------------------------------------------------------------------------------------
 // today + startOffset부터 개설가능
@@ -221,15 +218,15 @@ watch(selectedDates, emitSelectionChanged);
 // watchEffect(() => console.log(selectedYear.value));
 // watchEffect(() => console.log('prev month last date', prevMonthLastDate.value));
 // watchEffect(() => console.log(selectedMonth.value + 1, thisMonthLastDate.value));
-watchEffect(() => console.log('dates: ', dates.value));
-watchEffect(() => console.log('selectedDates: ', selectedDates.value));
+// watchEffect(() => console.log('dates: ', dates.value));
+// watchEffect(() => console.log('selectedDates: ', selectedDates.value));
 watchEffect(() => console.log('published program query: ', publishedProgramQuery.value));
 </script>
 
 <template>
   <section class="date-picker">
     <header class="title">
-      <title class="font-size:8">진행일 선택</title>
+      <h1 class="font-size:8">진행일 선택</h1>
       <button
           class="margin-left:auto n-btn n-btn:hover n-btn-bd:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-deco color:sub-1">
         초기화
@@ -287,7 +284,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
             'month-next': dateSchedule.date.getMonth() === (selectedMonth+1>11 ? 0 : selectedMonth+1),
             'today': dateSchedule.date.toDateString() === new Date().toDateString(),
             'available': isDateInRange(dateSchedule.date),
-            'selected': selectedDates.includes(dateSchedule.date),
+            'selected': selectedDates.find(date => date.getTime() === dateSchedule.date.getTime()),
             'occupied': dateSchedule.schedules.length !== 0
           }"
         >
@@ -398,7 +395,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
         height: 6vh;
         /* background-color: var(--color-base-1); */
         border-radius: 4px;
-        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        transition: background-color 0.1s ease, border-color 0.1s ease, color 0.1s ease;
 
         > label {
           flex-grow: 1;

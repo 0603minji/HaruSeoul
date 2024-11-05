@@ -59,6 +59,8 @@ watch(() => programData.value,
 // Handle selection change
 const updateSelectedProgram = (selectedOption) => {
   selectedProgram.value = selectedOption;
+  console.log('PublishProgramModal: updateSelectedProgram called');
+  console.log('   ->  selectedProgram: ', selectedProgram.value);
 };
 
 const updateSelectedDates = (selectedOptions) => {
