@@ -19,6 +19,11 @@ const programCreateDto = reactive({
   endTimeHour: "00",
   endTimeMinute: "00",
   price: 0,
+  inclusion:'',
+  exclusion:'',
+  packingList:'',
+  caution:'',
+  requirement:''
 });
 
 //================Fetch Functions==============
@@ -150,9 +155,6 @@ const priceValidation = () => {
 }
 
 const checkCourseValidation = () => {
-  console.log("routeComponentCount: " + routeComponentCount.value);
-  console.log(programCreateDto.routes);
-
   for (let index = 0; index < routeComponentCount.value; index++) {
     // title
     let routeTitle = programCreateDto.routes[index].title;
@@ -175,8 +177,44 @@ const checkCourseValidation = () => {
       return;
     }
   }
-
   window.location.hash = "#inclusion";
+};
+
+const checkInclusionValidation = () => {
+  if(inclusionValidation() || exclusionValidation()){
+    alert("입력이 올바르지 않습니다.");
+    return true;
+  }
+  window.location.hash = "#caution"
+}
+
+const inclusionValidation = () => {
+  return (programCreateDto.inclusion.length > 1000); 
+}
+
+const exclusionValidation = () => {
+  return (programCreateDto.exclusion.length > 1000);
+}
+
+
+const checkCautionValidation = () => {
+  if(packingListValidation() || cautionValidation() || requirementValidation()){
+    alert("입력이 올바르지 않습니다.");
+    return true;
+  }
+  window.location.hash = "#image"
+}
+
+const packingListValidation = () => {
+  return (programCreateDto.packingList.length > 1000); 
+}
+
+const cautionValidation = () => {
+  return (programCreateDto.caution.length > 1000); 
+}
+
+const requirementValidation = () => {
+  return (programCreateDto.requirement.length > 1000); 
 }
 </script>
 
@@ -425,11 +463,11 @@ const checkCourseValidation = () => {
           <p class="fw:100 p-bottom:2">List all the features that are included in the price so customers
             understand the value for money of
             your activity. Start a new line for each one.</p>
+            <p v-show="inclusionValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
           <label for="included" class="d:none">포함 항목을 작성하세요</label>
           <textarea id="included" name="included" rows="4" cols="50" class="input-textarea"
             placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.inclusion"></textarea>
-
-          <p class="text-align:end p-bottom:4">0 / 1000</p>
+          <p class="text-align:end p-bottom:4">{{ programCreateDto.inclusion.length }}/ 1000</p>
 
         </div>
 
@@ -439,16 +477,17 @@ const checkCourseValidation = () => {
             see
             that isn't included in the
             price. This allows customers to appropriately set their expectations.</p>
+            <p v-show="exclusionValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
           <label for="not-included" class="d:none">미포함 항목을 작성하세요</label>
           <textarea id="not-included" name="not-included" rows="4" cols="50" class="input-textarea"
             placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.exclusion"></textarea>
-          <p class="text-align:end p-bottom:4">0 / 1000</p>
+          <p class="text-align:end p-bottom:4">{{ programCreateDto.exclusion.length }}/ 1000</p>
         </div>
 
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#course">이전</a></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#caution">다음</a></div>
+          <div><a class="n-btn n-btn-bg-color:main" @click="checkInclusionValidation">다음</a></div>
         </div>
       </section>
 
@@ -459,34 +498,37 @@ const checkCourseValidation = () => {
           <div class="font-size:9 fw:bold p-bottom:4">준비물 <span class="font-size:6 fw:1">(선택사항)</span></div>
           <p class="fw:100 p-bottom:2">Such as a towel for a boat tour, or comfortable shoes for a hike.
             This information appears on the activity details page & voucher.</p>
-          <label for="preparation" class="d:none">준비 항목을 작성하세요</label>
+            <p v-show="packingListValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
+            <label for="preparation" class="d:none">준비 항목을 작성하세요</label>
           <textarea id="preparation" name="preparation" rows="4" cols="50" class="input-textarea"
             placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.packingList"></textarea>
-          <p class="text-align:end p-bottom:4">0 / 1000</p>
+          <p class="text-align:end p-bottom:4">{{ programCreateDto.packingList.length }}/ 1000</p>
         </div>
         <div class="form-group">
           <div class="font-size:9 fw:bold p-bottom:4">주의사항 <span class="font-size:6 fw:1">(선택사항)</span></div>
           <p class="fw:100 p-bottom:2">Add any remaining information that customers must know before they
             book.
             This information appears on the activity details page.</p>
-          <label for="notice" class="d:none">주의사항을 작성하세요</label>
+            <p v-show="cautionValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
+            <label for="notice" class="d:none">주의사항을 작성하세요</label>
           <textarea id="notice" name="notice" rows="4" class="input-textarea" cols="50"
             placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.caution"></textarea>
-          <p class="text-align:end p-bottom:4">0 / 1000</p>
+          <p class="text-align:end p-bottom:4">{{ programCreateDto.caution.length }} / 1000</p>
         </div>
         <div class="form-group">
           <div class="font-size:9 fw:bold p-bottom:4">요청사항 <span class="font-size:6 fw:1">(선택사항)</span></div>
           <p class="fw:100 p-bottom:2">
             Pls enter any requests the guest may have (ex : vegetarian meal requests can be accommodated).</p>
-          <label for="request" class="d:none">요청 사항을 작성하세요</label>
+            <p v-show="requirementValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
+            <label for="request" class="d:none">요청 사항을 작성하세요</label>
           <textarea id="request" name="request" class="input-textarea" rows="4" cols="50"
             placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.requirement"></textarea>
-          <p class="text-align:end p-bottom:4">0 / 1000</p>
+          <p class="text-align:end p-bottom:4">{{ programCreateDto.requirement.length }}/ 1000</p>
         </div>
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">이전</a></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#image">다음</a></div>
+          <div><a class="n-btn n-btn-bg-color:main" @click="checkCautionValidation">다음</a></div>
         </div>
       </section>
 
