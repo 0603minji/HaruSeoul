@@ -1,4 +1,6 @@
 <script setup>
+import { ref } from 'vue';
+
 // emit
 const emit = defineEmits(['selectionChanged'])
 
@@ -10,14 +12,32 @@ const props = defineProps({
   },
   initialOption: {
     type: Object,
+    default: () => {}
   }
 });
-
+console.log('searchableSelect rendered');
+console.log('searchableSelect props: ', props.options, props.initialOption);
 // State
 const isDropdownVisible = ref(false);
 const searchTerm = ref('');
 const selectedOption = ref(props.initialOption);
 const filteredOptions = ref([...props.options]);
+
+watch(
+    () => props.initialOption,
+    (newInitialOption) => {
+      selectedOption.value = newInitialOption;
+    }
+);
+
+watch(
+    () => props.options,
+    (newOptions) => {
+      filteredOptions.value = [...newOptions];
+      filterOptions(); // 검색어가 존재할 경우 새 옵션을 필터링
+    },
+    { deep: true }
+);
 
 // Methods
 const toggleDropdown = () => {
@@ -25,10 +45,13 @@ const toggleDropdown = () => {
 };
 
 const filterOptions = () => {
+  if (props.options.length===0)
+    return;
   const searchLower = searchTerm.value.toLowerCase();
   filteredOptions.value = props.options.filter(option =>
-      option.name.toLowerCase().includes(searchLower)
+      option.title.toLowerCase().includes(searchLower)
   );
+  console.log("filterOptions called")
 };
 
 const clearSearch = () => {
@@ -41,25 +64,12 @@ const onOptionChange = (option) => {
   emit('selectionChanged', option); // Emit the selected option
 };
 
-// Watcher to reset the filtered options when options prop changes
-watch(
-    () => props.options,
-    (newOptions) => {
-      filteredOptions.value = newOptions;
-    }
-);
-
-// watch(
-//     () => props.selectedOptions,
-//     (newSelectedOptions, oldSelectedOptions) => {
-//       selectedOptions.value = newSelectedOptions;
-//     },
-//     {deep: true}
-// );
-
-// watchEffect(() => {
-//   console.log(props.selectedOptions);
-// });
+// input에 @input이벤트가 발생할 때마다 filterOptions실행
+// (이렇게 해줘야 한글과 같은 조합형문자의 조합이 완료되지 않은 상태에서 바로바로 필터링 가능)
+const onInput = (event) => {
+    searchTerm.value = event.target.value; // 직접 값을 할당
+    filterOptions();
+};
 </script>
 
 <template>
@@ -72,7 +82,7 @@ watch(
       <!-- Select box that toggles the dropdown -->
       <div class="select-box">
         <div @click="toggleDropdown" class="status" v-if="!isDropdownVisible">
-          <p class="margin-right:auto" v-if="selectedOption!=null">{{ selectedOption.name }}</p>
+          <p class="margin-right:auto" v-if="selectedOption!=null">{{ selectedOption.title }}</p>
           <p class="margin-right:auto" v-if="selectedOption==null">프로그램을 선택하세요.</p>
           <span class="n-icon n-icon:arrow_down margin-left:auto">드롭다운 보기</span>
         </div>
@@ -83,7 +93,7 @@ watch(
               type="text"
               v-model="searchTerm"
               placeholder="Search..."
-              @input="filterOptions"
+              @input="onInput"
               @keydown.enter.prevent
           />
           <span v-if="searchTerm!==''" @click="clearSearch"
@@ -95,7 +105,8 @@ watch(
       <!-- Dropdown list -->
       <div v-if="isDropdownVisible" class="dropdown">
         <ul>
-          <li v-if="filteredOptions.length===0" class="padding:2">검색결과가 없습니다.</li>
+          <li v-if="searchTerm && filteredOptions.length===0" class="padding:2">검색결과가 없습니다.</li>
+          <li v-if="!searchTerm && filteredOptions.length===0" class="padding:2">선택 가능한 프로그램이 존재하지 않습니다.</li>
 
           <!--not selected & filtered-->
           <li class="filtered-option" v-for="option in filteredOptions" :key="option.id">
@@ -108,7 +119,7 @@ watch(
                   :checked="option.id === selectedOption.id"
                   @change="() => {onOptionChange(option); toggleDropdown();}"
               />
-              {{ option.name }}
+              {{ option.title }}
             </label>
           </li>
         </ul>
@@ -176,6 +187,7 @@ watch(
       left: 0;
       right: 0;
       border: 1px solid #ccc;
+      border-radius: 0 0 6px 6px;
       background-color: #fff;
       max-height: 350px;
       overflow-y: auto;

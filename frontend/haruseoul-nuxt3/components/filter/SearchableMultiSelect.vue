@@ -212,6 +212,7 @@ watch(
       left: 0;
       right: 0;
       border: 1px solid #ccc;
+      border-radius: 0 0 6px 6px;
       background-color: #fff;
       max-height: 400px;
       overflow-y: auto;
