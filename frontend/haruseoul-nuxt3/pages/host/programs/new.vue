@@ -9,9 +9,16 @@ const programCreateDto = reactive({
   categoryIds: [],
   routes: [], // route 객체를 여러개 가진 List
   images: [],
-  groupSizeMin: 1,
-  groupSizeMax: 1
-
+  groupSizeMin: 2,
+  groupSizeMax: 2,
+  title: '',
+  detail: '',
+  language: "English",
+  startTimeHour: "00",
+  startTimeMinute: "00",
+  endTimeHour: "00",
+  endTimeMinute: "00",
+  price: 0,
 });
 
 //================Fetch Functions==============
@@ -60,20 +67,7 @@ const sendCreateRequest = async (regMemberId, status) => {
     });
     console.log("Program created successfully:", response.data);
 
-    // const formData = new FormData();
-    // // programId를 application/json으로 설정하여 전송
-    // const programIdBlob = new Blob([JSON.stringify(response.data.id)], { type: 'application/json' });
-    // formData.append("programId", programIdBlob);
-    // formData.append("images", programCreateDto.images);
 
-  
-    // // 요청 전송
-    // const saveImageResponse = await axios.post("http://localhost:8080/api/v1/host/programs/images", formData, {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data'
-    //   }
-    // });
-    // console.log("Image saved successfully:", saveImageResponse.data);
 
     // 요청 성공 후 페이지 이동
     window.location.href = "/host/programs";
@@ -83,40 +77,114 @@ const sendCreateRequest = async (regMemberId, status) => {
   }
 }
 
-// // 이미지 파일 선택시 호출되는 함수
-// const handleFileChange = (event) => {
-//   const files = Array.from(event.target.files); // FileList를 배열로 변환
-
-//   // 파일 배열을 순회하며 각 파일과 인덱스 처리
-//   files.forEach((file, index) => {
-//     programCreateDto.images.push({ order: index, src: file });
-//   });
-
-//   console.log(programCreateDto.images);
-// };
-
 const minusGroupSizeMax = () => {
-  if (programCreateDto.groupSizeMax > 1) {
+  if (programCreateDto.groupSizeMax > 2) {
     programCreateDto.groupSizeMax -= 1;
   }
 };
 
 const plusGroupSizeMax = () => {
-  if (programCreateDto.groupSizeMax < 10) {
+  if (programCreateDto.groupSizeMax < 5) {
     programCreateDto.groupSizeMax += 1;
   }
 };
 
 const minusGroupSizeMin = () => {
-  if (programCreateDto.groupSizeMin > 1) {
+  if (programCreateDto.groupSizeMin > 2) {
     programCreateDto.groupSizeMin -= 1;
   }
 };
 
 const plusGroupSizeMin = () => {
-  if (programCreateDto.groupSizeMin < 10) {
+  if (programCreateDto.groupSizeMin < 5) {
     programCreateDto.groupSizeMin += 1;
   }
+};
+
+
+//======== Validation Checking Functions =============
+const checkIntroValidation = () => {
+  if (titleValidation() || detailValidation()) {
+    alert("입력이 올바르지 않습니다.");
+    return;
+  }
+  window.location.hash = '#detail';
+}
+
+const titleValidation = () => {
+  return (programCreateDto.title.length > 60)
+    || (programCreateDto.title.length > 0 && programCreateDto.title.length < 3);
+}
+
+const detailValidation = () => {
+  return (programCreateDto.detail.length > 1000) || (programCreateDto.detail.length > 0 && programCreateDto.detail.length < 10);
+}
+
+const checkDetailValidation = () => {
+  if (endTimeValidation() || groupSizeMinValidation()) {
+    alert("입력이 올바르지 않습니다.");
+    return;
+  }
+  window.location.hash = "#course";
+}
+
+const endTimeValidation = () => {
+  if (programCreateDto.endTimeHour < programCreateDto.startTimeHour) {
+    return true;
+  }
+  if ((programCreateDto.endTimeHour == programCreateDto.startTimeHour) &&
+    (programCreateDto.endTimeMinute < programCreateDto.startTimeMinute)) {
+    return true;
+  }
+  return false;
+}
+
+const groupSizeMinValidation = () => {
+  return programCreateDto.groupSizeMin > programCreateDto.groupSizeMax;
+}
+
+const priceValidation = () => {
+  if (programCreateDto.price < 0) {
+    programCreateDto.price = 0;
+  }
+}
+
+const checkCourseValidation = () => {
+  console.log("routeComponentCount: " + routeComponentCount.value);
+  console.log(programCreateDto.routes);
+
+  for (let index = 0; index < routeComponentCount.value; index++) {
+    // title
+    let routeTitle = programCreateDto.routes[index].title;
+    if ((routeTitle.length > 60) || (routeTitle.length > 0 && routeTitle.length < 3)) {
+      alert("입력이 올바르지 않습니다.");
+      return;
+    }
+
+    // address 
+    let routeAddress = programCreateDto.routes[index].address;
+    if ((routeAddress.length > 60) || (routeAddress.length > 0 && routeAddress.length < 3)) {
+      alert("입력이 올바르지 않습니다.");
+      return;
+    }
+
+    // description 
+    let routeDescription = programCreateDto.routes[index].description;
+    if ((routeDescription.length > 60) || (routeDescription.length > 0 && routeDescription.length < 3)) {
+      alert("입력이 올바르지 않습니다.");
+      return;
+    }
+  }
+
+  window.location.hash = "#inclusion";
+}
+
+// 현재 활성화된 섹션을 추적하는 상태
+const activeSection = ref('#intro');
+
+// 클릭 시 활성화된 섹션을 변경하는 함수
+const setActiveSection = (sectionId) => {
+  activeSection.value = sectionId;
 };
 </script>
 
@@ -126,13 +194,30 @@ const plusGroupSizeMin = () => {
     <nav class="n-bar-underline-create">
       <h1>목차</h1>
       <ul class="item-wrapper padding-x:6 justify-content:flex-start">
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#intro" class="">소개</a></li>
-        <li class="n-btn:hover n-btn n-btn-border:none n-btn-radius:0"><a href="#detail" class="">세부사항</a></li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#course" class="">코스</a></li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#inclusion" class="">포함사항</a>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0 " :class="{ active: activeSection === '#intro' }"
+          @click="setActiveSection('#intro')">
+          <a href="#intro" class="">소개</a>
         </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#caution" class="">추가정보</a></li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#image" class="">사진</a></li>
+        <li class="n-btn:hover n-btn n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#detail' }"
+          @click="setActiveSection('#detail')">
+          <a href="#detail" class="">세부사항</a>
+        </li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#course' }"
+          @click="setActiveSection('#course')">
+          <a href="#course" class="">코스</a>
+        </li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+          :class="{ active: activeSection === '#inclusion' }" @click="setActiveSection('#inclusion')">
+          <a href="#inclusion" class="">포함사항</a>
+        </li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#caution' }"
+          @click="setActiveSection('#caution')">
+          <a href="#caution" class="">추가정보</a>
+        </li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#image' }"
+          @click="setActiveSection('#image')">
+          <a href="#image" class="">사진</a>
+        </li>
       </ul>
     </nav>
 
@@ -143,24 +228,29 @@ const plusGroupSizeMin = () => {
         <div class="form-group">
           <div class="label-wrapper">
             <label for="title" class="form-label">제목</label>
+            <p v-show="titleValidation()" class="warning">** 3자 이상 60자 이하이어야 합니다 **</p>
           </div>
           <input class="input-text" id="title" type="text" name="title" placeholder="Enter title"
             v-model="programCreateDto.title">
           <div class="char-counter">
-            <span>0/60</span>
+            <span>{{ programCreateDto.title.length }}/60</span>
           </div>
         </div>
 
         <div class="form-group">
           <div class="label-wrapper">
             <label for="description" class="form-label">상세 설명</label>
+            <p v-show="detailValidation()" class="warning">** 10자 이상 1000자 이하이어야 합니다 **</p>
           </div>
           <textarea class="input-textarea" id="description" name="description" rows="8" cols="50" placeholder=""
             v-model="programCreateDto.detail"></textarea>
-          <p class="char-counter">0/1000</p>
+          <p class="char-counter">{{ programCreateDto.detail.length }}/1000</p>
         </div>
         <div class="form-group">
-          <div class="form-label">카테고리</div>
+          <div class="form-label">
+            카테고리
+          </div>
+          <p class="warning-category">(최대 2개까지 선택 가능합니다)</p>
           <div class="d:flex flex-wrap:wrap gap:2 bg-color:base-2 bd-radius:4 p:2 jc:space-between">
             <label v-for="c in categories" :key="c.id" class="d:flex al-items:center w:1/3">
               <!-- 
@@ -181,11 +271,10 @@ const plusGroupSizeMin = () => {
             </label>
           </div>
         </div>
-        <p class="category-note">**최대 2개까지 선택 가능합니다.</p>
 
         <div class="button-group">
           <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
-          <a class="n-btn n-btn-bg-color:main" href="#detail">다음</a>
+          <a class="n-btn n-btn-bg-color:main" @click="checkIntroValidation">다음</a>
         </div>
       </section>
 
@@ -201,7 +290,6 @@ const plusGroupSizeMin = () => {
             <option>Japanese</option>
             <option>Chinese</option>
           </select>
-
         </div>
         <div class="form-group">
           <div class="form-label">시작 시각</div>
@@ -247,6 +335,7 @@ const plusGroupSizeMin = () => {
         </div>
         <div class="form-group">
           <div class="form-label">종료 시각</div>
+          <p v-show="endTimeValidation()" class="warning">** 종료시각은 시작시각보다 이후이어야 합니다 **</p>
           <div class="time-select-wrapper">
             <select id="" name="" class="input-select" v-model="programCreateDto.endTimeHour">
               <option value="00">00</option>
@@ -286,44 +375,44 @@ const plusGroupSizeMin = () => {
             </select>
             <p class="time-unit">분</p>
           </div>
+
         </div>
-        <div class="">
-          <div class="d:flex form-group gap:6">
+        <div style="margin-bottom: 30px;">
+          <div class="d:flex form-group gap:8">
             <div class="form-label">최대 인원</div>
             <div class="counter-wrapper">
               <button class="n-btn n-btn-color:main-2" @click.prevent="minusGroupSizeMax">-</button>
-              <input type="number" name="max-count" class="counter-input no-spinner" min="1" max="10"
+              <input type="number" name="max-count" class="counter-input no-spinner" min="2" max="5"
                 v-model="programCreateDto.groupSizeMax">
               <button class="n-btn n-btn-color:main-2" @click.prevent="plusGroupSizeMax">+</button>
               <p class="people-unit">명</p>
             </div>
           </div>
 
-          <div class="d:flex form-group gap:6">
+          <div class="d:flex gap:8">
             <div class="form-label">최소 인원</div>
             <div class="counter-wrapper">
               <button class="n-btn n-btn-color:main-2" @click.prevent="minusGroupSizeMin">-</button>
-              <input type="number" name="min-count" class="counter-input no-spinner" min="1" max="10"
+              <input type="number" name="min-count" class="counter-input no-spinner" min="2" max="5"
                 v-model="programCreateDto.groupSizeMin">
               <button class="n-btn n-btn-color:main-2" @click.prevent="plusGroupSizeMin">+</button>
               <p class="people-unit">명</p>
             </div>
           </div>
-
-          <p class="warning p-bottom:4">* 호스트 본인을 제외한 인원 수를 입력하세요.</p>
-
+          <p v-show="groupSizeMinValidation()" class="warning">** 최소인원은 최대인원보다 작아야합니다 **</p>
         </div>
 
         <div class="form-group d:flex">
           <div class="form-label">총 비용</div>
-          <input type="number" name="cost" class="input-text" min="0" max="1000000" v-model="programCreateDto.price">
+          <input type="number" name="cost" class="input-text no-spinner" min="0" max="1000000"
+            v-model="programCreateDto.price" @change="priceValidation">
           <p class="currency-unit">원</p>
         </div>
 
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#intro">이전</a></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#course">다음</a></div>
+          <div><a class="n-btn n-btn-bg-color:main" @click="checkDetailValidation">다음</a></div>
         </div>
 
       </section>
@@ -348,7 +437,7 @@ const plusGroupSizeMin = () => {
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#detail">이전</a></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">다음</a></div>
+          <div><a class="n-btn n-btn-bg-color:main" @click="checkCourseValidation">다음</a></div>
         </div>
         <!-- =================== route 종료 ======================== -->
       </section>
@@ -538,6 +627,19 @@ const plusGroupSizeMin = () => {
 
 </template>
 <style scoped>
+/* 경고 문구 스타일 */
+.warning {
+  color: red;
+  font-size: 0.8rem;
+}
+
+.warning-category {
+  display: flex;
+  justify-content: right;
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+}
+
 .intro,
 .detail,
 .course,
@@ -640,11 +742,14 @@ const plusGroupSizeMin = () => {
   /* 폼 그룹 스타일 */
 
   .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
 
   .label-wrapper {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .form-label {
@@ -707,7 +812,7 @@ const plusGroupSizeMin = () => {
   /* 폼 그룹 스타일 */
 
   .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
 
   .form-label {
@@ -779,13 +884,6 @@ const plusGroupSizeMin = () => {
     font-size: 1rem;
     color: #333;
     padding: 0 10px;
-  }
-
-  /* 경고 문구 스타일 */
-
-  .warning {
-    color: red;
-    font-size: 0.9rem;
   }
 
   /* 비용 입력 스타일 */
@@ -1352,12 +1450,12 @@ textarea {
 /* Chrome, Safari, Edge, Opera */
 input[type="number"].no-spinner::-webkit-outer-spin-button,
 input[type="number"].no-spinner::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Firefox */
 input[type="number"].no-spinner {
-    -moz-appearance: textfield;
+  -moz-appearance: textfield;
 }
 </style>
