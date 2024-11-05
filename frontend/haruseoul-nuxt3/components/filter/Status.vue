@@ -87,7 +87,7 @@ const getDisplayValue = (statusId) => {
       <ul class="item-wrapper padding-y:6">
         <li>
           <a href="" class="n-btn n-btn-rv-filter n-btn:hover"
-          :class="{ active: selectedStatus === null }"
+          :class="{ active: selectedStatus === null || selectedStatus === 0 }"
              @click.prevent="(e) => { e.preventDefault(); selectStatusAll(); }"
              >전체</a>
         </li>
