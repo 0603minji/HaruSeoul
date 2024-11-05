@@ -155,6 +155,9 @@ const priceValidation = () => {
 }
 
 const checkCourseValidation = () => {
+  if (programCreateDto.routes.length === 0) {
+    window.location.hash = "#inclusion";
+  }
   for (let index = 0; index < routeComponentCount.value; index++) {
     // title
     let routeTitle = programCreateDto.routes[index].title;
