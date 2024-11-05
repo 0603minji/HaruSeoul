@@ -1,4 +1,25 @@
 <script setup>
+import {ref, watch, watchEffect} from 'vue';
+
+// emit
+const emit = defineEmits(['selectionChanged'])
+
+// Props
+const props = defineProps({
+  rangeStart: {
+    type: Date,
+    required: true,
+  },
+  rangeEnd: {
+    type: Date,
+    required: true,
+  },
+  publishedPrograms: {
+    type: Array,
+    required: true
+  }
+});
+console.log('calendar props: ', props.rangeStart, props.rangeEnd);
 // 초기 연도, 월
 const initialYear = new Date().getFullYear();
 const initialMonth = new Date().getMonth();
@@ -49,15 +70,31 @@ const dates = computed(() => {
 [
   {
     date: Date객체,
-    schedule: [programs]
+    schedules: [programs]
   },
   {
     date: Date객체,
-    schedule: [programs]
+    schedules: [programs]
   }
 ]; */
-const datesWithScedule = ref([]);
+const datesWithScedules = ref([]);
 
+watch(() => props.publishedPrograms,
+    (programs) => {
+      dates.value.map(date => {
+        const schedules = programs.filter(program => {
+          // console.log('date        : ', date.toISOString(), date.toLocaleString());
+          // console.log('program date: ', new Date(program.date+'T00:00:00+09:00').toISOString());
+          return new Date(program.date+'T00:00:00+09:00').getTime() === date.getTime();});
+        const dateWithSchedules = {
+          date: date,
+              schedules
+        }
+        // console.log(dateWithSchedules);
+        return datesWithScedules;
+      });
+    }
+);
 
 /*=== function =================================================================================================================*/
 // 연도선택 <option>태그 생성용
@@ -98,32 +135,25 @@ const toPrevMonth = () => {
 
 // 개설가능한 범위의 날짜인지?
 const isDateInRange = (date) => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const startRange = new Date(today);
-  const endRange = new Date(today);
-
-  startRange.setDate(today.getDate() + 3); // today + 3 days
-  endRange.setDate(today.getDate() + 3 + 21); // startRange + 21 days
-
-  return startRange <= date && date < endRange;
+  return props.rangeStart <= date && date < props.rangeEnd;
 };
 
 // watchEffect(() => console.log(selectedYear.value));
-// watchEffect(() => console.log(prevMonthLastDate.value));
+// watchEffect(() => console.log('prev month last date', prevMonthLastDate.value));
 // watchEffect(() => console.log(selectedMonth.value + 1, thisMonthLastDate.value));
-// watchEffect(() => console.log(dates.value));
+// watchEffect(() => console.log('dates: ', dates.value));
 // watchEffect(() => console.log(selectedDates.value));
 </script>
+
 <template>
-  <div class="date-picker">
-    <div class="title">
-      <p class="font-size:8">진행일 선택</p>
+  <section class="date-picker">
+    <header class="title">
+      <title class="font-size:8">진행일 선택</title>
       <button
           class="margin-left:auto n-btn n-btn:hover n-btn-bd:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-deco color:sub-1">
         초기화
       </button>
-    </div>
+    </header>
     <section class="calendar-new">
       <header class="calendar-header">
         <h1 class="d:none">May 2024</h1>
@@ -169,27 +199,27 @@ const isDateInRange = (date) => {
       </ul>
 
       <ol class="day-grid">
-        <li v-for="date in dates"
+        <li v-for="dateSchedule in datesWithScedules"
             :class="{
-            'month-prev': date.getMonth() === (selectedMonth-1<0 ? 11 : selectedMonth-1),
-            'month-next': date.getMonth() === (selectedMonth+1>11 ? 0 : selectedMonth+1),
-            'today': date.toDateString() === new Date().toDateString(),
-            'available': isDateInRange(date),
-            'selected': selectedDates.includes(date)
+            'month-prev': dateSchedule.date.getMonth() === (selectedMonth-1<0 ? 11 : selectedMonth-1),
+            'month-next': dateSchedule.getMonth() === (selectedMonth+1>11 ? 0 : selectedMonth+1),
+            'today': dateSchedule.date.toDateString() === new Date().toDateString(),
+            'available': isDateInRange(dateSchedule.date),
+            'selected': selectedDates.includes(dateSchedule.date)
             // 'occupied':
           }"
         >
           <label>
             <input type="checkbox"
-                   :disabled="!isDateInRange(date)"
+                   :disabled="!isDateInRange(dateSchedule.date) || dateSchedule.schedules.length!==0"
                    v-model="selectedDates"
-                   :value="date">
-            <span>{{ date.getDate() }}</span>
+                   :value="dateSchedule.date">
+            <span>{{ dateSchedule.date.getDate() }}</span>
           </label>
         </li>
       </ol>
     </section>
-  </div>
+  </section>
 </template>
 
 <style scoped>
@@ -297,6 +327,7 @@ const isDateInRange = (date) => {
           align-items: center;
 
           /* 체크박스 숨김 */
+
           input[type="checkbox"] {
             display: none;
             width: 100%; /* Make input take full width of li */

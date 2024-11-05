@@ -1,7 +1,18 @@
 <script setup>
+import { ref } from 'vue';
 import CalendarV2 from "~/components/filter/CalendarV2.vue";
-import PublishedProgram from "~/components/modal/PublishProgramModal.vue"
+import PublishProgramModal from "~/components/modal/PublishProgramModal.vue"
 import ProgramFilterModal from "~/components/modal/ProgramFilterModal.vue";
+
+const isPublishProgramModalVisible = ref(false);
+const hostId = 1;
+const pIdTobePublished = ref(null);
+
+const publishProgramHandler = (pId) => {
+  isPublishProgramModalVisible.value = true;
+  pIdTobePublished.value = pId;
+};
+
 </script>
 <template>
   <main>
@@ -9,9 +20,10 @@ import ProgramFilterModal from "~/components/modal/ProgramFilterModal.vue";
     <div class="container">
 <!--      <CalendarV2 />-->
 
-<!--      <PublishedProgram :default-program-id=""/>-->
+      <button @click.prevent="publishProgramHandler(16)">개설하기</button>
+      <PublishProgramModal v-if="isPublishProgramModalVisible" :default-program-id="pIdTobePublished" :host-id="hostId"/>
 
-      <ProgramFilterModal />
+<!--      <ProgramFilterModal />-->
     </div>
     <br>
     <br>
