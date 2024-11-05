@@ -16,7 +16,7 @@ const selectedProgramIds = ref([]); // 프로그램 필터에서 선택된 프�
 const categories = ref([]);
 const selectedCategories = ref([]);
 const selectedStatus = ref([]);
-const currentPage = ref(1); //  현재 페이지 번호
+const currentPage = ref(1); //  현재 페이지 번호 
 const cardsPerPage = 6; //  한페이지당 표시할 프로그램 카드 수
 // 모달 관련 상태
 const moreIsOpen = ref(false);
@@ -280,10 +280,30 @@ const closeMore = () => {
 };
 
 // 필터 초기화
-const filterInit = () => {
-    selectCategoryAll();
-    selectProgramAll();
-    selectStatusAll();
+const filterInit = async() => {
+    selectedCategories.value = [];
+    const cartegoryCheckboxes = document.querySelectorAll(".categoryIds");
+    cartegoryCheckboxes.forEach((checkbox) => {
+        checkbox.checked = false;
+    });
+
+    selectedProgramIds.value = [];
+    // 프로그램 필터에서 선택된 프로그램 id들을 담은 selectedPrograms 배열 객체를 비움
+    const programCheckboxes = document.querySelectorAll(".programids");
+    programCheckboxes.forEach((checkbox) => {
+        checkbox.checked = false;
+    });
+    selectedStatus.value = [];
+    const statusCheckboxes = document.querySelectorAll(".statusCheckbox");
+    statusCheckboxes.forEach((checkbox) => {
+        // 상태 조건 필터링 모두를 unCheck 한다.
+        checkbox.checked = false;
+    });
+
+    goToPage(1);
+    fetchPrograms();        //  프로그램 목록을 가져오는 함수
+
+    // All 체크 하는거 맞아
     const CategoryCheckbox = document.querySelector(".categoryAll");
     CategoryCheckbox.checked = true;
     const programCheckbox = document.querySelector(".programidAll");
@@ -442,7 +462,7 @@ const filterInit = () => {
                     <header class="n-title">
                         <h1 class="">Filter</h1>
                         <div>
-                            <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)" @click="filterInit">
+                            <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;" @click="filterInit">
                                 초기화
                             </button>
                         </div>
