@@ -210,11 +210,19 @@ const isDateInRange = (date) => {
   return rangeStart <= date && date < rangeEnd;
 };
 
+// Emit selection changed
+const emitSelectionChanged = () => {
+  emit('selectionChanged', [...selectedDates.value]);
+};
+
+// Watch the selected dates and emit changes
+watch(selectedDates, emitSelectionChanged);
+
 // watchEffect(() => console.log(selectedYear.value));
 // watchEffect(() => console.log('prev month last date', prevMonthLastDate.value));
 // watchEffect(() => console.log(selectedMonth.value + 1, thisMonthLastDate.value));
 watchEffect(() => console.log('dates: ', dates.value));
-// watchEffect(() => console.log(selectedDates.value));
+watchEffect(() => console.log('selectedDates: ', selectedDates.value));
 watchEffect(() => console.log('published program query: ', publishedProgramQuery.value));
 </script>
 
