@@ -178,14 +178,6 @@ const checkCourseValidation = () => {
 
   window.location.hash = "#inclusion";
 }
-
-// 현재 활성화된 섹션을 추적하는 상태
-const activeSection = ref('#intro');
-
-// 클릭 시 활성화된 섹션을 변경하는 함수
-const setActiveSection = (sectionId) => {
-  activeSection.value = sectionId;
-};
 </script>
 
 
@@ -194,30 +186,13 @@ const setActiveSection = (sectionId) => {
     <nav class="n-bar-underline-create">
       <h1>목차</h1>
       <ul class="item-wrapper padding-x:6 justify-content:flex-start">
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0 " :class="{ active: activeSection === '#intro' }"
-          @click="setActiveSection('#intro')">
-          <a href="#intro" class="">소개</a>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#intro" class="">소개</a></li>
+        <li class="n-btn:hover n-btn n-btn-border:none n-btn-radius:0"><a href="#detail" class="">세부사항</a></li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#course" class="">코스</a></li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#inclusion" class="">포함사항</a>
         </li>
-        <li class="n-btn:hover n-btn n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#detail' }"
-          @click="setActiveSection('#detail')">
-          <a href="#detail" class="">세부사항</a>
-        </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#course' }"
-          @click="setActiveSection('#course')">
-          <a href="#course" class="">코스</a>
-        </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
-          :class="{ active: activeSection === '#inclusion' }" @click="setActiveSection('#inclusion')">
-          <a href="#inclusion" class="">포함사항</a>
-        </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#caution' }"
-          @click="setActiveSection('#caution')">
-          <a href="#caution" class="">추가정보</a>
-        </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#image' }"
-          @click="setActiveSection('#image')">
-          <a href="#image" class="">사진</a>
-        </li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#caution" class="">추가정보</a></li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#image" class="">사진</a></li>
       </ul>
     </nav>
 
@@ -375,7 +350,7 @@ const setActiveSection = (sectionId) => {
             </select>
             <p class="time-unit">분</p>
           </div>
-
+          
         </div>
         <div style="margin-bottom: 30px;">
           <div class="d:flex form-group gap:8">
