@@ -63,22 +63,17 @@ const publishedProgramQuery = computed(() => (
     {
       mIds: props.hostId,
       s: [1, 2, 5, 6].join(","),
-      d: [dates.value.at(0)
-          .toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-          })
-          .replace(/. /g, '-')
-          .replace('.', ''),
-        dates.value.at(-1)
-            .toLocaleDateString('ko-KR', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit'
-            })
-            .replace(/. /g, '-')
-            .replace('.', '')].join(",") // 달력에 표시된 첫날 ~ 끝날 dates.getFirst getLast 한국시간 자정
+      d: [dates.value.at(0), dates.value.at(-1)] // 달력에 표시된 첫날 ~ 끝날 dates.getFirst getLast 한국시간 자정
+          .map((date) =>
+              new Intl.DateTimeFormat('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                timeZone: 'Asia/seoul'
+              }).format(date)
+                  .replace(/\. /g, '-')
+                  .replace('.', '')
+          ).join(",")
     })
 );
 
@@ -207,6 +202,12 @@ const isDateInRange = (date) => {
   return rangeStart <= date && date < rangeEnd;
 };
 
+const resetSelectedDatesHandler = () => {
+  if (selectedDates.value.length === 0)
+    return;
+  selectedDates.value = [];
+};
+
 // Emit selection changed
 const emitSelectionChanged = () => {
   emit('selectionChanged', [...selectedDates.value]);
@@ -228,6 +229,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
     <header class="title">
       <h1 class="font-size:8">진행일 선택</h1>
       <button
+          @click.prevent="resetSelectedDatesHandler"
           class="margin-left:auto n-btn n-btn:hover n-btn-bd:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-deco color:sub-1">
         초기화
       </button>
@@ -236,7 +238,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
       <header class="calendar-header">
         <h1 class="d:none">May 2024</h1>
         <button @click.prevent="toPrevMonth"
-                class="to-prev-month n-btn border-radius:full n-icon n-icon:arrow_left n-icon-size:3" type="button">이전
+                class="to-prev-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_left n-icon-size:3" type="button">이전
         </button>
         <div class="year-month-wrapper font-size:9 font-weight:bold">
           <select class="year" v-model="selectedYear">
@@ -248,7 +250,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
           </select>
         </div>
         <button @click.prevent="toNextMonth"
-                class="to-next-month n-btn border-radius:full n-icon n-icon:arrow_right n-icon-size:3" type="button">다음
+                class="to-next-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_right n-icon-size:3" type="button">다음
         </button>
       </header>
 
@@ -350,6 +352,10 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
         background-color: var(--color-base-1);
         --btn-border-color: transparent;
         box-shadow: 0 1.88px 0.88px 0 rgba(0, 14, 51, 0.05);
+      }
+
+      button:hover{
+        background-color: var(--color-base-3);
       }
 
       .to-prev-month {
