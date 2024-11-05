@@ -13,5 +13,5 @@ public interface ProgramService {
                                LocalDate startDate, LocalDate endDate,
                                Integer minPrice, Integer maxPrice,
                                Integer groupSizeMax, Integer groupSizeMin,
-                               Integer duration, LocalTime startTime, String language, Integer page, Integer pageSize);
+                               Integer duration, Integer startTime, String language, Integer page, Integer pageSize);
 }

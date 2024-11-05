@@ -45,7 +45,7 @@ public class DefaultProgramService implements ProgramService {
     public ProgramResponseDto getList(List<Long> programIds, List<Long> categoryIds, LocalDate startDate,
                                       LocalDate endDate, Integer minPrice,
                                       Integer maxPrice, Integer groupSizeMax, Integer groupSizeMin,
-                                      Integer duration, LocalTime startTime, String language,
+                                      Integer duration, Integer startTime, String language,
                                       Integer page, Integer pageSize) {
 
         Pageable pageable = PageRequest.of(page - 1, pageSize);
@@ -56,8 +56,11 @@ public class DefaultProgramService implements ProgramService {
             filterdProgramIds.retainAll(programIds);
         }
 
+        LocalTime morningTime = LocalTime.of(12, 0);  // 오전 12시
+        LocalTime afternoonTime = LocalTime.of(18, 0);  // 오후 6시
+
         Page<Program> programs = programRepository.findProgramsByFilters(
-                filterdProgramIds, categoryIds, minPrice, maxPrice, groupSizeMin, groupSizeMax, startTime, language,duration ,pageable);
+                filterdProgramIds, categoryIds, minPrice, maxPrice, groupSizeMin, groupSizeMax, startTime, morningTime, afternoonTime, language, duration, pageable);
 
         List<Program> filteredPrograms = programs.getContent();
 
