@@ -16,7 +16,7 @@ const selectedProgramIds = ref([]); // 프로그램 필터에서 선택된 프�
 const categories = ref([]);
 const selectedCategories = ref([]);
 const selectedStatus = ref([]);
-const currentPage = ref(1); //  현재 페이지 번호 
+const currentPage = ref(1); //  현재 페이지 번호
 const cardsPerPage = 6; //  한페이지당 표시할 프로그램 카드 수
 // 모달 관련 상태
 const moreIsOpen = ref(false);
@@ -280,30 +280,10 @@ const closeMore = () => {
 };
 
 // 필터 초기화
-const filterInit = async() => {
-    selectedCategories.value = [];
-    const cartegoryCheckboxes = document.querySelectorAll(".categoryIds");
-    cartegoryCheckboxes.forEach((checkbox) => {
-        checkbox.checked = false;
-    });
-
-    selectedProgramIds.value = [];
-    // 프로그램 필터에서 선택된 프로그램 id들을 담은 selectedPrograms 배열 객체를 비움
-    const programCheckboxes = document.querySelectorAll(".programids");
-    programCheckboxes.forEach((checkbox) => {
-        checkbox.checked = false;
-    });
-    selectedStatus.value = [];
-    const statusCheckboxes = document.querySelectorAll(".statusCheckbox");
-    statusCheckboxes.forEach((checkbox) => {
-        // 상태 조건 필터링 모두를 unCheck 한다.
-        checkbox.checked = false;
-    });
-
-    goToPage(1);
-    fetchPrograms();        //  프로그램 목록을 가져오는 함수
-
-    // All 체크 하는거 맞아
+const filterInit = () => {
+    selectCategoryAll();
+    selectProgramAll();
+    selectStatusAll();
     const CategoryCheckbox = document.querySelector(".categoryAll");
     CategoryCheckbox.checked = true;
     const programCheckbox = document.querySelector(".programidAll");
@@ -320,7 +300,8 @@ const filterInit = async() => {
             <header class="n-title">
                 <h1 class="">프로그램 관리</h1>
                 <div>
-                    <nuxt-link to="/host/programs/new" class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록</nuxt-link>
+                    <nuxt-link to="/host/programs/new"
+                        class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록</nuxt-link>
                 </div>
             </header>
 
@@ -451,9 +432,12 @@ const filterInit = async() => {
 
                 <!-- 모달 창 -->
                 <div v-if="moreIsOpen" class="more-overlay" @click="closeMore">
-                    <div class="more" @click.stop>
+                    <div class="more">
                         <div class="more-close"><button @click="closeMore">Ⅹ</button></div>
-                        <a href="#" class="n-btn">수정하기</a>
+                        <div class="more-content" @click.stop>
+                            <a href="#" class="n-btn">수정하기</a>
+                            <a href="#" class="n-btn">삭제하기</a>
+                        </div>
                     </div>
                 </div>
 
@@ -462,7 +446,8 @@ const filterInit = async() => {
                     <header class="n-title">
                         <h1 class="">Filter</h1>
                         <div>
-                            <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;" @click="filterInit">
+                            <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)"
+                                @click="filterInit">
                                 초기화
                             </button>
                         </div>
@@ -936,6 +921,32 @@ const filterInit = async() => {
     }
 }
 
+.more {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-base-1);
+    border-radius: 10px;
+    padding: 8px;
+    
+    .more-close {
+        display: flex;
+        justify-content: right;
+    }
+
+    .more-content {
+        .n-btn {
+            --btn-border-color: var(--color-base-7);
+            color: var(--color-base-7);
+        }
+
+        display: flex;
+        flex-direction: column;
+        padding: 20px 30px;
+        gap: 16px;
+        width: 300px;
+    }
+}
+
 .more-overlay {
     position: fixed;
     top: 0;
@@ -947,28 +958,5 @@ const filterInit = async() => {
     justify-content: center;
     align-items: center;
     z-index: 7;
-}
-
-.more {
-    .more-close{
-        display: flex;
-        justify-content: right;
-    }
-
-    .n-btn {
-        margin: 10px;
-        --btn-border-color: var(--color-base-7);
-        color: var(--color-base-7);
-    }
-
-    display: flex;
-    flex-direction: column;
-    background: var(--color-base-1);
-    padding: 4px 10px 10px 10px ;
-    gap: 16px;
-    border-radius: 8px;
-    width: 300px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
 }
 </style>
