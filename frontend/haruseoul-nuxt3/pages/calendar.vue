@@ -8,7 +8,7 @@ const isPublishProgramModalVisible = ref(false);
 const hostId = 1;
 const pIdTobePublished = ref(null);
 
-const publishProgramHandler = (pId) => {
+const OpenpublishProgramModalHandler = (pId) => {
   isPublishProgramModalVisible.value = true;
   pIdTobePublished.value = pId;
 };
@@ -20,13 +20,11 @@ const publishProgramHandler = (pId) => {
     <div class="container">
 <!--      <CalendarV2 />-->
 
-      <button @click.prevent="publishProgramHandler(16)">개설하기</button>
-      <PublishProgramModal v-if="isPublishProgramModalVisible" :default-program-id="pIdTobePublished" :host-id="hostId"/>
+      <button @click.prevent="OpenpublishProgramModalHandler(16)" class="n-btn n-btn-background-color:sub n-btn:hover">개설하기</button>
+      <PublishProgramModal v-if="isPublishProgramModalVisible" :default-program-id="pIdTobePublished" :host-id="hostId" @close-modal="isPublishProgramModalVisible=false"/>
 
 <!--      <ProgramFilterModal />-->
     </div>
-    <br>
-    <br>
   </main>
 </template>
 <style scoped>
@@ -35,11 +33,6 @@ const publishProgramHandler = (pId) => {
   gap: 40px;
   flex-direction: column;
   justify-content: center;
-
-  margin: 0 100px;
-
-  > section {
-    //flex-grow: 1;
-  }
+  margin: 0 100px 50px 100px;
 }
 </style>
