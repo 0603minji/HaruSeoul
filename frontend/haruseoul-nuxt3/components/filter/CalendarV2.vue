@@ -6,20 +6,12 @@ const emit = defineEmits(['selectionChanged'])
 
 // Props
 const props = defineProps({
-  rangeStart: {
-    type: Date,
-    required: true,
-  },
-  rangeEnd: {
-    type: Date,
-    required: true,
-  },
-  publishedPrograms: {
-    type: Array,
+  hostId: {
+    type: Number,
     required: true
   }
 });
-console.log('calendar props: ', props.rangeStart, props.rangeEnd);
+
 // 초기 연도, 월
 const initialYear = new Date().getFullYear();
 const initialMonth = new Date().getMonth();
@@ -37,6 +29,7 @@ const prevMonthLastDate = computed(() => new Date(selectedYear.value, selectedMo
 // 이번 달의 마지막 날
 const thisMonthLastDate = computed(() => new Date(selectedYear.value, selectedMonth.value + 1, 0));
 
+// selectedYear or selectedMonth가 변하면 update
 const dates = computed(() => {
   const datesInMonth = [];
   // 이전 달 마지막 월요일부터 이번달 1일 전까지 dates에 추가
@@ -66,6 +59,47 @@ const dates = computed(() => {
   return datesInMonth;
 });
 
+// dates가 변하면 update
+const publishedProgramQuery = computed(() => (
+    {
+      mIds: props.hostId,
+      s: [1, 2, 5, 6].join(","),
+      d: [dates.value.at(0)
+          .toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          })
+          .replace(/. /g, '-')
+          .replace('.', ''),
+        dates.value.at(-1)
+            .toLocaleDateString('ko-KR', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit'
+            })
+            .replace(/. /g, '-')
+            .replace('.', '')].join(",") // 달력에 표시된 첫날 ~ 끝날 dates.getFirst getLast 한국시간 자정
+    })
+);
+
+// query가 변하면 새로 fetch (refresh) -> publishedPrograms
+watch(() => publishedProgramQuery.value,
+    (newQuery) => {
+      console.log('publishedProgramQuery.value watch진입: pulishedRefresh()')
+      publishedRefresh();
+    }
+);
+
+/*=== fetch ==========================================================================================================*/
+const config = useRuntimeConfig();
+
+// 캘린더에 개설불가능한 날짜 표시를 위한 개설프로그램 목록 fetch
+const {data: publishedData, refresh: publishedRefresh} = useFetch(`host/published-programs`, {
+  baseURL: config.public.apiBase,
+  params: computed(() => publishedProgramQuery.value)
+});
+
 /*
 [
   {
@@ -79,24 +113,62 @@ const dates = computed(() => {
 ]; */
 const datesWithScedules = ref([]);
 
-watch(() => props.publishedPrograms,
-    (programs) => {
-      dates.value.map(date => {
-        const schedules = programs.filter(program => {
+// Published Programs in date range
+const publishedPrograms = ref([]);
+
+watch(() => publishedPrograms.value,
+    (newPrograms) => {
+      console.log('publishedPrograms watch 진입');
+      // dates로 datesWithPrograms [{date: , schedules: []}] update
+      datesWithScedules.value = dates.value.map(date => {
+        // date와 진행일이 같은 프로그램들만 골라내서 schedules에 담기
+        const schedules = newPrograms.filter(program => {
           // console.log('date        : ', date.toISOString(), date.toLocaleString());
           // console.log('program date: ', new Date(program.date+'T00:00:00+09:00').toISOString());
-          return new Date(program.date+'T00:00:00+09:00').getTime() === date.getTime();});
+          return new Date(program.date + 'T00:00:00+09:00').getTime() === date.getTime();
+        });
+
+        // date와 schedules로 dateWithSchedules 생성
         const dateWithSchedules = {
           date: date,
-              schedules
+          schedules
         }
         // console.log(dateWithSchedules);
-        return datesWithScedules;
+        return dateWithSchedules;
       });
+      console.log('   ->  datesWithSchedules updated', datesWithScedules.value);
     }
 );
 
-/*=== function =================================================================================================================*/
+watch(() => publishedData.value,
+    (newPublishedData) => {
+      console.log('publishedData watch진입')
+      if (newPublishedData) {
+        console.log('   ->  new publishedData: ', newPublishedData.publishedPrograms);
+        publishedPrograms.value = newPublishedData.publishedPrograms;
+        console.log('   ->  publishedData.value fetched. publishedPrograms: ', publishedPrograms.value);
+      }
+    }
+);
+
+
+
+// --- 개설가능일 계산용 -------------------------------------------------------------------------------------------------
+// today + startOffset부터 개설가능
+const startOffset = 3;
+// today + startOffset부터 publishableRange만큼 개설가능
+const publishableRange = 21;
+
+// query ?mIds=props.hostId&s=1,2,5,6&d=개설가능첫날,끝날
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const rangeStart = new Date(today); // 개설가능 시작일
+const rangeEnd = new Date(today); // 개설가능 말일
+
+rangeStart.setDate(today.getDate() + startOffset); // today + 3 days
+rangeEnd.setDate(today.getDate() + startOffset + publishableRange); // rangeStart + 21 days
+
+/*=== function =======================================================================================================*/
 // 연도선택 <option>태그 생성용
 const getYearOptions = (baseYear, range) => {
   const year = [];
@@ -135,14 +207,15 @@ const toPrevMonth = () => {
 
 // 개설가능한 범위의 날짜인지?
 const isDateInRange = (date) => {
-  return props.rangeStart <= date && date < props.rangeEnd;
+  return rangeStart <= date && date < rangeEnd;
 };
 
 // watchEffect(() => console.log(selectedYear.value));
 // watchEffect(() => console.log('prev month last date', prevMonthLastDate.value));
 // watchEffect(() => console.log(selectedMonth.value + 1, thisMonthLastDate.value));
-// watchEffect(() => console.log('dates: ', dates.value));
+watchEffect(() => console.log('dates: ', dates.value));
 // watchEffect(() => console.log(selectedDates.value));
+watchEffect(() => console.log('published program query: ', publishedProgramQuery.value));
 </script>
 
 <template>
@@ -199,14 +272,15 @@ const isDateInRange = (date) => {
       </ul>
 
       <ol class="day-grid">
+        <!--dateSchedule = {date: Date객체, [publishedProgramListDto]}-->
         <li v-for="dateSchedule in datesWithScedules"
             :class="{
             'month-prev': dateSchedule.date.getMonth() === (selectedMonth-1<0 ? 11 : selectedMonth-1),
-            'month-next': dateSchedule.getMonth() === (selectedMonth+1>11 ? 0 : selectedMonth+1),
+            'month-next': dateSchedule.date.getMonth() === (selectedMonth+1>11 ? 0 : selectedMonth+1),
             'today': dateSchedule.date.toDateString() === new Date().toDateString(),
             'available': isDateInRange(dateSchedule.date),
-            'selected': selectedDates.includes(dateSchedule.date)
-            // 'occupied':
+            'selected': selectedDates.includes(dateSchedule.date),
+            'occupied': dateSchedule.schedules.length !== 0
           }"
         >
           <label>
@@ -385,7 +459,7 @@ const isDateInRange = (date) => {
 
       /* 이미 개설된 프로그램 존재하는 날짜 */
 
-      .occupied {
+      .occupied.available {
         background-color: var(--color-base-3);
         box-shadow: none;
 

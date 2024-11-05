@@ -15,8 +15,8 @@ const props = defineProps({
     default: () => {}
   }
 });
-console.log('searchableSelect rendered');
-console.log('searchableSelect props: ', props.options, props.initialOption);
+// console.log('searchableSelect rendered');
+// console.log('searchableSelect props: ', props.options, props.initialOption);
 // State
 const isDropdownVisible = ref(false);
 const searchTerm = ref('');
@@ -51,7 +51,7 @@ const filterOptions = () => {
   filteredOptions.value = props.options.filter(option =>
       option.title.toLowerCase().includes(searchLower)
   );
-  console.log("filterOptions called")
+  // console.log("filterOptions called");
 };
 
 const clearSearch = () => {

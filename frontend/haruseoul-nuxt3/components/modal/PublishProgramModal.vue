@@ -26,38 +26,14 @@ const selectedProgram = ref(null); // 초기값 = props.defaultProgramId에 해�
 // Selected dates 프로그램 진행일
 const selectedDates = [];
 
-// Published Programs in available date range
-const publishedPrograms = ref([]);
-
 // Every Possible options for the select box
 const programOptions = ref([]);
 
-// --- 개설가능일 계산용 -------------------------------------------------------------------------------------------------
-// today + startOffset부터 개설가능
-const startOffset = 3;
-// today + startOffset부터 publishableRange만큼 개설가능
-const publishableRange = 21;
-
-// query ?mIds=props.hostId&s=1,2,5,6&d=개설가능첫날,끝날
-const today = new Date();
-today.setHours(0, 0, 0, 0);
-const rangeStart = new Date(today); // 개설가능 시작일
-const rangeEnd = new Date(today); // 개설가능 말일
-
-rangeStart.setDate(today.getDate() + startOffset); // today + 3 days
-rangeEnd.setDate(today.getDate() + startOffset + publishableRange); // rangeStart + 21 days
 // ---------------------------------------------------------------------------------------------------------------------
 
 const programQuery = {
   s: ["Published", "In Progress"].join(",")
 };
-
-const publishedProgramQuery = {
-  mIds: props.hostId,
-  s: [1, 2, 5, 6].join(","),
-  d: [rangeStart.toISOString().split("T")[0], rangeEnd.toISOString().split("T")[0]].join(",")
-};
-
 
 // === fetch ===========================================================================================================
 const config = useRuntimeConfig();
@@ -72,25 +48,12 @@ const {data: programData} = useFetch(`host/programs/user/${props.hostId}`, {
 watch(() => programData.value,
     (newOne) => {
       programOptions.value = newOne;
-      console.log('programData.value fetched', programOptions.value);
+      // console.log('programData.value fetched', programOptions.value);
       // selectedProgram 초기화
       selectedProgram.value = newOne.find(program => program.id === props.defaultProgramId);
-      console.log(selectedProgram.value);
+      // console.log(selectedProgram.value);
     }
 );
-
-// 캘린더에 개설불가능한 날짜 표시를 위한 개설프로그램 목록 fetch
-const {data: publishedData} = useFetch(`host/published-programs`, {
-  baseURL: config.public.apiBase,
-  params: publishedProgramQuery
-});
-
-watchEffect(() => {
-  if (publishedData.value) {
-    publishedPrograms.value = publishedData.value.publishedPrograms;
-    console.log('publishedData.value fetched', publishedPrograms.value);
-  }
-});
 
 // === function ========================================================================================================
 // Handle selection change
@@ -116,8 +79,7 @@ const updateSelectedDates = () => {
       <SearchableSelect :options="programOptions" :initial-option="selectedProgram"
                         @selection-changed="updateSelectedProgram"/>
       <!-- 진행일 선택 -->
-      <FilterCalendarV2 :range-start="rangeStart" :range-end="rangeEnd" :published-programs="publishedPrograms"
-                        @selection-changed="updateSelectedDates"/>
+      <FilterCalendarV2 :host-id="props.hostId" @selection-changed="updateSelectedDates"/>
 
       <div class="submit">
         <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>
