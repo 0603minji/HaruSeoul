@@ -41,20 +41,16 @@ public class ProgramController {
         return ResponseEntity.ok(programResponseDto);
     }
 
+    @GetMapping("one")
+    public ResponseEntity<ProgramListDto> getOneProgram(@RequestParam(name = "id") Long pId){
+        return ResponseEntity.ok(service.getOneProgram(pId));
+    }
+
     @PostMapping
     public ResponseEntity<Program> create(@RequestBody ProgramCreateDto programCreateDto) {
         return ResponseEntity.ok(service.create(programCreateDto));
     }
 
-//    @PostMapping("/images")
-//    public ResponseEntity<List<Image>> saveImage(
-//            @RequestPart("programId") Long programId,
-//            @RequestPart("images") List<MultipartFile> images
-//    ) {
-//        log.info("programId: {}", programId);
-//        log.info("images size: {}", images.size());
-//        return ResponseEntity.ok(service.saveImages(programId, images));
-//    }
 
     @PutMapping("{id}")
     public ResponseEntity<Program> update(
