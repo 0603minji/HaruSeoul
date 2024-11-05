@@ -281,4 +281,13 @@ public class DefaultProgramService implements ProgramService {
     public void delete(Long programId) {
         programRepository.deleteById(programId);
     }
+
+    public ProgramListDto getOneProgram(Long pId) {
+        Optional<Program> programOptional = programRepository.findById(pId);
+
+        if(!programOptional.isPresent()) return null;
+        Program program = programOptional.get();
+        ProgramListDto programListDto = ProgramMapper.mapToDto(program);
+        return programListDto;
+    }
 }
