@@ -239,13 +239,19 @@ public class DefaultProgramService implements ProgramService {
     @Transactional
     public Program update(ProgramUpdateDto programUpdateDto) {
 
-        Program oldProgram = programRepository.findById(programUpdateDto.getProgramId()).get();
+        Optional<Program> programOptional = programRepository.findById(programUpdateDto.getProgramId());
 
+        if(!programOptional.isPresent()) {
+            log.error("{} is not found", programUpdateDto.getProgramId());
+            return null;
+        }
+
+        Program oldProgram = programOptional.get();
         oldProgram.setTitle(programUpdateDto.getTitle());
         oldProgram.setDetail(programUpdateDto.getDetail());
         oldProgram.setLanguage(programUpdateDto.getLanguage());
-        oldProgram.setStartTime(LocalTime.parse(programUpdateDto.getStartTime()));
-        oldProgram.setEndTime(LocalTime.parse(programUpdateDto.getEndTime()));
+        oldProgram.setStartTime(getLocalTime(programUpdateDto.getStartTimeHour(), programUpdateDto.getStartTimeMinute()));
+        oldProgram.setEndTime(getLocalTime(programUpdateDto.getEndTimeHour(), programUpdateDto.getEndTimeMinute()));
         oldProgram.setGroupSizeMin(programUpdateDto.getGroupSizeMin());
         oldProgram.setGroupSizeMax(programUpdateDto.getGroupSizeMax());
         oldProgram.setPrice(programUpdateDto.getPrice());
@@ -257,8 +263,8 @@ public class DefaultProgramService implements ProgramService {
 
         Program newProgram = programRepository.save(oldProgram);
 
+        //  카테고리 업데이트 (category)
         Long programId = newProgram.getId();
-
         categoryProgramRepository.deleteByProgramId(programId);
 
         List<Long> categoryIds = programUpdateDto.getCategoryIds();
@@ -266,7 +272,12 @@ public class DefaultProgramService implements ProgramService {
         List<CategoryProgram> newCategoryPrograms = new ArrayList<>();
 
         for (Long categoryId : categoryIds) {
-            Category category = categoryRepository.findById(categoryId).get();
+            Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+            if(!categoryOptional.isPresent()) {
+                log.error("{} is not found", categoryId);
+                continue;
+            }
+            Category category = categoryOptional.get();
             CategoryProgram categoryProgram = CategoryProgram.builder()
                     .program(newProgram)
                     .category(category)
@@ -275,6 +286,7 @@ public class DefaultProgramService implements ProgramService {
         }
         categoryProgramRepository.saveAll(newCategoryPrograms);
 
+        //  todo: 코스 업데이트 (route)
         return newProgram;
     }
 

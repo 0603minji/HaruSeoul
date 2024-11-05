@@ -52,7 +52,7 @@ public class ProgramController {
     }
 
 
-    @PutMapping("{id}")
+    @PutMapping
     public ResponseEntity<Program> update(
             @RequestBody ProgramUpdateDto programUpdateDto
     ) {
