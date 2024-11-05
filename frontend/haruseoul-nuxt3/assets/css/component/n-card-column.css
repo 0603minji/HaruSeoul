@@ -16,7 +16,7 @@
 
 @media (min-width:992px) {
     .n-card-container-column {
-        --column-number: 3;
+        --column-number: 4;
     }
 }
 
@@ -83,6 +83,6 @@
      }
 
      .card-footer {
-
+        display: flex;
      }
  }

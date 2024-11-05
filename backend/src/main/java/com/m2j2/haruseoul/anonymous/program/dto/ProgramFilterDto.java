@@ -22,8 +22,6 @@ public class ProgramFilterDto {
     private Integer groupSizeMin;
     private Integer groupSizeMax;
     private Integer duration;
-    private LocalTime startTime;
+    private Integer startTime;
     private String language;
-
-
 }
