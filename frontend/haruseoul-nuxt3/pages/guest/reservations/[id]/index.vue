@@ -16,119 +16,118 @@
             </div>
 
             <div class="n-card-container bg-color:base-1">
-                <div class="n-card bg-color:base-1 padding:6" v-for="r in reservations" :key="r.id">
-                    <RouterLink :to="`/guest/reservations/${r.id}`" class="n-link-box" href="detail?id=1"></RouterLink>
-                    <div class="card-header">
-                        <div class="left">
-                            <span v-if="['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)"
-                                class="n-panel-tag">
-                                결제완료
-                            </span>
+        <div class="n-card bg-color:base-1 padding:6" v-for="r in reservations" :key="r.id">
+          <RouterLink :to="`/guest/reservations/${r.id}`" class="n-link-box" href="detail?id=1"></RouterLink>
+          <div class="card-header">
+            <div class="left">
+              <span v-if="['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
+                결제완료
+              </span>
 
-                            <span v-else-if="r.statusName === 'Finished'" class="n-panel-tag not-submitted">
-                                이용완료
-                            </span>
+              <span v-else-if="r.statusName === 'Finished'" class="n-panel-tag not-submitted">
+                이용완료
+              </span>
 
-                            <span v-else-if="r.statusName === 'Confirmed'" class="n-panel-tag not-submitted">
-                                예약확정
-                            </span>
+              <span v-else-if="r.statusName === 'Confirmed'" class="n-panel-tag not-submitted">
+                예약확정
+              </span>
 
-                            <span v-else-if="r.statusName === 'Canceled'" class="n-panel-tag not-submitted">
-                                취소됨
-                            </span>
-                        </div>
-                    </div>
+              <span v-else-if="r.statusName === 'Canceled'" class="n-panel-tag not-submitted">
+                취소됨
+              </span>
+            </div>
+          </div>
 
-                    <div class="card-main">
-                        <div class="img-wrapper">
-                            <img src="/public/image/program_01.png" alt="대표사진" />
-                        </div>
+          <div class="card-main">
+            <div class="img-wrapper">
+              <img src="/public/image/program_01.png" alt="대표사진" />
+            </div>
 
-                        <div class="card-info-wrapper">
-                            <div class="card-header-responsive">
-                                <div class="left">
-                                    <span v-if="['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)"
-                                        class="n-panel-tag">
-                                        결제완료
-                                    </span>
+            <div class="card-info-wrapper">
+              <div class="card-header-responsive">
+                <div class="left">
+                  <span v-if="['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
+                    결제완료
+                  </span>
 
-                                    <span v-else-if="r.statusName === 'Finished'" class="n-panel-tag not-submitted">
-                                        이용완료
-                                    </span>
+                  <span v-else-if="r.statusName === 'Finished'" class="n-panel-tag not-submitted">
+                    이용완료
+                  </span>
 
-                                    <span v-else-if="r.statusName === 'Confirmed'" class="n-panel-tag not-submitted">
-                                        예약확정
-                                    </span>
+                  <span v-else-if="r.statusName === 'Confirmed'" class="n-panel-tag not-submitted">
+                    예약확정
+                  </span>
 
-                                    <span v-else-if="r.statusName === 'Canceled'" class="n-panel-tag not-submitted">
-                                        취소됨
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="title" style="font-size: 15px;">
-                                {{ r.programTitle }}
-                            </p>
-                            <div class="card-info-responsive">
-                                <div class="d:flex flex-direction:column">
-                                    <div class="card-info">
-                                        <span class="n-icon n-icon:calendar n-deco">진행일</span>
-                                        <span>{{ r.date }} (D-{{ r.dDay }})</span>
-                                    </div>
-                                    <div class="card-info">
-                                        <span class="n-icon n-icon:group n-deco">예약인원</span>
-                                        <span>{{ r.groupSize }}</span>
-                                    </div>
-                                </div>
-
-                                <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
-                                    class="card-footer-responsive">
-                                    <a href="aa" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                                    <a href="aa" class="n-btn">예약 취소</a>
-                                    <a href="aa"
-                                        class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
-                                </div>
-
-                                <div v-else-if="r.statusName === 'Finished'" class="card-footer-responsive">
-                                    <a href="aa" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                                    <a href="aa" class="n-btn">리뷰 작성</a>
-                                    <a href="aa"
-                                        class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
-                                </div>
-
-                                <div v-else-if="r.statusName === 'Canceled'" class="card-footer-responsive">
-                                    <a href="aa" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                                    <a href="aa"
-                                        class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
-                        class="card-footer margin-top:2">
-                        <a href="aa" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                        <a href="aa" class="n-btn" style="color: #DB4455; --btn-border-color:#DB4455;">예약 취소</a>
-                        <a href="aa"
-                            class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
-                    </div>
-
-                    <div v-else-if="r.statusName === 'Finished'" class="card-footer margin-top:2">
-                        <a href="aa" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                        <a href="aa" class="n-btn">리뷰 작성</a>
-                        <a href="aa"
-                            class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
-                    </div>
-
-                    <div v-else-if="r.statusName === 'Canceled'" class="card-footer margin-top:2"
-                        style="justify-content: right;">
-                        <a href="aa" class="n-btn bg-color:main-1 color:base-1" style="max-width: 156px;">호스트 문의</a>
-                        <a href="aa"
-                            class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
-                    </div>
+                  <span v-else-if="r.statusName === 'Canceled'" class="n-panel-tag not-submitted">
+                    취소됨
+                  </span>
+                </div>
+              </div>
+              <p class="title">
+                {{ r.programTitle }}
+              </p>
+              <div class="card-info-responsive">
+                <div class="d:flex flex-direction:column">
+                  <div class="card-info">
+                    <span class="n-icon n-icon:calendar n-deco">진행일</span>
+                    <span>
+                      {{ r.date }}
+                      <span v-if="(r.dDay <= 7)" style="color: #DB4455;">(D-{{ r.dDay }})</span>
+                      <span v-else-if="(r.dDay > 7)">(D-{{ r.dDay }})</span>
+                  </span>
+                    
+                  </div>
+                  <div class="card-info">
+                    <span class="n-icon n-icon:group n-deco">예약인원</span>
+                    <span>{{ r.groupSize }}</span>
+                  </div>
                 </div>
 
+                <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
+                  class="card-footer-responsive">
+                  <a href="aa" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
+                  <a href="aa" class="n-btn" style="color: #DB4455; --btn-border-color:#DB4455;">예약 취소</a>
+                  <a href="aa"
+                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+                </div>
+
+                <div v-else-if="r.statusName === 'Finished'" class="card-footer-responsive">
+                  <a href="aa" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
+                  <a href="aa" class="n-btn">리뷰 작성</a>
+                  <a href="aa"
+                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+                </div>
+
+                <div v-else-if="r.statusName === 'Canceled'" class="card-footer-responsive">
+                  <a href="aa" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
+                  <a href="aa"
+                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+                </div>
+
+              </div>
             </div>
+          </div>
+
+          <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
+            class="card-footer margin-top:2">
+            <a href="aa" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
+            <a href="aa" class="n-btn" style="color: #DB4455; --btn-border-color:#DB4455;">예약 취소</a>
+            <a href="aa" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+          </div>
+
+          <div v-else-if="r.statusName === 'Finished'" class="card-footer margin-top:2">
+            <a href="aa" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
+            <a href="aa" class="n-btn">리뷰 작성</a>
+            <a href="aa" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+          </div>
+
+          <div v-else-if="r.statusName === 'Canceled'" class="card-footer margin-top:2" style="justify-content: right;">
+            <a href="aa" class="n-btn bg-color:main-1 color:base-1" style="max-width: 278px;">호스트 문의</a>
+            <a href="aa" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+          </div>
+
+        </div>
+      </div>
 
             <!--  본문  -->
             <section class="content">
@@ -693,9 +692,9 @@
                         --btn-font-size: 14px;
                         --btn-border-color: var(--color-main-1);
                         --btn-border-radius: 12px;
-                        /* --btn-bg-hover: var(--color-base-2); */
+                        --btn-bg-hover: var(--color-base-2);
                         --btn-bg-color: transparent;
-                        --btn-padding: 12px 16px;
+                        --btn-padding: 13px 26px;
                         align-items: center;
                         background-color: var(--btn-bg-color);
                         border: 1px solid var(--btn-border-color, var(--color-base-3));
