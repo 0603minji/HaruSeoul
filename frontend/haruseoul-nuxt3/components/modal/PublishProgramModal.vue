@@ -24,7 +24,7 @@ const props = defineProps({
 const selectedProgram = ref(null); // 초기값 = props.defaultProgramId에 해당하는 programFilterDto {id: 16, title: "abdav"}
 
 // Selected dates 프로그램 진행일
-const selectedDates = [];
+let selectedDates = [];
 
 // Every Possible options for the select box
 const programOptions = ref([]);
@@ -61,8 +61,10 @@ const updateSelectedProgram = (selectedOption) => {
   selectedProgram.value = selectedOption;
 };
 
-const updateSelectedDates = () => {
-
+const updateSelectedDates = (selectedOptions) => {
+  selectedDates = selectedOptions;
+  console.log('PublishProgramModal: updateSelectedDates called');
+  console.log('   ->  selectedDates: ', selectedDates);
 };
 
 </script>
