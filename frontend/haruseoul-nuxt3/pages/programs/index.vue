@@ -33,9 +33,9 @@
             </div>
 
             <div class="reset-box">
-              <a href="" class="icon-box n-deco1 n-icon n-icon:reset">
+              <span class="icon-box n-deco1 n-icon n-icon:reset">
                 초기화
-              </a>
+              </span>
             </div>
           </section>
 
@@ -57,7 +57,7 @@
             </header>
 
             <!--=== 프로그램 카드 목록 ===================================================-->
-            <ul class="n-card-container-column bg-color:base-1">
+            <ul v-if="programs.length > 0" class="n-card-container-column bg-color:base-1">
               <!-- =================================== 예약 카드 1개 =================================== -->
               <li v-for="p in programs" class="n-card n-card-column bg-color:base-1">
                 <NuxtLink :to="`/programs/${p.id}`" class="n-link-box"></NuxtLink>
@@ -94,6 +94,8 @@
                 </div>
               </li>
             </ul>
+            <p v-else class="no-results-message">해당 목록이 존재하지 않습니다.</p>
+            <div ref="infiniteScrollTrigger" class="infinite-scroll-trigger"></div> <!-- 무한 스크롤 트리거 -->
           </section>
         </div>
 
@@ -102,7 +104,7 @@
           <header class="n-title">
             <h1 class="">Filter</h1>
             <div>
-              <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)">초기화</button>
+              <button @click="resetFilters" class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)">초기화</button>
             </div>
           </header>
 
@@ -111,6 +113,7 @@
             <details open class="filter">
               <summary class="collapse">
                 <span class="title">Period</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
               </summary>
               <form action="" class="form">
                 <div class="modal-duration">
@@ -136,12 +139,12 @@
                 <div class="modal-checkbox">
                   <!-- All 체크박스 -->
                   <label>
-                    <input @change="fetchPrograms" type="checkbox"> All
+                    <input v-model="allCategoriesSelected" @change="toggleAllCategories" type="checkbox"> All
                   </label>
 
                   <!-- 카테고리 체크박스 목록 -->
                   <label v-for="c in categories" :key="c.id">
-                    <input @change="fetchPrograms" type="checkbox" v-model="selectedCategoryIds" :value="c.id"> {{ c.name }}
+                    <input @change="updateAllCheckbox" type="checkbox" v-model="selectedCategoryIds" :value="c.id"> {{ c.name }}
                   </label>
                 </div>
               </form>
@@ -161,9 +164,9 @@
 <!--                    <input type="range" class="slider">-->
 <!--                  </div>-->
                   <div class="price-inputs">
-                    <input v-model="minPrice" @input="fetchPrograms" type="text" placeholder="₩0">
+                    <input v-model="minPrice" @input="fetchPrograms" type="number" placeholder="₩0">
                     <span class="tilde">~</span>
-                    <input v-model="maxPrice" @input="fetchPrograms" type="text" placeholder="₩1000000">
+                    <input v-model="maxPrice" @input="fetchPrograms" type="number" placeholder="₩1000000">
                   </div>
                 </div>
               </form>
@@ -319,7 +322,7 @@ const page = ref(1);
 const pageSize = ref(15);
 const fetching = ref(false);
 
-
+const allCategoriesSelected = ref(true);
 // 필터 값들
 const selectedCategoryIds = ref([]);
 const startDate = ref(null);
@@ -329,7 +332,7 @@ const maxPrice = ref(null);
 const groupSizeMin = ref(null);
 const groupSizeMax = ref(null);
 const duration = ref(null);
-const startTime = ref(null);
+const startTime = ref(1);
 const language = ref(null);
 
 
@@ -338,8 +341,6 @@ const fetchCategories = async () => {
   const response = await axios.get("http://localhost:8080/api/v1/categories");
   categories.value = response.data;
 };
-
-console.log(selectedCategoryIds.value)
 
 
 const fetchPrograms = async () => {
@@ -366,7 +367,11 @@ const fetchPrograms = async () => {
     });
 
     // 데이터 추가 및 페이지 값 증가
-    programs.value = response.data.programs
+    if (page.value === 1) {
+      programs.value = response.data.programs; // 필터 적용 시 데이터를 새로 설정
+    } else {
+      programs.value.push(...response.data.programs); // 무한 스크롤로 데이터를 추가
+    }
     totalRowCount.value = response.data.totalRowCount;
     // page.value += 1; // 다음 페이지로 증가
     // console.log("Next page to fetch:", page.value); // 디버깅 로그: 증가된 페이지 값
@@ -379,9 +384,74 @@ const fetchPrograms = async () => {
   }
 };
 
+const resetProgramsAndFetch = () => {
+  programs.value = [];
+  page.value = 1;
+  fetchPrograms();
+};
+
+watch([selectedCategoryIds, startDate, endDate, minPrice, maxPrice, groupSizeMin, groupSizeMax, duration, startTime, language], resetProgramsAndFetch);
+
+const observeInfiniteScroll = () => {
+  const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !fetching.value) {
+          page.value++;
+          fetchPrograms();
+        }
+      },
+      { rootMargin: '0px', threshold: 1.0 }
+  );
+
+  observer.observe(document.querySelector('.infinite-scroll-trigger'));
+};
+
+// All 체크박스를 클릭했을 때 모든 카테고리를 선택/해제하고 fetchPrograms 호출
+const toggleAllCategories = () => {
+  if (allCategoriesSelected.value) {
+    selectedCategoryIds.value = [];
+  } else {
+    selectedCategoryIds.value = categories.value.map(category => category.id); // 개별 카테고리 선택
+  }
+  fetchPrograms(); // 변경 사항 적용
+};
+
+
+// 개별 카테고리 선택 상태가 변경될 때 All 체크박스 상태를 업데이트하고 fetchPrograms 호출
+const updateAllCheckbox = () => {
+  if (selectedCategoryIds.value.length === categories.value.length) {
+    // 모든 개별 체크박스가 선택된 경우 All 체크박스만 선택
+    allCategoriesSelected.value = true;
+    selectedCategoryIds.value = [];
+  } else {
+    // 선택된 개별 카테고리 수가 전체와 다를 경우 All 체크박스 해제
+    allCategoriesSelected.value = false;
+  }
+  fetchPrograms(); // 변경 사항 적용
+};
+
+//=========필터 리셋============
+
+const resetFilters = () => {
+  selectedCategoryIds.value = [];
+  startDate.value = null;
+  endDate.value = null;
+  minPrice.value = null;
+  maxPrice.value = null;
+  groupSizeMin.value = null;
+  groupSizeMax.value = null;
+  duration.value = null;
+  startTime.value = null;
+  language.value = null;
+  page.value = 1; // 첫 페이지로 초기화
+  fetchPrograms(); // 초기화 후 프로그램 목록 다시 가져오기
+};
+
+
 onMounted(() => {
   fetchPrograms(); // 첫 번째 페이지 데이터 로드
   fetchCategories();
+  observeInfiniteScroll();
 });
 
 
@@ -401,6 +471,7 @@ onMounted(() => {
         .n-btn {
           --btn-font-size: 12px;
         }
+
       }
 
       /*===============================================================================================*/
@@ -447,6 +518,7 @@ onMounted(() => {
 
         .n-icon {
           --icon-size: var(--icon-size-4);
+          cursor: pointer;
         }
       }
 
@@ -457,6 +529,11 @@ onMounted(() => {
       }
     }
   }
+}
+.no-results-message{
+  padding:100px;
+  display: flex;
+  justify-content: center;
 }
 
 @media (min-width: 768px) {
@@ -473,6 +550,13 @@ onMounted(() => {
 
       .layout-main-aside {
         display: flex;
+        position: sticky;
+        top: 0;
+        height: 100vh; /* 화면 전체 높이 */
+        overflow-y: auto; /* 내용이 넘칠 경우 내부 스크롤 */
+        padding-right: 10px; /* 스크롤바와의 여유 공간 */
+        box-sizing: border-box;
+
       }
     }
   }
