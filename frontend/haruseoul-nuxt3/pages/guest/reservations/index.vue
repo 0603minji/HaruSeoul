@@ -24,7 +24,8 @@ const fetchReservations = async (pageNum) => {
   try {
     const params = {
       s: Array.isArray(selectedStatus.value) ? selectedStatus.value.join(",") : null,
-      pageNum: currentPage.value
+      pageNum: currentPage.value,
+      // m: memberId.value
     };
 
     const response = await axios.get("http://localhost:8080/api/v1/guest/reservations", { params:params });
@@ -34,12 +35,13 @@ const fetchReservations = async (pageNum) => {
     reservations.value = response.data.reservations;
     totalRowCount.value = response.data.totalRowCount;
     totalPageCount.value = response.data.totalPageCount;
-
+    
     hasPreviousPage.value = currentPage.value > 1;
     hasNextPage.value = currentPage.value < totalPageCount.value;
-    startNum.value = totalRowCount.value % currentPage.value;
-    
+    startNum.value = pageNumbers[0];
     pageNumbers.value = Array.from({ length: 5 }, (_, startNum) => startNum + 1);
+    
+    // startNum.value = response.data.startNum;
 
     // 각 예약의 날짜 차이를 계산하여 dDay 속성을 추가합니다.
     const currentDate = new Date();
@@ -48,6 +50,7 @@ const fetchReservations = async (pageNum) => {
       if (r.date) {
         const reservationDate = new Date(r.date);
         r.dDay = Math.floor((reservationDate - currentDate) / (1000 * 60 * 60 * 24)); // dDay 계산
+        // 1초 x 60(분) x 60(시) x 24(일)
       } else {
         r.dDay = null; // 날짜가 없을 경우 null 처리
       }
@@ -73,24 +76,26 @@ const pageClickHandler = async (newPage) => {
     return;
   }
 
-  currentPage.value = newPage; // 현재 페이지를 선택한 페이지로 업데이트
-}
+  currentPage.value = route.query.p;
+} 
 
 // 페이지가 변경될 때 쿼리 문자열을 업데이트
 watch(
   () => route.query.p,
   (newPage) => {
-    currentPage.value = parseInt(newPage) || 1; // 페이지 쿼리를 정수로 변환하여 현재 페이지에 할당
+    currentPage.value = parseInt(newPage) || 1; // 현재 페이지를 선택한 페이지로 업데이트
     fetchReservations(); // 새로운 페이지에 따라 예약 목록 갱신
   }
 );
 
 // 초기 예약 데이터 로드
 onMounted(() => {
-  currentPage.value = parseInt(route.query.p) || 1;
+  currentPage.value = route.query.p || 1;
   fetchReservations();
 });
 </script>
+
+
 
 
 <template>
@@ -224,9 +229,11 @@ onMounted(() => {
 
         </div>
       </div>
+
       <!-- Pager 부분 -->
       <Pager class="mb:4" :page-numbers="pageNumbers" :start-number="startNum" :total-page-count="totalPageCount"
       :href="`reservations`" @pageChange="pageClickHandler" />
+
     </section>
   </main>
 </template>

@@ -49,9 +49,9 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
-    public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, int pageNum, int cardsPerPage) {
+    public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, int pageNum) {
         Sort sort = Sort.by("regDate").descending();
-        Pageable pageable = PageRequest.of(pageNum-1, cardsPerPage, sort);
+        Pageable pageable = PageRequest.of(pageNum-1, 6, sort);
 
         // 요청 페이지 번호 확인
         System.out.println("Requesting page number: " + (pageNum - 1));
