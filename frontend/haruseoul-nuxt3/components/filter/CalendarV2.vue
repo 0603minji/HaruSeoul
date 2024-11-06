@@ -240,7 +240,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
         <button @click.prevent="toPrevMonth"
                 class="to-prev-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_left n-icon-size:3" type="button">이전
         </button>
-        <div class="year-month-wrapper font-size:9 font-weight:bold">
+        <div class="year-month-wrapper font-size:9">
           <select class="year" v-model="selectedYear">
             <option v-for="year in getYearOptions(initialYear, yearRange)" :value="year">{{ year }}</option>
           </select>
@@ -341,10 +341,13 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
 
       .year-month-wrapper {
         display: flex;
+        gap: 8px;
         //box-shadow: 0 1.88px 0.88px 0 rgba(0, 14, 51, 0.05);
 
         .year, .month {
           font-size: 1rem;
+          border-radius: 8px;
+          padding: 4px 8px;
         }
       }
 
