@@ -20,11 +20,9 @@ import java.util.List;
 public class ProgramController {
 
     DefaultProgramService service;
-    DefaultCategoryService categoryService;
 
     public ProgramController(DefaultProgramService service, DefaultCategoryService categoryService) {
         this.service = service;
-        this.categoryService = categoryService;
     }
 
     @GetMapping
@@ -41,27 +39,27 @@ public class ProgramController {
         return ResponseEntity.ok(programResponseDto);
     }
 
-    @GetMapping("one")
-    public ResponseEntity<ProgramListDto> getOneProgram(@RequestParam(name = "id") Long pId){
-        return ResponseEntity.ok(service.getOneProgram(pId));
-    }
-
     @PostMapping
     public ResponseEntity<Program> create(@RequestBody ProgramCreateDto programCreateDto) {
         return ResponseEntity.ok(service.create(programCreateDto));
-    }
-
-
-    @PutMapping
-    public ResponseEntity<Program> update(
-            @RequestBody ProgramUpdateDto programUpdateDto
-    ) {
-        return ResponseEntity.ok(service.update(programUpdateDto));
     }
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable(name = "id") Long id) {
         service.delete(id);
     }
-
+    
+    //  ====== 호스트 프로그램 수정 컨트롤러 =======================
+    @PutMapping
+    public ResponseEntity<Program> update(
+            @RequestBody ProgramUpdateDto programUpdateDto
+    ) {
+        return ResponseEntity.ok(service.update(programUpdateDto));
+    }
+    
+    //  ====== 호스트 프로그램 1건 조회 컨트롤러 =======================
+    @GetMapping("one")
+    public ResponseEntity<ProgramListDto> getOneProgram(@RequestParam(name = "id") Long pId){
+        return ResponseEntity.ok(service.getOneProgram(pId));
+    }
 }
