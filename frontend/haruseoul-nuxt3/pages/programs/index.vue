@@ -136,12 +136,12 @@
                 <div class="modal-checkbox">
                   <!-- All 체크박스 -->
                   <label>
-                    <input type="checkbox"> All
+                    <input @change="fetchPrograms" type="checkbox"> All
                   </label>
 
                   <!-- 카테고리 체크박스 목록 -->
                   <label v-for="c in categories" :key="c.id">
-                    <input type="checkbox" v-model="selectedCategoryIds" :value="c.id"> {{ c.name }}
+                    <input @change="fetchPrograms" type="checkbox" v-model="selectedCategoryIds" :value="c.id"> {{ c.name }}
                   </label>
                 </div>
               </form>
@@ -321,9 +321,9 @@ const fetching = ref(false);
 
 
 // 필터 값들
+const selectedCategoryIds = ref([]);
 const startDate = ref(null);
 const endDate = ref(null);
-const selectedCategoryIds = ref([]);
 const minPrice = ref(null);
 const maxPrice = ref(null);
 const groupSizeMin = ref(null);
@@ -339,6 +339,8 @@ const fetchCategories = async () => {
   categories.value = response.data;
 };
 
+console.log(selectedCategoryIds.value)
+
 
 const fetchPrograms = async () => {
   if (fetching.value) return; // 중복 호출 방지
@@ -348,7 +350,7 @@ const fetchPrograms = async () => {
     console.log("Fetching page:", page.value); // 디버깅 로그: 현재 페이지 번호
     const response = await axios.get('http://localhost:8080/api/v1/programs', {
       params: {
-        categoryIds: selectedCategoryIds.value.length === 0 ? null : selectedCategoryIds.value,
+        categoryIds: selectedCategoryIds.value.length === 0 ? null : selectedCategoryIds.value.join(','),
         startDate: startDate.value,
         endDate: endDate.value,
         minPrice: minPrice.value,
