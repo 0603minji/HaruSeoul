@@ -10,4 +10,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             " from Review r " +
             "where r.program.member.id = :mId")
     Long countByMemberId(@Param("mId") Long mId);
+
+    @Query("select SUM(r.rating)" +
+            " from Review r " +
+            "where r.program.member.id = :mId")
+    Long sumRatingByMemberId(@Param("mId") Long mId);
 }
