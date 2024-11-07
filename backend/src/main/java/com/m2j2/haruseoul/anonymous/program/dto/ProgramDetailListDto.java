@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class ProgramDetailListDto {
+
     private List<String> img;
     private List<String> categoryNames;
 
