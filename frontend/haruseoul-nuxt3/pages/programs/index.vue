@@ -4,102 +4,6 @@
       <h1 class="d:none">프로그램 목록</h1>
 
       <div class="layout-main">
-        <div class="layout-main-list">
-          <!--=== 필터 .n-filter ==========================================-->
-          <section class="n-filter md:d:none bg-color:base-1">
-            <h1 class="d:none">필터</h1>
-
-            <div class="overflow-x:auto">
-              <ul class="item-wrapper">
-                <li><a href=""
-                       class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
-                </li>
-                <li><a href=""
-                       class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:price n-icon-size:1 n-deco n-deco-gap:1">가격</a>
-                </li>
-                <li><a href=""
-                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a>
-                </li>
-                <li><a href=""
-                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:globe n-icon-size:1 n-deco n-deco-gap:1">언어</a>
-                </li>
-                <li><a href=""
-                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:clock n-icon-size:1 n-deco n-deco-gap:1">시작시간</a>
-                </li>
-                <li><a href=""
-                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:group n-icon-size:1 n-deco n-deco-gap:1 ">참여인원</a>
-                </li>
-              </ul>
-            </div>
-
-            <div class="reset-box">
-              <span class="icon-box n-deco1 n-icon n-icon:reset">
-                초기화
-              </span>
-            </div>
-          </section>
-
-          <!--=== 프로그램 목록==========================================-->
-          <section class="pg-list">
-            <!--=== 정렬 .list-header ==========================================-->
-            <header class="list-header bg-color:base-1">
-              <h1 class="d:none">프로그램 목록</h1>
-              <div>
-                <span class="list-item-count">{{ totalRowCount }} Result</span>
-                <!--            <button type="button" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">-->
-                <!--                정렬-->
-                <!--            </button>-->
-                <a href=""
-                   class="option sort n-icon n-icon:arrow_swap n-icon-color:base-6 n-deco n-deco-gap:1">
-                  정렬
-                </a>
-              </div>
-            </header>
-
-            <!--=== 프로그램 카드 목록 ===================================================-->
-            <ul v-if="programs.length > 0" class="n-card-container-column bg-color:base-1">
-              <!-- =================================== 예약 카드 1개 =================================== -->
-              <li v-for="p in programs" class="n-card n-card-column bg-color:base-1">
-                <NuxtLink :to="`/programs/${p.id}`" class="n-link-box"></NuxtLink>
-                <h2 class="d:none">프로그램 카드</h2>
-
-                <div class="card-main">
-                  <div class="img-wrapper">
-                    <img src="/public/image/program_01.png" alt="대표사진">
-                  </div>
-
-                  <div class="card-info-wrapper">
-                    <div class="card-info gap:1 color:base-7 font-size:5">
-                      <span>{{ p.categoryNames.join(' · ') }}</span>
-                    </div>
-                    <p class="title">{{ p.title }}</p>
-
-                    <div class="card-info">
-                                            <span class="n-icon n-icon:star n-deco"
-                                                  style="--icon-color: var(--color-yellow-1)"></span>
-                      <span>{{ p.rating }} ({{ p.totalRatingCount }})</span>
-                    </div>
-                    <div class="card-info">
-                      <span class="n-icon n-icon:clock_sand n-deco"></span>
-                      <span>{{ p.duration }} hours</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card-footer justify-content:flex-end">
-                                    <span
-                                        class="n-icon n-icon:price n-icon-size:2 n-deco n-deco-gap:1 font-size:8 margin-right:3">{{
-                                        p.price ? Number(p.price).toLocaleString() : '가격 없음'
-                                      }}</span>
-                </div>
-              </li>
-            </ul>
-            <p v-else class="no-results-message">해당 목록이 존재하지 않습니다.</p>
-            <div ref="infiniteScrollTrigger" class="infinite-scroll-trigger"></div> <!-- 무한 스크롤 트리거 -->
-          </section>
-        </div>
-
-        <!--=== 필터 @media (min-width:768px)==========================================-->
         <aside class="layout-main-aside">
           <header class="n-title">
             <h1 class="">Filter</h1>
@@ -159,10 +63,10 @@
 
               <form action="" class="form">
                 <div class="price-container">
-<!--                  <div class="range-slider">-->
-<!--                    <input type="range" class="slider">-->
-<!--                    <input type="range" class="slider">-->
-<!--                  </div>-->
+                  <!--                  <div class="range-slider">-->
+                  <!--                    <input type="range" class="slider">-->
+                  <!--                    <input type="range" class="slider">-->
+                  <!--                  </div>-->
                   <div class="price-inputs">
                     <input v-model="minPrice" @input="fetchPrograms" type="number" placeholder="₩0">
                     <span class="tilde">~</span>
@@ -185,6 +89,10 @@
                   <div>
                     <input id="language-all" type="radio" class="radio" name="language" :value="null" v-model="language" @change="fetchPrograms">
                     <label for="language-all">All</label>
+                  </div>
+                  <div>
+                    <input id="language-english" type="radio" class="radio" name="language" value="Korean" v-model="language" @change="fetchPrograms">
+                    <label for="language-english">Korean</label>
                   </div>
                   <div>
                     <input id="language-english" type="radio" class="radio" name="language" value="English" v-model="language" @change="fetchPrograms">
@@ -304,6 +212,103 @@
 
           </div>
         </aside>
+        <div class="layout-main-list">
+          <!--=== 필터 .n-filter ==========================================-->
+          <section class="n-filter md:d:none bg-color:base-1">
+            <h1 class="d:none">필터</h1>
+
+            <div class="overflow-x:auto">
+              <ul class="item-wrapper">
+                <li><a href=""
+                       class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
+                </li>
+                <li><a href=""
+                       class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:price n-icon-size:1 n-deco n-deco-gap:1">가격</a>
+                </li>
+                <li><a href=""
+                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a>
+                </li>
+                <li><a href=""
+                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:globe n-icon-size:1 n-deco n-deco-gap:1">언어</a>
+                </li>
+                <li><a href=""
+                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:clock n-icon-size:1 n-deco n-deco-gap:1">시작시간</a>
+                </li>
+                <li><a href=""
+                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:group n-icon-size:1 n-deco n-deco-gap:1 ">참여인원</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="reset-box">
+              <span class="icon-box n-deco1 n-icon n-icon:reset">
+                초기화
+              </span>
+            </div>
+          </section>
+
+          <!--=== 프로그램 목록==========================================-->
+          <section class="pg-list">
+            <!--=== 정렬 .list-header ==========================================-->
+            <header class="list-header bg-color:base-1">
+              <h1 class="d:none">프로그램 목록</h1>
+              <div>
+                <span class="list-item-count">{{ totalRowCount }} Result</span>
+                <!--            <button type="button" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">-->
+                <!--                정렬-->
+                <!--            </button>-->
+                <a href=""
+                   class="option sort n-icon n-icon:arrow_swap n-icon-color:base-6 n-deco n-deco-gap:1">
+                  정렬
+                </a>
+              </div>
+            </header>
+
+            <!--=== 프로그램 카드 목록 ===================================================-->
+            <ul v-if="programs.length > 0" class="n-card-container-column bg-color:base-1">
+              <!-- =================================== 예약 카드 1개 =================================== -->
+              <li v-for="p in programs" class="n-card n-card-column bg-color:base-1">
+                <NuxtLink :to="`/programs/${p.id}`" class="n-link-box"></NuxtLink>
+                <h2 class="d:none">프로그램 카드</h2>
+
+                <div class="card-main">
+                  <div class="img-wrapper">
+                    <img src="/public/image/program_01.png" alt="대표사진">
+                  </div>
+
+                  <div class="card-info-wrapper">
+                    <div class="card-info gap:1 color:base-7 font-size:5">
+                      <span>{{ p.categoryNames.join(' · ') }}</span>
+                    </div>
+                    <p class="title">{{ p.title }}</p>
+
+                    <div class="card-info">
+                                            <span class="n-icon n-icon:star n-deco"
+                                                  style="--icon-color: var(--color-yellow-1)"></span>
+                      <span>{{ p.rating }} ({{ p.totalRatingCount }})</span>
+                    </div>
+                    <div class="card-info">
+                      <span class="n-icon n-icon:clock_sand n-deco"></span>
+                      <span>{{ p.duration }} hours</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-footer justify-content:flex-end">
+                                    <span
+                                        class="n-icon n-icon:price n-icon-size:2 n-deco n-deco-gap:1 font-size:8 margin-right:3">{{
+                                        p.price ? Number(p.price).toLocaleString() : '가격 없음'
+                                      }}</span>
+                </div>
+              </li>
+            </ul>
+            <p v-else class="no-results-message">해당 목록이 존재하지 않습니다.</p>
+            <div ref="infiniteScrollTrigger" class="infinite-scroll-trigger"></div> <!-- 무한 스크롤 트리거 -->
+          </section>
+        </div>
+
+        <!--=== 필터 @media (min-width:768px)==========================================-->
+
       </div>
     </section>
 
@@ -556,7 +561,13 @@ onMounted(() => {
         overflow-y: auto; /* 내용이 넘칠 경우 내부 스크롤 */
         padding-right: 10px; /* 스크롤바와의 여유 공간 */
         box-sizing: border-box;
+        -ms-overflow-style: none;  /* IE 및 Edge */
+        scrollbar-width: none;  /* Firefox */
 
+        /* Chrome, Safari, Edge에서 스크롤바 숨기기 */
+        &::-webkit-scrollbar {
+          display: none;
+        }
       }
     }
   }
