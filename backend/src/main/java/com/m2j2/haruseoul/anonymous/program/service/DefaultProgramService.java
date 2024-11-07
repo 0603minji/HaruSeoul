@@ -1,14 +1,10 @@
 package com.m2j2.haruseoul.anonymous.program.service;
 
-import com.m2j2.haruseoul.anonymous.program.dto.ProgramListDto;
-import com.m2j2.haruseoul.anonymous.program.dto.ProgramResponseDto;
+import com.m2j2.haruseoul.anonymous.program.dto.*;
 import com.m2j2.haruseoul.entity.Image;
 import com.m2j2.haruseoul.entity.Program;
-import com.m2j2.haruseoul.repository.CategoryRepository;
-import com.m2j2.haruseoul.repository.MemberRepository;
 import com.m2j2.haruseoul.repository.ProgramRepository;
 import com.m2j2.haruseoul.repository.PublishedProgramRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,26 +14,30 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service("anonymousProgramService")
 public class DefaultProgramService implements ProgramService {
 
     private final ProgramRepository programRepository;
     private final PublishedProgramRepository publishedProgramRepository;
-    private final CategoryRepository categoryRepository;
-    private final MemberRepository memberRepository;
-    private final ModelMapper modelMapper;
+    private final CategoryProgramService categoryProgramService;
+    private final ProgramDetailImageService programDetailImageService;
+    private final ProgramDetailService programDetailService;
+    private final ProgramDetailMemberService programDetailMemberService;
+    private final ProgramDetailReviewService programDetailReviewService;
+    private final ProgramDetailRouteService programDetailRouteService;
 
 
-    public DefaultProgramService(CategoryRepository categoryRepository, ProgramRepository programRepository, PublishedProgramRepository publishedProgramRepository, MemberRepository memberRepository, ModelMapper modelMapper) {
-        this.categoryRepository = categoryRepository;
+    public DefaultProgramService(CategoryProgramService categoryProgramService, ProgramRepository programRepository, PublishedProgramRepository publishedProgramRepository, ProgramDetailImageService programDetailImageService, ProgramDetailService programDetailService, ProgramDetailMemberService programDetailMemberService, ProgramDetailReviewService programDetailReviewService, ProgramDetailRouteService programDetailRouteService) {
+        this.categoryProgramService = categoryProgramService;
         this.programRepository = programRepository;
         this.publishedProgramRepository = publishedProgramRepository;
-        this.memberRepository = memberRepository;
-        this.modelMapper = modelMapper;
+        this.programDetailImageService = programDetailImageService;
+        this.programDetailService = programDetailService;
+        this.programDetailMemberService = programDetailMemberService;
+        this.programDetailReviewService = programDetailReviewService;
+        this.programDetailRouteService = programDetailRouteService;
     }
 
     @Override
@@ -90,5 +90,27 @@ public class DefaultProgramService implements ProgramService {
                 .totalRowCount((int) programs.getTotalElements())
                 .build();
 
+    }
+
+    @Override
+    @Transactional
+    public ProgramDetailResponseDto getList(Long id) {
+        ProgramDetailProgramDto programDetailProgramDto = programDetailService.getDetail(id);
+        ProgramDetailCategoryDto programDetailCategoryDto = categoryProgramService.getCategoryNames(id);
+        ProgramDetailImageDto programDetailImageDto = programDetailImageService.getSrc(id);
+        ProgramDetailMemberDto programDetailMemberDto = programDetailMemberService.getName(id);
+        ProgramDetailReviewDto programDetailReviewDto = programDetailReviewService.getList(id);
+        List<ProgramDetailRouteDto> programDetailRouteDto = programDetailRouteService.getRoutes(id);
+
+        ProgramDetailResponseDto programDetailResponseDto = ProgramDetailResponseDto
+                .builder()
+                .programDetailProgramDto(programDetailProgramDto)
+                .programDetailCategoryDto(programDetailCategoryDto)
+                .programDetailImageDto(programDetailImageDto)
+                .programDetailMemberDto(programDetailMemberDto)
+                .programDetailReviewDto(programDetailReviewDto)
+                .programDetailRouteDto(programDetailRouteDto)
+                .build();
+        return programDetailResponseDto;
     }
 }

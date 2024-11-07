@@ -69,6 +69,12 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
                                         Pageable pageable);
 
 
+    @Query("SELECT p.member.id FROM Program p WHERE p.id = :id")
+    Long findMemberIdByProgramId(@Param("id") Long programId);
+
+    @Query("SELECT p.id FROM Program p WHERE p.member.id = :memberId")
+    List<Long> findIdByMemberId(@Param("memberId") Long memberId);
+
 }
 
 
