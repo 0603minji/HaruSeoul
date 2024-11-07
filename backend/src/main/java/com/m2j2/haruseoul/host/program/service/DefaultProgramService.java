@@ -236,6 +236,7 @@ public class DefaultProgramService implements ProgramService {
         oldProgram.setPackingList(programUpdateDto.getPackingList());
         oldProgram.setRequirement(programUpdateDto.getRequirement());
         oldProgram.setCaution(programUpdateDto.getCaution());
+        oldProgram.setStatus(programUpdateDto.getStatus());
 
         //  Program 객체를 db에 저장하는 save 메서드 호출
         Program newProgram = programRepository.save(oldProgram);

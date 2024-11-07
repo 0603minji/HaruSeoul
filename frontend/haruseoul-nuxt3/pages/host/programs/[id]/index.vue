@@ -197,7 +197,7 @@
                                         makgeolli and tteobokki.
                                         I’m desired to feel you happy by let you make your unforgettable Seoul!
                                     </p>
-                                    <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">펼치기</button>
+                                    <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">see more</button>
                                 </div>
                             </div>
                         </div>
@@ -448,7 +448,7 @@
 
                                         <!-- 주의사항 -->
                                         <div style="padding: var(--gap-6); padding-bottom: 0;">
-                                            <h2 class="info-form n-icon n-icon:caution">주의사항</h2>
+                                            <h2 class="info-form n-icon n-icon:caution">Caution</h2>
                                             <ul>
                                                 <li class="list-content">Extensive walking</li>
                                                 <li class="list-content">A lot of outdoor activities</li>

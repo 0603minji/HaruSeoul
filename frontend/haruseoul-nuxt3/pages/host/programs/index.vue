@@ -1,11 +1,11 @@
-<!--1. 페이지 네이션 구현-->
-<!--2. programs/new에서 값 입력받으면 새로운 프로그램 조회 가능 구현-->
-<!--3. 프로그램 상태에 따라 버튼 변경 : 작성하기 / 개설하기 / 예약관리 -->
-<!--4. 로그인 되어있는 해당 호스트에 대한 프로그램만 조회 -->
+<!-- 1. 로그인 되어있는 해당 호스트에 대한 프로그램만 조회 -->
+<!-- 2. 수정하기 : 페이지 이동 구현 (detail -> new) -->
+
 
 <script setup>
 import { onMounted, ref, computed } from "vue";
 import axios from "axios";
+import { useRouter } from 'vue-router';
 
 //============= 변수 영역 ====================
 const programs = ref([]); //  서버에서 가져온 프로그램 목록 저장 배열
@@ -20,6 +20,8 @@ const currentPage = ref(1); //  현재 페이지 번호
 const cardsPerPage = 6; //  한페이지당 표시할 프로그램 카드 수
 // 모달 관련 상태
 const moreIsOpen = ref(false);
+const router = useRouter();
+const selectedProgramId = ref(null);
 
 //============= Lifecycle Functions ================
 onMounted(() => {
@@ -270,8 +272,9 @@ const visiblePages = computed(() => {
 
 
 // 모달 열기
-const openMore = () => {
+const openMore = (id) => {
     moreIsOpen.value = true;
+    selectedProgramId.value = id;
 };
 
 // 모달 닫기
@@ -290,6 +293,13 @@ const filterInit = () => {
     programCheckbox.checked = true;
     const statusCheckbox = document.querySelector(".statusCheckboxAll");
     statusCheckbox.checked = true;
+}
+
+
+const goToEditPage = (id) => {
+    if (id) {
+        router.push(`/host/programs/${id}`);
+    }
 }
 </script>
 
@@ -365,7 +375,7 @@ const filterInit = () => {
                                             class="n-panel-tag not-submitted">작성완료</span>
                                     </div>
                                     <div class="right">
-                                        <a @click.prevent="openMore()" href=""
+                                        <a @click.prevent="openMore(p.id)" href=""
                                             class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
                                     </div>
                                 </div>
@@ -433,9 +443,9 @@ const filterInit = () => {
                 <!-- 모달 창 -->
                 <div v-if="moreIsOpen" class="more-overlay" @click="closeMore">
                     <div class="more">
-                        <div class="more-close"><button @click="closeMore">Ⅹ</button></div>
+                        <div class="more-close"><button @click="closeMore" style="cursor: pointer;">Ⅹ</button></div>
                         <div class="more-content" @click.stop>
-                            <a href="#" class="n-btn">수정하기</a>
+                            <a href="#" class="n-btn" @click.prevent="goToEditPage(selectedProgramId)">수정하기</a>
                             <a href="#" class="n-btn">삭제하기</a>
                         </div>
                     </div>
@@ -446,7 +456,7 @@ const filterInit = () => {
                     <header class="n-title">
                         <h1 class="">Filter</h1>
                         <div>
-                            <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)"
+                            <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;"
                                 @click="filterInit">
                                 초기화
                             </button>
