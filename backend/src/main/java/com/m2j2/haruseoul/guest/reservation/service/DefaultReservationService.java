@@ -132,9 +132,11 @@ public class DefaultReservationService implements ReservationService {
         // ReservationDetailHostDto Host;
         // ratingCount: 특정 memberId 에 해당하는 review 의 개수 담기
         Long ratingCount = reviewRepository.countByMemberId(reservation.getPublishedProgram().getProgram().getMember().getId());
+        Long totalRating = reviewRepository.sumRatingByMemberId(reservation.getPublishedProgram().getProgram().getMember().getId()); // 모든 rating 값의 합
+        Double averageRating = ratingCount != 0 ? totalRating / ratingCount : 0.0;
         ReservationDetailHostDto reservationDetailHostDto = ReservationDetailHostDto.builder()
                 .memberName(reservation.getPublishedProgram().getProgram().getMember().getName())
-                .programRating(String.valueOf(reservationProgram.getRating()))
+                .programRating(String.valueOf(averageRating))
                 .ratingCount(ratingCount)
                 .build();
 
