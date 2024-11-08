@@ -155,6 +155,7 @@ onMounted(() => {
                   style="border-color: #DB4455; color: #DB4455;">
                     취소됨
                   </span>
+                  <span style="font-weight: bold; padding: 5px;">[{{ r.id }}]</span>
                 </div>
               </div>
               <p class="title">
@@ -167,11 +168,11 @@ onMounted(() => {
                     <span v-if="r.dDay > 1">
 
                       {{ r.date }}
-                      <span v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 7)" style="color: #DB4455;">
+                      <span v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3)" style="color: #DB4455;">
                         (D-{{ r.dDay }})
                       </span>
 
-                      <span v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 7)">
+                      <span v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
                         (D-{{ r.dDay }})
                       </span>
                       
