@@ -15,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,8 +49,8 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
     @Override
     public PublishedProgramResponseDto getList(List<Long> memberIds, List<LocalDate> dates, List<Long> statusIds, List<Long> programIds,
                                                Integer page, Integer pageSize, String sortBy, String order) {
-        Sort sort = order.equals("asc")? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(page-1, pageSize, sort);
+        Sort sort = order.equals("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
 
         LocalDate start = dates == null ? null : dates.getFirst();
         LocalDate end = dates == null ? null : dates.getLast();
@@ -80,10 +79,9 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
         boolean hasPreviousPage = publishedProgramPage.hasPrevious();
 
         // pager에 표시할 목록. 1~5, 6~10...
-        List<Long> pages = new ArrayList<>();
         int offset = (page - 1) % 5;
         int startNUm = page - offset;
-        pages = IntStream.range(startNUm, startNUm + 5)
+        List<Long> pages = IntStream.range(startNUm, startNUm + 5)
                 .boxed()
                 .map(Long::valueOf)
                 .toList();
@@ -97,6 +95,38 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
                 .hasNextPage(hasNextPage)
                 .hasPreviousPage(hasPreviousPage)
                 .build();
+    }
+
+    @Override
+    public PublishedProgramResponseDto getList(List<Long> memberIds, List<LocalDate> dates, List<Long> statusIds, List<Long> programIds,
+                                               Integer page, Integer pageSize, String sortBy, String order, String tab) {
+        // tab : null
+        if (tab == null)
+            return getList(memberIds, dates, statusIds, programIds, page, pageSize, sortBy, order);
+
+        // tab : todo(예정된 예약) s=1,2,5,6일 때
+        // 1. 선택된 필터가 없을 때 statusIds == null => statusIds = List.of(1L,2L,5L,6L)
+        if (tab.equals("todo") && statusIds == null)
+            return getList(memberIds, dates, List.of(1L,2L,5L,6L), programIds, page, pageSize, sortBy, order);
+
+        // 2. 선택된 필터가 하나라도 있을 때 !statusId.isEmpty() => statusIds.retainAll(List.of(1L,2L,5L,6L))
+        if (tab.equals("todo") && !statusIds.isEmpty()) {
+            // statusIds(선택된 필터)와 1,2,5,6의 교집합
+            List<Long> retained = Arrays.asList(1L,2L,5L,6L);
+            retained.retainAll(statusIds);
+            return getList(memberIds, dates, retained, programIds, page, pageSize, sortBy, order);
+        }
+
+        // tab : finished(지난 예약) s=3
+        if (tab.equals("finished"))
+            return getList(memberIds, dates, List.of(3L), programIds, page, pageSize, sortBy, order);
+
+        // tab : canceled(취소된 예약) s=4
+        if (tab.equals("canceled"))
+            return getList(memberIds, dates, List.of(4L), programIds, page, pageSize, sortBy, order);
+
+        // 그 밖의 유효하지 않은 값들
+        return getList(memberIds, dates, statusIds, programIds, page, pageSize, sortBy, order);
     }
 
     @Override
