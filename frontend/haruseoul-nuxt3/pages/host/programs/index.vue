@@ -1,11 +1,11 @@
-<!--1. 페이지 네이션 구현-->
-<!--2. programs/new에서 값 입력받으면 새로운 프로그램 조회 가능 구현-->
-<!--3. 프로그램 상태에 따라 버튼 변경 : 작성하기 / 개설하기 / 예약관리 -->
-<!--4. 로그인 되어있는 해당 호스트에 대한 프로그램만 조회 -->
+<!-- 1. 로그인 되어있는 해당 호스트에 대한 프로그램만 조회 -->
+<!-- 2. 수정하기 : 페이지 이동 구현 (detail -> new) -->
+
 
 <script setup>
 import { onMounted, ref, computed } from "vue";
 import axios from "axios";
+import { useRouter } from 'vue-router';
 
 //============= 변수 영역 ====================
 const programs = ref([]); //  서버에서 가져온 프로그램 목록 저장 배열
@@ -20,6 +20,8 @@ const currentPage = ref(1); //  현재 페이지 번호
 const cardsPerPage = 6; //  한페이지당 표시할 프로그램 카드 수
 // 모달 관련 상태
 const moreIsOpen = ref(false);
+const router = useRouter();
+const selectedProgramId = ref(null);
 
 //============= Lifecycle Functions ================
 onMounted(() => {
@@ -270,8 +272,9 @@ const visiblePages = computed(() => {
 
 
 // 모달 열기
-const openMore = () => {
+const openMore = (id) => {
     moreIsOpen.value = true;
+    selectedProgramId.value = id;
 };
 
 // 모달 닫기
@@ -291,6 +294,13 @@ const filterInit = () => {
     const statusCheckbox = document.querySelector(".statusCheckboxAll");
     statusCheckbox.checked = true;
 }
+
+
+const goToEditPage = (id) => {
+    if (id) {
+        router.push(`/host/programs/${id}`);
+    }
+}
 </script>
 
 <template>
@@ -300,7 +310,8 @@ const filterInit = () => {
             <header class="n-title">
                 <h1 class="">프로그램 관리</h1>
                 <div>
-                    <nuxt-link to="/host/programs/new" class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록</nuxt-link>
+                    <nuxt-link to="/host/programs/new"
+                        class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록</nuxt-link>
                 </div>
             </header>
 
@@ -364,7 +375,7 @@ const filterInit = () => {
                                             class="n-panel-tag not-submitted">작성완료</span>
                                     </div>
                                     <div class="right">
-                                        <a @click.prevent="openMore()" href=""
+                                        <a @click.prevent="openMore(p.id)" href=""
                                             class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
                                     </div>
                                 </div>
@@ -431,9 +442,12 @@ const filterInit = () => {
 
                 <!-- 모달 창 -->
                 <div v-if="moreIsOpen" class="more-overlay" @click="closeMore">
-                    <div class="more" @click.stop>
-                        <div class="more-close"><button @click="closeMore">Ⅹ</button></div>
-                        <a href="#" class="n-btn">수정하기</a>
+                    <div class="more">
+                        <div class="more-close"><button @click="closeMore" style="cursor: pointer;">Ⅹ</button></div>
+                        <div class="more-content" @click.stop>
+                            <a href="#" class="n-btn" @click.prevent="goToEditPage(selectedProgramId)">수정하기</a>
+                            <a href="#" class="n-btn">삭제하기</a>
+                        </div>
                     </div>
                 </div>
 
@@ -442,7 +456,8 @@ const filterInit = () => {
                     <header class="n-title">
                         <h1 class="">Filter</h1>
                         <div>
-                            <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)" @click="filterInit">
+                            <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;"
+                                @click="filterInit">
                                 초기화
                             </button>
                         </div>
@@ -916,6 +931,32 @@ const filterInit = () => {
     }
 }
 
+.more {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-base-1);
+    border-radius: 10px;
+    padding: 8px;
+    
+    .more-close {
+        display: flex;
+        justify-content: right;
+    }
+
+    .more-content {
+        .n-btn {
+            --btn-border-color: var(--color-base-7);
+            color: var(--color-base-7);
+        }
+
+        display: flex;
+        flex-direction: column;
+        padding: 20px 30px;
+        gap: 16px;
+        width: 300px;
+    }
+}
+
 .more-overlay {
     position: fixed;
     top: 0;
@@ -927,28 +968,5 @@ const filterInit = () => {
     justify-content: center;
     align-items: center;
     z-index: 7;
-}
-
-.more {
-    .more-close{
-        display: flex;
-        justify-content: right;
-    }
-
-    .n-btn {
-        margin: 10px;
-        --btn-border-color: var(--color-base-7);
-        color: var(--color-base-7);
-    }
-
-    display: flex;
-    flex-direction: column;
-    background: var(--color-base-1);
-    padding: 4px 10px 10px 10px ;
-    gap: 16px;
-    border-radius: 8px;
-    width: 300px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
 }
 </style>
