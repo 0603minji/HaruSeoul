@@ -4,6 +4,214 @@
       <h1 class="d:none">프로그램 목록</h1>
 
       <div class="layout-main">
+        <aside class="layout-main-aside">
+          <header class="n-title">
+            <h1 class="">Filter</h1>
+            <div>
+              <button @click="resetFilters" class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)">초기화</button>
+            </div>
+          </header>
+
+          <div class="filters">
+            <!-- 기간 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">Period</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
+              <form action="" class="form">
+                <div class="modal-duration">
+                  <label>
+                    <input type="date" v-model="startDate" @change="fetchPrograms" placeholder="Start Date">
+                  </label>
+                  <span>~</span>
+                  <label>
+                    <input type="date" v-model="endDate" @change="fetchPrograms" placeholder="End Date">
+                  </label>
+                </div>
+              </form>
+            </details>
+
+            <!-- 카테고리 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">Category</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
+
+              <form action="" class="form">
+                <div class="modal-checkbox">
+                  <!-- All 체크박스 -->
+                  <label>
+                    <input v-model="allCategoriesSelected" @change="toggleAllCategories" type="checkbox"> All
+                  </label>
+
+                  <!-- 카테고리 체크박스 목록 -->
+                  <label v-for="c in categories" :key="c.id">
+                    <input @change="updateAllCheckbox" type="checkbox" v-model="selectedCategoryIds" :value="c.id"> {{ c.name }}
+                  </label>
+                </div>
+              </form>
+            </details>
+
+            <!-- 가격 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">Price</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
+
+              <form action="" class="form">
+                <div class="price-container">
+                  <!--                  <div class="range-slider">-->
+                  <!--                    <input type="range" class="slider">-->
+                  <!--                    <input type="range" class="slider">-->
+                  <!--                  </div>-->
+                  <div class="price-inputs">
+                    <input v-model="minPrice" @input="fetchPrograms" type="number" placeholder="₩0">
+                    <span class="tilde">~</span>
+                    <input v-model="maxPrice" @input="fetchPrograms" type="number" placeholder="₩1000000">
+                  </div>
+                </div>
+              </form>
+            </details>
+
+            <!-- 진행언어 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">Language</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
+
+              <form action="" class="form">
+                <div class="modal-radio">
+                  <label class="d:none">Language</label>
+                  <div>
+                    <input id="language-all" type="radio" class="radio" name="language" :value="null" v-model="language" @change="fetchPrograms">
+                    <label for="language-all">All</label>
+                  </div>
+                  <div>
+                    <input id="language-english" type="radio" class="radio" name="language" value="Korean" v-model="language" @change="fetchPrograms">
+                    <label for="language-english">Korean</label>
+                  </div>
+                  <div>
+                    <input id="language-english" type="radio" class="radio" name="language" value="English" v-model="language" @change="fetchPrograms">
+                    <label for="language-english">English</label>
+                  </div>
+                  <div>
+                    <input id="language-japanese" type="radio" class="radio" name="language" value="Japanese" v-model="language" @change="fetchPrograms">
+                    <label for="language-japanese">Japanese</label>
+                  </div>
+                  <div>
+                    <input id="language-chinese" type="radio" class="radio" name="language" value="Chinese" v-model="language" @change="fetchPrograms">
+                    <label for="language-chinese">Chinese</label>
+                  </div>
+                </div>
+              </form>
+            </details>
+
+            <!-- 참여인원 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">Group Size</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
+
+              <form action="" class="form">
+
+                <div class="min-max-container">
+                  <div class="min-section">
+                    <span>Min</span>
+                    <div class="input-group">
+                      <button class="n-btn">-</button>
+                      <input v-model="groupSizeMin" @change="fetchPrograms" type="number" min="2" max="5">
+                      <button class="n-btn">＋</button>
+                    </div>
+                  </div>
+
+                  <span class="tilde">~</span>
+
+                  <div class="max-section">
+                    <span>Max</span>
+                    <div class="input-group">
+                      <button class="n-btn">-</button>
+                      <input v-model="groupSizeMax" @change="fetchPrograms" type="number" min="2" max="5">
+                      <button class="n-btn">＋</button>
+                    </div>
+                  </div>
+                </div>
+
+              </form>
+            </details>
+
+            <!-- 소요시간 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">Duration</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
+
+              <form action="" class="form">
+                <div class="modal-radio">
+                  <div>
+                    <input type="radio" class="radio" name="duration" :value="null" v-model="duration" @change="fetchPrograms">
+                    <label>All</label>
+                  </div>
+                  <div>
+                    <input type="radio" class="radio" name="duration" value="1" v-model="duration" @change="fetchPrograms">
+                    <label>Under 2 hours</label>
+                  </div>
+                  <div>
+                    <input type="radio" class="radio" name="duration" value="2" v-model="duration" @change="fetchPrograms">
+                    <label>2 ~ 4 hours</label>
+                  </div>
+                  <div>
+                    <input type="radio" class="radio" name="duration" value="3" v-model="duration" @change="fetchPrograms">
+                    <label>4 ~ 6 hours</label>
+                  </div>
+                  <div>
+                    <input type="radio" class="radio" name="duration" value="4" v-model="duration" @change="fetchPrograms">
+                    <label>6 ~ 8 hours</label>
+                  </div>
+                  <div>
+                    <input type="radio" class="radio" name="duration" value="5" v-model="duration" @change="fetchPrograms">
+                    <label>Over 8 hours</label>
+                  </div>
+                </div>
+              </form>
+            </details>
+
+            <!-- 시작시간 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">Start Time</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
+
+              <form action="" class="form">
+                <div class="modal-radio">
+                  <div>
+                    <input type="radio" class="radio" name="startTime" value="1" v-model="startTime" @change="fetchPrograms">
+                    <label>All</label>
+                  </div>
+                  <div>
+                    <input type="radio" class="radio" name="startTime" value="2" v-model="startTime" @change="fetchPrograms">
+                    <label>Before 12 PM</label>
+                  </div>
+                  <div>
+                    <input type="radio" class="radio" name="startTime" value="3" v-model="startTime" @change="fetchPrograms">
+                    <label>12 PM to 6 PM</label>
+                  </div>
+                  <div>
+                    <input type="radio" class="radio" name="startTime" value="4" v-model="startTime" @change="fetchPrograms">
+                    <label>After 6 PM</label>
+                  </div>
+                </div>
+              </form>
+            </details>
+
+          </div>
+        </aside>
         <div class="layout-main-list">
           <!--=== 필터 .n-filter ==========================================-->
           <section class="n-filter md:d:none bg-color:base-1">
@@ -33,9 +241,9 @@
             </div>
 
             <div class="reset-box">
-              <a href="" class="icon-box n-deco1 n-icon n-icon:reset">
+              <span class="icon-box n-deco1 n-icon n-icon:reset">
                 초기화
-              </a>
+              </span>
             </div>
           </section>
 
@@ -57,10 +265,10 @@
             </header>
 
             <!--=== 프로그램 카드 목록 ===================================================-->
-            <ul class="n-card-container-column bg-color:base-1">
+            <ul v-if="programs.length > 0" class="n-card-container-column bg-color:base-1">
               <!-- =================================== 예약 카드 1개 =================================== -->
               <li v-for="p in programs" class="n-card n-card-column bg-color:base-1">
-                <a class="n-link-box" href="detail"></a>
+                <NuxtLink :to="`/programs/${p.id}`" class="n-link-box"></NuxtLink>
                 <h2 class="d:none">프로그램 카드</h2>
 
                 <div class="card-main">
@@ -94,191 +302,50 @@
                 </div>
               </li>
             </ul>
+            <p v-else class="no-results-message">해당 목록이 존재하지 않습니다.</p>
+            <div ref="infiniteScrollTrigger" class="infinite-scroll-trigger"></div> <!-- 무한 스크롤 트리거 -->
           </section>
         </div>
 
         <!--=== 필터 @media (min-width:768px)==========================================-->
-        <aside class="layout-main-aside">
-          <header class="n-title">
-            <h1 class="">Filter</h1>
-            <div>
-              <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1)">초기화</button>
-            </div>
-          </header>
 
-          <div class="filters">
-            <!-- 기간 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">Period</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-                <div class="modal-duration">
-                  <label>
-                    <input type="date" placeholder="Start Date">
-                  </label>
-                  <span>~</span>
-                  <label>
-                    <input type="date" placeholder="End Date">
-                  </label>
-                </div>
-              </form>
-            </details>
-
-            <!-- 카테고리 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">Category</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-                <div class="modal-checkbox">
-                  <label><input type="checkbox">All</label>
-                  <label><input type="checkbox">Activity</label>
-                  <label><input type="checkbox">Culture</label>
-                  <label><input type="checkbox">Shopping</label>
-                  <label><input type="checkbox">Food</label>
-                  <label><input type="checkbox">Nature</label>
-                </div>
-              </form>
-            </details>
-
-            <!-- 가격 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">Price</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-                <div class="price-container">
-                  <div class="range-slider">
-                    <input type="range" min="0" max="300000" value="0" class="slider">
-                    <input type="range" min="0" max="300000" value="300000" class="slider">
-                  </div>
-                  <div class="price-inputs">
-                    <input type="text" placeholder="₩0" value="₩0" readonly>
-                    <span class="tilde">~</span>
-                    <input type="text" placeholder="₩300000" value="₩300000" readonly>
-
-                  </div>
-                </div>
-              </form>
-            </details>
-
-            <!-- 진행언어 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">Language</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-
-                <div class="modal-radio">
-                  <div><label><input type="radio" class="radio">All</label></div>
-                  <div><label><input type="radio" class="radio">English</label></div>
-                  <div><label><input type="radio" class="radio">Japanese</label></div>
-                  <div><label><input type="radio" class="radio">Chinese</label></div>
-                </div>
-
-              </form>
-            </details>
-
-            <!-- 참여인원 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">Group Size</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-
-                <div class="min-max-container">
-                  <div class="min-section">
-                    <span>Min</span>
-                    <div class="input-group">
-                      <button class="n-btn">-</button>
-                      <input type="number" min="0" max="8" value="0">
-                      <button class="n-btn">＋</button>
-                    </div>
-                  </div>
-
-                  <span class="tilde">~</span>
-
-                  <div class="max-section">
-                    <span>Max</span>
-                    <div class="input-group">
-                      <button class="n-btn">-</button>
-                      <input type="number" min="0" max="8" value="8">
-                      <button class="n-btn">＋</button>
-                    </div>
-                  </div>
-                </div>
-
-              </form>
-            </details>
-
-            <!-- 소요시간 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">Duration</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-
-                <div class="modal-radio">
-                  <div><label><input type="radio" class="radio">All</label></div>
-                  <div><label><input type="radio" class="radio">Under 2 hours</label></div>
-                  <div><label><input type="radio" class="radio">2 ~ 4 hours</label></div>
-                  <div><label><input type="radio" class="radio">4 ~ 6 hours</label></div>
-                  <div><label><input type="radio" class="radio">6 ~ 8 hours</label></div>
-                  <div><label><input type="radio" class="radio">Over 8 hours</label></div>
-                </div>
-
-              </form>
-            </details>
-
-            <!-- 시작시간 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">Start Time</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-
-                <div class="modal-radio">
-                  <div><label><input type="radio" class="radio">All</label></div>
-                  <div><label><input type="radio" class="radio">Before 12 PM</label></div>
-                  <div><label><input type="radio" class="radio">12 PM to 6 PM</label></div>
-                  <div><label><input type="radio" class="radio">After 6 PM</label></div>
-                </div>
-
-              </form>
-            </details>
-          </div>
-        </aside>
       </div>
     </section>
 
   </main>
 </template>
 
-
 <script setup>
-import {ref, onMounted, onUnmounted} from 'vue';
+import {ref, onMounted, onUnmounted, computed} from 'vue';
 import axios from 'axios';
 
 const programs = ref([]);
 const totalRowCount = ref(0);
+const categories = ref([]);
 const page = ref(1);
 const pageSize = ref(15);
 const fetching = ref(false);
+
+const allCategoriesSelected = ref(true);
+// 필터 값들
+const selectedCategoryIds = ref([]);
+const startDate = ref(null);
+const endDate = ref(null);
+const minPrice = ref(null);
+const maxPrice = ref(null);
+const groupSizeMin = ref(null);
+const groupSizeMax = ref(null);
+const duration = ref(null);
+const startTime = ref(1);
+const language = ref(null);
+
+
+
+const fetchCategories = async () => {
+  const response = await axios.get("http://localhost:8080/api/v1/categories");
+  categories.value = response.data;
+};
+
 
 const fetchPrograms = async () => {
   if (fetching.value) return; // 중복 호출 방지
@@ -287,14 +354,31 @@ const fetchPrograms = async () => {
   try {
     console.log("Fetching page:", page.value); // 디버깅 로그: 현재 페이지 번호
     const response = await axios.get('http://localhost:8080/api/v1/programs', {
-      params: {page: page.value, pageSize: pageSize.value},
+      params: {
+        categoryIds: selectedCategoryIds.value.length === 0 ? null : selectedCategoryIds.value.join(','),
+        startDate: startDate.value,
+        endDate: endDate.value,
+        minPrice: minPrice.value,
+        maxPrice: maxPrice.value,
+        groupSizeMin: groupSizeMin.value,
+        groupSizeMax: groupSizeMax.value,
+        duration: duration.value,
+        startTime: startTime.value,
+        language: language.value,
+        page: page.value,
+        pageSize: pageSize.value,
+      },
     });
 
     // 데이터 추가 및 페이지 값 증가
-    programs.value = [...programs.value, ...response.data.programs];
+    if (page.value === 1) {
+      programs.value = response.data.programs; // 필터 적용 시 데이터를 새로 설정
+    } else {
+      programs.value.push(...response.data.programs); // 무한 스크롤로 데이터를 추가
+    }
     totalRowCount.value = response.data.totalRowCount;
-    page.value += 1; // 다음 페이지로 증가
-    console.log("Next page to fetch:", page.value); // 디버깅 로그: 증가된 페이지 값
+    // page.value += 1; // 다음 페이지로 증가
+    // console.log("Next page to fetch:", page.value); // 디버깅 로그: 증가된 페이지 값
 
   } catch (error) {
     console.error("프로그램 목록을 가져오는 데 실패했습니다:", error);
@@ -304,25 +388,78 @@ const fetchPrograms = async () => {
   }
 };
 
-// 스크롤 이벤트 감지
-const handleScroll = () => {
-  const bottomReached = window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 200;
-  console.log("Scroll detected. bottomReached:", bottomReached); // 디버그용
-  if (bottomReached && programs.value.length < totalRowCount.value && !fetching.value) {
-    fetchPrograms();
-  }
+const resetProgramsAndFetch = () => {
+  programs.value = [];
+  page.value = 1;
+  fetchPrograms();
 };
+
+watch([selectedCategoryIds, startDate, endDate, minPrice, maxPrice, groupSizeMin, groupSizeMax, duration, startTime, language], resetProgramsAndFetch);
+
+const observeInfiniteScroll = () => {
+  const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !fetching.value) {
+          page.value++;
+          fetchPrograms();
+        }
+      },
+      { rootMargin: '0px', threshold: 1.0 }
+  );
+
+  observer.observe(document.querySelector('.infinite-scroll-trigger'));
+};
+
+// All 체크박스를 클릭했을 때 모든 카테고리를 선택/해제하고 fetchPrograms 호출
+const toggleAllCategories = () => {
+  if (allCategoriesSelected.value) {
+    selectedCategoryIds.value = [];
+  } else {
+    selectedCategoryIds.value = categories.value.map(category => category.id); // 개별 카테고리 선택
+  }
+  fetchPrograms(); // 변경 사항 적용
+};
+
+
+// 개별 카테고리 선택 상태가 변경될 때 All 체크박스 상태를 업데이트하고 fetchPrograms 호출
+const updateAllCheckbox = () => {
+  if (selectedCategoryIds.value.length === categories.value.length) {
+    // 모든 개별 체크박스가 선택된 경우 All 체크박스만 선택
+    allCategoriesSelected.value = true;
+    selectedCategoryIds.value = [];
+  } else {
+    // 선택된 개별 카테고리 수가 전체와 다를 경우 All 체크박스 해제
+    allCategoriesSelected.value = false;
+  }
+  fetchPrograms(); // 변경 사항 적용
+};
+
+//=========필터 리셋============
+
+const resetFilters = () => {
+  selectedCategoryIds.value = [];
+  startDate.value = null;
+  endDate.value = null;
+  minPrice.value = null;
+  maxPrice.value = null;
+  groupSizeMin.value = null;
+  groupSizeMax.value = null;
+  duration.value = null;
+  startTime.value = 1;
+  language.value = null;
+  page.value = 1; // 첫 페이지로 초기화
+  fetchPrograms(); // 초기화 후 프로그램 목록 다시 가져오기
+};
+
 
 onMounted(() => {
   fetchPrograms(); // 첫 번째 페이지 데이터 로드
-  window.addEventListener('scroll', handleScroll);
+  fetchCategories();
+  observeInfiniteScroll();
 });
 
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
+
 </script>
-
 
 <style scoped>
 .layout-body {
@@ -337,6 +474,7 @@ onUnmounted(() => {
         .n-btn {
           --btn-font-size: 12px;
         }
+
       }
 
       /*===============================================================================================*/
@@ -383,6 +521,7 @@ onUnmounted(() => {
 
         .n-icon {
           --icon-size: var(--icon-size-4);
+          cursor: pointer;
         }
       }
 
@@ -393,6 +532,11 @@ onUnmounted(() => {
       }
     }
   }
+}
+.no-results-message{
+  padding:100px;
+  display: flex;
+  justify-content: center;
 }
 
 @media (min-width: 768px) {
@@ -409,6 +553,19 @@ onUnmounted(() => {
 
       .layout-main-aside {
         display: flex;
+        position: sticky;
+        top: 0;
+        height: 100vh; /* 화면 전체 높이 */
+        overflow-y: auto; /* 내용이 넘칠 경우 내부 스크롤 */
+        padding-right: 10px; /* 스크롤바와의 여유 공간 */
+        box-sizing: border-box;
+        -ms-overflow-style: none;  /* IE 및 Edge */
+        scrollbar-width: none;  /* Firefox */
+
+        /* Chrome, Safari, Edge에서 스크롤바 숨기기 */
+        &::-webkit-scrollbar {
+          display: none;
+        }
       }
     }
   }
@@ -528,18 +685,8 @@ onUnmounted(() => {
         background-color: var(--color-base-3);
         border-radius: 5px;
         outline: none;
-        position: absolute;
-        pointer-events: none;
-      }
-
-      .slider:first-child {
-        z-index: 1;
-        /* 첫 번째 슬라이더가 뒷부분에 위치하게 함 */
-      }
-
-      .slider:last-child {
-        z-index: 2;
-        /* 두 번째 슬라이더가 앞부분에 위치하게 하여 겹칠 때도 정상적으로 보이도록 설정 */
+        position: relative;
+        pointer-events: none; /* 슬라이더 바에서도 클릭이 가능하게 변경 */
       }
 
       .slider::-webkit-slider-thumb {
@@ -551,10 +698,10 @@ onUnmounted(() => {
         border-radius: 50%;
         cursor: pointer;
         position: relative;
-        z-index: 5;
+        z-index: 2; /* 두 슬라이더 핸들의 z-index를 같은 값으로 설정 */
         pointer-events: auto;
-        /* 슬라이더 핸들에서 이벤트 발생 허용 */
       }
+
     }
 
     .price-inputs {
