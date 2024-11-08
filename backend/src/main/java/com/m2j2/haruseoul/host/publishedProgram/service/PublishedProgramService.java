@@ -9,6 +9,7 @@ import java.util.List;
 public interface PublishedProgramService {
     PublishedProgramCreatedDto create(PublishedProgramCreateDto publishedProgramCreateDto);
     PublishedProgramUpdatedDto update(PublishedProgramUpdateDto publishedProgramUpdateDto);
-    PublishedProgramResponseDto getList(List<LocalDate> dates, List<Long> statusIds, List<Long> programIds);
+    PublishedProgramResponseDto getList(List<Long> memberIds, List<LocalDate> dates, List<Long> statusIds, List<Long> programIds,
+                                        Integer page, Integer pageSize, String sort, String order);
     boolean delete(Long id);
 }

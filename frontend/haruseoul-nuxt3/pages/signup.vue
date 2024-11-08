@@ -119,7 +119,7 @@ const submitHandler = async () => {
   try {
     const response = await axios.post('http://localhost:8080/api/v1/members/signup', memberData);
     // 회원가입 성공 시 http://localhost:5173/success 페이지로 리디렉션
-    window.location.href = "http://localhost:5173/success";
+    navigateTo('/signup-success');
   } catch (error) {
     alert("입력값을 확인해주세요")
     // 실패 시 처리 로직 추가 가능

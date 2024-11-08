@@ -4,7 +4,7 @@
     <div class="message">
       Your account was successfully created!
     </div>
-    <RouterLink to="/login" class="n-btn n-btn-background-color:main">
+    <RouterLink to="/signin" class="n-btn n-btn-background-color:main">
       Back to Login
     </RouterLink>
   </main>

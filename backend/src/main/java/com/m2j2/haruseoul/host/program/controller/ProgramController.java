@@ -2,26 +2,27 @@ package com.m2j2.haruseoul.host.program.controller;
 
 import com.m2j2.haruseoul.anonymous.service.DefaultCategoryService;
 import com.m2j2.haruseoul.entity.Category;
+import com.m2j2.haruseoul.entity.Image;
 import com.m2j2.haruseoul.entity.Program;
 import com.m2j2.haruseoul.host.program.dto.*;
 import com.m2j2.haruseoul.host.program.service.DefaultProgramService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 
-
+@Slf4j
 @RestController("hostProgramController")
 @RequestMapping("host/programs")
 public class ProgramController {
 
     DefaultProgramService service;
-    DefaultCategoryService categoryService;
 
     public ProgramController(DefaultProgramService service, DefaultCategoryService categoryService) {
         this.service = service;
-        this.categoryService = categoryService;
     }
 
     @GetMapping
@@ -30,8 +31,7 @@ public class ProgramController {
             @RequestParam(name = "pg", required = false) List<Long> pIds,
             @RequestParam(name = "s", required = false) List<String> statuses,
             @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-            @RequestParam(name = "cardsPerPage", defaultValue = "6") int cardsPerPage)
-    {
+            @RequestParam(name = "cardsPerPage", defaultValue = "6") int cardsPerPage) {
 
         ProgramResponseDto programResponseDto = service.getList(pIds, cIds, statuses, pageNum, cardsPerPage);
 
@@ -43,16 +43,30 @@ public class ProgramController {
         return ResponseEntity.ok(service.create(programCreateDto));
     }
 
-    @PutMapping("{id}")
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable(name = "id") Long id) {
+        service.delete(id);
+    }
+    
+    //  ====== 호스트 프로그램 수정 컨트롤러 =======================
+    @PutMapping
     public ResponseEntity<Program> update(
             @RequestBody ProgramUpdateDto programUpdateDto
     ) {
         return ResponseEntity.ok(service.update(programUpdateDto));
     }
+    
+    //  ====== 호스트 프로그램 1건 조회 컨트롤러 =======================
+    @GetMapping("one")
+    public ResponseEntity<ProgramListDto> getOneProgram(@RequestParam(name = "id") Long pId){
+        return ResponseEntity.ok(service.getOneProgram(pId));
+    }
 
-    @DeleteMapping("{id}")
-    public void delete(@PathVariable(name = "id") Long id) {
-        service.delete(id);
+
+    @GetMapping("user/{id}")
+    public ResponseEntity<List<ProgramFilterDto>> getList(@PathVariable(name = "id") Long hostId,
+                                                    @RequestParam(name = "s", required = false) List<String> statuses) {
+        return ResponseEntity.ok(service.getList(hostId, statuses));
     }
 
 }

@@ -24,9 +24,13 @@ public class ProgramUpdateDto {
 
     private String language;
 
-    private String startTime;
+    private String startTimeHour;
 
-    private String endTime;
+    private String startTimeMinute;
+
+    private String endTimeHour;
+
+    private String endTimeMinute;
 
     private Integer groupSizeMax;
 
@@ -45,6 +49,8 @@ public class ProgramUpdateDto {
     private String caution; // 주의사항
 
     private String requirement; // 요청사항
+
+    private String status;
 
     //private List<Image> images;
 

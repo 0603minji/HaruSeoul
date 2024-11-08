@@ -2,10 +2,12 @@ package com.m2j2.haruseoul.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "image")
@@ -25,5 +27,4 @@ public class Image {
 
     @Column(name = "src", nullable = false)
     private String src;
-
 }
