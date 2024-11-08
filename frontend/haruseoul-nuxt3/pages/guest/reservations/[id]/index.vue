@@ -3,20 +3,21 @@ import { onMounted, ref } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 
-const reservation = ref({});
+const reservation = ref({
+  guest: {},
+  host: {},
+  program: {},
+  requirement: {},
+  reservationCard: {}
+});
 
 const route = useRoute();
 
-// 필요한 속성명을 배열에 정의하고, 각 속성을 computed로 설정합니다.
-const keys = ['guest', 'host', 'program', 'requirement', 'reservationCard'];
-
-// 각 속성명에 따라 computed 속성을 생성하는 함수
-const computedValues = Object.fromEntries(
-  keys.map(key => [key, computed(() => reservation.value[key])])
-);
-
-// 필요한 변수에 할당하여 동기화 작업
-const { guest, host, program, requirement, reservationCard } = computedValues;
+const guest = computed(() => reservation.value.guest);
+const host = computed(() => reservation.value.host);
+const program = computed(() => reservation.value.program);
+const requirement = computed(() => reservation.value.requirement);
+const reservationCard = computed(() => reservation.value.reservationCard);
 
 
 // 데이터 함수
@@ -30,6 +31,7 @@ const fetchreservation = async (rId) => {
   console.log(guest.value);
   console.log(host.value);
   console.log(requirement.value);
+  console.log(reservationCard.value);
 
 
   // 날짜 차이를 계산하여 dDay 속성을 추가합니다.
@@ -77,7 +79,7 @@ onMounted(() => {
         예약 상세보기
       </div>
       <div style="width: 100%; padding: var(--gap-3) var(--gap-6)">
-        예약번호 {{ reservationCard.date }}{{ reservation.reservationId }}
+        예약번호 {{ reservation.reservationId }}
       </div>
 
       <div class="n-card-container bg-color:base-1" v-for="r in reservation" :key="r.id">
@@ -477,7 +479,7 @@ onMounted(() => {
         </section>
 
         <!--  이용완료, 취소됨 상태만 예약 삭제할 수 있도록 설정     -->
-        <div v-if="['Finished', 'Confirmed'].includes(reservation.statusName)" style="
+        <div v-if="['Finished', 'Canceled'].includes(reservationCard.statusName)" style="
             display: flex;
             justify-content: center;
             padding: var(--gap-8) 0;
