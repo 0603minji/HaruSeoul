@@ -1,3 +1,45 @@
+<script setup>
+import { useRoute } from 'vue-router'
+import axios from "axios";
+import { reactive } from 'vue';
+
+// import { useFetch } from '@nuxtjs/composition-api'
+
+const route = useRoute()
+const id = route.params.id
+const oneProgram = reactive({});
+const durationHour = ref(0);
+const durationMinute = ref(0);
+// const { data: programData } = await useFetch(() => `/api/programs/${id}`)
+
+onMounted(() => {
+    console.log(id);
+    fetchOneProgram();
+})
+
+const fetchOneProgram = async () => {
+    const response = await axios.get(
+        "http://localhost:8080/api/v1/host/programs/" + id
+    );
+    oneProgram.value = response.data;
+    console.log("data :", oneProgram.value);
+    console.log("data :", oneProgram.value.categoryNames);
+    
+    durationHour.value = parseInt(oneProgram.value.endTimeHour) - parseInt(oneProgram.value.startTimeHour);
+    durationMinute.value = parseInt(oneProgram.value.endTimeMinute) - parseInt(oneProgram.value.startTimeMinute);
+    if(durationMinute.value<0) {
+        durationMinute.value = durationMinute.value + 60;
+        durationHour.value = durationHour.value - 1;
+    }
+    if(durationMinute.value===30) {
+        durationMinute.value=5;
+    }
+    console.log("durationHour.value : ", durationHour.value);
+    console.log("duration minute : ", durationMinute.value);
+};
+
+</script>
+
 <template>
     <main>
         <section class="main-wrapper">
@@ -49,11 +91,9 @@
                     </div>
                     <!--==== 카테고리 ====-->
                     <div class="categories">
-                        <div class="n-panel-tag category">
-                            Activity
-                        </div>
-                        <div class="n-panel-tag category">
-                            Food
+                        <div v-if="oneProgram.value && oneProgram.value.categoryNames" class="n-panel-tag category"
+                            v-for="c in oneProgram.value.categoryNames">
+                            {{ c }}
                         </div>
                         <div class="edit-btn">
                             <button class="n-icon n-icon:edit"></button>
@@ -62,22 +102,26 @@
                     <!--========= 프로그램 제목 + 평점리뷰 + 가격 =========-->
                     <div class="info">
                         <div style="display: flex; align-items: center;">
-                            <p class="title">
-                                Drinks & Bites in Seoul Tour
+                            <p class="title" v-if="oneProgram.value && oneProgram.value.title">
+                                {{ oneProgram.value.title }}
                             </p>
                             <div class="edit-btn">
                                 <button class="n-icon n-icon:edit"></button>
                             </div>
                         </div>
                         <div class="rating-review">
-                            <span class="n-icon n-icon:star n-deco">3.5</span>
+                            <span class="n-icon n-icon:star n-deco" v-if="oneProgram.value">
+                                {{ oneProgram.value.rating === null ? '0.0' : oneProgram.value.rating }}
+                            </span>
                             <span>/</span>
                             <span>5.0</span>
-                            <span>(13 Reviews)</span>
+                            <span>(Reviews)</span>
+
                             <div class="price">
                                 <div class="n-icon n-icon:price n-deco"
-                                    style="display: flex; justify-content: center; align-items: center; height: inherit; font-size: var(--font-size-10); gap: 0;">
-                                    35,000
+                                    style="display: flex; justify-content: center; align-items: center; height: inherit; font-size: var(--font-size-10); gap: 0;"
+                                    v-if="oneProgram.value && oneProgram.value.price">
+                                    {{ oneProgram.value.price }}
                                 </div>
                                 <div
                                     style="display: flex; justify-content: center; align-items: center; height: inherit; margin-left: var(--gap-1); font-size: var(--font-size-6);">
@@ -104,30 +148,35 @@
                                         <div class="list-container">
                                             <ul>
                                                 <li class="list-content">
-                                                    <span class="n-icon n-icon:globe n-deco">
-                                                        English
+                                                    <span class="n-icon n-icon:globe n-deco"
+                                                    v-if="oneProgram.value && oneProgram.value.language">
+                                                        {{ oneProgram.value.language }}
                                                     </span>
                                                     <div class="edit-btn m-left:3">
                                                         <button class="n-icon n-icon:edit"></button>
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
-                                                    <span class="n-icon n-icon:people n-deco">2/5</span>
+                                                    <span class="n-icon n-icon:people n-deco" v-if="oneProgram.value">
+                                                        {{ oneProgram.value.groupSizeMin }}/{{ oneProgram.value.groupSizeMax }}
+                                                    </span>
                                                     <span>(min/max)</span>
                                                     <div class="edit-btn m-left:3">
                                                         <button class="n-icon n-icon:edit"></button>
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
-                                                    <span class="n-icon n-icon:clock n-deco">3.5</span>
+                                                    <span class="n-icon n-icon:clock n-deco">
+                                                        {{ durationHour }}.{{ durationMinute }}
+                                                    </span>
                                                     <span>hours</span>
                                                     <div class="edit-btn m-left:3">
                                                         <button class="n-icon n-icon:edit"></button>
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
-                                                    <span class="n-icon n-icon:placeholder n-deco">Jong-ro Station 3rd
-                                                        Exit
+                                                    <span class="n-icon n-icon:placeholder n-deco" v-if="oneProgram.value">
+                                                       
                                                     </span>
                                                     <div class="edit-btn m-left:3">
                                                         <button class="n-icon n-icon:edit"></button>
@@ -498,7 +547,8 @@
 
                                     <div
                                         style="display:flex; justify-content: space-between; align-items: center; padding: 0 var(--gap-6);">
-                                        <span style="display:flex; align-items: center; width: auto; height: 30px;">60 Results</span>
+                                        <span style="display:flex; align-items: center; width: auto; height: 30px;">60
+                                            Results</span>
                                         <div style="display: flex;">
                                             <a href="" class="n-icon n-icon:arrow_swap">정렬 아이콘</a>
                                             <span>Latest</span>
