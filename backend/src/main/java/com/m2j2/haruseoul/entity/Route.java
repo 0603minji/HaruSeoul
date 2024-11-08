@@ -48,4 +48,6 @@ public class Route {
     @Column(name = "transportation_duration")
     private LocalTime transportationDuration;
 
+    @Column(name = "start_time")
+    private LocalTime startTime;
 }

@@ -8,6 +8,10 @@ import com.m2j2.haruseoul.repository.StatusRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 public class DefaultPublishedProgramService implements PublishedProgramService {
@@ -43,23 +48,54 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
     final long STATUS_CONFIRMED = 6L;
 
     @Override
-    public PublishedProgramResponseDto getList(List<LocalDate> dates, List<Long> statusIds, List<Long> programIds) {
-        LocalDate start = dates == null ? null : dates.get(0);
-        LocalDate end = dates == null ? null : dates.get(dates.size()-1);
-        List<PublishedProgram> publishedPrograms = publishedProgramRepository.findAll(start, end, statusIds, programIds);
+    public PublishedProgramResponseDto getList(List<Long> memberIds, List<LocalDate> dates, List<Long> statusIds, List<Long> programIds,
+                                               Integer page, Integer pageSize, String sortBy, String order) {
+        Sort sort = order.equals("asc")? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page-1, pageSize, sort);
 
+        LocalDate start = dates == null ? null : dates.getFirst();
+        LocalDate end = dates == null ? null : dates.getLast();
+
+        // Page<pp>
+        Page<PublishedProgram> publishedProgramPage = publishedProgramRepository
+                .findAll(memberIds, start, end, statusIds, programIds, pageable);
+
+        // List<ppListDto>----------------------------------------------------------------------------------------------
         modelMapper.typeMap(PublishedProgram.class, PublishedProgramListDto.class)
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getProgram().getGroupSizeMax(), PublishedProgramListDto::setGroupSizeMax);
                     mapper.map(src -> src.getProgram().getGroupSizeMin(), PublishedProgramListDto::setGroupSizeMin);
                 });
 
-        List<PublishedProgramListDto> publishedProgramListDtos = publishedPrograms.stream()
+        List<PublishedProgramListDto> publishedProgramListDtos = publishedProgramPage.stream()
                 .map(publishedProgram -> modelMapper.map(publishedProgram, PublishedProgramListDto.class))
+                .toList();
+
+        //--------------------------------------------------------------------------------------------------------------
+
+        long totalCount = publishedProgramPage.getTotalElements();
+        long totalPages = publishedProgramPage.getTotalPages();
+        int currentPageRowCount = publishedProgramPage.getNumberOfElements();
+        boolean hasNextPage = publishedProgramPage.hasNext();
+        boolean hasPreviousPage = publishedProgramPage.hasPrevious();
+
+        // pager에 표시할 목록. 1~5, 6~10...
+        List<Long> pages = new ArrayList<>();
+        int offset = (page - 1) % 5;
+        int startNUm = page - offset;
+        pages = IntStream.range(startNUm, startNUm + 5)
+                .boxed()
+                .map(Long::valueOf)
                 .toList();
 
         return PublishedProgramResponseDto.builder()
                 .publishedPrograms(publishedProgramListDtos)
+                .pages(pages)
+                .totalCount(totalCount)
+                .totalPages(totalPages)
+                .currentPageRowCount(currentPageRowCount)
+                .hasNextPage(hasNextPage)
+                .hasPreviousPage(hasPreviousPage)
                 .build();
     }
 
@@ -80,47 +116,45 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
         /* 애초에 프론트 달력ui에서 유효하지 않은 날짜는 선택불가능하도록 처리하겠지만
          혹시라도 입력받은 진행일이 유효하지 않은 경우? 1. 개설가능한 날짜 범위(개설당일+3일 ~ 14일?) 외, 2. 이미 개설된 날짜거나*/
 
-        // 1. 개설가능한 날짜 범위 외
-        // 개설가능한 날짜(firstAvailableDate ~ lastAvailableDate)
-        LocalDate firstAvailableDate = LocalDate.now().plusDays(3); // 오늘로부터 3일 이후
-        LocalDate lastAvailableDate = firstAvailableDate.plusDays(14); // 최초 개설가능일~14일
-        List<LocalDate> inValidDates = new ArrayList<>();
-        for (LocalDate date : publishedProgramCreateDto.getDates()) {
-            if (date.isBefore(firstAvailableDate) || date.isAfter(lastAvailableDate))
-                inValidDates.add(date);
-        }
-        // 예외처리 필요
-        if (!inValidDates.isEmpty()) {
-            System.out.println("프로그램 개설 실패: 유효하지 않은 날짜.");
-            inValidDates.forEach(System.out::println);
-            System.out.println("개설가능일: 3일 후부터 2주간");
-            return null;
-        }
-
-        // 2. 이미 개설된 날짜.
-        List<Long> pIdsByHost = programRepository.findAll2(publishedProgramCreateDto.getRegMemberId(),
-                        null,
-                        List.of("Published"))
-                .stream()
-                .map(Program::getId)
-                .toList();
-        System.out.println(pIdsByHost);
-        List<PublishedProgram> activePublishedPrograms = publishedProgramRepository.findAll(firstAvailableDate, lastAvailableDate,
-                Arrays.asList(STATUS_ON_GOING, STATUS_URGENT, STATUS_CONFIRMED, STATUS_WAIT_CONFIRM), pIdsByHost);
-        List<LocalDate> unavailableDates = new ArrayList<>(activePublishedPrograms.stream().map(publishedProgram -> publishedProgram.getDate()).toList());
-        System.out.println(unavailableDates);
-        unavailableDates.retainAll(publishedProgramCreateDto.getDates());
-        if (!unavailableDates.isEmpty()) {
-            System.out.println("프로그램 개설 실패: 해당 일자에 이미 개설된 프로그램이 존재합니다.");
-            unavailableDates.forEach(System.out::println);
-            return null;
-        }
+//        // 1. 개설가능한 날짜 범위 외
+//        // 개설가능한 날짜(firstAvailableDate ~ lastAvailableDate)
+//        LocalDate firstAvailableDate = LocalDate.now().plusDays(3); // 오늘로부터 3일 이후
+//        LocalDate lastAvailableDate = firstAvailableDate.plusDays(14); // 최초 개설가능일~14일
+//        List<LocalDate> inValidDates = new ArrayList<>();
+//        for (LocalDate date : publishedProgramCreateDto.getDates()) {
+//            if (date.isBefore(firstAvailableDate) || date.isAfter(lastAvailableDate))
+//                inValidDates.add(date);
+//        }
+//        // 예외처리 필요
+//        if (!inValidDates.isEmpty()) {
+//            System.out.println("프로그램 개설 실패: 유효하지 않은 날짜.");
+//            inValidDates.forEach(System.out::println);
+//            System.out.println("개설가능일: 3일 후부터 2주간");
+//            return null;
+//        }
+//
+//        // 2. 이미 개설된 날짜.
+//        List<PublishedProgram> activePublishedPrograms = publishedProgramRepository.findAll(List.of(publishedProgramCreateDto.getRegMemberId()),
+//                firstAvailableDate, lastAvailableDate,
+//                Arrays.asList(STATUS_ON_GOING, STATUS_URGENT, STATUS_CONFIRMED, STATUS_WAIT_CONFIRM), null);
+//
+//        List<LocalDate> unavailableDates = new ArrayList<>(activePublishedPrograms.stream().map(PublishedProgram::getDate).toList());
+//        System.out.println(unavailableDates);
+//
+//        unavailableDates.retainAll(publishedProgramCreateDto.getDates());
+//
+//        if (!unavailableDates.isEmpty()) {
+//            System.out.println("프로그램 개설 실패: 해당 일자에 이미 개설된 프로그램이 존재합니다.");
+//            unavailableDates.forEach(System.out::println);
+//            return null;
+//        }
         // </editor-fold>
 
         // ** PublishedProgram엔티티에 필드로 등록될 값들
         // 개설할 프로그램 entity
         Program program = programRepository.findById(publishedProgramCreateDto.getProgramId())
                 .orElseThrow(() -> new EntityNotFoundException("Program not found with ID: " + publishedProgramCreateDto.getProgramId()));
+
         // 개설된 프로그램의 status 초기값
         final Long INITIAL_STATUS_ID = STATUS_ON_GOING;
         Status initialStatus = statusRepository.findById(INITIAL_STATUS_ID)
@@ -128,17 +162,17 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
 
 
         // 개설할 프로그램 리스트 만들어서 saveAll(개설된 프로그램 리스트)
-        List<PublishedProgram> publishedPrograms = new ArrayList<>();
-        for (LocalDate date : publishedProgramCreateDto.getDates()) {
-            PublishedProgram publishedProgram = PublishedProgram.builder()
-                    .program(program)
-                    .date(date)
-                    .groupSizeCurrent(0) // 초기값 0
-                    .status(initialStatus)
-                    .build();
-            publishedPrograms.add(publishedProgram);
-        }
+        List<PublishedProgram> publishedPrograms = publishedProgramCreateDto.getDates().stream()
+                .map(date -> PublishedProgram.builder()
+                        .program(program)
+                        .date(date)
+                        .groupSizeCurrent(0) // 초기값 0
+                        .status(initialStatus)
+                        .build())
+                .toList();
+
         List<PublishedProgram> savedPublishedPrograms = publishedProgramRepository.saveAll(publishedPrograms);
+
         return PublishedProgramCreatedDto.builder()
                 .programId(program.getId())
                 .programTitle(program.getTitle())
@@ -212,36 +246,6 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
 
         // 5. 저장된 publishedProgram을 다시 db에서 꺼내서 dto에 담아서 리턴
         PublishedProgram savedPublishedProgram = publishedProgramRepository.findById(publishedProgramUpdateDto.getId()).get();
-
-//        PublishedProgramUpdatedDto publishedProgramUpdatedDto = PublishedProgramUpdatedDto.builder()
-//                .id(savedPublishedProgram.getId())
-//                .programId(savedPublishedProgram.getProgram().getId())
-//                .groupSizeCurrent(savedPublishedProgram.getGroupSizeCurrent())
-//                .date(savedPublishedProgram.getDate())
-//                .statusId(newStatus.getId())
-//                .statusName(newStatus.getName())
-//                .bookingMemberIds(savedPublishedProgram.getReservations()
-//                        .stream()
-//                        .map(Reservation::getMember)
-//                        .map(Member::getId)
-//                        .toList())
-//                .build();
-//
-//        return publishedProgramUpdatedDto;
-
-//       savedPublishedProgram.getReservations().forEach(reservation -> {
-//           System.out.println(reservation.getMember().getName());
-//       });
-
-        // publishedProgram의 reservations -> publishedProgramUpdatedDto의 bookingMemberIds
-//        modelMapper.typeMap(PublishedProgram.class, PublishedProgramUpdatedDto.class)
-//                .addMappings(mapper -> {
-//                    mapper.map(src -> src.getReservations().stream()
-//                                    .map(reservation -> reservation.getMember().getId())
-//                                    .toList(),
-//                            PublishedProgramUpdatedDto::setBookingMemberIds);
-//                });
-//        return modelMapper.map(savedPublishedProgram, PublishedProgramUpdatedDto.class);
 
         // modelMapper에서 쓸 Converter. List<Reservation> reservations를 List<Long> memberIds로
         // 6. 커스텀 modelMapper 설정
