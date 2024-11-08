@@ -86,22 +86,22 @@ const getDisplayValue = (statusId) => {
     <div class="overflow-x:auto">
       <ul class="item-wrapper padding-y:6">
         <li>
-          <a href="" class="n-btn n-btn-rv-filter n-btn:hover"
-          :class="{ active: selectedStatus === null }"
+          <NuxtLink href="" class="n-btn n-btn-rv-filter n-btn:hover"
+          :class="{ active: selectedStatus === null || selectedStatus === 0 }"
              @click.prevent="(e) => { e.preventDefault(); selectStatusAll(); }"
-             >전체</a>
+             >전체</NuxtLink>
         </li>
         <!-- 결제완료 버튼을 1개로 고정 -->
         <li>
-          <a @click.prevent="(e) => { e.preventDefault(); selectReservations([1, 2, 5]); }" href=""
+          <NuxtLink @click.prevent="(e) => { e.preventDefault(); selectReservations([1, 2, 5]); }" href=""
              class="n-btn n-btn n-btn-rv-filter n-btn:hover"
-             :class="{ active: selectedStatus === '결제완료' }">결제완료</a>
+             :class="{ active: selectedStatus === '결제완료' }">결제완료</NuxtLink>
         </li>
         <!-- 나머지 상태 버튼들 -->
         <li v-for="s in statuses" :key="s.id">
-          <a @click.prevent="(e) => { e.preventDefault(); selectReservations([s.id]); }" href=""
+          <NuxtLink @click.prevent="(e) => { e.preventDefault(); selectReservations([s.id]); }" href=""
              class="n-btn n-btn n-btn-rv-filter n-btn:hover"
-             :class="{ active: selectedStatus === s.id }">{{ getDisplayValue(s.id) }}</a>
+             :class="{ active: selectedStatus === s.id }">{{ getDisplayValue(s.id) }}</NuxtLink>
         </li>
       </ul>
     </div>

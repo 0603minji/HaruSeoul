@@ -1,6 +1,6 @@
 .profile-card {
     display: flex;
-    padding: 0 var(--gap-2) var(--gap-6) var(--gap-2);
+    padding: 0 var(--gap-6) var(--gap-8) var(--gap-2);
     align-items: center;
     justify-content: space-between;
 
