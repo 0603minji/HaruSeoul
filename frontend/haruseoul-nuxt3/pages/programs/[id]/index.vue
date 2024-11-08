@@ -513,10 +513,10 @@ import {useRoute} from 'vue-router';
 
 const route = useRoute();
 const programId = ref(route.params.id); // route에서 programId를 가져옴
-const currentHash = ref(window.location.hash);
+const currentHash = computed(() => route.hash || '');
 
 
-const {data, pending, error} = await useFetch(`http://localhost:8080/api/v1/programs/${programId.value}`);
+const {data , error} = await useFetch(`http://localhost:8080/api/v1/programs/${programId.value}`);
 
 
 const addressWithOrderOne = computed(() => {
@@ -565,12 +565,7 @@ const formatDuration = (hours, minutes) => {
 
 watchEffect(() => {
   console.log("Fetched data:", data.value);
-  console.log("Loading status:", pending.value);
   console.log("Error:", error.value);
-  currentHash.value = window.location.hash;
-});
-window.addEventListener('hashchange', () => {
-  currentHash.value = window.location.hash;
 });
 
 
