@@ -24,8 +24,12 @@ public class PublishedProgramController {
     public ResponseEntity<PublishedProgramResponseDto> getAll(@RequestParam(name = "mIds", required = false) List<Long> memberIds,
                                                               @RequestParam(name = "d", required = false) List<LocalDate> dates,
                                                               @RequestParam(name = "s", required = false) List<Long> statusIds,
-                                                              @RequestParam(name = "pIds", required = false) List<Long> programIds) {
-        return ResponseEntity.ok(service.getList(memberIds, dates, statusIds, programIds));
+                                                              @RequestParam(name = "pIds", required = false) List<Long> programIds,
+                                                              @RequestParam(name = "p", defaultValue = "1") Integer page,
+                                                              @RequestParam(name = "pageSize", defaultValue = "42") Integer pageSize,
+                                                              @RequestParam(name = "sortBy", defaultValue = "regDate") String sortBy,
+                                                              @RequestParam(name = "order", defaultValue = "desc") String order) {
+        return ResponseEntity.ok(service.getList(memberIds, dates, statusIds, programIds, page, pageSize, sortBy, order));
     }
 
     @PostMapping

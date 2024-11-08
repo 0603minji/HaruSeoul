@@ -2,6 +2,8 @@ package com.m2j2.haruseoul.repository;
 
 import com.m2j2.haruseoul.entity.PublishedProgram;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,7 +23,7 @@ public interface PublishedProgramRepository extends JpaRepository<PublishedProgr
             "and ((:start is null or :end is null) or pp.date between :start and :end) " +
             "and (:statusIds is null or pp.status.id in :statusIds) " +
             "and (:programIds is null or pp.program.id in :programIds)")
-    List<PublishedProgram> findAll(@Param("mIds") List<Long> memberIds, LocalDate start, LocalDate end, List<Long> statusIds, List<Long> programIds);
+    Page<PublishedProgram> findAll(@Param("mIds") List<Long> memberIds, LocalDate start, LocalDate end, List<Long> statusIds, List<Long> programIds, Pageable pageable);
 
 
     @Query("SELECT pp.program.id FROM PublishedProgram pp " +
