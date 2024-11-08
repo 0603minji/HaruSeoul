@@ -1,6 +1,6 @@
 <script setup>
 
-import { onMounted, defineProps, defineEmits, reactive, watch  } from "vue";
+import { onMounted, defineProps, defineEmits, reactive, watch } from "vue";
 import axios from "axios";
 
 
@@ -39,8 +39,8 @@ const route = reactive({
 
 //===================== Fetch Functions ====================
 const fetchTransportationIds = async () => {
-  const response = await axios.get("http://localhost:8080/api/v1/transportation");
-  transportationIds.value = response.data;
+    const response = await axios.get("http://localhost:8080/api/v1/transportation");
+    transportationIds.value = response.data;
 }
 
 
@@ -49,7 +49,7 @@ const fetchTransportationIds = async () => {
 //  그 안에 현재 route 객체를 전달
 //  { ...route } : route 객체의 복사본을 만들어 데이터를 전달하는 역할
 const updateParent = () => {
-  emit('updateRoute', { ...route });
+    emit('updateRoute', { ...route });
 };
 
 
@@ -57,28 +57,44 @@ const updateParent = () => {
 //  route 객체가 변경될 때마다 자동으로 updateParent 함수를 호출
 //  { deep: true } 옵션 : route 객체의 하위 속성(내부 속성들)까지 감시
 watch(route, () => {
-  updateParent();
+    updateParent();
 }, { deep: true });
 
 const minusDuration = () => {
-    if(route.duration == 0) {
+    if (route.duration == 0) {
         return;
     }
     route.duration -= 10
 }
 
 const plusDuration = () => {
-    if(route.duration == 600) {
+    if (route.duration == 600) {
         return;
     }
     route.duration += 10
+}
+
+//====== Validation Checking Functions =========================
+
+const titleValidation = () => {
+    return ((route.title.length > 60) || (route.title.length > 0 && route.title.length < 3));
+}
+
+const addressValidation = () => {
+    return ((route.address.length > 60) || (route.address.length > 0 && route.address.length < 3));
+}
+
+const descriptionValidation = () => {
+    return ((route.description.length > 60) || (route.description.length > 0 && route.description.length < 3));
 }
 </script>
 
 <template>
     <section>
         <div class="course-card">
-            <div class="card-header">출발지</div>
+            <div class="card-header">
+                {{ props.order > 1 ? '경유지' : '출발지' }}
+            </div>
 
             <div class="course-input-area">
 
@@ -87,28 +103,33 @@ const plusDuration = () => {
                     <label>
                         <input type="text" class="input-text" placeholder="제목" v-model="route.title">
                     </label>
+                    <p v-show="titleValidation()" class="warning">** 3자 이상 60자 이하이어야 합니다 **</p>
                 </div>
 
                 <div class="input-with-icon">
-                    <img src="/public/image/pen.svg" alt="아이콘">
+                    <img src="/public/image/pin.svg" alt="아이콘">
                     <label>
                         <input type="text" class="input-text" placeholder="주소" v-model="route.address">
                     </label>
+                    <p v-show="addressValidation()" class="warning">** 3자 이상 60자 이하이어야 합니다 **</p>
                 </div>
 
                 <div class="input-with-icon">
                     <label>
-                        <img src="/public/image/pin.svg" alt="아이콘">
+                        <img src="/public/image/pen.svg" alt="아이콘">
                         <input type="text" class="input-text" placeholder="장소 설명" v-model="route.description">
                     </label>
+                    <p v-show="descriptionValidation()" class="warning">** 3자 이상 60자 이하이어야 합니다 **</p>
                 </div>
+
                 <div class="course-select-time">
                     <div class="time-label">
                         <img src="/public/image/pin.svg" alt="아이콘">
                         <span>시작시각</span>
                     </div>
                     <div class="time-select-wrapper">
-                        <label><select id="start-hour" class="input-select" name="start-hour" v-model="route.startTimeHour">
+                        <label><select id="start-hour" class="input-select" name="start-hour"
+                                v-model="route.startTimeHour">
                                 <option value="00">00</option>
                                 <option value="01">01</option>
                                 <option value="02">02</option>
@@ -139,7 +160,8 @@ const plusDuration = () => {
                     </div>
                     <div class="time-select-wrapper">
                         <label>
-                            <select id="start-minute" class="input-select" name="start-minute" v-model="route.startTimeMinute">
+                            <select id="start-minute" class="input-select" name="start-minute"
+                                v-model="route.startTimeMinute">
                                 <option value="00">00</option>
                                 <option value="10">10</option>
                                 <option value="20">20</option>
@@ -160,7 +182,8 @@ const plusDuration = () => {
                     </div>
                     <div class="duration-pm-wrapper">
                         <button class="n-btn btn-minus" @click.prevent="minusDuration">-</button>
-                        <input type="number" id="duration" class="duration-input no-spinner" name="duration" min="0" v-model="route.duration">
+                        <input type="number" id="duration" class="duration-input no-spinner" name="duration" min="0"
+                            v-model="route.duration">
                         <button class="n-btn btn-plus" @click.prevent="plusDuration">+</button>
                     </div>
                     <span>분</span>
@@ -217,6 +240,13 @@ const plusDuration = () => {
 .caution:target,
 .images-upload-container:target {
     display: block;
+}
+
+/* 경고 문구 스타일 */
+
+.warning {
+    color: red;
+    font-size: 0.9rem;
 }
 
 .n-bar-underline-create {
@@ -440,13 +470,6 @@ const plusDuration = () => {
         font-size: 1rem;
         color: #333;
         padding: 0 10px;
-    }
-
-    /* 경고 문구 스타일 */
-
-    .warning {
-        color: red;
-        font-size: 0.9rem;
     }
 
     /* 비용 입력 스타일 */

@@ -179,36 +179,6 @@ public class DefaultProgramService implements ProgramService {
         return savedProgram;
     }
 
-//    public List<Image> saveImages(Long programId, List<MultipartFile> multipartFiles) {
-//        // 1. 프로그램이 실재하는 프로그램인지 확인한다.
-//        Optional<Program> programById = programRepository.findById(programId);
-//        if (programById.isEmpty()) {
-//            log.error("[에러] 등록되지 않은 프로그램 입니다", programId);
-//            return null;
-//        }
-//        Program savedProgram = programById.get();
-//
-//        AtomicInteger index = new AtomicInteger(0);
-//        List<Image> images = multipartFiles.stream()
-//                .map(multipartFile -> {
-//                    try {
-//                        return Image.builder()
-//                                .order(index.getAndIncrement())  // AtomicInteger로 인덱스 증가
-//                                .src(multipartFile.getBytes())
-//                                .program(savedProgram)
-//                                .build();
-//                    } catch (IOException e) {
-//                        log.error("Error Message: {}", e.getMessage());
-//                        throw new RuntimeException(e);
-//                    }
-//                })
-//                .toList();
-//
-//        List<Image> savedImages = imageRepository.saveAll(images);
-//        log.info("{} 개의 이미지가 정상 저장되었습니다.", savedImages.size());
-//        return savedImages;
-//    }
-
     private LocalTime getLocalTimeByDuration(Integer duration) {
         if (duration == null) return LocalTime.of(0, 0);
 
@@ -243,18 +213,30 @@ public class DefaultProgramService implements ProgramService {
         return time;
     }
 
-
+    //  ====== 호스트 프로그램 수정 메서드 ==============================
     @Override
     @Transactional
     public Program update(ProgramUpdateDto programUpdateDto) {
 
-        Program oldProgram = programRepository.findById(programUpdateDto.getProgramId()).get();
+        //  주어진 프로그램 id로 기존 프로그램 조회
+        //  null 결과반환 대비해서 Optional 타입
+        Optional<Program> programOptional = programRepository.findById(programUpdateDto.getProgramId());
 
+        //  조회 결과 null인 경우 예외 처리
+        if(!programOptional.isPresent()) {
+            log.error("{} is not found", programUpdateDto.getProgramId());
+            return null;
+        }
+
+        //  조회 결과 null이 아닌 경우 조회결과를  Program 객체에 저장
+        Program oldProgram = programOptional.get();
+        
+        //  Program 객체의 각 필드를 ProgramUpdateDto의 값으로 업데이트
         oldProgram.setTitle(programUpdateDto.getTitle());
         oldProgram.setDetail(programUpdateDto.getDetail());
         oldProgram.setLanguage(programUpdateDto.getLanguage());
-        oldProgram.setStartTime(LocalTime.parse(programUpdateDto.getStartTime()));
-        oldProgram.setEndTime(LocalTime.parse(programUpdateDto.getEndTime()));
+        oldProgram.setStartTime(getLocalTime(programUpdateDto.getStartTimeHour(), programUpdateDto.getStartTimeMinute()));
+        oldProgram.setEndTime(getLocalTime(programUpdateDto.getEndTimeHour(), programUpdateDto.getEndTimeMinute()));
         oldProgram.setGroupSizeMin(programUpdateDto.getGroupSizeMin());
         oldProgram.setGroupSizeMax(programUpdateDto.getGroupSizeMax());
         oldProgram.setPrice(programUpdateDto.getPrice());
@@ -263,31 +245,71 @@ public class DefaultProgramService implements ProgramService {
         oldProgram.setPackingList(programUpdateDto.getPackingList());
         oldProgram.setRequirement(programUpdateDto.getRequirement());
         oldProgram.setCaution(programUpdateDto.getCaution());
+        oldProgram.setStatus(programUpdateDto.getStatus());
 
+        //  Program 객체를 db에 저장하는 save 메서드 호출
         Program newProgram = programRepository.save(oldProgram);
 
+        //  카테고리(category) 업데이트
+        //  카테고리 db가 따로 존재하므로 따로 업데이트 필요
         Long programId = newProgram.getId();
 
+        //  category_program  테이블에 기존 데이터를 삭제
         categoryProgramRepository.deleteByProgramId(programId);
 
+        //  programUpdateDto에 있는 새로운 카테고리 id 리스트를 categoryIds에 저장
         List<Long> categoryIds = programUpdateDto.getCategoryIds();
 
+        //  CategoryProgram 객체들을 담는 리스트  newCategoryPrograms
         List<CategoryProgram> newCategoryPrograms = new ArrayList<>();
 
+        //  categoryIds(List)에서 category(Long) 하나씩 반복
         for (Long categoryId : categoryIds) {
-            Category category = categoryRepository.findById(categoryId).get();
+            //  category 테이블에서 해당 카테고리 id를 조회
+            //  null 결과 반환 대비해서  Optional 타입
+            Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+            //  category 테이블에 존재하지 않는 카테고리  id인 경우
+            if(!categoryOptional.isPresent()) {
+                log.error("{} is not found", categoryId);
+                continue;
+            }
+            //  category 테이블에 존재하는 카테고리 id인 경우
+            //  카테고리 id에 해당하는 category 객체를 저장
+            Category category = categoryOptional.get();
+
+            //  category_program 테이블에 저장하기 위한
+            //  CategoryProgram 객체로 빌드 (새로운 카테고리를 함께 빌드)
             CategoryProgram categoryProgram = CategoryProgram.builder()
                     .program(newProgram)
                     .category(category)
                     .build();
+
+            //  CategoryProgram 객체들을 담는 리스트  newCategoryPrograms
+            //  newCategoryPrograms 리스트에 카테고리 최대 2개에 대한
+            //  각각의 CategoryProgram 객체들을 누적받는 리스트
             newCategoryPrograms.add(categoryProgram);
         }
+        
+        //  CategoryProgram 객체들을 누적받은 리스트를
+        //  category_program 테이블에 저장
         categoryProgramRepository.saveAll(newCategoryPrograms);
 
+        //  todo: 코스(route) 업데이트
+        //  todo: 이미지(image) 업데이트
         return newProgram;
     }
 
+
     public void delete(Long programId) {
         programRepository.deleteById(programId);
+    }
+
+    public ProgramListDto getOneProgram(Long pId) {
+        Optional<Program> programOptional = programRepository.findById(pId);
+
+        if(!programOptional.isPresent()) return null;
+        Program program = programOptional.get();
+        ProgramListDto programListDto = ProgramMapper.mapToDto(program);
+        return programListDto;
     }
 }
