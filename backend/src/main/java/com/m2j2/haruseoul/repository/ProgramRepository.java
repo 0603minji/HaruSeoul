@@ -40,17 +40,40 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
             "AND (:maxPrice IS NULL OR p.price <= :maxPrice) " +
             "AND (:groupSizeMin IS NULL OR p.groupSizeMin >= :groupSizeMin) " +
             "AND (:groupSizeMax IS NULL OR p.groupSizeMax <= :groupSizeMax) " +
-            "AND (:startTime IS NULL OR p.startTime >= :startTime) " +
-            "AND (:language IS NULL OR p.language = :language)")
+            "AND (:startTimeOption IS NULL OR " +
+            "(CASE " +
+            "    WHEN :startTimeOption = 1 THEN TRUE " +  // "전체" 옵션
+            "    WHEN :startTimeOption = 2 THEN p.startTime < :morningTime " +  // "오전 12시 이전"
+            "    WHEN :startTimeOption = 3 THEN p.startTime >= :morningTime AND p.startTime < :afternoonTime " +  // "오후 12시 ~ 오후 6시"
+            "    WHEN :startTimeOption = 4 THEN p.startTime >= :afternoonTime " +  // "오후 6시 이후"
+            "END)) " +
+            "AND (:language IS NULL OR p.language = :language) " +
+            "AND (:durationOption IS NULL OR " +
+            "(CASE WHEN :durationOption = 1 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) < 2 " +
+            "WHEN :durationOption = 2 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) BETWEEN 2 AND 4 " +
+            "WHEN :durationOption = 3 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) BETWEEN 4 AND 6 " +
+            "WHEN :durationOption = 4 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) BETWEEN 6 AND 8 " +
+            "WHEN :durationOption = 5 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) > 8 " +
+            "END))")
     Page<Program> findProgramsByFilters(@Param("programIds") List<Long> programIds,
                                         @Param("categoryIds") List<Long> categoryIds,
                                         @Param("minPrice") Integer minPrice,
                                         @Param("maxPrice") Integer maxPrice,
                                         @Param("groupSizeMin") Integer groupSizeMin,
                                         @Param("groupSizeMax") Integer groupSizeMax,
-                                        @Param("startTime") LocalTime startTime,
+                                        @Param("startTimeOption") Integer startTimeOption,
+                                        @Param("morningTime") LocalTime morningTime,
+                                        @Param("afternoonTime") LocalTime afternoonTime,
                                         @Param("language") String language,
+                                        @Param("durationOption") Integer durationOption,
                                         Pageable pageable);
+
+
+    @Query("SELECT p.member.id FROM Program p WHERE p.id = :id")
+    Long findMemberIdByProgramId(@Param("id") Long programId);
+
+    @Query("SELECT p.id FROM Program p WHERE p.member.id = :memberId")
+    List<Long> findIdByMemberId(@Param("memberId") Long memberId);
 
 }
 

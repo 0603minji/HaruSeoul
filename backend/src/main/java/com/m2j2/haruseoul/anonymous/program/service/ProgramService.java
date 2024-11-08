@@ -1,5 +1,7 @@
 package com.m2j2.haruseoul.anonymous.program.service;
 
+import com.m2j2.haruseoul.anonymous.program.dto.ProgramDetailProgramDto;
+import com.m2j2.haruseoul.anonymous.program.dto.ProgramDetailResponseDto;
 import com.m2j2.haruseoul.anonymous.program.dto.ProgramResponseDto;
 import org.springframework.stereotype.Service;
 
@@ -13,5 +15,9 @@ public interface ProgramService {
                                LocalDate startDate, LocalDate endDate,
                                Integer minPrice, Integer maxPrice,
                                Integer groupSizeMax, Integer groupSizeMin,
-                               Integer duration, LocalTime startTime, String language, Integer page, Integer pageSize);
+                               Integer duration, Integer startTime, String language, Integer page, Integer pageSize);
+
+
+
+    ProgramDetailResponseDto getList(Long id);
 }
