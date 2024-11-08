@@ -315,7 +315,6 @@
   </main>
 </template>
 
-
 <script setup>
 import {ref, onMounted, onUnmounted, computed} from 'vue';
 import axios from 'axios';
@@ -446,7 +445,7 @@ const resetFilters = () => {
   groupSizeMin.value = null;
   groupSizeMax.value = null;
   duration.value = null;
-  startTime.value = null;
+  startTime.value = 1;
   language.value = null;
   page.value = 1; // 첫 페이지로 초기화
   fetchPrograms(); // 초기화 후 프로그램 목록 다시 가져오기
@@ -461,7 +460,6 @@ onMounted(() => {
 
 
 </script>
-
 
 <style scoped>
 .layout-body {

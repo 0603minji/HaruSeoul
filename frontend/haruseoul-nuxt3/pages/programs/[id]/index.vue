@@ -271,7 +271,7 @@
                                                 <span class="n-icon n-icon:placeholder"
                                                       style="margin-right: var(--gap-1);">위치아이콘</span>
                         <span style="margin-right: var(--gap-1);">{{ addressWithOrderOne }}</span>
-                        <button class="copy-btn">주소복사</button>
+                        <button @click.prevent="copyAddress" class="copy-btn">주소복사</button>
                       </div>
                     </div>
                     <div class="map-img-wrapper">
@@ -514,10 +514,10 @@ import {useRoute} from 'vue-router';
 const route = useRoute();
 const programId = ref(route.params.id); // route에서 programId를 가져옴
 const currentHash = computed(() => route.hash || '');
+const copiedAddress = ref('');
 
 
 const {data , error} = await useFetch(`http://localhost:8080/api/v1/programs/${programId.value}`);
-
 
 const addressWithOrderOne = computed(() => {
   const item = data.value.programDetailRouteDto.find(route => route.order === 1);
@@ -561,6 +561,28 @@ const stops = computed(() =>
 const formatDuration = (hours, minutes) => {
   return `${hours}시간 ${minutes}분`;
 };
+
+const copyAddress = async () => {
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      // navigator.clipboard가 지원될 경우
+      await navigator.clipboard.writeText(addressWithOrderOne.value);
+    } else {
+      // 지원되지 않는 경우 execCommand 사용
+      const textarea = document.createElement("textarea");
+      textarea.value = addressWithOrderOne.value;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+    alert('주소가 복사되었습니다.');
+  } catch (err) {
+    console.error('복사 실패:', err);
+  }
+
+};
+
 
 
 watchEffect(() => {
