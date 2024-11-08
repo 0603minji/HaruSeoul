@@ -93,6 +93,15 @@ public class DefaultProgramService implements ProgramService {
         return programResponseDto;
     }
 
+    @Override
+    public List<ProgramFilterDto> getList(Long hostId, List<String> statuses) {
+        List<Program> programs = programRepository.findAllList(hostId, null, statuses);
+
+        return programs.stream()
+                .map(program -> mapper.map(program, ProgramFilterDto.class))
+                .toList();
+    }
+
     public List<ProgramTitle> getProgramTitles() {
         return programRepository.findAllByOrderByTitle();
     }

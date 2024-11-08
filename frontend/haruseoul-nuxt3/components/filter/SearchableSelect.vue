@@ -1,65 +1,91 @@
 <script setup>
+import { ref } from 'vue';
+
 // emit
 const emit = defineEmits(['selectionChanged'])
 
 // Props
 const props = defineProps({
-  options: {
-    type: Array,
+  defaultProgramId: {
+    type: Number,
     required: true,
   },
-  initialOption: {
-    type: Object,
+  hostId: {
+    type: Number,
+    required: true
   }
 });
 
-// State
+// === variables =======================================================================================================
 const isDropdownVisible = ref(false);
-const searchTerm = ref('');
-const selectedOption = ref(props.initialOption);
-const filteredOptions = ref([...props.options]);
+const searchTerm = ref(''); // 옵션리스트에서 필터링할 검색어
+const selectedOption = ref(null); // 옵션리스트에서 선택된 옵션
+const programOptions = ref([]); // 선택가능한 모든 프로그램 옵션리스트
+const filteredOptions = ref([]); // 옵션리스트에서 검색어로 필터링된 리스트
 
-// Methods
+// === fetch ===========================================================================================================
+// Every Possible options for the select box
+const programQuery = {
+  s: ["Published", "In Progress"].join(",")
+};
+
+const config = useRuntimeConfig();
+
+// 프로그램 선택창에 개설가능한 모든 프로그램 옵션을 표시하기 위한 개설가능프로그램목록 fetch
+// default 선택값은 props.defaultProgramId
+const {data: programData} = useFetch(`host/programs/user/${props.hostId}`, {
+  baseURL: config.public.apiBase,
+  params: programQuery
+});
+
+watch(() => programData.value,
+    (newOne) => {
+      programOptions.value = newOne;
+      filteredOptions.value = newOne; // 초기값은 모든 options
+      // 검색어가 입력되어있을 경우, 필터링
+      filterOptions();
+      console.log('  SearchableSelect: programDate.value watch 진입');
+      console.log('    ->  programOptions.value: ', programOptions.value);
+      selectedOption.value = newOne.find(program => program.id === props.defaultProgramId); // selectedOption 초기화
+      emit('selectionChanged', selectedOption.value);
+      console.log('     -> selectedOption: ', selectedOption.value);
+    }
+);
+
+/*=== function =======================================================================================================*/
 const toggleDropdown = () => {
   isDropdownVisible.value = !isDropdownVisible.value;
 };
 
+// 검색어로 옵션리스트 필터
 const filterOptions = () => {
+  if (programOptions.value.length===0) // 검색할 옵션이 없을 때
+    return;
   const searchLower = searchTerm.value.toLowerCase();
-  filteredOptions.value = props.options.filter(option =>
-      option.name.toLowerCase().includes(searchLower)
+  filteredOptions.value = programOptions.value.filter(option =>
+      option.title.toLowerCase().includes(searchLower)
   );
+  // console.log("filterOptions called");
 };
 
+// 검색어 초기화
 const clearSearch = () => {
   searchTerm.value = '';
   filterOptions();
 };
 
+// 옵션 선택 시, selectedOption update, 부모에게 emit
 const onOptionChange = (option) => {
   selectedOption.value = option; // Update the local selected option
   emit('selectionChanged', option); // Emit the selected option
 };
 
-// Watcher to reset the filtered options when options prop changes
-watch(
-    () => props.options,
-    (newOptions) => {
-      filteredOptions.value = newOptions;
-    }
-);
-
-// watch(
-//     () => props.selectedOptions,
-//     (newSelectedOptions, oldSelectedOptions) => {
-//       selectedOptions.value = newSelectedOptions;
-//     },
-//     {deep: true}
-// );
-
-// watchEffect(() => {
-//   console.log(props.selectedOptions);
-// });
+// input에 @input이벤트가 발생할 때마다 filterOptions실행
+// (이렇게 해줘야 한글과 같은 조합형문자의 조합이 완료되지 않은 상태에서 바로바로 필터링 가능)
+const onInput = (event) => {
+    searchTerm.value = event.target.value; // 직접 값을 할당
+    filterOptions();
+};
 </script>
 
 <template>
@@ -72,30 +98,30 @@ watch(
       <!-- Select box that toggles the dropdown -->
       <div class="select-box">
         <div @click="toggleDropdown" class="status" v-if="!isDropdownVisible">
-          <p class="margin-right:auto" v-if="selectedOption!=null">{{ selectedOption.name }}</p>
+          <p class="margin-right:auto" v-if="selectedOption!=null">{{ selectedOption.title }}</p>
           <p class="margin-right:auto" v-if="selectedOption==null">프로그램을 선택하세요.</p>
-          <span class="n-icon n-icon:arrow_down margin-left:auto">드롭다운 보기</span>
+          <span class="dropdown-toogle n-icon n-icon:arrow_down margin-left:auto">드롭다운 보기</span>
         </div>
 
         <div class="search-input" v-if="isDropdownVisible">
-
           <input
               type="text"
               v-model="searchTerm"
               placeholder="Search..."
-              @input="filterOptions"
+              @input="onInput"
               @keydown.enter.prevent
           />
           <span v-if="searchTerm!==''" @click="clearSearch"
                 class="clear-search n-icon n-icon:exit n-icon-color:base-6 n-icon-size:4">검색어 초기화</span>
-          <span @click="toggleDropdown" class="n-icon n-icon:arrow_up">드롭다운 닫기</span>
+          <span @click="toggleDropdown" class="dropdown-toogle n-icon n-icon:arrow_up">드롭다운 닫기</span>
         </div>
       </div>
 
       <!-- Dropdown list -->
       <div v-if="isDropdownVisible" class="dropdown">
         <ul>
-          <li v-if="filteredOptions.length===0" class="padding:2">검색결과가 없습니다.</li>
+          <li v-if="searchTerm && filteredOptions.length===0" class="padding:2">검색결과가 없습니다.</li>
+          <li v-if="!searchTerm && filteredOptions.length===0" class="padding:2">선택 가능한 프로그램이 존재하지 않습니다.</li>
 
           <!--not selected & filtered-->
           <li class="filtered-option" v-for="option in filteredOptions" :key="option.id">
@@ -108,7 +134,7 @@ watch(
                   :checked="option.id === selectedOption.id"
                   @change="() => {onOptionChange(option); toggleDropdown();}"
               />
-              {{ option.name }}
+              {{ option.title }}
             </label>
           </li>
         </ul>
@@ -158,7 +184,7 @@ watch(
       .search-input {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 8px;
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 6px 6px 0 0;
@@ -167,6 +193,24 @@ watch(
         input {
           flex-grow: 1;
         }
+
+        .clear-search {
+          border-radius: 50%;
+          --icon-color: var(--color-base-7);
+        }
+
+        .clear-search:hover {
+          background-color: var(--color-base-3);
+        }
+      }
+
+      .dropdown-toogle {
+        border-radius: 5px;
+        --icon-color: var(--color-base-7);
+      }
+
+      .dropdown-toogle:hover {
+        background-color: #f8f8f8;
       }
     }
 
@@ -176,6 +220,7 @@ watch(
       left: 0;
       right: 0;
       border: 1px solid #ccc;
+      border-radius: 0 0 6px 6px;
       background-color: #fff;
       max-height: 350px;
       overflow-y: auto;

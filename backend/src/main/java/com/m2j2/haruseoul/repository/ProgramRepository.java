@@ -29,7 +29,7 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
             "where (:hostId is null or p.member.id = :hostId)" +
             "and (:statuses is null or p.status in :statuses)" +
             "and (:pIds is null or p.id in :pIds)")
-    List<Program> findAll2(Long hostId, @Param("pIds") List<Long> programIds, List<String> statuses);
+    List<Program> findAllList(Long hostId, @Param("pIds") List<Long> programIds, List<String> statuses);
 
 
     @Query("SELECT p FROM Program p " +
