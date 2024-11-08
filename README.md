@@ -58,18 +58,14 @@
 
 
 ### 기술 스택
-✔️Frond-end
+1. Frond-end
+
+    <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML5&logoColor=white">
+    <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=CSS3&logoColor=white">
+    <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white">
 
 
-<img src="https://img.shields.io/badge/HTML-61DAFB?style=for-the-badge&logo=Html&logoColor=skyblue">
-<img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=Css&logoColor=white">
-<img src="https://img.shields.io/badge/Vue-764ABC?style=for-the-badge&logo=Vue.js&logoColor=purple">
-<img src="https://img.shields.io/badge/Nuxt-000000?style=for-the-badge&logo=Nuxt&logoColor=skyblue">
+2. Back-end
 
-
-✔️Back-end
-
-
-<img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=yellow">
-<img src="https://img.shields.io/badge/Maria DB-6DB33F?style=for-the-badge&logo=Maria&logoColor=yellow">
+    <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
 
