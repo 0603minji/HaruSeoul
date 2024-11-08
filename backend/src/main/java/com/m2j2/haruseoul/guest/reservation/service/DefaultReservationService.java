@@ -49,9 +49,9 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
-    public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, int pageNum, int cardsPerPage) {
+    public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, int pageNum) {
         Sort sort = Sort.by("regDate").descending();
-        Pageable pageable = PageRequest.of(pageNum-1, cardsPerPage, sort);
+        Pageable pageable = PageRequest.of(pageNum-1, 6, sort);
 
         // 요청 페이지 번호 확인
         System.out.println("Requesting page number: " + (pageNum - 1));
@@ -132,9 +132,11 @@ public class DefaultReservationService implements ReservationService {
         // ReservationDetailHostDto Host;
         // ratingCount: 특정 memberId 에 해당하는 review 의 개수 담기
         Long ratingCount = reviewRepository.countByMemberId(reservation.getPublishedProgram().getProgram().getMember().getId());
+        Long totalRating = reviewRepository.sumRatingByMemberId(reservation.getPublishedProgram().getProgram().getMember().getId()); // 모든 rating 값의 합
+        Double averageRating = ratingCount != 0 ? totalRating / ratingCount : 0.0;
         ReservationDetailHostDto reservationDetailHostDto = ReservationDetailHostDto.builder()
                 .memberName(reservation.getPublishedProgram().getProgram().getMember().getName())
-                .programRating(String.valueOf(reservationProgram.getRating()))
+                .programRating(String.valueOf(averageRating))
                 .ratingCount(ratingCount)
                 .build();
 

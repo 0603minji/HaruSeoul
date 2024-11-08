@@ -23,16 +23,16 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> getList(
             @RequestParam(name = "s", required = false)List<Long> statusIds,
             @RequestParam(name = "m", required = false)List<Long> memberIds,
-            @RequestParam(name = "pageNumber", defaultValue = "1") int pageNumber,
-            @RequestParam(name = "cardsPerPage", defaultValue = "6") int cardsPerPage){
-        ReservationResponseDto reservationResponseDto = reservationService.getList(statusIds, memberIds, pageNumber, cardsPerPage);
+            @RequestParam(name = "pageNum", defaultValue = "1") int pageNum){
+        ReservationResponseDto reservationResponseDto = reservationService.getList(statusIds, memberIds, pageNum);
 
         return ResponseEntity.ok(reservationResponseDto);
     }
 
-    @GetMapping("{rid}")
+    @GetMapping("/{rid}")
     public ResponseEntity<ReservationDetailResponseDto> getDetail(
             @PathVariable("rid") Long rId){
+        System.out.println("Received rId: " + rId);
         ReservationDetailResponseDto reservationDetailResponseDto = reservationService.getDetail(rId);
 
         return ResponseEntity.ok(reservationDetailResponseDto);
