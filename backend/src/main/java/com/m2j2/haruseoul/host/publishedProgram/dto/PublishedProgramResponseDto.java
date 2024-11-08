@@ -12,5 +12,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PublishedProgramResponseDto {
+    private List<Long> pages;
+    private long totalCount;
+    private long totalPages;
+    private int currentPageRowCount;
+    private boolean hasNextPage;
+    private boolean hasPreviousPage;
     private List<PublishedProgramListDto> publishedPrograms;
 }

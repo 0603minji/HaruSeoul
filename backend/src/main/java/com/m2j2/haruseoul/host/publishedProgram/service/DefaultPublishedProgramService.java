@@ -8,6 +8,10 @@ import com.m2j2.haruseoul.repository.StatusRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 public class DefaultPublishedProgramService implements PublishedProgramService {
@@ -43,23 +48,54 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
     final long STATUS_CONFIRMED = 6L;
 
     @Override
-    public PublishedProgramResponseDto getList(List<Long> memberIds, List<LocalDate> dates, List<Long> statusIds, List<Long> programIds) {
+    public PublishedProgramResponseDto getList(List<Long> memberIds, List<LocalDate> dates, List<Long> statusIds, List<Long> programIds,
+                                               Integer page, Integer pageSize, String sortBy, String order) {
+        Sort sort = order.equals("asc")? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page-1, pageSize, sort);
+
         LocalDate start = dates == null ? null : dates.getFirst();
         LocalDate end = dates == null ? null : dates.getLast();
-        List<PublishedProgram> publishedPrograms = publishedProgramRepository.findAll(memberIds, start, end, statusIds, programIds);
 
+        // Page<pp>
+        Page<PublishedProgram> publishedProgramPage = publishedProgramRepository
+                .findAll(memberIds, start, end, statusIds, programIds, pageable);
+
+        // List<ppListDto>----------------------------------------------------------------------------------------------
         modelMapper.typeMap(PublishedProgram.class, PublishedProgramListDto.class)
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getProgram().getGroupSizeMax(), PublishedProgramListDto::setGroupSizeMax);
                     mapper.map(src -> src.getProgram().getGroupSizeMin(), PublishedProgramListDto::setGroupSizeMin);
                 });
 
-        List<PublishedProgramListDto> publishedProgramListDtos = publishedPrograms.stream()
+        List<PublishedProgramListDto> publishedProgramListDtos = publishedProgramPage.stream()
                 .map(publishedProgram -> modelMapper.map(publishedProgram, PublishedProgramListDto.class))
+                .toList();
+
+        //--------------------------------------------------------------------------------------------------------------
+
+        long totalCount = publishedProgramPage.getTotalElements();
+        long totalPages = publishedProgramPage.getTotalPages();
+        int currentPageRowCount = publishedProgramPage.getNumberOfElements();
+        boolean hasNextPage = publishedProgramPage.hasNext();
+        boolean hasPreviousPage = publishedProgramPage.hasPrevious();
+
+        // pager에 표시할 목록. 1~5, 6~10...
+        List<Long> pages = new ArrayList<>();
+        int offset = (page - 1) % 5;
+        int startNUm = page - offset;
+        pages = IntStream.range(startNUm, startNUm + 5)
+                .boxed()
+                .map(Long::valueOf)
                 .toList();
 
         return PublishedProgramResponseDto.builder()
                 .publishedPrograms(publishedProgramListDtos)
+                .pages(pages)
+                .totalCount(totalCount)
+                .totalPages(totalPages)
+                .currentPageRowCount(currentPageRowCount)
+                .hasNextPage(hasNextPage)
+                .hasPreviousPage(hasPreviousPage)
                 .build();
     }
 
