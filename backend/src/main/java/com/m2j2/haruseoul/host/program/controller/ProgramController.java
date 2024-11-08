@@ -57,8 +57,8 @@ public class ProgramController {
     }
     
     //  ====== 호스트 프로그램 1건 조회 컨트롤러 =======================
-    @GetMapping("one")
-    public ResponseEntity<ProgramListDto> getOneProgram(@RequestParam(name = "id") Long pId){
+    @GetMapping("{id}")
+    public ResponseEntity<ProgramListDto> getOneProgram(@PathVariable(name = "id") Long pId){
         return ResponseEntity.ok(service.getOneProgram(pId));
     }
 

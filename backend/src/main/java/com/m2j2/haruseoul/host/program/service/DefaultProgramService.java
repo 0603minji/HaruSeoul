@@ -305,11 +305,15 @@ public class DefaultProgramService implements ProgramService {
     }
 
     public ProgramListDto getOneProgram(Long pId) {
-        Optional<Program> programOptional = programRepository.findById(pId);
-
+        Optional<Program> programOptional = programRepository.findById(pId); // 프로그램이 있는지 없는지 검사
         if(!programOptional.isPresent()) return null;
         Program program = programOptional.get();
-        ProgramListDto programListDto = ProgramMapper.mapToDto(program);
+
+
+        List<Route> byProgramId = routeRepository.findByProgramId(pId);
+        ProgramListDto programListDto = ProgramMapper.mapToDto(program, byProgramId);
+
+
         return programListDto;
     }
 }
