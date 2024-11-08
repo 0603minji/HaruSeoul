@@ -1,10 +1,18 @@
 <script setup>
+import {ref, watch, watchEffect} from 'vue';
 import SearchableSelect from "~/components/filter/SearchableSelect.vue";
+import axios from "axios";
 // 부모로부터 props로 전달받을 것
-// 디폴트 개설할 프로그램 -> SearchableSelect
-// 그 외 호스트가 개설가능한 모든 프로그램들 -> SearchableSelect
-// 개설가능한 기간 내 이미 개설된 프로그램들 -> Calendar
-// submit -> emit 'publishProgram'
+// 1. 디폴트 개설할 프로그램 -> SearchableSelect
+// 2. hostId
+// submit -> post
+/*
+PublishedProgramCreateDto(regMemberId, programId, dates)
+POST host/published-programs
+* */
+
+// emit
+const emit = defineEmits(['closeModal']);
 
 // Props
 const props = defineProps({
@@ -16,93 +24,78 @@ const props = defineProps({
     type: Number,
     required: true
   }
-//   programOptions: {
-//     type: Array,
-//   },
-//   publishedPrograms: {
-//     type: Array,
-//   }
 });
 
-// query ?mIds=props.hostId&s=1,2,5,6&d=개설가능첫날,끝날
-const today = new Date();
-today.setHours(0, 0, 0, 0);
-const startRange = new Date(today);
-const endRange = new Date(today);
+/*=== variables ======================================================================================================*/
+// Selected option
+const selectedProgram = ref(null); // 초기값 = props.defaultProgramId에 해당하는 programFilterDto {id: 16, title: "abdav"}
 
-startRange.setDate(today.getDate() + 3); // today + 3 days
-endRange.setDate(today.getDate() + 3 + 21); // startRange + 21 days
-
-let query = {
-  mIds: props.hostId,
-  s: [1, 2, 5, 6],
-  d: [startRange.toISOString().split("T")[0], endRange.toISOString().split("T")[0]]
-};
+// Selected dates 프로그램 진행일
+let selectedDates = [];
 
 const config = useRuntimeConfig();
-const {data, refresh} = useFetch(`host/published-programs`, {
-  baseURL: config.public.apiBase,
-  params: query
-});
 
-/*=======================================================================================================================*/
-// Sample options for the select box
-const programs = ref([
-  {id: 1, name: 'Program A'},
-  {id: 2, name: 'Program B'},
-  {id: 3, name: 'Program C'},
-  {id: 4, name: 'Program D'},
-  {id: 5, name: 'Program E'},
-  {id: 6, name: 'Program F'},
-  {id: 7, name: 'Program G'},
-  {id: 8, name: 'Program H'},
-  {id: 9, name: 'Program I'},
-  {id: 10, name: 'Program J'},
-  {id: 11, name: 'Program K'},
-  {id: 12, name: 'Program L'},
-  {id: 13, name: 'Program M'},
-  {id: 14, name: 'Program N'},
-  {id: 15, name: 'Program O'},
-  {id: 16, name: 'Program P'},
-  {id: 17, name: 'Program Q'},
-  {id: 18, name: 'Program R'},
-  {id: 19, name: 'Program S'},
-  {id: 20, name: 'Program T'},
-  {id: 21, name: 'Program U'},
-  {id: 22, name: 'Program V'},
-  {id: 23, name: 'Program W'},
-  {id: 24, name: 'Program X'},
-  {id: 25, name: 'Program Y'},
-  {id: 26, name: 'Program Z'},
-]);
-
-// initial
-const initial = {id: 4, name: 'Program D'};
-
-// Selected option
-const selectedProgram = ref(initial);
-
+// === function ========================================================================================================
 // Handle selection change
-const updateSelection = (selectedOption) => {
+const updateSelectedProgram = (selectedOption) => {
   selectedProgram.value = selectedOption;
+  console.log('PublishProgramModal: updateSelectedProgram called');
+  console.log('   ->  selectedProgram: ', selectedProgram.value);
 };
 
-watchEffect(() => console.log(selectedProgram.value));
+const updateSelectedDates = (selectedOptions) => {
+  selectedDates = selectedOptions;
+  console.log('PublishProgramModal: updateSelectedDates called');
+  console.log('   ->  selectedDates: ', selectedDates);
+};
+
+const submitHandler = async () => {
+  console.log('PublishedProgramModal: submitHandler called');
+  if (selectedDates.length===0) {
+    console.log('   ->  selectedDates is empty. Please select date.');
+    return;
+  }
+  const publishedProgramCreateDto = {
+    regMemberId: props.hostId,
+    programId: selectedProgram.value.id,
+    dates: selectedDates.map((date) =>
+        new Intl.DateTimeFormat('ko-KR', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          timeZone: 'Asia/seoul'
+        }).format(date)
+            .replace(/\. /g, '-')
+            .replace('.', '')
+    )
+  };
+
+  try {
+    console.log('   ->  POST host/published-programs');
+    const response = await axios.post(`${config.public.apiBase}host/published-programs`, publishedProgramCreateDto);
+    console.log('   PublishedProgram created successfully: ', response.data);
+  } catch (error) {
+    console.error('  Error creating publishedProgram: ', error);
+  }
+
+  // 모달창 닫기
+  emit('closeModal');
+};
 </script>
 
 <template>
-  <aside class="popup">
+  <aside class="popup modal">
     <header class="popup-header">
       <h1 class="font-size:9">개설하기</h1>
-      <button class="n-btn n-btn:hover n-btn-border:transparent n-icon n-icon:exit">닫기</button>
+      <button @click.prevent="emit('closeModal')" class="n-btn n-btn-border:transparent n-icon n-icon:exit">닫기</button>
     </header>
 
-    <form class="popup-body" action="">
+    <form @submit.prevent="submitHandler" class="popup-body" action="">
       <!--프로그램 선택-->
-      <SearchableSelect :options="programs" :initial-option="initial"
-                        @selection-changed="updateSelection"/>
-
-      <FilterCalendarV2/>
+      <SearchableSelect :host-id="props.hostId" :default-program-id="defaultProgramId"
+                        @selection-changed="updateSelectedProgram"/>
+      <!-- 진행일 선택 -->
+      <FilterCalendarV2 :host-id="props.hostId" @selection-changed="updateSelectedDates"/>
 
       <div class="submit">
         <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>
@@ -112,8 +105,29 @@ watchEffect(() => console.log(selectedProgram.value));
 </template>
 
 <style scoped>
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000; /* Sit on top */
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 100%); /* 초기에 바닥에 숨어있음 */
+  width: 100%;
+  min-width: 350px;
+  max-width: 500px;
+  max-height: 100vh;
+  //background-color: white;
+  //border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.modal.show {
+  display: flex;
+  transform: translate(-50% ,0); /* 아래에서 등장 */
+}
+
 .popup {
-  border: 1px solid black;
   border-radius: 16px 16px 0 0;
   background-color: var(--color-base-1);
   //padding: 16px 24px;
@@ -126,10 +140,16 @@ watchEffect(() => console.log(selectedProgram.value));
     align-items: center;
     justify-content: center;
     position: relative;
+    margin-bottom: 10px;
 
     button {
       position: absolute;
       right: 14px;
+      --icon-color: var(--color-base-5);
+    }
+
+    button:hover {
+      --icon-color: var(--color-base-7);
     }
   }
 
@@ -137,6 +157,7 @@ watchEffect(() => console.log(selectedProgram.value));
     display: flex;
     flex-direction: column;
     padding: 0 10px;
+    overflow-y: auto;
 
     .submit {
       margin-left: auto;

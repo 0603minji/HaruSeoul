@@ -25,7 +25,9 @@ public interface PublishedProgramRepository extends JpaRepository<PublishedProgr
 
 
     @Query("SELECT pp.program.id FROM PublishedProgram pp " +
-            "WHERE (:startDate IS NULL AND :endDate IS NULL OR (pp.date BETWEEN :startDate AND :endDate))")
+            "WHERE (:startDate IS NULL AND :endDate IS NULL OR " +
+            "(pp.date >= :startDate OR :startDate IS NULL) AND " +
+            "(pp.date <= :endDate OR :endDate IS NULL))")
     List<Long> findProgramIdsByDateRange(@Param("startDate") LocalDate startDate,
                                          @Param("endDate") LocalDate endDate);
 

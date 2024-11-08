@@ -1,3 +1,5 @@
+<script setup>
+</script>
 <template>
   <header th:fragment="header" class="n-global-header n-global-header:guest">
     <h1 class="n-heading:2">HaruSeoul</h1>
@@ -135,5 +137,6 @@
     </section>
   </header>
 </template>
-<script></script>
-<style></style>
+<style>
+
+</style>
