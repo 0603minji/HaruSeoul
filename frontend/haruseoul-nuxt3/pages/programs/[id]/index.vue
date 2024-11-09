@@ -171,7 +171,7 @@
 
                 <div class="text">
                   <p class="p-summary">{{ data.programDetailProgramDto.detail }}</p>
-                  <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">펼치기</button>
+<!--                  <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">펼치기</button>-->
                 </div>
               </div>
             </div>
@@ -214,7 +214,7 @@
                     <div v-for="(stop, index) in stops" :key="index" class="point drop-by">
                       <div class="icon-wrapper">
                         <span class="n-icon n-icon:rectangle">막대기</span>
-                        <span class="n-icon n-icon:number1">경유 아이콘</span>
+                        <span :class="`n-icon n-icon:number${stop.order}`">경유 아이콘</span>
                       </div>
                       <div class="point-detail">
                         <div class="n-panel-tag n-panel-tag:time">
@@ -290,14 +290,16 @@
                     <h1>포함사항</h1>
                     <div class="list-container">
                       <ul style="padding-left: 0;">
-                        <li class="info-input n-icon n-icon:success-circle-green">
-                          {{ data.programDetailProgramDto.inclusion }}
+                        <li v-for="(item, index) in data.programDetailProgramDto.inclusion.split('\n')" :key="index" class="info-input n-icon n-icon:success-circle-green">
+                          {{ item }}
                         </li>
                       </ul>
                     </div>
                     <div class="list-container">
                       <ul style="padding-left: 0;">
-                        <li class="info-input n-icon n-icon:error">{{ data.programDetailProgramDto.exclusion }}</li>
+                        <li v-for="(item, index) in data.programDetailProgramDto.exclusion.split('\n')" :key="index" class="info-input n-icon n-icon:error">
+                          {{ item }}
+                        </li>
                       </ul>
                     </div>
                   </section>
@@ -316,14 +318,19 @@
                     <div style="padding: 0 var(--gap-6);">
                       <h2 class="info-form n-icon n-icon:success-decagon">준비물</h2>
                       <ul>
-                        <li class="list-content">{{ data.programDetailProgramDto.packingList }}</li>
+                        <li v-for="(item, index) in data.programDetailProgramDto.packingList.split('\n')" :key="index" class="list-content">
+                          {{ item }}
+                        </li>
+
                       </ul>
                     </div>
 
                     <div style="padding: var(--gap-6); padding-bottom: 0;">
                       <h2 class="info-form n-icon n-icon:caution">주의사항</h2>
                       <ul>
-                        <li class="list-content">{{ data.programDetailProgramDto.caution }}</li>
+                        <li v-for="(item, index) in data.programDetailProgramDto.caution.split('\n')" :key="index" class="list-content">
+                          {{ item }}
+                        </li>
                       </ul>
                     </div>
 
@@ -532,7 +539,7 @@ const titleWithOrderOne = computed(() => {
 const meetingTimeWithOrderOne = computed(() => {
   const item = data.value.programDetailRouteDto.find(route => route.order === 1);
   if (item && item.startTime) {
-    return item.startTime.split(':').slice(1).join(':'); // 첫 번째 요소를 제거하고 나머지를 조합
+    return item.startTime
   }
 });
 
