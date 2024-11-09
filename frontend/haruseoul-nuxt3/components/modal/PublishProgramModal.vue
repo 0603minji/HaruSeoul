@@ -1,6 +1,7 @@
 <script setup>
 import {ref, watch, watchEffect} from 'vue';
 import SearchableSelect from "~/components/filter/SearchableSelect.vue";
+import PublishDatePicker from "~/components/filter/PublishDatePicker.vue";
 import axios from "axios";
 // 부모로부터 props로 전달받을 것
 // 1. 디폴트 개설할 프로그램 -> SearchableSelect
@@ -39,20 +40,20 @@ const config = useRuntimeConfig();
 // Handle selection change
 const updateSelectedProgram = (selectedOption) => {
   selectedProgram.value = selectedOption;
-  console.log('PublishProgramModal: updateSelectedProgram called');
-  console.log('   ->  selectedProgram: ', selectedProgram.value);
+  console.log('******* PublishProgramModal: updateSelectedProgram called');
+  console.log('          ->  selectedProgram: ', selectedProgram.value);
 };
 
 const updateSelectedDates = (selectedOptions) => {
   selectedDates = selectedOptions;
-  console.log('PublishProgramModal: updateSelectedDates called');
-  console.log('   ->  selectedDates: ', selectedDates);
+  console.log('******* PublishProgramModal: updateSelectedDates called');
+  console.log('          ->  selectedDates: ', selectedDates);
 };
 
 const submitHandler = async () => {
-  console.log('PublishedProgramModal: submitHandler called');
+  console.log('******* PublishedProgramModal: submitHandler called');
   if (selectedDates.length===0) {
-    console.log('   ->  selectedDates is empty. Please select date.');
+    console.log('          ->  selectedDates is empty. Please select date.');
     return;
   }
   const publishedProgramCreateDto = {
@@ -71,11 +72,11 @@ const submitHandler = async () => {
   };
 
   try {
-    console.log('   ->  POST host/published-programs');
+    console.log('          ->  POST host/published-programs');
     const response = await axios.post(`${config.public.apiBase}host/published-programs`, publishedProgramCreateDto);
-    console.log('   PublishedProgram created successfully: ', response.data);
+    console.log('          PublishedProgram created successfully: ', response.data);
   } catch (error) {
-    console.error('  Error creating publishedProgram: ', error);
+    console.error('         Error creating publishedProgram: ', error);
   }
 
   // 모달창 닫기
@@ -95,7 +96,7 @@ const submitHandler = async () => {
       <SearchableSelect :host-id="props.hostId" :default-program-id="defaultProgramId"
                         @selection-changed="updateSelectedProgram"/>
       <!-- 진행일 선택 -->
-      <FilterCalendarV2 :host-id="props.hostId" @selection-changed="updateSelectedDates"/>
+      <PublishDatePicker :host-id="props.hostId" @selection-changed="updateSelectedDates"/>
 
       <div class="submit">
         <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>
