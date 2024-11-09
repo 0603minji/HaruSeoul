@@ -18,10 +18,7 @@ const yearOptions = [
 
 // 검색가능한 최초 날짜, 최후 날짜
 const minDate = new Date(yearOptions[0], 0, 1); // 검색가능한 기간 내 첫날 1.1
-const maxDate = new Date(yearOptions[yearOptions.length-1], 11, 31); // 검색가능한 기간 내 마지막날 12.31
-console.log('mindate: ', minDate);
-console.log('maxdate: ', maxDate);
-
+const maxDate = new Date(yearOptions.at(-1), 11, 31); // 검색가능한 기간 내 마지막날 12.31
 
 // 선택된 연도, 월
 const selectedYear = ref(initialYear);
@@ -73,7 +70,7 @@ const dates = computed(() => {
 
 /*=== function =======================================================================================================*/
 const toNextMonth = () => {
-  console.log("toNextMonth called");
+  // console.log("toNextMonth called");
   if (selectedMonth.value === 11) {
     selectedYear.value += 1;
     selectedMonth.value = 0;
@@ -83,7 +80,7 @@ const toNextMonth = () => {
 }
 
 const toPrevMonth = () => {
-  console.log("toPrevMonth called");
+  // console.log("toPrevMonth called");
   if (selectedMonth.value === 0) {
     selectedMonth.value = 11;
     selectedYear.value -= 1;
@@ -96,9 +93,25 @@ const isFirstMonth = () => selectedMonth.value === 0 && selectedYear.value === i
 
 const isLastMonth = () => selectedMonth.value === 11 && selectedYear.value === initialYear + yearRange;
 
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
+
+// Date객체를 받아서 해당 객체의 년월로 selectedYear, selectedMonth를 초기화
+const setSelectedYearMonth = (date) => {
+  selectedYear.value = date.getFullYear();
+  selectedMonth.value = date.getMonth();
+};
+
 const resetSelectedDatesHandler = () => {
-  if (selectedDates.value.length === 0)
-    return;
+  // 캘린터 페이지도 오늘이 표시된 곳으로 설정
+  selectedYear.value = initialYear;
+  selectedMonth.value = initialMonth;
+
   selectedDates.value = [];
 };
 
@@ -127,6 +140,29 @@ const isDisabled = (date) => {
         초기화
       </button>
     </header>
+
+    <div class="selected-date-range-display">
+      <div class="date-wrapper">
+        <!-- Start date display -->
+        <span v-if="!selectedDates.at(0)" class="start-date-placeholder">Start date</span>
+        <span v-else class="start-date" :title="'Go to calendar page with Start date'" @click.prevent="setSelectedYearMonth(selectedDates.at(0))">{{ formatDate(selectedDates.at(0)) }}</span>
+
+        <!-- Clear button for start date -->
+        <button v-if="selectedDates.at(0)" class="clear-selected-date-icon n-btn n-btn:hover n-btn-bd:none n-icon n-icon:exit" @click.prevent="selectedDates.shift()">날짜 선택해제</button>
+      </div>
+
+      <div>~</div>
+
+      <div class="date-wrapper">
+        <!-- End date display -->
+        <span v-if="!selectedDates.at(1)" class="end-date-placeholder">End date</span>
+        <span v-else class="end-date" :title="'Go to calendar page with End date'" @click.prevent="setSelectedYearMonth(selectedDates.at(1))">{{ formatDate(selectedDates.at(1)) }}</span>
+
+        <!-- Clear button for end date -->
+        <button v-if="selectedDates.at(1)" class="clear-selected-date-icon n-btn n-btn:hover n-btn-bd:none n-icon n-icon:exit" @click.prevent="selectedDates.pop()">날짜 선택해제</button>
+      </div>
+    </div>
+
     <section class="calendar-container">
       <header class="calendar-header">
         <h1 class="d:none">Calendar</h1>
@@ -220,10 +256,57 @@ const isDisabled = (date) => {
     }
   }
 
+  .selected-date-range-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    height: 42px;
+    padding: 8px;
+    margin: 0 10px 30px 10px;
+
+    .date-wrapper {
+      display: flex;
+      flex-grow: 1;
+      flex-basis: 0;
+      gap: 4px;
+      align-items: center;
+      justify-content: center;
+
+      .start-date-placeholder, .end-date-placeholder {
+        font-size: 16px;
+        color: var(--color-base-6);
+      }
+
+      .start-date, .end-date {
+        font-size: 16px;
+        cursor: pointer;
+        padding: 6px 10px;
+        border-radius: 12px;
+      }
+
+      :is(.start-date, .end-date):hover {
+        background-color: var(--color-base-2);
+      }
+
+      .clear-selected-date-icon {
+        --btn-bg-color: var(--color-base-3);
+        --btn-bg-hover: var(--color-base-3);
+        --icon-size: 16px;
+        --icon-color: var(--color-base-6);
+      }
+      .clear-selected-date-icon:hover {
+        --icon-color: var(--color-base-8);
+      }
+    }
+  }
+
   .calendar-container {
     //max-width: 768px;
     //min-width: 250px;
     width: 100%;
+    height: 495px;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -311,7 +394,7 @@ const isDisabled = (date) => {
         justify-content: center;
         align-items: center;
 
-        height: 6vh;
+        height: 56px;
         border-radius: 4px;
         transition: background-color 0.1s ease, border-color 0.1s ease, color 0.1s ease;
 

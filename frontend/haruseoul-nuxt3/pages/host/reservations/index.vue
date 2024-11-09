@@ -1,7 +1,16 @@
 <script setup>
 
-import {watchEffect} from "vue";
+import {ref, watchEffect} from "vue";
 import {useRoute} from 'vue-router';
+import DateRangeFilterModal from "~/components/modal/DateRangeFilterModal.vue";
+
+// === 모달창 ==========================================================================================================
+const isDateRangeFilterModalVisible = ref(false);
+
+const OpenDateRangeHandler = () => {
+  isDateRangeFilterModalVisible.value = true;
+};
+
 
 const hostId = 4; // 프론트에서 저장하고 있는 인증정보에 접근해서 얻어와야함
 const page = ref(1);
@@ -239,7 +248,7 @@ const calculateKoreanDDay = (enteredDate) => {
 
             <div class="overflow-x:auto">
               <ul class="item-wrapper">
-                <li><a href=""
+                <li><a @click.prevent="OpenDateRangeHandler" href=""
                        class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
                 </li>
                 <li><a href=""
@@ -375,6 +384,10 @@ const calculateKoreanDDay = (enteredDate) => {
       </div>
     </section>
 
+    <!-- 모달   -->
+    <DateRangeFilterModal :class="{'show': isDateRangeFilterModalVisible}" :host-id="hostId" @close-modal="isDateRangeFilterModalVisible=false"/>
+    <!-- 모달창 떴을 때 배경처리   -->
+    <div :class="{'active': isPublishProgramModalVisible || isDateRangeFilterModalVisible}" class="backdrop"></div>
   </main>
 </template>
 
@@ -544,5 +557,21 @@ const calculateKoreanDDay = (enteredDate) => {
   .md\:d\:none {
     display: none;
   }
+}
+
+/* 모달창 떴을 때 배경처리용 */
+.backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dark background */
+  backdrop-filter: blur(5px); /* Blur effect */
+  z-index: 999; /* Behind modal but above other content */
+}
+.backdrop.active {
+  display: block;
 }
 </style>
