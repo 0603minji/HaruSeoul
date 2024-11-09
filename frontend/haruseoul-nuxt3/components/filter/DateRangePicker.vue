@@ -1,22 +1,27 @@
 <script setup>
-import {ref, watch, watchEffect} from 'vue';
+import {ref, watch} from 'vue';
 
 // emit
 const emit = defineEmits(['selectionChanged'])
-
-// Props
-const props = defineProps({
-  hostId: {
-    type: Number,
-    required: true
-  }
-});
 
 /*=== 달력 dates 생성 =======================================================================================================*/
 // 초기 연도, 월
 const initialYear = new Date().getFullYear();
 const initialMonth = new Date().getMonth();
+// 연도 선택셀렉트박스 옵션
 const yearRange = 3; // 현재 연도 +- yearRange까지 옵션으로 제공
+const yearOptions = [
+  ...Array.from({ length: yearRange }, (_, i) => initialYear - (yearRange - i)), // Previous years
+  initialYear, // Current year
+  ...Array.from({ length: yearRange }, (_, i) => initialYear + (i + 1)) // Next years
+];
+
+// 검색가능한 최초 날짜, 최후 날짜
+const minDate = new Date(yearOptions[0], 0, 1); // 검색가능한 기간 내 첫날 1.1
+const maxDate = new Date(yearOptions[yearOptions.length-1], 11, 31); // 검색가능한 기간 내 마지막날 12.31
+console.log('mindate: ', minDate);
+console.log('maxdate: ', maxDate);
+
 
 // 선택된 연도, 월
 const selectedYear = ref(initialYear);
@@ -67,24 +72,9 @@ const dates = computed(() => {
 });
 
 /*=== function =======================================================================================================*/
-// 연도선택 <option>태그 생성용
-const getYearOptions = (baseYear, range) => {
-  const year = [];
-  year.push(baseYear);
-
-  for (let i = 0; i < range; i++)
-    year.push(baseYear + i + 1);
-
-  for (let i = 0; i < range; i++)
-    year.unshift(baseYear - (i + 1));
-
-  return year;
-};
-
 const toNextMonth = () => {
+  console.log("toNextMonth called");
   if (selectedMonth.value === 11) {
-    if (selectedYear.value === initialYear + yearRange)
-      return;
     selectedYear.value += 1;
     selectedMonth.value = 0;
   } else {
@@ -93,15 +83,18 @@ const toNextMonth = () => {
 }
 
 const toPrevMonth = () => {
+  console.log("toPrevMonth called");
   if (selectedMonth.value === 0) {
-    if (selectedYear.value === initialYear - yearRange)
-      return;
     selectedMonth.value = 11;
     selectedYear.value -= 1;
   } else {
     selectedMonth.value -= 1;
   }
 }
+
+const isFirstMonth = () => selectedMonth.value === 0 && selectedYear.value === initialYear - yearRange;
+
+const isLastMonth = () => selectedMonth.value === 11 && selectedYear.value === initialYear + yearRange;
 
 const resetSelectedDatesHandler = () => {
   if (selectedDates.value.length === 0)
@@ -134,23 +127,25 @@ const isDisabled = (date) => {
         초기화
       </button>
     </header>
-    <section class="calendar-new">
+    <section class="calendar-container">
       <header class="calendar-header">
         <h1 class="d:none">Calendar</h1>
         <button @click.prevent="toPrevMonth"
+                :disabled="isFirstMonth()"
                 class="to-prev-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_left n-icon-size:3"
                 type="button">이전
         </button>
         <div class="year-month-wrapper font-size:9">
           <select class="year" v-model="selectedYear">
-            <option v-for="year in getYearOptions(initialYear, yearRange)" :value="year">{{ year }}</option>
+            <option v-for="year in yearOptions" :value="year">{{ year }}</option>
           </select>
 
           <select class="month" v-model="selectedMonth">
-            <option v-for="(month, index) in 12" :value="index">{{ index + 1 }}</option>
+            <option v-for="(_, index) in 12" :value="index">{{ index + 1 }}</option>
           </select>
         </div>
         <button @click.prevent="toNextMonth"
+                :disabled="isLastMonth()"
                 class="to-next-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_right n-icon-size:3"
                 type="button">다음
         </button>
@@ -186,6 +181,7 @@ const isDisabled = (date) => {
             /* 전달, 다음달도 표시되고 선택가능토록 */
             'month-prev': date.getMonth() === (selectedMonth-1<0 ? 11 : selectedMonth-1),
             'month-next': date.getMonth() === (selectedMonth+1>11 ? 0 : selectedMonth+1),
+            'out-of-date-range': !(minDate <= date && date <= maxDate),
             'today': date.toDateString() === new Date().toDateString(),
             'selected': selectedDates.find(d => d.getTime() === date.getTime()),
             'date-between': selectedDates.at(0) < date && date < selectedDates.at(1)
@@ -224,7 +220,7 @@ const isDisabled = (date) => {
     }
   }
 
-  .calendar-new {
+  .calendar-container {
     //max-width: 768px;
     //min-width: 250px;
     width: 100%;
@@ -254,6 +250,8 @@ const isDisabled = (date) => {
         }
       }
 
+      /*--- 다음달 이전달 버튼 -----------------------------------------------------------------------------------------*/
+
       button {
         background-color: var(--color-base-1);
         --btn-border-color: transparent;
@@ -273,7 +271,16 @@ const isDisabled = (date) => {
         margin-right: auto;
         margin-left: 16px;
       }
+
+      /* 이전 다음달이 존재하지 않으면 버튼 disabled */
+
+      :is(.to-prev-month, .to-next-month):disabled {
+        --icon-color: var(--color-base-5);
+        cursor: not-allowed;
+      }
     }
+
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     .weekdays {
       display: grid;
@@ -321,6 +328,7 @@ const isDisabled = (date) => {
           align-items: center;
 
           /* 체크박스 숨김 */
+
           input[type="checkbox"] {
             display: none;
             width: 100%; /* Make input take full width of li */
@@ -348,9 +356,15 @@ const isDisabled = (date) => {
       :is(.month-prev, .month-next) {
         background-color: var(--calendar-bg-color);
         box-shadow: none;
+
         > label span {
           color: var(--date-color-disabled);
         }
+      }
+
+      /* 검색범위 외 month-prev, month-next(ex. 2020-12-31 or 2028-01-01)는 hidden 처리 */
+      .out-of-date-range {
+        visibility: hidden;
       }
 
       li:has(input[type="checkbox"]:not(:disabled)):hover {
@@ -358,6 +372,7 @@ const isDisabled = (date) => {
       }
 
       /* 선택된 날짜 */
+
       .selected {
         background-color: var(--color-sub-1);
 
@@ -377,7 +392,7 @@ const isDisabled = (date) => {
   }
 
   @media (min-width: 768px) {
-    .calendar-new {
+    .calendar-container {
 
     }
   }
