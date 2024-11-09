@@ -2,12 +2,15 @@
 import { ref } from 'vue';
 import CalendarV2 from "~/components/filter/PublishDatePicker.vue";
 import PublishProgramModal from "~/components/modal/PublishProgramModal.vue"
-import ProgramFilterModal from "~/components/modal/ProgramFilterModal.vue";
+import ProgramFilterModal from "~/components/modal/DateRangeFilterModal.vue";
+import DateRangePicker from "~/components/filter/DateRangePicker.vue";
+import DateRangeFilterModal from "~/components/modal/DateRangeFilterModal.vue";
+import SearchableMultiSelect from "~/components/filter/SearchableMultiSelect.vue";
 
 const route = useRoute();
 
 const isPublishProgramModalVisible = ref(false);
-const isProgramFilterModalVisible = ref(false);
+const isDateRangeFilterModalVisible = ref(false);
 
 const hostId = 1;
 const pIdTobePublished = ref(null);
@@ -18,7 +21,7 @@ const OpenpublishProgramModalHandler = (pId) => {
 };
 
 const OpenDateRangeHandler = () => {
-  isProgramFilterModalVisible.value = true;
+  isDateRangeFilterModalVisible.value = true;
 };
 </script>
 <template>
@@ -28,7 +31,7 @@ const OpenDateRangeHandler = () => {
 <!--      <Calendanpm rV2 />-->
 
       <button @click.prevent="OpenpublishProgramModalHandler(16)" class="n-btn n-btn-background-color:sub n-btn:hover">개설하기</button>
-      <PublishProgramModal v-if="isPublishProgramModalVisible" :class="{'show': isPublishProgramModalVisible}" :default-program-id="pIdTobePublished" :host-id="hostId" @close-modal="isPublishProgramModalVisible=false"/>
+      <PublishProgramModal :class="{'show': isPublishProgramModalVisible}" :default-program-id="pIdTobePublished" :host-id="hostId" @close-modal="isPublishProgramModalVisible=false"/>
 
       <!--=== 필터 .n-filter ==========================================-->
       <!--모집 중, 예약 확정, 폐지 임박, 종료, 폐지, 필터-->
@@ -57,10 +60,9 @@ const OpenDateRangeHandler = () => {
           </a>
         </div>
       </section>
-
-      <ProgramFilterModal v-if="isProgramFilterModalVisible" :class="{'show': isProgramFilterModalVisible}" :host-id="hostId" @close-modal="isProgramFilterModalVisible=false"/>
+      <DateRangeFilterModal :class="{'show': isDateRangeFilterModalVisible}" :host-id="hostId" @close-modal="isDateRangeFilterModalVisible=false"/>
     </div>
-    <div :class="{'active': isPublishProgramModalVisible || isProgramFilterModalVisible}" class="backdrop"></div>
+    <div :class="{'active': isPublishProgramModalVisible || isDateRangeFilterModalVisible}" class="backdrop"></div>
   </main>
 </template>
 <style scoped>
