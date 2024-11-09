@@ -3,7 +3,7 @@
 </script>
 <template>
 
-  <section class="calendar-new">
+  <section class="calendar-container">
     <header class="calendar-header">
       <h1 class="d:none">May 2024</h1>
       <button class="to-prev-month n-btn border-radius:full n-icon n-icon:arrow_left n-icon-size:3" type="button">이전</button>
@@ -100,7 +100,7 @@
 </template>
 
 <style scoped>
-.calendar-new {
+.calendar-container {
   //max-width: 768px;
   //min-width: 250px;
   width: 373px;
@@ -248,7 +248,7 @@
 }
 
 @media (min-width: 768px) {
-  .calendar-new {
+  .calendar-container {
 
   }
 }

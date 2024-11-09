@@ -1,11 +1,16 @@
 <script setup>
 import { ref } from 'vue';
-import CalendarV2 from "~/components/filter/CalendarV2.vue";
+import CalendarV2 from "~/components/filter/PublishDatePicker.vue";
 import PublishProgramModal from "~/components/modal/PublishProgramModal.vue"
-import ProgramFilterModal from "~/components/modal/ProgramFilterModal.vue";
+import ProgramFilterModal from "~/components/modal/DateRangeFilterModal.vue";
+import DateRangePicker from "~/components/filter/DateRangePicker.vue";
+import DateRangeFilterModal from "~/components/modal/DateRangeFilterModal.vue";
+import SearchableMultiSelect from "~/components/filter/SearchableMultiSelect.vue";
+
+const route = useRoute();
 
 const isPublishProgramModalVisible = ref(false);
-const isProgramFilterModalVisible = ref(false);
+const isDateRangeFilterModalVisible = ref(false);
 
 const hostId = 1;
 const pIdTobePublished = ref(null);
@@ -15,19 +20,49 @@ const OpenpublishProgramModalHandler = (pId) => {
   pIdTobePublished.value = pId;
 };
 
+const OpenDateRangeHandler = () => {
+  isDateRangeFilterModalVisible.value = true;
+};
 </script>
 <template>
   <main>
     calendar
     <div class="container">
-<!--      <CalendarV2 />-->
+<!--      <Calendanpm rV2 />-->
 
       <button @click.prevent="OpenpublishProgramModalHandler(16)" class="n-btn n-btn-background-color:sub n-btn:hover">개설하기</button>
-      <PublishProgramModal v-if="isPublishProgramModalVisible" :class="{'show': isPublishProgramModalVisible}" :default-program-id="pIdTobePublished" :host-id="hostId" @close-modal="isPublishProgramModalVisible=false"/>
+      <PublishProgramModal :class="{'show': isPublishProgramModalVisible}" :default-program-id="pIdTobePublished" :host-id="hostId" @close-modal="isPublishProgramModalVisible=false"/>
 
-<!--      <ProgramFilterModal />-->
+      <!--=== 필터 .n-filter ==========================================-->
+      <!--모집 중, 예약 확정, 폐지 임박, 종료, 폐지, 필터-->
+      <section class="n-filter md:d:none bg-color:base-1">
+        <h1 class="d:none">필터</h1>
+
+        <div class="overflow-x:auto">
+          <ul class="item-wrapper">
+            <li><a @click.prevent="OpenDateRangeHandler" href=""
+                   :class="{active: route.query.dates}"
+                   class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
+            </li>
+            <li><a href=""
+                   class="active active:border n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
+              상태</a></li>
+            <li><a href=""
+                   class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1">프로그램</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="reset-box">
+          <div class="gradation"></div>
+          <a href="" class="icon-box n-deco1 n-icon n-icon:reset">
+            초기화
+          </a>
+        </div>
+      </section>
+      <DateRangeFilterModal :class="{'show': isDateRangeFilterModalVisible}" :host-id="hostId" @close-modal="isDateRangeFilterModalVisible=false"/>
     </div>
-    <div :class="{'active': isPublishProgramModalVisible || isProgramFilterModalVisible}" class="backdrop"></div>
+    <div :class="{'active': isPublishProgramModalVisible || isDateRangeFilterModalVisible}" class="backdrop"></div>
   </main>
 </template>
 <style scoped>
