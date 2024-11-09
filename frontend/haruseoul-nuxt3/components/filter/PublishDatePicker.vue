@@ -234,7 +234,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
         초기화
       </button>
     </header>
-    <section class="calendar-new">
+    <section class="calendar-container">
       <header class="calendar-header">
         <h1 class="d:none">May 2024</h1>
         <button @click.prevent="toPrevMonth"
@@ -320,7 +320,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
     }
   }
 
-  .calendar-new {
+  .calendar-container {
     //max-width: 768px;
     //min-width: 250px;
     width: 100%;
@@ -471,6 +471,10 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
         }
       }
 
+      .selected:hover {
+        background-color: var(--color-sub-0) !important;
+      }
+
       /* 이미 개설된 프로그램 존재하는 날짜 */
 
       .occupied.available {
@@ -485,7 +489,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
   }
 
   @media (min-width: 768px) {
-    .calendar-new {
+    .calendar-container {
 
     }
   }

@@ -77,7 +77,7 @@ const updateSelectedDates = (selectedOptions) => {
       <SearchableMultiSelect :options="programs" :initial-options="initial"
                              @selection-changed="updateSelection"/>
 
-      <DateRangePicker :host-id="props.hostId" @selection-changed="updateSelectedDates"/>
+      <DateRangePicker @selection-changed="updateSelectedDates"/>
 
       <div class="submit">
         <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>
