@@ -3,12 +3,18 @@
 import {ref, watchEffect} from "vue";
 import {useRoute} from 'vue-router';
 import DateRangeFilterModal from "~/components/modal/DateRangeFilterModal.vue";
+import PublishProgramModal from "~/components/modal/PublishProgramModal.vue";
 
 // === 모달창 ==========================================================================================================
 const isDateRangeFilterModalVisible = ref(false);
+const isPublishProgramModalVisible = ref(false);
 
 const OpenDateRangeHandler = () => {
   isDateRangeFilterModalVisible.value = true;
+};
+
+const OpenPublishProgramModalHandler = () => {
+  isPublishProgramModalVisible.value = true;
 };
 
 
@@ -214,7 +220,7 @@ const calculateKoreanDDay = (enteredDate) => {
       <header class="n-title">
         <h1 class="">예약관리</h1>
         <div>
-          <a href="" class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">일정 추가</a>
+          <a @click.prevent="OpenPublishProgramModalHandler" href="" class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">일정 추가</a>
         </div>
       </header>
 
@@ -385,7 +391,9 @@ const calculateKoreanDDay = (enteredDate) => {
     </section>
 
     <!-- 모달   -->
-    <DateRangeFilterModal :class="{'show': isDateRangeFilterModalVisible}" :host-id="hostId" @close-modal="isDateRangeFilterModalVisible=false"/>
+    <DateRangeFilterModal :class="{'show': isDateRangeFilterModalVisible}" @close-modal="isDateRangeFilterModalVisible=false"/>
+    <PublishProgramModal :class="{'show': isPublishProgramModalVisible}" :host-id="hostId" @close-modal="isPublishProgramModalVisible=false"/>
+
     <!-- 모달창 떴을 때 배경처리   -->
     <div :class="{'active': isPublishProgramModalVisible || isDateRangeFilterModalVisible}" class="backdrop"></div>
   </main>
