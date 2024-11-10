@@ -14,20 +14,24 @@ const updateSelectedDates = (selectedOptions) => {
   console.log('         ->  selectedDates: ', selectedDates);
 };
 
+const closeModal = () => {
+  emit('closeModal', selectedDates);
+}
+
 </script>
 
 <template>
   <aside class="popup modal">
     <header class="popup-header">
       <h1 class="font-size:9">필터</h1>
-      <button @click.prevent="emit('closeModal')" class="n-btn n-btn:hover n-btn-border:transparent n-icon n-icon:exit">닫기</button>
+      <button @click.prevent="closeModal" class="n-btn n-btn:hover n-btn-border:transparent n-icon n-icon:exit">닫기</button>
     </header>
 
     <form class="popup-body" action="">
       <DateRangePicker @selection-changed="updateSelectedDates"/>
 
       <div class="submit">
-        <button @click.prevent="emit('closeModal')" class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>
+        <button @click.prevent="closeModal" class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>
       </div>
     </form>
   </aside>

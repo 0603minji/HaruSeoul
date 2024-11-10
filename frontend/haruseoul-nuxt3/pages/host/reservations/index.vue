@@ -9,17 +9,13 @@ import PublishProgramModal from "~/components/modal/PublishProgramModal.vue";
 const isDateRangeFilterModalVisible = ref(false);
 const isPublishProgramModalVisible = ref(false);
 
-const OpenDateRangeHandler = () => {
-  isDateRangeFilterModalVisible.value = true;
-};
+const OpenDateRangeHandler = () => isDateRangeFilterModalVisible.value = true;
+const OpenPublishProgramModalHandler = () => isPublishProgramModalVisible.value = true;
 
-const OpenPublishProgramModalHandler = () => {
-  isPublishProgramModalVisible.value = true;
-};
-
+const config = useRuntimeConfig();
+const queryString = useRoute().query;
 
 const hostId = 4; // 프론트에서 저장하고 있는 인증정보에 접근해서 얻어와야함
-const page = ref(1);
 
 // PublishedProgramResponseDto
 const pages = ref([1, 2, 3, 4, 5]);
@@ -30,144 +26,22 @@ let hasNextPage;
 let hasPreviousPage;
 const publishedPrograms = ref([]);
 
-let query = {
-  p: useRoute().query.p,
-};
-
-/*// Remove empty parameters (optional)
-Object.keys(newQuery).forEach(key => {
-  if (!newQuery[key]) delete newQuery[key];
-});*/
-
-// router.push({ query: newQuery });
-
-/*// query에 쓸
-const dates = ref([]); // 검색할 기간의 시작일, 말일. PublishedProgramFilter에서 emit으로 받아올 것
-const statuses = ref([]); // 검색할 상태. 1~6. PublishedProgramFilter에서 emit으로 받아올 것
-const pIds = ref([]); // 검색할 프로그램 id들. PublishedProgramFilter에서 emit으로 받아올 것*/
-/*const query = computed(() => {
-      const result = {mIds: hosId};
-
-      // Add `s` key only if `statuses` is not empty
-      if (statuses.value.length) {
-        result.s = statuses.value.join(",");
-      }
-
-      // Add `d` key only if `dates` is not empty
-      if (dates.value.length) {
-        result.d = dates.value
-            .map((date) =>
-                new Intl.DateTimeFormat("ko-KR", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  timeZone: "Asia/Seoul",
-                })
-                    .format(date)
-                    .replace(/\. /g, "-")
-                    .replace(".", "")
-            )
-            .join(",");
-      }
-
-      // Add `pIds` key only if `pIds` is not empty
-      if (pIds.value.length) {
-        result.pIds = pIds.value.join(",");
-      }
-      return result;
-    }
-);
-console.log('query initialized. ', query.value);*/
-/*// query가 변하면 새로 fetch (refresh) -> publishedPrograms
-watch(() => query.value,
-    (newQuery) => {
-      console.log('query.value watch진입: refresh()')
-      refresh();
-    }
-);*/
-/*=== fetch ==========================================================================================================*/
-const config = useRuntimeConfig();
-// 최초에 예정된 일정만 fetch
-const {data, refresh} = useFetch(`host/published-programs?mIds=${hostId}`, {
-  baseURL: config.public.apiBase,
-  query: query
-})
-
-watchEffect(() => {
-      console.log('publishedData watchEffect진입')
-      if (!data.value) {
-        console.log('publishedData watchEffect 종료')
-        return;
-      }
-      console.log('   ->  new publishedData: ', data.value);
-
-      // console.log(useRoute().query)
-      // 예정된 일정
-      if (useRoute().query.tab === "finished")
-        publishedPrograms.value = data.value.publishedPrograms.filter(p => p.statusName === "Finished");
-      if (!useRoute().query.hasOwnProperty('tab'))
-        publishedPrograms.value = data.value.publishedPrograms.filter(p => p.statusName != "Finished" && p.statusName != "Canceled");
-      if (useRoute().query.tab === "canceled")
-        publishedPrograms.value = data.value.publishedPrograms.filter(p => p.statusName === "Canceled");
-
-
-
-      console.log('   ->  publishedPrograms: ', publishedPrograms.value);
-
-      pages.value = data.value.pages;
-      totalCount.value = data.value.totalCount;
-      totalPages = data.value.totalPages;
-      currentPageRowCount = data.value.currentPageRowCount;
-      hasNextPage = data.value.hasNextPage;
-      hasPreviousPage = data.value.hasPreviousPage;
-      console.log('   ->  pages: ', pages.value);
-      console.log('   ->  totalCount: ', totalCount.value);
-      console.log('   ->  totalPages: ', totalPages);
-      console.log('   ->  currentPageRowCount: ', currentPageRowCount);
-      console.log('   ->  hasNextPage: ', hasNextPage);
-      console.log('   ->  hasPreviousPage: ', hasPreviousPage);
-      console.log('publishedData watchEffect 종료')
-    }
-)
-
-// watch(() => data.value ,(newData) => {
-//       console.log('publishedData watchEffect진입')
-//       if (!newData) {
-//         console.log('publishedData watchEffect 종료')
-//         return;
-//       }
-//       console.log('   ->  new publishedData: ', newData);
-//
-//       // console.log(useRoute().query)
-//       // 예정된 일정
-//       if (useRoute().query.tab === "finished")
-//         publishedPrograms.value = newData.publishedPrograms.filter(p => p.statusName === "Finished");
-//       if (!useRoute().query.hasOwnProperty('tab'))
-//         publishedPrograms.value = newData.publishedPrograms.filter(p => p.statusName != "Finished" && p.statusName != "Canceled");
-//       if (useRoute().query.tab === "canceled")
-//         publishedPrograms.value = newData.publishedPrograms.filter(p => p.statusName === "Canceled");
-//
-//
-//
-//       console.log('   ->  publishedPrograms: ', publishedPrograms.value);
-//
-//       pages.value = newData.pages;
-//       totalCount.value = newData.totalCount;
-//       totalPages = newData.totalPages;
-//       currentPageRowCount = newData.currentPageRowCount;
-//       hasNextPage = newData.hasNextPage;
-//       hasPreviousPage = newData.hasPreviousPage;
-//       console.log('   ->  pages: ', pages.value);
-//       console.log('   ->  totalCount: ', totalCount.value);
-//       console.log('   ->  totalPages: ', totalPages);
-//       console.log('   ->  currentPageRowCount: ', currentPageRowCount);
-//       console.log('   ->  hasNextPage: ', hasNextPage);
-//       console.log('   ->  hasPreviousPage: ', hasPreviousPage);
-//       console.log('publishedData watchEffect 종료')
-//     }
-// )
-// ;
-
+// query에 들어가는 변수들
+// 최초 페이지 접속 시 query에 쓸 변수 초기화. 이후에는 emit event함수로 초기화 후 fetch후 publishedPrograms갱신
+const dates = ref(queryString.dates); // 검색할 기간의 시작일, 말일. PublishedProgramFilter에서 emit으로 받아올 것
+const statuses = ref(queryString.s); // 검색할 상태. 1~6. PublishedProgramFilter에서 emit으로 받아올 것
+const pIds = ref(queryString.pIds); // 검색할 프로그램 id들. PublishedProgramFilter에서 emit으로 받아올 것
+const page = ref(queryString.p);
+const pageSize = ref(6);
+const sortBy = ref(null); // 예정된 일정: date, 지난, 취소된 일정: regDate or null
+const order = ref(null); // 예정된 일정: desc or null, 지난, 취소된 일정: asc
+/*
+** tab에 따른 api쿼리 **
+  1. undefined : host/published-programs?tab=todo
+  2. finished : ?tab=finished
+  3. canceled : ?tab=canceled
+*/
+const tab = ref(queryString.tab);
 
 //=== function =========================================================================================================
 // 2024-11-26 -> 24.11.26 Tue
@@ -209,6 +83,118 @@ const calculateKoreanDDay = (enteredDate) => {
   return daysDifference;
 }
 
+const createQuery = () => {
+  const result = {mIds: hostId};
+
+  if (page.value) result.p = page.value;
+  // tab filtering
+  if (tab.value === "finished" || tab.value === "canceled") {
+    result.tab = tab.value;
+    if (order.value) result.order = order.value;
+    if (sortBy.value) result.sortBy = sortBy.value;
+  }
+  // tab==undefined거나 다른 값이면 예정된 일정 탭으로 간주
+  else {
+    result.tab = "todo";
+
+    if (order.value) result.order = order.value;
+    else result.order = "asc";
+
+    if (sortBy.value) result.sortBy = sortBy.value;
+    else result.sortBy = "date";
+  }
+
+  // --- 필터 ------------------------------------------------------
+  // Add `s` key only if `statuses` is not empty
+  if (statuses.value) result.s = statuses.value;
+
+  // Add `d` key only if `dates` is not empty
+  if (dates.value) result.d = dates.value;
+
+  // Add `pIds` key only if `pIds` is not empty
+  if (pIds.value) result.pIds = pIds.value;
+  console.log('createdQuery: ', result);
+  return result;
+}
+
+// $fetch
+const fetchData = async () => {
+  const data = await $fetch(`host/published-programs`, {
+    baseURL: config.public.apiBase,
+    query: createQuery()
+  });
+
+  mapFetchedData(data);
+}
+
+// fetch한 데이터로 변수 초기화
+const mapFetchedData = (fetchedData) => {
+  publishedPrograms.value = fetchedData.publishedPrograms;
+  pages.value = fetchedData.pages;
+  totalCount.value = fetchedData.totalCount;
+  totalPages = fetchedData.totalPages;
+  currentPageRowCount = fetchedData.currentPageRowCount;
+  hasNextPage = fetchedData.hasNextPage;
+  hasPreviousPage = fetchedData.hasPreviousPage;
+  console.log('mapFetchedData called');
+  console.log('   ->  pages: ', pages.value);
+  console.log('   ->  totalCount: ', totalCount.value);
+  console.log('   ->  totalPages: ', totalPages);
+  console.log('   ->  currentPageRowCount: ', currentPageRowCount);
+  console.log('   ->  hasNextPage: ', hasNextPage);
+  console.log('   ->  hasPreviousPage: ', hasPreviousPage);
+  console.log('   ->  publishedPrograms: ', publishedPrograms.value);
+}
+
+// tab으로 이동 (예정된, 지난, 취소된)
+const tabChangeHandler = (newTab) => {
+  console.log('tabChangeHandler called')
+  tab.value = newTab;
+  console.log('tab: ', tab.value);
+  fetchData();
+}
+
+const updateDateFilterQuery = (selectedDates) => {
+  console.log('updateDateFilterQuery called')
+  // [date객체, date객체] -> "2024-11-26,2024-11-28"
+  dates.value = selectedDates
+      .map((date) =>
+          new Intl.DateTimeFormat("ko-KR", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            timeZone: "Asia/Seoul",
+          })
+              .format(date)
+              .replace(/\. /g, "-")
+              .replace(".", "")
+      )
+      .join(",");
+  console.log('   ->  dates쿼리: ', dates.value);
+
+  fetchData();
+}
+
+// 모든 필터 초기화
+const resetFilterHandler = () => {
+  dates.value = "";
+  statuses.value = "";
+  pIds.value = "";
+  page.value = "1";
+
+  fetchData();
+}
+
+/*=== fetch ==========================================================================================================*/
+// 최초에 예정된 일정만 fetch
+const {data} = await useFetch(`host/published-programs`, {
+  baseURL: config.public.apiBase,
+  query: createQuery()
+})
+
+// data.value에 PublishedProgramResponseDto가 담겨있음
+// fetch한 데이터를 변수에 할당
+mapFetchedData(data.value);
 </script>
 
 <template>
@@ -220,27 +206,31 @@ const calculateKoreanDDay = (enteredDate) => {
       <header class="n-title">
         <h1 class="">예약관리</h1>
         <div>
-          <a @click.prevent="OpenPublishProgramModalHandler" href="" class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">일정 추가</a>
+          <a @click.prevent="OpenPublishProgramModalHandler" href=""
+             class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">일정 추가</a>
         </div>
       </header>
 
-      <!--=== host/reservation/list 예약관리 상단바==========================================-->
+      <!--=== 탭 예정된 일정 / 지난 일정 / 취소된 일정 ==========================================-->
       <nav class="n-bar-underline">
         <h1 class="d:none">네비탭</h1>
         <ul class="item-wrapper">
-          <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
-              :class="{ active: useRoute().query.tab == null }">
-            <RouterLink to="./reservations">예정된 일정</RouterLink>
+          <li @click.prevent="tabChangeHandler(undefined)"
+              class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+              :class="{ active: tab == null }">
+            <NuxtLink to="./reservations">예정된 일정</NuxtLink>
           </li>
-          <li class=" n-btn:hover n-btn n-btn-border:none n-btn-radius:0"
-              :class="{ active: useRoute().query.tab === 'finished' }">
-            <RouterLink to="./reservations?tab=finished">지난
+          <li @click.prevent="tabChangeHandler('finished')"
+              class=" n-btn:hover n-btn n-btn-border:none n-btn-radius:0"
+              :class="{ active: tab === 'finished' }">
+            <NuxtLink to="./reservations?tab=finished">지난
               일정
-            </RouterLink>
+            </NuxtLink>
           </li>
-          <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
-              :class="{ active: useRoute().query.tab === 'canceled' }">
-            <RouterLink to="./reservations?tab=canceled">취소된 일정</RouterLink>
+          <li @click.prevent="tabChangeHandler('canceled')"
+              class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+              :class="{ active: tab === 'canceled' }">
+            <NuxtLink to="./reservations?tab=canceled">취소된 일정</NuxtLink>
           </li>
         </ul>
       </nav>
@@ -248,17 +238,17 @@ const calculateKoreanDDay = (enteredDate) => {
       <div class="layout-main">
         <div class="layout-main-list">
           <!--=== 필터 .n-filter ==========================================-->
-          <!--모집 중, 예약 확정, 폐지 임박, 종료, 폐지, 필터-->
+          <!-- 1.모집 중, 2.폐지임박, 3.종료, 4.취소, 5.예약확정대기, 6.예약확정 -->
           <section class="n-filter md:d:none bg-color:base-1">
             <h1 class="d:none">필터</h1>
-
             <div class="overflow-x:auto">
               <ul class="item-wrapper">
                 <li><a @click.prevent="OpenDateRangeHandler" href=""
-                       class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
+                       :class="{'active': dates }"
+                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
                 </li>
                 <li><a href=""
-                       class="active active:border n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
+                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
                   상태</a></li>
                 <li><a href=""
                        class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1">프로그램</a>
@@ -268,9 +258,11 @@ const calculateKoreanDDay = (enteredDate) => {
 
             <div class="reset-box">
               <div class="gradation"></div>
-              <a href="" class="icon-box n-deco1 n-icon n-icon:reset">
-                초기화
-              </a>
+              <div class="btn-box">
+                <button @click.prevent="resetFilterHandler" :class="{'n-deco': false}" class="reset-btn n-icon n-icon:reset">
+                  Reset
+                </button>
+              </div>
             </div>
           </section>
 
@@ -352,10 +344,9 @@ const calculateKoreanDDay = (enteredDate) => {
                         <img src="/public/image/program_02.png" alt="게스트 프로필">
                       </div>
                     </div>
-                    <span
-                        class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">{{
-                        pp.groupSizeCurrent
-                      }} / {{ pp.groupSizeMax }}</span>
+                    <span class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">
+                      {{ pp.groupSizeCurrent }} / {{ pp.groupSizeMax }}
+                    </span>
                   </div>
                 </div>
 
@@ -372,10 +363,9 @@ const calculateKoreanDDay = (enteredDate) => {
                         <img src="/public/image/program_02.png" alt="게스트 프로필">
                       </div>
                     </div>
-                    <span
-                        class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">{{
-                        pp.groupSizeCurrent
-                      }} / {{ pp.groupSizeMax }}</span>
+                    <span class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">
+                      {{ pp.groupSizeCurrent }} / {{ pp.groupSizeMax }}
+                    </span>
                   </div>
                 </div>
               </li>
@@ -391,8 +381,10 @@ const calculateKoreanDDay = (enteredDate) => {
     </section>
 
     <!-- 모달   -->
-    <DateRangeFilterModal :class="{'show': isDateRangeFilterModalVisible}" @close-modal="isDateRangeFilterModalVisible=false"/>
-    <PublishProgramModal :class="{'show': isPublishProgramModalVisible}" :host-id="hostId" @close-modal="isPublishProgramModalVisible=false"/>
+    <DateRangeFilterModal :class="{'show': isDateRangeFilterModalVisible}"
+                          @close-modal="(selectedDates) => { updateDateFilterQuery(selectedDates); isDateRangeFilterModalVisible = false;}"/>
+    <PublishProgramModal :class="{'show': isPublishProgramModalVisible}" :host-id="hostId"
+                         @close-modal="() => { fetchData(); isPublishProgramModalVisible=false; }"/>
 
     <!-- 모달창 떴을 때 배경처리   -->
     <div :class="{'active': isPublishProgramModalVisible || isDateRangeFilterModalVisible}" class="backdrop"></div>
@@ -579,6 +571,7 @@ const calculateKoreanDDay = (enteredDate) => {
   backdrop-filter: blur(5px); /* Blur effect */
   z-index: 999; /* Behind modal but above other content */
 }
+
 .backdrop.active {
   display: block;
 }
