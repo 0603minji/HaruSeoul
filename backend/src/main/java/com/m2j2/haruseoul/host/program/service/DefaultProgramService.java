@@ -194,7 +194,6 @@ public class DefaultProgramService implements ProgramService {
         int minute = duration % 60;
         return LocalTime.of(hour, minute);
     }
-
     //  ====== 호스트 프로그램 수정 메서드 ==============================
     @Override
     @Transactional
@@ -292,8 +291,10 @@ public class DefaultProgramService implements ProgramService {
         Program program = programOptional.get();
 
 
-        List<Route> byProgramId = routeRepository.findByProgramId(pId);
-        ProgramListDto programListDto = ProgramMapper.mapToDto(program, byProgramId);
+        List<Route> routes = routeRepository.findByProgramId(pId);
+        ProgramListDto programListDto = ProgramMapper.mapToDto(program, routes);
+
+
 
 
         return programListDto;

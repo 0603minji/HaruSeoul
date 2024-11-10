@@ -47,7 +47,7 @@ public class ProgramController {
     public void delete(@PathVariable(name = "id") Long id) {
         service.delete(id);
     }
-    
+
     //  ====== 호스트 프로그램 수정 컨트롤러 =======================
     @PutMapping
     public ResponseEntity<Program> update(
@@ -55,17 +55,17 @@ public class ProgramController {
     ) {
         return ResponseEntity.ok(service.update(programUpdateDto));
     }
-    
+
     //  ====== 호스트 프로그램 1건 조회 컨트롤러 =======================
     @GetMapping("{id}")
-    public ResponseEntity<ProgramListDto> getOneProgram(@PathVariable(name = "id") Long pId){
+    public ResponseEntity<ProgramListDto> getOneProgram(@PathVariable(name = "id") Long pId) {
         return ResponseEntity.ok(service.getOneProgram(pId));
     }
 
 
     @GetMapping("user/{id}")
     public ResponseEntity<List<ProgramFilterDto>> getList(@PathVariable(name = "id") Long hostId,
-                                                    @RequestParam(name = "s", required = false) List<String> statuses) {
+                                                          @RequestParam(name = "s", required = false) List<String> statuses) {
         return ResponseEntity.ok(service.getList(hostId, statuses));
     }
 

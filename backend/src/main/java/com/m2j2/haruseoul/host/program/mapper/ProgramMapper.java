@@ -5,7 +5,9 @@ import com.m2j2.haruseoul.entity.CategoryProgram;
 import com.m2j2.haruseoul.entity.Program;
 import com.m2j2.haruseoul.entity.Route;
 import com.m2j2.haruseoul.host.program.dto.ProgramListDto;
+import com.m2j2.haruseoul.host.program.dto.RouteCreateDto;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public class ProgramMapper {
@@ -74,10 +76,57 @@ public class ProgramMapper {
                 .build();
     }
 
+
+    //  route도 포함해서 ProgramListDto 생성
     public static ProgramListDto mapToDto(Program program, List<Route> routes) {
         ProgramListDto programListDto = mapToDto(program);
-//        programListDto.setRoute(routes);
+        List<RouteCreateDto> routeCreateDtos = routes.stream().map(route -> {
+            int transportationDuration = localTimeToInteger(route.getTransportationDuration());
+
+            LocalTime localTime = route.getStartTime() == null ? LocalTime.of(0, 0) : route.getStartTime();
+            String[] split = localTime.toString().split(":");
+
+            RouteCreateDto routeCreateDto = RouteCreateDto.builder()
+                    .id(route.getId())
+                    .order(route.getOrder())
+                    .title(route.getTitle())
+                    .description(route.getDescription())
+                    .address(route.getAddress())
+                    .transportationDuration(String.valueOf(transportationDuration)) //
+                    .transportationId(route.getTransportation().getId())
+                    .duration(localTimeToInteger(route.getDuration()))
+                    .startTimeHour(split[0])
+                    .startTimeMinute(split[1])
+                    .build();
+            return routeCreateDto;
+        }).toList();
+
+        programListDto.setRoute(routeCreateDtos);
 
         return programListDto;
+    }
+
+
+    public static void main(String[] args) {
+        LocalTime localTime = LocalTime.of(14, 30);
+        System.out.println(localTime);
+
+        String[] split = localTime.toString().split(":");
+        System.out.println(split[0]);
+        System.out.println(split[1]);
+    }
+
+    public static int localTimeToInteger(LocalTime localTime) {
+        if(localTime == null) {
+            return 0;
+        }
+
+        String strLocalTime = localTime.toString();
+        String[] split = strLocalTime.split(":");
+
+        int hour = Integer.parseInt(split[0]) * 60;
+        int minute = Integer.parseInt(split[1]);
+
+        return (hour + minute);
     }
 }
