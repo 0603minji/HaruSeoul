@@ -73,6 +73,11 @@ public class ProgramMapper {
                 .startTimeMinute(startTimeMinute)
                 .endTimeHour(endTimeHour)
                 .endTimeMinute(endTimeMinute)
+                .inclusion(program.getInclusion())
+                .exclusion(program.getExclusion())
+                .packingList(program.getPackingList())
+                .caution(program.getCaution())
+                .requirement(program.getRequirement())
                 .build();
     }
 
@@ -94,6 +99,7 @@ public class ProgramMapper {
                     .address(route.getAddress())
                     .transportationDuration(String.valueOf(transportationDuration)) //
                     .transportationId(route.getTransportation().getId())
+                    .transportationName(route.getTransportation().getName())
                     .duration(localTimeToInteger(route.getDuration()))
                     .startTimeHour(split[0])
                     .startTimeMinute(split[1])

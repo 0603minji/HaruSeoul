@@ -10,6 +10,10 @@ const id = route.params.id
 const oneProgram = reactive({});
 const durationHour = ref(0);
 const durationMinute = ref(0);
+const inclusionLines = ref('');
+const exclusionLines = ref('');
+const packingListLines = ref('');
+const cautionLines = ref('');
 // const { data: programData } = await useFetch(() => `/api/programs/${id}`)
 
 onMounted(() => {
@@ -24,18 +28,31 @@ const fetchOneProgram = async () => {
     oneProgram.value = response.data;
     console.log("data :", oneProgram.value);
     console.log("data :", oneProgram.value.categoryNames);
-    
+
     durationHour.value = parseInt(oneProgram.value.endTimeHour) - parseInt(oneProgram.value.startTimeHour);
     durationMinute.value = parseInt(oneProgram.value.endTimeMinute) - parseInt(oneProgram.value.startTimeMinute);
-    if(durationMinute.value<0) {
+    if (durationMinute.value < 0) {
         durationMinute.value = durationMinute.value + 60;
         durationHour.value = durationHour.value - 1;
     }
-    if(durationMinute.value===30) {
-        durationMinute.value=5;
+    if (durationMinute.value === 30) {
+        durationMinute.value = 5;
     }
     console.log("durationHour.value : ", durationHour.value);
     console.log("duration minute : ", durationMinute.value);
+
+
+
+    const inclusion = oneProgram.value.inclusion === null ? '' : oneProgram.value.inclusion;
+    const exclusion = oneProgram.value.exclusion === null ? '' : oneProgram.value.exclusion;
+    const packingList = oneProgram.value.packingList === null ? '' : oneProgram.value.packingList;
+    const caution = oneProgram.value.caution === null ? '' : oneProgram.value.caution;
+    
+    inclusionLines.value  = inclusion.split('\n');
+    exclusionLines.value = exclusion.split('\n');
+    packingListLines.value = packingList.split('\n');
+    cautionLines.value = caution.split('\n');
+
 };
 
 </script>
@@ -149,7 +166,7 @@ const fetchOneProgram = async () => {
                                             <ul>
                                                 <li class="list-content">
                                                     <span class="n-icon n-icon:globe n-deco"
-                                                    v-if="oneProgram.value && oneProgram.value.language">
+                                                        v-if="oneProgram.value && oneProgram.value.language">
                                                         {{ oneProgram.value.language }}
                                                     </span>
                                                     <div class="edit-btn m-left:3">
@@ -158,7 +175,8 @@ const fetchOneProgram = async () => {
                                                 </li>
                                                 <li class="list-content">
                                                     <span class="n-icon n-icon:people n-deco" v-if="oneProgram.value">
-                                                        {{ oneProgram.value.groupSizeMin }}/{{ oneProgram.value.groupSizeMax }}
+                                                        {{ oneProgram.value.groupSizeMin }}/{{
+                                                        oneProgram.value.groupSizeMax }}
                                                     </span>
                                                     <span>(min/max)</span>
                                                     <div class="edit-btn m-left:3">
@@ -175,8 +193,9 @@ const fetchOneProgram = async () => {
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
-                                                    <span class="n-icon n-icon:placeholder n-deco" v-if="oneProgram.value && oneProgram.value.route">
-                                                       {{ oneProgram.value.route[0].address }}
+                                                    <span class="n-icon n-icon:placeholder n-deco"
+                                                        v-if="oneProgram.value && oneProgram.value.route">
+                                                        {{ oneProgram.value.route[0].address }}
                                                     </span>
                                                     <div class="edit-btn m-left:3">
                                                         <button class="n-icon n-icon:edit"></button>
@@ -231,7 +250,7 @@ const fetchOneProgram = async () => {
                                 </div>
                                 <div class="text">
                                     <p class="p-summary" v-if="oneProgram.value && oneProgram.value.detail">
-                                        {{  oneProgram.value.detail }}
+                                        {{ oneProgram.value.detail }}
                                     </p>
                                     <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">see more</button>
                                 </div>
@@ -239,8 +258,6 @@ const fetchOneProgram = async () => {
                         </div>
                     </section>
 
-
-                    <!--===============  코스 =================-->
                     <section id="course-information" class="program">
                         <h1>Course</h1>
                         <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
@@ -257,141 +274,48 @@ const fetchOneProgram = async () => {
                                     </div>
 
                                     <section class="n-course-flow">
-                                        <!--     출발지    -->
-                                        <div class="point">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <span class="n-icon n-icon:placeholder">위치아이콘</span>
+                                        <div v-for="(route, index) in oneProgram.value.route"
+                                            v-if="oneProgram.value && oneProgram.value.route">
+                                            <!--     출발지    -->
+                                            <div :class="`point ${index !== 0 && index !== oneProgram.value.route.length - 1 ? 'drop-by' : ''}`">
+
+                                                <div class="icon-wrapper">
+                                                    <span class="n-icon n-icon:rectangle">막대기</span>
+                                                    <span :class="`n-icon n-icon:${index === 0 ? 'placeholder' : 'number' + index}`">위치아이콘</span>
+                                                </div>
+
+
+                                                <div class="point-detail">
+                                                    <div class="n-panel-tag n-panel-tag:time">
+                                                        <span class="n-icon n-icon:clock n-deco">
+                                                            {{ route.startTimeHour }}:{{ route.startTimeMinute }}
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="point-name">{{ route.title }}</span>
+                                                        <span> ({{ route.duration }}min)</span>
+                                                        <div class="point-info">{{ route.description }}</div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="point-detail">
-                                                <div class="n-panel-tag n-panel-tag:time">
-                                                    <span class="n-icon n-icon:clock n-deco">
-                                                        16:00
-                                                    </span>
+
+                                            <!--   이동 수단   -->
+                                            <div class="transport">
+                                                <div class="icon-wrapper">
+                                                    <span class="n-icon n-icon:rectangle">막대기</span>
+                                                    <div class="img-wrapper">
+                                                        <img src="/assets/image/icon/bus.png" alt="이동수단">
+                                                    </div>
                                                 </div>
                                                 <div>
-                                                    <span class="point-name">Title</span>
-                                                    <span>(duration)</span>
-                                                    <div class="point-info">Info</div>
+
+                                                    <div class="transport-detail">
+                                                        <p>{{ route.transportationName }}</p>
+                                                        <p>({{ route.transportationDuration }} min)</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <!--   이동 수단   -->
-                                        <div class="transport">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <div class="img-wrapper">
-                                                    <img src="/assets/image/icon/bus.png" alt="이동수단">
-                                                </div>
-                                            </div>
-                                            <div>
-
-                                                <div class="transport-detail">
-                                                    <p>Bus</p>
-                                                    <p>(transportation duration)</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <!--     경유지    -->
-                                        <div class="point drop-by">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <span class="n-icon n-icon:number1">위치아이콘</span>
-                                            </div>
-                                            <div class="point-detail">
-                                                <div class="n-panel-tag n-panel-tag:time">
-                                                    <span class="n-icon n-icon:clock n-deco">
-                                                        17:00
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span class="point-name">Title</span>
-                                                    <span>(duration)</span>
-                                                    <div class="point-info">Info</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!--   이동 수단   -->
-                                        <div class="transport">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <div class="img-wrapper">
-                                                    <img src="/assets/image/icon/subway.png" alt="이동수단">
-                                                </div>
-                                            </div>
-                                            <div>
-
-                                                <div class="transport-detail">
-                                                    <p>Subway</p>
-                                                    <p>(transportation duration)</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <!--     경유지    -->
-                                        <div class="point drop-by">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <span class="n-icon n-icon:number1">위치아이콘</span>
-                                            </div>
-                                            <div class="point-detail">
-                                                <div class="n-panel-tag n-panel-tag:time">
-                                                    <span class="n-icon n-icon:clock n-deco">
-                                                        19:00
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span class="point-name">Title</span>
-                                                    <span>(duration)</span>
-                                                    <div class="point-info">Info</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!--   이동 수단   -->
-                                        <div class="transport">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <div class="img-wrapper">
-                                                    <img src="/assets/image/icon/walk.png" alt="이동수단">
-                                                </div>
-                                            </div>
-                                            <div>
-
-                                                <div class="transport-detail">
-                                                    <p>Walk</p>
-                                                    <p>(transportation duration)</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <!--     도착지    -->
-                                        <div class="point">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <span class="n-icon n-icon:placeholder">위치아이콘</span>
-                                            </div>
-                                            <div class="point-detail">
-                                                <div class="n-panel-tag n-panel-tag:time">
-                                                    <span class="n-icon n-icon:clock n-deco">
-                                                        23:00
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span class="point-name">Title</span>
-                                                    <span>(duration)</span>
-                                                    <div class="point-info">Info</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
                                     </section>
                                 </div>
                             </div>
@@ -415,13 +339,12 @@ const fetchOneProgram = async () => {
                                     <section style="padding-top: 0;">
                                         <h1>만나는장소</h1>
                                         <div class="info-container">
-                                            <p>Gang-nam Station 11th Exit</p>
+                                            <p v-if="oneProgram.value && oneProgram.value.route">{{ oneProgram.value.route[0].title }}</p>            
                                             <div
                                                 style="display:flex; align-items: center; padding: var(--gap-3) 0; color: var(--color-base-7);">
                                                 <span class="n-icon n-icon:placeholder"
                                                     style="margin-right: var(--gap-1);">위치아이콘</span>
-                                                <span style="margin-right: var(--gap-1);">Yeoksam-dong, Gangnam-gu,
-                                                    Seoul</span>
+                                                <span style="margin-right: var(--gap-1);" v-if="oneProgram.value && oneProgram.value.route">{{ oneProgram.value.route[0].address }}</span>
                                             </div>
                                         </div>
                                         <div class="map-img-wrapper">
@@ -444,14 +367,16 @@ const fetchOneProgram = async () => {
                                         <h1>포함사항</h1>
                                         <div class="list-container">
                                             <ul style="padding-left: 0;">
-                                                <li class="info-input n-icon n-icon:success-circle-green">Entrance Fee
+                                                <li class="info-input n-icon n-icon:success-circle-green" v-for="inclusion in inclusionLines" >
+                                                    {{ inclusion }}
                                                 </li>
-                                                <li class="info-input n-icon n-icon:success-circle-green">Lunch Fee</li>
                                             </ul>
                                         </div>
                                         <div class="list-container">
                                             <ul style="padding-left: 0;">
-                                                <li class="info-input n-icon n-icon:error">Personal expenses</li>
+                                                <li class="info-input n-icon n-icon:error" v-for="exclusion in exclusionLines" >
+                                                    {{exclusion}}
+                                                </li>
                                             </ul>
                                         </div>
                                     </section>
@@ -475,10 +400,7 @@ const fetchOneProgram = async () => {
                                         <div style="padding: 0 var(--gap-6);">
                                             <h2 class="info-form n-icon n-icon:success-decagon">Essentials</h2>
                                             <ul>
-                                                <li class="list-content">Comfortable shoes</li>
-                                                <li class="list-content">Personal expenses</li>
-                                                <li class="list-content">Passport</li>
-                                                <li class="list-content">Identification card</li>
+                                                <li class="list-content" v-for="packingList in packingListLines">{{packingList}}</li>
                                             </ul>
                                         </div>
 
@@ -486,6 +408,8 @@ const fetchOneProgram = async () => {
                                         <div style="padding: var(--gap-6); padding-bottom: 0;">
                                             <h2 class="info-form n-icon n-icon:caution">Caution</h2>
                                             <ul>
+                                                <li class="list-content" v-for="caution in cautionLines">{{ caution }}</li>
+                                                <!-- 
                                                 <li class="list-content">Extensive walking</li>
                                                 <li class="list-content">A lot of outdoor activities</li>
                                                 <li class="list-content">This program allows changes in travel dates and
@@ -496,7 +420,8 @@ const fetchOneProgram = async () => {
                                                     if there is a forecast of 10mm
                                                     or more of rainfall per hour or temperatures below -5°C, according
                                                     to the Korea Meteorological Administration's forecast
-                                                    for the scheduled travel day.</li>
+                                                    for the scheduled travel day.</li> 
+                                                    -->
                                             </ul>
                                         </div>
 

@@ -55,6 +55,16 @@ public class ProgramListDto {
 
     private List<RouteCreateDto> route;
 
+    private String inclusion;
+
+    private String exclusion;
+
+    private String packingList;
+
+    private String caution;
+
+    private String requirement;
+
 //    private List<Image> images;
 //
 //    private List<Review> reviews;
