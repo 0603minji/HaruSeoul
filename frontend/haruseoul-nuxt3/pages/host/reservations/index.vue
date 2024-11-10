@@ -4,13 +4,14 @@ import {ref, watchEffect} from "vue";
 import {useRoute} from 'vue-router';
 import DateRangeFilterModal from "~/components/modal/DateRangeFilterModal.vue";
 import PublishProgramModal from "~/components/modal/PublishProgramModal.vue";
+import PublishedStatusFilterModal from "~/components/modal/PublishedStatusFilterModal.vue";
 
 // === 모달창 ==========================================================================================================
-const isDateRangeFilterModalVisible = ref(false);
-const isPublishProgramModalVisible = ref(false);
+const isModalVisible = ref("");
 
-const OpenDateRangeHandler = () => isDateRangeFilterModalVisible.value = true;
-const OpenPublishProgramModalHandler = () => isPublishProgramModalVisible.value = true;
+const OpenDateRangeFilterModalHandler = () => isModalVisible.value = "DateRangeFilterModal";
+const OpenPublishedStatusFilterModalHandler = () => isModalVisible.value = "PublishedStatusFilterModal";
+const OpenPublishProgramModalHandler = () => isModalVisible.value = "PublishProgramModal";
 
 const config = useRuntimeConfig();
 const queryString = useRoute().query;
@@ -42,6 +43,8 @@ const order = ref(null); // 예정된 일정: desc or null, 지난, 취소된 �
   3. canceled : ?tab=canceled
 */
 const tab = ref(queryString.tab);
+
+const reRenderTrigger = ref(false);
 
 //=== function =========================================================================================================
 // 2024-11-26 -> 24.11.26 Tue
@@ -151,6 +154,10 @@ const tabChangeHandler = (newTab) => {
   console.log('tabChangeHandler called')
   tab.value = newTab;
   console.log('tab: ', tab.value);
+
+  // 프로그램 상태필터 disabled처리하고 선택되어있는건 체크해제
+  // statusFilterModal에게 props로 현재 탭 통지
+
   fetchData();
 }
 
@@ -175,14 +182,23 @@ const updateDateFilterQuery = (selectedDates) => {
   fetchData();
 }
 
+const updateStatusFilterQuery = (selectedStatuses) => {
+  console.log('updateStatusFilterQuery called');
+  statuses.value = selectedStatuses.join(",");
+  fetchData();
+}
+
 // 모든 필터 초기화
 const resetFilterHandler = () => {
+  // 쿼리초기화하고 다시 fetch
   dates.value = "";
   statuses.value = "";
   pIds.value = "";
   page.value = "1";
-
   fetchData();
+
+  // 모달창에 저장된 선택값들도 초기화. 필터모달 다시 랜더링
+  reRenderTrigger.value = !reRenderTrigger.value;
 }
 
 /*=== fetch ==========================================================================================================*/
@@ -243,11 +259,12 @@ mapFetchedData(data.value);
             <h1 class="d:none">필터</h1>
             <div class="overflow-x:auto">
               <ul class="item-wrapper">
-                <li><a @click.prevent="OpenDateRangeHandler" href=""
+                <li><a @click.prevent="OpenDateRangeFilterModalHandler" href=""
                        :class="{'active': dates }"
                        class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:calendar n-icon-size:1 n-deco n-deco-gap:1">기간</a>
                 </li>
-                <li><a href=""
+                <li><a @click.prevent="OpenPublishedStatusFilterModalHandler" href=""
+                       :class="{'active': statuses}"
                        class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
                   상태</a></li>
                 <li><a href=""
@@ -381,13 +398,15 @@ mapFetchedData(data.value);
     </section>
 
     <!-- 모달   -->
-    <DateRangeFilterModal :class="{'show': isDateRangeFilterModalVisible}"
-                          @close-modal="(selectedDates) => { updateDateFilterQuery(selectedDates); isDateRangeFilterModalVisible = false;}"/>
-    <PublishProgramModal :class="{'show': isPublishProgramModalVisible}" :host-id="hostId"
-                         @close-modal="() => { fetchData(); isPublishProgramModalVisible=false; }"/>
+    <DateRangeFilterModal :key="reRenderTrigger" :class="{'show': isModalVisible === 'DateRangeFilterModal'}"
+                          @close-modal="(selectedDates) => { updateDateFilterQuery(selectedDates); isModalVisible = '';}"/>
+    <PublishedStatusFilterModal :key="reRenderTrigger" :class="{'show': isModalVisible === 'PublishedStatusFilterModal'}"
+                          @close-modal="(selectedStatuses) => { updateStatusFilterQuery(selectedStatuses); isModalVisible = '';}"/>
+    <PublishProgramModal :class="{'show': isModalVisible === 'PublishProgramModal'}" :host-id="hostId"
+                         @close-modal="() => { fetchData(); isModalVisible = ''; }"/>
 
     <!-- 모달창 떴을 때 배경처리   -->
-    <div :class="{'active': isPublishProgramModalVisible || isDateRangeFilterModalVisible}" class="backdrop"></div>
+    <div :class="{'active': isModalVisible}" class="backdrop"></div>
   </main>
 </template>
 
