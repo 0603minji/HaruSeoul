@@ -20,6 +20,7 @@ public class RouteCreateDto {
     private String description;
     private Integer duration;
     private String transportationDuration;
+    private String transportationName;
     private String startTimeHour;
     private String startTimeMinute;
 }
