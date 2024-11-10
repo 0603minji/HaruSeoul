@@ -112,7 +112,7 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
         // 2. 선택된 필터가 하나라도 있을 때 !statusId.isEmpty() => statusIds.retainAll(List.of(1L,2L,5L,6L))
         if (tab.equals("todo") && !statusIds.isEmpty()) {
             // statusIds(선택된 필터)와 1,2,5,6의 교집합
-            List<Long> retained = Arrays.asList(1L,2L,5L,6L);
+            List<Long> retained = new ArrayList<>(Arrays.asList(1L, 2L, 5L, 6L));
             retained.retainAll(statusIds);
             return getList(memberIds, dates, retained, programIds, page, pageSize, sortBy, order);
         }

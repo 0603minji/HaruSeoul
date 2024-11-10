@@ -27,11 +27,11 @@ const closeModal = () => {
       <button @click.prevent="closeModal" class="n-btn n-btn:hover n-btn-border:transparent n-icon n-icon:exit">닫기</button>
     </header>
 
-    <form class="popup-body" action="">
+    <form @submit.prevent="closeModal" class="popup-body" action="">
       <DateRangePicker @selection-changed="updateSelectedDates"/>
 
       <div class="submit">
-        <button @click.prevent="closeModal" class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>
+        <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>
       </div>
     </form>
   </aside>
