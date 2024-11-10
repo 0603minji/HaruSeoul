@@ -8,7 +8,7 @@ const emit = defineEmits(['selectionChanged'])
 const props = defineProps({
   defaultProgramId: {
     type: Number,
-    required: true,
+    default: null
   },
   hostId: {
     type: Number,
@@ -23,35 +23,6 @@ const selectedOption = ref(null); // 옵션리스트에서 선택된 옵션
 const programOptions = ref([]); // 선택가능한 모든 프로그램 옵션리스트
 const filteredOptions = ref([]); // 옵션리스트에서 검색어로 필터링된 리스트
 
-// === fetch ===========================================================================================================
-// Every Possible options for the select box
-const programQuery = {
-  s: ["Published", "In Progress"].join(",")
-};
-
-const config = useRuntimeConfig();
-
-// 프로그램 선택창에 개설가능한 모든 프로그램 옵션을 표시하기 위한 개설가능프로그램목록 fetch
-// default 선택값은 props.defaultProgramId
-const {data: programData} = useFetch(`host/programs/user/${props.hostId}`, {
-  baseURL: config.public.apiBase,
-  params: programQuery
-});
-
-watch(() => programData.value,
-    (newOne) => {
-      programOptions.value = newOne;
-      filteredOptions.value = newOne; // 초기값은 모든 options
-      // 검색어가 입력되어있을 경우, 필터링
-      filterOptions();
-      console.log('  SearchableSelect: programDate.value watch 진입');
-      console.log('    ->  programOptions.value: ', programOptions.value);
-      selectedOption.value = newOne.find(program => program.id === props.defaultProgramId); // selectedOption 초기화
-      emit('selectionChanged', selectedOption.value);
-      console.log('     -> selectedOption: ', selectedOption.value);
-    }
-);
-
 /*=== function =======================================================================================================*/
 const toggleDropdown = () => {
   isDropdownVisible.value = !isDropdownVisible.value;
@@ -63,7 +34,7 @@ const filterOptions = () => {
     return;
   const searchLower = searchTerm.value.toLowerCase();
   filteredOptions.value = programOptions.value.filter(option =>
-      option.title.toLowerCase().includes(searchLower)
+       option.title && option.title.toLowerCase().includes(searchLower)
   );
   // console.log("filterOptions called");
 };
@@ -83,9 +54,32 @@ const onOptionChange = (option) => {
 // input에 @input이벤트가 발생할 때마다 filterOptions실행
 // (이렇게 해줘야 한글과 같은 조합형문자의 조합이 완료되지 않은 상태에서 바로바로 필터링 가능)
 const onInput = (event) => {
-    searchTerm.value = event.target.value; // 직접 값을 할당
-    filterOptions();
+  searchTerm.value = event.target.value; // 직접 값을 할당
+  filterOptions();
 };
+
+// === fetch ===========================================================================================================
+// Every Possible options for the select box
+const programQuery = {
+  s: ["Published", "Unpublished"].join(",")
+};
+
+const config = useRuntimeConfig();
+
+// 프로그램 선택창에 개설가능한 모든 프로그램 옵션을 표시하기 위한 개설가능프로그램목록 fetch
+// default 선택값은 props.defaultProgramId
+const {data: programData} = await useFetch(`host/programs/user/${props.hostId}`, {
+  baseURL: config.public.apiBase,
+  params: programQuery
+});
+
+programOptions.value = programData.value;
+// filteredOptions 초기화, 검색어가 입력되어있을 경우, 필터링
+filterOptions();
+// selectedOption 초기화
+selectedOption.value = props.defaultProgramId === null? null : programOptions.value.find(program => program.id === props.defaultProgramId);
+emit('selectionChanged', selectedOption.value); // Emit the default selected option
+
 </script>
 
 <template>
@@ -131,7 +125,7 @@ const onInput = (event) => {
                   name="program"
                   type="radio"
                   :value="option"
-                  :checked="option.id === selectedOption.id"
+                  :checked="selectedOption!=null && option.id === selectedOption.id"
                   @change="() => {onOptionChange(option); toggleDropdown();}"
               />
               {{ option.title }}
@@ -239,6 +233,10 @@ const onInput = (event) => {
             gap: 6px;
             cursor: pointer;
           }
+        }
+
+        li:has(input:checked) {
+          background-color: #e1e0e0;
         }
 
         .filtered-option:hover {

@@ -4,14 +4,6 @@ import DateRangePicker from "~/components/filter/DateRangePicker.vue";
 // emit
 const emit = defineEmits(['closeModal']);
 
-// Props
-const props = defineProps({
-  hostId: {
-    type: Number,
-    required: true
-  }
-});
-
 // Selected dates 프로그램 검색기간 [시작일 , 끝] or [날짜]
 let selectedDates = [];
 

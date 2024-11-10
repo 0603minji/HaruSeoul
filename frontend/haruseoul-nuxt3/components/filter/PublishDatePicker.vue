@@ -12,10 +12,15 @@ const props = defineProps({
   }
 });
 
+/*=== variables =======================================================================================================*/
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const rangeStart = new Date(today); // 개설가능 시작일
+const rangeEnd = new Date(today); // 개설가능 말일
+
 // 초기 연도, 월
 const initialYear = new Date().getFullYear();
 const initialMonth = new Date().getMonth();
-const yearRange = 3; // 현재 연도 +- yearRange까지 옵션으로 제공
 
 // 선택된 연도, 월
 const selectedYear = ref(initialYear);
@@ -28,6 +33,88 @@ const prevMonthLastDate = computed(() => new Date(selectedYear.value, selectedMo
 // 이번 달의 마지막 날
 const thisMonthLastDate = computed(() => new Date(selectedYear.value, selectedMonth.value + 1, 0));
 
+const config = useRuntimeConfig();
+
+/*
+[
+  {
+    date: Date객체,
+    schedules: [programs]
+  },
+  {
+    date: Date객체,
+    schedules: [programs]
+  }
+]; */
+const datesWithScedules = ref([]);
+
+
+/*=== function =======================================================================================================*/
+const updateDatesWithSchedules = (dates, publishedPrograms) => {
+  // dates로 datesWithPrograms [{date: , schedules: []}] update
+  datesWithScedules.value = dates.map(date => {
+    // date와 진행일이 같은 프로그램들만 골라내서 schedules에 담기
+    const schedules = publishedPrograms.filter(program => {
+      // console.log('date        : ', date.toISOString(), date.toLocaleString());
+      // console.log('program date: ', new Date(program.date+'T00:00:00+09:00').toISOString());
+      return new Date(program.date + 'T00:00:00+09:00').getTime() === date.getTime();
+    });
+
+    // date와 schedules로 dateWithSchedules 생성 후 리턴
+    return {date: date, schedules};
+  });
+}
+
+const toNextMonth = () => {
+  // console.log("toNextMonth called");
+  if (selectedMonth.value === 11) {
+    selectedYear.value += 1;
+    selectedMonth.value = 0;
+  } else {
+    selectedMonth.value += 1;
+  }
+}
+
+const toPrevMonth = () => {
+  // console.log("toPrevMonth called");
+  if (selectedMonth.value === 0) {
+    selectedMonth.value = 11;
+    selectedYear.value -= 1;
+  } else {
+    selectedMonth.value -= 1;
+  }
+}
+
+// 개설가능한 범위의 날짜인지?
+const isDateInRange = (date) => {
+  return rangeStart <= date && date < rangeEnd;
+};
+
+const resetSelectedDatesHandler = () => {
+  // 캘린터 페이지도 오늘이 표시된 곳으로 설정
+  selectedYear.value = initialYear;
+  selectedMonth.value = initialMonth;
+
+  selectedDates.value = [];
+};
+
+// Emit selection changed
+const emitSelectionChanged = () => {
+  emit('selectionChanged', [...selectedDates.value]);
+};
+
+
+// --- 개설가능일 계산용 rangeStart, rangeEnd------------------------------------------------------------------------------
+// query ?mIds=props.hostId&s=1,2,5,6&d=개설가능첫날,끝날
+// today + startOffset부터 개설가능
+const startOffset = 3;
+// today + startOffset부터 publishableRange만큼 개설가능
+const publishableRange = 21;
+
+rangeStart.setDate(today.getDate() + startOffset); // today + 3 days
+rangeEnd.setDate(today.getDate() + startOffset + publishableRange); // rangeStart + 21 days
+
+/*=== 달력 dates 생성 ==================================================================================================*/
 // selectedYear or selectedMonth가 변하면 update
 const dates = computed(() => {
   const datesInMonth = [];
@@ -58,6 +145,7 @@ const dates = computed(() => {
   return datesInMonth;
 });
 
+
 // dates가 변하면 update
 const publishedProgramQuery = computed(() => (
     {
@@ -77,141 +165,19 @@ const publishedProgramQuery = computed(() => (
     })
 );
 
-// query가 변하면 새로 fetch (refresh) -> publishedPrograms
-watch(() => publishedProgramQuery.value,
-    (newQuery) => {
-      console.log('publishedProgramQuery.value watch진입: pulishedRefresh()')
-      publishedRefresh();
-    }
-);
-
 /*=== fetch ==========================================================================================================*/
-const config = useRuntimeConfig();
-
-/*
-[
-  {
-    date: Date객체,
-    schedules: [programs]
-  },
-  {
-    date: Date객체,
-    schedules: [programs]
-  }
-]; */
-const datesWithScedules = ref([]);
-
-// Published Programs in date range
-const publishedPrograms = ref([]);
-
 // 캘린더에 개설불가능한 날짜 표시를 위한 개설프로그램 목록 fetch
-const {data: publishedData, refresh: publishedRefresh} = useFetch(`host/published-programs`, {
+const {data: publishedData, refresh: publishedRefresh} = await useFetch(`host/published-programs`, {
   baseURL: config.public.apiBase,
   params: computed(() => publishedProgramQuery.value)
 });
 
-watch(() => publishedData.value,
-    (newPublishedData) => {
-      console.log('publishedData watch진입')
-      if (newPublishedData) {
-        console.log('   ->  new publishedData: ', newPublishedData.publishedPrograms);
-        publishedPrograms.value = newPublishedData.publishedPrograms;
-        console.log('   ->  publishedData.value fetched. publishedPrograms: ', publishedPrograms.value);
-      }
-    }
-);
+updateDatesWithSchedules(dates.value, publishedData.value.publishedPrograms);
 
-watch(() => publishedPrograms.value,
-    (newPrograms) => {
-      console.log('publishedPrograms watch 진입');
-      // dates로 datesWithPrograms [{date: , schedules: []}] update
-      datesWithScedules.value = dates.value.map(date => {
-        // date와 진행일이 같은 프로그램들만 골라내서 schedules에 담기
-        const schedules = newPrograms.filter(program => {
-          // console.log('date        : ', date.toISOString(), date.toLocaleString());
-          // console.log('program date: ', new Date(program.date+'T00:00:00+09:00').toISOString());
-          return new Date(program.date + 'T00:00:00+09:00').getTime() === date.getTime();
-        });
-
-        // date와 schedules로 dateWithSchedules 생성
-        const dateWithSchedules = {
-          date: date,
-          schedules
-        }
-        // console.log(dateWithSchedules);
-        return dateWithSchedules;
-      });
-      console.log('   ->  datesWithSchedules updated', datesWithScedules.value);
-    }
-);
-
-// --- 개설가능일 계산용 -------------------------------------------------------------------------------------------------
-// today + startOffset부터 개설가능
-const startOffset = 3;
-// today + startOffset부터 publishableRange만큼 개설가능
-const publishableRange = 21;
-
-// query ?mIds=props.hostId&s=1,2,5,6&d=개설가능첫날,끝날
-const today = new Date();
-today.setHours(0, 0, 0, 0);
-const rangeStart = new Date(today); // 개설가능 시작일
-const rangeEnd = new Date(today); // 개설가능 말일
-
-rangeStart.setDate(today.getDate() + startOffset); // today + 3 days
-rangeEnd.setDate(today.getDate() + startOffset + publishableRange); // rangeStart + 21 days
-
-/*=== function =======================================================================================================*/
-// 연도선택 <option>태그 생성용
-const getYearOptions = (baseYear, range) => {
-  const year = [];
-  year.push(baseYear);
-
-  for (let i = 0; i < range; i++)
-    year.push(baseYear + i + 1);
-
-  for (let i = 0; i < range; i++)
-    year.unshift(baseYear - (i + 1));
-
-  return year;
-};
-
-const toNextMonth = () => {
-  if (selectedMonth.value === 11) {
-    if (selectedYear.value === initialYear + yearRange)
-      return;
-    selectedYear.value += 1;
-    selectedMonth.value = 0;
-  } else {
-    selectedMonth.value += 1;
-  }
-}
-
-const toPrevMonth = () => {
-  if (selectedMonth.value === 0) {
-    if (selectedYear.value === initialYear - yearRange)
-      return;
-    selectedMonth.value = 11;
-    selectedYear.value -= 1;
-  } else {
-    selectedMonth.value -= 1;
-  }
-}
-
-// 개설가능한 범위의 날짜인지?
-const isDateInRange = (date) => {
-  return rangeStart <= date && date < rangeEnd;
-};
-
-const resetSelectedDatesHandler = () => {
-  if (selectedDates.value.length === 0)
-    return;
-  selectedDates.value = [];
-};
-
-// Emit selection changed
-const emitSelectionChanged = () => {
-  emit('selectionChanged', [...selectedDates.value]);
-};
+watch(dates, async () => {
+  await publishedRefresh();
+  updateDatesWithSchedules(dates.value, publishedData.value.publishedPrograms);
+});
 
 // Watch the selected dates and emit changes
 watch(selectedDates, emitSelectionChanged);
@@ -221,7 +187,8 @@ watch(selectedDates, emitSelectionChanged);
 // watchEffect(() => console.log(selectedMonth.value + 1, thisMonthLastDate.value));
 // watchEffect(() => console.log('dates: ', dates.value));
 // watchEffect(() => console.log('selectedDates: ', selectedDates.value));
-watchEffect(() => console.log('published program query: ', publishedProgramQuery.value));
+// watchEffect(() => console.log('published program query: ', publishedProgramQuery.value));
+
 </script>
 
 <template>
@@ -238,19 +205,23 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
       <header class="calendar-header">
         <h1 class="d:none">May 2024</h1>
         <button @click.prevent="toPrevMonth"
-                class="to-prev-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_left n-icon-size:3" type="button">이전
+                :disabled="selectedMonth <= new Date().getMonth()"
+                class="to-prev-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_left n-icon-size:3"
+                type="button">이전
         </button>
         <div class="year-month-wrapper font-size:9">
-          <select class="year" v-model="selectedYear">
-            <option v-for="year in getYearOptions(initialYear, yearRange)" :value="year">{{ year }}</option>
-          </select>
+          <span class="year">
+            {{ selectedYear }}.
+          </span>
 
-          <select class="month" v-model="selectedMonth">
-            <option v-for="(month, index) in 12" :value="index">{{ index + 1 }}</option>
-          </select>
+          <span class="month">
+            {{ selectedMonth + 1 }}.
+          </span>
         </div>
         <button @click.prevent="toNextMonth"
-                class="to-next-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_right n-icon-size:3" type="button">다음
+                :disabled="rangeEnd.getMonth() <= selectedMonth"
+                class="to-next-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_right n-icon-size:3"
+                type="button">다음
         </button>
       </header>
 
@@ -305,6 +276,9 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
 
 <style scoped>
 .date-picker {
+  --calendar-bg-color: #f5f5f5;
+  --date-color-disabled: rgba(0, 23, 84, 0.15);
+
   display: flex;
   flex-direction: column;
 
@@ -324,11 +298,12 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
     //max-width: 768px;
     //min-width: 250px;
     width: 100%;
+    height: 495px;
     display: flex;
     flex-direction: column;
     gap: 12px;
     padding: 20px;
-    background-color: #f5f5f5;
+    background-color: var(--calendar-bg-color);
     border-radius: 14px;
     box-shadow: 0 1.88px 2px 0 rgba(0, 14, 51, 0.05);
 
@@ -341,15 +316,19 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
 
       .year-month-wrapper {
         display: flex;
-        gap: 8px;
         //box-shadow: 0 1.88px 0.88px 0 rgba(0, 14, 51, 0.05);
+        border-radius: 8px;
+        padding: 4px 8px;
+        background-color: white;
 
         .year, .month {
-          font-size: 1rem;
+          font-size: 1.2rem;
           border-radius: 8px;
-          padding: 4px 8px;
+          padding: 4px 4px;
         }
       }
+
+      /*--- 다음달 이전달 버튼 -----------------------------------------------------------------------------------------*/
 
       button {
         background-color: var(--color-base-1);
@@ -357,7 +336,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
         box-shadow: 0 1.88px 0.88px 0 rgba(0, 14, 51, 0.05);
       }
 
-      button:hover{
+      button:hover {
         background-color: var(--color-base-3);
       }
 
@@ -370,7 +349,16 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
         margin-right: auto;
         margin-left: 16px;
       }
+
+      /* 이전 다음달이 존재하지 않으면 버튼 disabled */
+
+      :is(.to-prev-month, .to-next-month):disabled {
+        --icon-color: var(--color-base-5);
+        cursor: not-allowed;
+      }
     }
+
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     .weekdays {
       display: grid;
@@ -401,7 +389,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
         justify-content: center;
         align-items: center;
 
-        height: 6vh;
+        height: 56px;
         /* background-color: var(--color-base-1); */
         border-radius: 4px;
         transition: background-color 0.1s ease, border-color 0.1s ease, color 0.1s ease;
@@ -425,7 +413,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
           }
 
           span {
-            color: rgba(0, 23, 84, 0.15);
+            color: var(--date-color-disabled);
             font-size: 0.75rem;
             font-weight: 500;
           }
@@ -482,7 +470,7 @@ watchEffect(() => console.log('published program query: ', publishedProgramQuery
         box-shadow: none;
 
         > label span {
-          color: rgba(0, 23, 84, 0.15);
+          color: var(--date-color-disabled);
         }
       }
     }
