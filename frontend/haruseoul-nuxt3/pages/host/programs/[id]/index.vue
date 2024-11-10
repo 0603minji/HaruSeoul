@@ -175,8 +175,8 @@ const fetchOneProgram = async () => {
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
-                                                    <span class="n-icon n-icon:placeholder n-deco" v-if="oneProgram.value">
-                                                       
+                                                    <span class="n-icon n-icon:placeholder n-deco" v-if="oneProgram.value && oneProgram.value.route">
+                                                       {{ oneProgram.value.route[0].address }}
                                                     </span>
                                                     <div class="edit-btn m-left:3">
                                                         <button class="n-icon n-icon:edit"></button>
@@ -230,21 +230,8 @@ const fetchOneProgram = async () => {
                                     </div>
                                 </div>
                                 <div class="text">
-                                    <p class="p-summary">
-                                        Fall in love with the best nightlife hot spots in Jung-Gu. If you're looking for
-                                        a
-                                        perfect night out in Seoul this drinks and bites tour is the life of the party!
-                                        Me, your local host is a nightlife expert and is up to date with current hot
-                                        spots
-                                        and
-                                        hip
-                                        venues, so ask away and enjoy the city mingling with the locals.
-                                        Visit some of the best spots in town and have a drink together with a typical
-                                        local
-                                        bite
-                                        like
-                                        makgeolli and tteobokki.
-                                        I’m desired to feel you happy by let you make your unforgettable Seoul!
+                                    <p class="p-summary" v-if="oneProgram.value && oneProgram.value.detail">
+                                        {{  oneProgram.value.detail }}
                                     </p>
                                     <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">see more</button>
                                 </div>
