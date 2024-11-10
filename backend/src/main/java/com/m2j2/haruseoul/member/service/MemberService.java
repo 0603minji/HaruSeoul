@@ -4,7 +4,7 @@ import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.member.dto.MemberCreateDto;
 import com.m2j2.haruseoul.member.dto.MemberListDto;
 import com.m2j2.haruseoul.member.dto.MemberUpdateDto;
-import com.m2j2.haruseoul.member.dto.SigninDto;
+import com.m2j2.haruseoul.auth.dto.SigninDto;
 
 
 public interface MemberService {
@@ -14,7 +14,6 @@ public interface MemberService {
 
     void update(MemberUpdateDto memberUpdateDto);
     Member validatePwd(Long memberId,String currentPwd);
-    Member signin(SigninDto signinDto);
 
     void delete(Long id);
 }
