@@ -27,9 +27,11 @@ const props = defineProps({
   }
 });
 
-watch(props.defaultProgramId ,(newProps) => {
-  console.log("   watch defaultProgramId: ",props.defaultProgramId);
-})
+watch(() => props.defaultProgramId,
+    (newVal) => {
+      console.log("watch defaultProgramId:", newVal);
+    }
+);
 
 const reRenderTrigger = ref(false);
 
@@ -42,10 +44,6 @@ let selectedDates = ref([]);
 
 // submit버튼을 누를 수 있는 상태인지? 프로그램, 날짜 모두 선택되어야함
 const isPublishable = computed(() => selectedDates.value.length > 0 && selectedProgram.value != null);
-
-watchEffect(() => {
-  console.log(isPublishable.value);
-})
 
 const config = useRuntimeConfig();
 
@@ -124,7 +122,9 @@ const closeModal = () => {
       <PublishDatePicker :key="reRenderTrigger" :host-id="props.hostId" @selection-changed="updateSelectedDates"/>
 
       <div class="submit">
-        <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1" :title="'Please select program and dates.'" :disabled="!isPublishable">확인</button>
+        <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1" :title="'Please select program and dates.'"
+                :disabled="!isPublishable">확인
+        </button>
       </div>
     </form>
   </aside>
@@ -150,7 +150,7 @@ const closeModal = () => {
 
 .modal.show {
   display: flex;
-  transform: translate(-50% ,0); /* 아래에서 등장 */
+  transform: translate(-50%, 0); /* 아래에서 등장 */
 }
 
 .popup {

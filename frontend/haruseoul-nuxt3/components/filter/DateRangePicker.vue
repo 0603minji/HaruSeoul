@@ -11,9 +11,9 @@ const initialMonth = new Date().getMonth();
 // 연도 선택셀렉트박스 옵션
 const yearRange = 3; // 현재 연도 +- yearRange까지 옵션으로 제공
 const yearOptions = [
-  ...Array.from({ length: yearRange }, (_, i) => initialYear - (yearRange - i)), // Previous years
+  ...Array.from({length: yearRange}, (_, i) => initialYear - (yearRange - i)), // Previous years
   initialYear, // Current year
-  ...Array.from({ length: yearRange }, (_, i) => initialYear + (i + 1)) // Next years
+  ...Array.from({length: yearRange}, (_, i) => initialYear + (i + 1)) // Next years
 ];
 
 // 검색가능한 최초 날짜, 최후 날짜
@@ -27,11 +27,13 @@ const selectedMonth = ref(initialMonth);
 const selectedDates = ref([]);
 // selectedDates가 변할 때마다 날짜순 정렬 후 emit
 watch(selectedDates, (newDates) => {
-  // 선택된 날짜가 2개일 때만 정렬
-  if (newDates.length >= 2)
-    newDates.sort((a, b) => a - b);
-  emit('selectionChanged', [...newDates]);
-});
+      // 선택된 날짜가 2개일 때만 정렬
+      if (newDates.length >= 2)
+        newDates.sort((a, b) => a - b);
+      emit('selectionChanged', [...newDates]);
+    },
+    {deep: true}
+);
 
 // 이전 달의 마지막 날
 const prevMonthLastDate = computed(() => new Date(selectedYear.value, selectedMonth.value, 0));
@@ -145,10 +147,14 @@ const isDisabled = (date) => {
       <div class="date-wrapper">
         <!-- Start date display -->
         <span v-if="!selectedDates.at(0)" class="start-date-placeholder">Start date</span>
-        <span v-else class="start-date" :title="'Go to calendar page with Start date'" @click.prevent="setSelectedYearMonth(selectedDates.at(0))">{{ formatDate(selectedDates.at(0)) }}</span>
+        <span v-else class="start-date" :title="'Go to calendar page with Start date'"
+              @click.prevent="setSelectedYearMonth(selectedDates.at(0))">{{ formatDate(selectedDates.at(0)) }}</span>
 
         <!-- Clear button for start date -->
-        <button v-if="selectedDates.at(0)" class="clear-selected-date-icon n-btn n-btn:hover n-btn-bd:none n-icon n-icon:exit" @click.prevent="selectedDates.shift()">날짜 선택해제</button>
+        <button v-if="selectedDates.at(0)"
+                class="clear-selected-date-icon n-btn n-btn:hover n-btn-bd:none n-icon n-icon:exit"
+                @click.prevent="selectedDates.shift()">날짜 선택해제
+        </button>
       </div>
 
       <div>~</div>
@@ -156,10 +162,14 @@ const isDisabled = (date) => {
       <div class="date-wrapper">
         <!-- End date display -->
         <span v-if="!selectedDates.at(1)" class="end-date-placeholder">End date</span>
-        <span v-else class="end-date" :title="'Go to calendar page with End date'" @click.prevent="setSelectedYearMonth(selectedDates.at(1))">{{ formatDate(selectedDates.at(1)) }}</span>
+        <span v-else class="end-date" :title="'Go to calendar page with End date'"
+              @click.prevent="setSelectedYearMonth(selectedDates.at(1))">{{ formatDate(selectedDates.at(1)) }}</span>
 
         <!-- Clear button for end date -->
-        <button v-if="selectedDates.at(1)" class="clear-selected-date-icon n-btn n-btn:hover n-btn-bd:none n-icon n-icon:exit" @click.prevent="selectedDates.pop()">날짜 선택해제</button>
+        <button v-if="selectedDates.at(1)"
+                class="clear-selected-date-icon n-btn n-btn:hover n-btn-bd:none n-icon n-icon:exit"
+                @click.prevent="selectedDates.pop()">날짜 선택해제
+        </button>
       </div>
     </div>
 
@@ -296,6 +306,7 @@ const isDisabled = (date) => {
         --icon-size: 16px;
         --icon-color: var(--color-base-6);
       }
+
       .clear-selected-date-icon:hover {
         --icon-color: var(--color-base-8);
       }
@@ -446,6 +457,7 @@ const isDisabled = (date) => {
       }
 
       /* 검색범위 외 month-prev, month-next(ex. 2020-12-31 or 2028-01-01)는 hidden 처리 */
+
       .out-of-date-range {
         visibility: hidden;
       }
