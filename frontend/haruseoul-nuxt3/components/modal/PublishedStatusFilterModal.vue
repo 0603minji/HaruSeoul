@@ -28,17 +28,18 @@ watchEffect(() => {
 
 
 // Computed property to check if a status should be disabled based on the tab
-const isStatusDisabled = (statusName) => {
+const isStatusDisabled = (StatusName) => {
   console.log('isStatusDisabled called. tab: ', props.tab);
-  console.log('  statusName : ', statusName)
-  if (props.tab.toLowerCase() === 'canceled') {
-    console.log('   ', statusName !== 'canceled')
+  console.log('  statusName : ', StatusName.toLowerCase())
+  const statusName = StatusName.toLowerCase();
+  if (props.tab === 'canceled') {
+    console.log('   isStatusDisabled: ', statusName !== 'canceled')
     return statusName !== 'canceled';
-  } else if (props.tab.toLowerCase() === 'finished') {
-    console.log('   ', statusName !== 'finished')
+  } else if (props.tab === 'finished') {
+    console.log('   isStatusDisabled: ', statusName !== 'finished')
     return statusName !== 'finished';
   } else {
-    console.log('   ', statusName === 'finished' || statusName === 'canceled')
+    console.log('   isStatusDisabled: ', statusName === 'finished' || statusName === 'canceled')
     return statusName === 'finished' || statusName === 'canceled';
   }
 };
@@ -67,11 +68,7 @@ const resetSelectedStatusesHandler = () => {
   selectedStatuses.value = [];
 }
 
-const config = useRuntimeConfig();
-
-const { data } = await useAuthFetch(`host/published-programs/status`, {
-  baseURL: config.public.apiBase
-});
+const { data } = await useAuthFetch(`host/published-programs/status`);
 
 </script>
 
