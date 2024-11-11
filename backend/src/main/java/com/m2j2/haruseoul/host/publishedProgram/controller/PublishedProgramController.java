@@ -28,8 +28,9 @@ public class PublishedProgramController {
                                                               @RequestParam(name = "p", defaultValue = "1") Integer page,
                                                               @RequestParam(name = "pageSize", defaultValue = "42") Integer pageSize,
                                                               @RequestParam(name = "sortBy", defaultValue = "regDate") String sortBy,
-                                                              @RequestParam(name = "order", defaultValue = "desc") String order) {
-        return ResponseEntity.ok(service.getList(memberIds, dates, statusIds, programIds, page, pageSize, sortBy, order));
+                                                              @RequestParam(name = "order", defaultValue = "desc") String order,
+                                                              @RequestParam(name = "tab", required = false) String tab) {
+        return ResponseEntity.ok(service.getList(memberIds, dates, statusIds, programIds, page, pageSize, sortBy, order, tab));
     }
 
     @PostMapping
