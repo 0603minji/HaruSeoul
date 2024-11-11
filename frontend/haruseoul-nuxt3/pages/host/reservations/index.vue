@@ -461,6 +461,7 @@ mapFetchedData(data.value);
                                 :class="{'show': isModalVisible === 'PublishedStatusFilterModal'}"
                                 :tab="tab"
                                 :selectedStatuses="selectedStatuses"
+                                @update-list-by-tab="updateStatusFilterQuery(selected)"
                                 @close-modal="(selected) => { updateStatusFilterQuery(selected); isModalVisible = '';}"/>
     <PublishProgramModal :class="{'show': isModalVisible === 'PublishProgramModal'}" :host-id="hostId"
                          @close-modal="() => { fetchData(); isModalVisible = ''; }"/>
