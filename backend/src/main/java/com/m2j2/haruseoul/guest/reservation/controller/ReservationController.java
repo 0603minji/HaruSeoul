@@ -4,6 +4,7 @@ import com.m2j2.haruseoul.entity.Reservation;
 import com.m2j2.haruseoul.guest.reservation.dto.*;
 import com.m2j2.haruseoul.guest.reservation.service.DefaultReservationService;
 import com.m2j2.haruseoul.host.program.dto.ProgramCreateDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,10 +39,21 @@ public class ReservationController {
         return ResponseEntity.ok(reservationDetailResponseDto);
     }
 
-    @PostMapping
-    @RequestMapping("/new")
-    public void create(
-            @RequestBody ReservationCreateDto reservationCreateDto){
+    @PostMapping("/new")
+    public ResponseEntity<Void> create(
+            @RequestBody ReservationCreateDto reservationCreateDto) {
         reservationService.create(reservationCreateDto);
+        return ResponseEntity.status(201).build();  // 201 Created 응답을 반환
+    }
+
+    @PutMapping("{rid}/cancel")  // 예약 취소를 위한 PUT 요청
+    public ResponseEntity<Void> cancelReservation(@PathVariable(name = "rid") Long reservationId) {
+        try {
+            // delete 메서드를 호출하여 예약 취소 처리 (소프트 삭제)
+            reservationService.delete(reservationId);
+            return ResponseEntity.noContent().build();  // 204 No Content 응답 반환 (취소 성공)
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 예약이 없을 경우 404 Not Found 반환
+        }
     }
 }

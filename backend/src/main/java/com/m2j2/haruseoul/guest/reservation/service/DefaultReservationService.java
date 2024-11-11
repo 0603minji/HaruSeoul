@@ -50,7 +50,9 @@ public class DefaultReservationService implements ReservationService {
 
     @Override
     public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, int pageNum) {
-        Sort sort = Sort.by("regDate").descending();
+
+        Sort sort = Sort.by("publishedProgram.date").ascending();
+//        Sort sort = Sort.by("regDate").descending();
         Pageable pageable = PageRequest.of(pageNum-1, 6, sort);
 
         // 요청 페이지 번호 확인
@@ -202,7 +204,26 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
+    @Transactional
     public void delete(Long reservationId) {
-        reservationRepository.deleteById(reservationId);
+        // 예약 ID로 해당 예약을 찾아옵니다.
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+
+        // 삭제 날짜를 현재 시간으로 설정합니다.
+        reservation.setDeleteDate(Instant.now());  // 삭제 일자를 현재 시간으로 설정 (LocalDateTime으로 변경 가능)
+
+        // 상태를 '취소됨'으로 변경 (id=4)
+        Status cancelledStatus = statusRepository.findById(4L)
+                .orElseThrow(() -> new IllegalArgumentException("상태 ID 4를 찾을 수 없습니다."));
+
+        // PublishedProgram의 상태를 취소됨(4)으로 업데이트
+        reservation.getPublishedProgram().setStatus(cancelledStatus);
+
+        // 예약을 업데이트합니다.
+        reservationRepository.save(reservation);
+
+        // 로그를 남겨서 예약 삭제에 대한 기록을 남길 수 있습니다.
+        System.out.println("Reservation with ID " + reservationId + " has been soft deleted at " + Instant.now());
     }
 }

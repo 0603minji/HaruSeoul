@@ -1,84 +1,85 @@
 <script setup>
-import { ref, defineExpose, defineEmits } from 'vue';
+import {ref, defineProps, defineEmits} from 'vue';
 
-// 상태 관리 변수
-const isVisible = ref(false); // 모달의 표시 상태
-const selectedReservationId = ref(null); // 선택된 예약 ID
+const props = defineProps({
+  showModal: Boolean,
+  currentReservationId: Number
+});
 
-// 부모에게 전달할 이벤트 정의
-const emit = defineEmits();
+const emit = defineEmits(['close', 'cancel']);
 
-// 모달 열기
-const openModal = (reservationId) => {
-  isVisible.value = true;
-  selectedReservationId.value = reservationId;
-};
+const errorMessage = ref('');
+const successMessage = ref('');
 
 // 모달 닫기
 const closeModal = () => {
-  isVisible.value = false;
-  selectedReservationId.value = null;
+  emit('close');
 };
 
-// 취소 확인 처리
-const confirmCancel = () => {
-  // 'cancel' 이벤트를 부모 컴포넌트로 전달
-  emit('cancel', selectedReservationId.value);
-  closeModal(); // 모달 닫기
-};
+// 예약 취소 확인 시 API 요청 처리
+const cancelReservation = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const currentDate = new Date().toISOString(); // 현재 시간
 
-// `openModal` 메서드를 외부에서 사용할 수 있도록 노출
-defineExpose({
-  openModal,
-});
+    // API 요청 보내기
+    await useReservationFetch(
+        `guest/reservations/${props.currentReservationId}/cancel`,
+        {
+          method: "PUT",  // 예약을 취소하는 PUT 요청
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            deleteDate: currentDate,  // 삭제일자 현재 날짜
+          },
+        }
+    );
+
+    // cancel 이벤트 전달
+    emit('cancel');
+
+    // 모달 닫기
+    closeModal();
+
+    // 새로고침
+    window.location.reload(); // 페이지 새로고침
+
+  } catch (error) {
+    errorMessage.value = '예약 취소 실패: ' + error.message;
+  }
+};
 </script>
 
 <template>
-  <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
+  <div v-if="showModal" class="modal">
     <div class="modal-content">
-      <h3>예약을 취소하시겠습니까?</h3>
-      <div class="modal-actions">
-        <button @click="confirmCancel" class="confirm-btn">예</button>
-        <button @click="closeModal" class="cancel-btn">아니요</button>
+      <p style="font-size: 15px; font-weight: bold">정말 예약을 취소하시겠습니까?</p>
+      <div style="width: 180px; padding-left: 20px; padding-top: 15px; display: flex; justify-content: space-between">
+        <button class="n-btn n-btn:hover" style="color:#DB4455" @click="cancelReservation">확인</button>
+        <button class="n-btn n-btn:hover" @click="closeModal">닫기</button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.modal-overlay {
+.modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 3;
 }
 
 .modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-}
-
-.modal-actions button {
-  margin: 10px;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.confirm-btn {
-  background-color: #DB4455;
-  color: white;
-}
-
-.cancel-btn {
-  background-color: #ccc;
+  background-color: white;
+  padding: 35px;
+  border-radius: 10px;
 }
 </style>
