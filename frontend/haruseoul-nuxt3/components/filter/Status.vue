@@ -98,7 +98,7 @@ const getDisplayValue = (statusId) => {
              :class="{ active: selectedStatus === '결제완료' }">결제완료</NuxtLink>
         </li>
         <!-- 나머지 상태 버튼들 -->
-        <li v-for="s in statuses" :key="s.id">
+        <li v-for="s in statuses.sort((a, b) => b.id - a.id)" :key="s.id">
           <NuxtLink @click.prevent="(e) => { e.preventDefault(); selectReservations([s.id]); }" href=""
              class="n-btn n-btn n-btn-rv-filter n-btn:hover"
              :class="{ active: selectedStatus === s.id }">{{ getDisplayValue(s.id) }}</NuxtLink>
