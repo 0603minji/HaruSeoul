@@ -1,37 +1,48 @@
 <template>
+  <Head>
+    <Script
+        type="text/javascript"
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=16a77f29af1bb5775a70cd85a9cfb9cc&libraries=services">
+    </Script>
+  </Head>
   <main>
     <section class="main-wrapper">
-<!--      <pre>{{ JSON.stringify(data, null, 2) }}</pre>-->
+      <!--      <pre>{{ JSON.stringify(data, null, 2) }}</pre>-->
       <section v-if="data" class="program-detail">
         <h1 class="d:none">program-detail 페이지</h1>
-
         <nav class="n-bar-underline">
           <h1 class="d:none">네비탭</h1>
           <ul class="item-wrapper padding-x:6">
-            <li :class="{ active: currentHash === '#intro' }" class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+            <li :class="{ active: currentHash === '#intro' }"
+                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
               <a href="#intro">개요</a>
             </li>
-            <li :class="{ active: currentHash === '#program-overview' }" class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+            <li :class="{ active: currentHash === '#program-overview' }"
+                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
               <a href="#program-overview">프로그램 소개</a>
             </li>
-            <li :class="{ active: currentHash === '#course-information' }" class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+            <li :class="{ active: currentHash === '#course-information' }"
+                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
               <a href="#course-information">코스 안내</a>
             </li>
-            <li :class="{ active: currentHash === '#meeting-location' }" class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+            <li :class="{ active: currentHash === '#meeting-location' }"
+                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
               <a href="#meeting-location">만나는 장소</a>
             </li>
-            <li :class="{ active: currentHash === '#inclusions' }" class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+            <li :class="{ active: currentHash === '#inclusions' }"
+                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
               <a href="#inclusions">포함사항</a>
             </li>
-            <li :class="{ active: currentHash === '#things-to-know' }" class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+            <li :class="{ active: currentHash === '#things-to-know' }"
+                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
               <a href="#things-to-know">꼭 알아두세요!</a>
             </li>
-            <li :class="{ active: currentHash === '#review' }" class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+            <li :class="{ active: currentHash === '#review' }"
+                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
               <a href="#review">리뷰</a>
             </li>
           </ul>
         </nav>
-
 
 
         <!--  프로그램 소개  -->
@@ -171,7 +182,7 @@
 
                 <div class="text">
                   <p class="p-summary">{{ data.programDetailProgramDto.detail }}</p>
-                  <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">펼치기</button>
+                  <!--                  <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">펼치기</button>-->
                 </div>
               </div>
             </div>
@@ -187,9 +198,7 @@
                   <span class="title">코스 안내</span>
                 </div>
                 <div class="details">
-                  <div class="map-img-wrapper">
-                    <img class="map-img" src="/public/image/map.png" alt="코스지도">
-                  </div>
+                  <div class="map-img-wrapper" id="map1"></div>
 
                   <section class="n-course-flow">
                     <!-- 출발지 -->
@@ -214,7 +223,7 @@
                     <div v-for="(stop, index) in stops" :key="index" class="point drop-by">
                       <div class="icon-wrapper">
                         <span class="n-icon n-icon:rectangle">막대기</span>
-                        <span class="n-icon n-icon:number1">경유 아이콘</span>
+                        <span :class="`n-icon n-icon:number${stop.order}`">경유 아이콘</span>
                       </div>
                       <div class="point-detail">
                         <div class="n-panel-tag n-panel-tag:time">
@@ -274,9 +283,7 @@
                         <button @click.prevent="copyAddress" class="copy-btn">주소복사</button>
                       </div>
                     </div>
-                    <div class="map-img-wrapper">
-                      <img class="map-img" src="/public/image/map.png" alt="map">
-                    </div>
+                    <div class="map-container" id="map2" style="width: 100%; height: 400px;"></div>
                   </section>
                 </div>
               </div>
@@ -289,15 +296,22 @@
                   <section>
                     <h1>포함사항</h1>
                     <div class="list-container">
-                      <ul style="padding-left: 0;">
-                        <li class="info-input n-icon n-icon:success-circle-green">
-                          {{ data.programDetailProgramDto.inclusion }}
+                      <ul v-if="data.programDetailProgramDto.inclusion">
+                        <li v-for="(item, index) in data.programDetailProgramDto.inclusion.split('\n')"
+                            :key="index"
+                            class="list-content">
+                          {{ item }}
                         </li>
                       </ul>
+
                     </div>
                     <div class="list-container">
-                      <ul style="padding-left: 0;">
-                        <li class="info-input n-icon n-icon:error">{{ data.programDetailProgramDto.exclusion }}</li>
+                      <ul v-if="data.programDetailProgramDto.exclusion">
+                        <li v-for="(item, index) in data.programDetailProgramDto.exclusion.split('\n')"
+                            :key="index"
+                            class="list-content">
+                          {{ item }}
+                        </li>
                       </ul>
                     </div>
                   </section>
@@ -315,16 +329,26 @@
 
                     <div style="padding: 0 var(--gap-6);">
                       <h2 class="info-form n-icon n-icon:success-decagon">준비물</h2>
-                      <ul>
-                        <li class="list-content">{{ data.programDetailProgramDto.packingList }}</li>
+                      <ul v-if="data.programDetailProgramDto.packingList">
+                        <li v-for="(item, index) in data.programDetailProgramDto.packingList.split('\n')"
+                            :key="index"
+                            class="list-content">
+                          {{ item }}
+                        </li>
                       </ul>
+
                     </div>
 
                     <div style="padding: var(--gap-6); padding-bottom: 0;">
                       <h2 class="info-form n-icon n-icon:caution">주의사항</h2>
-                      <ul>
-                        <li class="list-content">{{ data.programDetailProgramDto.caution }}</li>
+                      <ul v-if="data.programDetailProgramDto.caution">
+                        <li v-for="(item, index) in data.programDetailProgramDto.caution.split('\n')"
+                            :key="index"
+                            class="list-content">
+                          {{ item }}
+                        </li>
                       </ul>
+
                     </div>
 
                     <div style="padding: var(--gap-6)">
@@ -514,10 +538,127 @@ import {useRoute} from 'vue-router';
 const route = useRoute();
 const programId = ref(route.params.id); // route에서 programId를 가져옴
 const currentHash = computed(() => route.hash || '');
-const copiedAddress = ref('');
+
+onMounted(() => {
+  const loadMap1 = () => {
+    const container = document.getElementById('map1');
+    if (!container) {
+      console.warn("Map1 container not found. Skipping map initialization.");
+      return;
+    }
+
+    const options = {
+      center: new kakao.maps.LatLng(33.450701, 126.570667),
+      level: 5
+    };
+    const map = new kakao.maps.Map(container, options);
+
+    const geocoder = new kakao.maps.services.Geocoder();
+    const locations = [
+      departure.value,
+      ...stops.value,
+      destination.value
+    ];
+
+    const coordsPromises = locations.map(location => {
+      return new Promise((resolve, reject) => {
+        if (location && location.address) {
+          geocoder.addressSearch(location.address, (result, status) => {
+            if (status === kakao.maps.services.Status.OK) {
+              resolve(new kakao.maps.LatLng(result[0].y, result[0].x));
+            } else {
+              console.error(`주소를 찾을 수 없습니다: ${location.address}`);
+              resolve(null);
+            }
+          });
+        } else {
+          resolve(null);
+        }
+      });
+    });
+
+    Promise.all(coordsPromises).then(coords => {
+      const filteredCoords = coords.filter(coord => coord !== null);
+
+      // 경로를 나타내는 선을 생성합니다.
+      const polyline = new kakao.maps.Polyline({
+        map: map,
+        path: filteredCoords,
+        strokeWeight: 5,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeStyle: 'solid'
+      });
+
+      // 각 지점에 순서에 따른 숫자 마커를 추가합니다.
+      filteredCoords.forEach((coord, index) => {
+        const markerContent = `<div style="width: 24px; height: 24px; background-color: #FF6347; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">${index + 1}</div>`;
+
+        const marker = new kakao.maps.CustomOverlay({
+          map: map,
+          position: coord,
+          content: markerContent,
+          yAnchor: 1
+        });
+      });
+
+      // 경로를 따라 지도의 중심과 확대 수준을 조정합니다.
+      const bounds = new kakao.maps.LatLngBounds();
+      filteredCoords.forEach(coord => bounds.extend(coord));
+      map.setBounds(bounds);
+    });
+  };
+
+  const loadMap2 = () => {
+    const container = document.getElementById('map2');
+    if (!container) {
+      console.warn("Map container not found. Skipping map initialization.");
+      return;
+    }
+
+    const options = {
+      center: new kakao.maps.LatLng(33.450701, 126.570667), // 기본 중심 좌표
+      level: 3
+    };
+    const map = new kakao.maps.Map(container, options);
+
+    if (addressWithOrderOne.value) {
+      const geocoder = new kakao.maps.services.Geocoder();
+
+      geocoder.addressSearch(addressWithOrderOne.value, (result, status) => {
+        if (status === kakao.maps.services.Status.OK) {
+          const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+          map.setCenter(coords);
+
+          new kakao.maps.Marker({
+            map: map,
+            position: coords
+          });
+        } else {
+          console.error('주소를 찾을 수 없습니다.');
+        }
+      });
+    } else {
+      console.log("주소가 없어 기본 좌표를 표시합니다.");
+    }
+  };
+
+  if (window.kakao && window.kakao.maps) {
+    loadMap1();
+    loadMap2();
+  } else {
+    const interval = setInterval(() => {
+      if (window.kakao && window.kakao.maps) {
+        loadMap2();
+        clearInterval(interval);
+      }
+    }, 100);
+  }
+});
 
 
-const {data , error} = await useFetch(`http://localhost:8080/api/v1/programs/${programId.value}`);
+
+const {data, error} = await useFetch(`http://localhost:8080/api/v1/programs/${programId.value}`);
 
 const addressWithOrderOne = computed(() => {
   const item = data.value.programDetailRouteDto.find(route => route.order === 1);
@@ -532,7 +673,7 @@ const titleWithOrderOne = computed(() => {
 const meetingTimeWithOrderOne = computed(() => {
   const item = data.value.programDetailRouteDto.find(route => route.order === 1);
   if (item && item.startTime) {
-    return item.startTime.split(':').slice(1).join(':'); // 첫 번째 요소를 제거하고 나머지를 조합
+    return item.startTime
   }
 });
 
@@ -580,9 +721,7 @@ const copyAddress = async () => {
   } catch (err) {
     console.error('복사 실패:', err);
   }
-
 };
-
 
 
 watchEffect(() => {

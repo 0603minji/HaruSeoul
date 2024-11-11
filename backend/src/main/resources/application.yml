@@ -5,3 +5,7 @@ spring:
 server:
   servlet:
     context-path: /api/v1
+
+haruSeoul:
+  jwt:
+    secret: {SPRING_JWT_SECRET_KEY}

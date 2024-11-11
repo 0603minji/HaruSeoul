@@ -1,68 +1,70 @@
 <template>
-  <header th:fragment="header" class="n-global-header n-global-header:host">
-    <h1 class="n-heading:2">HaruSeoul</h1>
+  <header class="n-global-header n-global-header:host">
+    <NuxtLink href="/" class="n-heading:2">
+      <img src="/assets/image/icon/logo.svg" alt="">
+    </NuxtLink>
 
     <nav class="header-menu-container ml:auto">
       <h1 class="d:none">헤더메뉴</h1>
 
       <div class="d:flex align-items:center">
-        <a class="n-btn n-btn:hover" href="/host/main">게스트 되기</a>
+        <NuxtLink class="n-btn n-btn:hover" href="/programs">게스트 되기</NuxtLink>
       </div>
 
       <ul class="header-menus:text-only lg:show">
         <li class="header-menu">
-          <a
+          <NuxtLink
             class="n-btn n-btn:hover n-btn-bd:transparent host-btn"
-            href="/host/main"
-            >프로그램 등록</a
+            href="/host/programs/new"
+            >프로그램 등록</NuxtLink
           >
         </li>
         <span class="separator"></span>
         <li class="header-menu">
-          <a
+          <NuxtLink
             class="n-btn n-btn:hover n-btn-bd:transparent host-btn"
-            href="/host/main"
-            >프로그램 관리</a
+            href="/host/programs"
+            >프로그램 관리</NuxtLink
           >
         </li>
         <span class="separator"></span>
         <li class="header-menu">
-          <a
+          <NuxtLink
             class="n-btn n-btn:hover n-btn-bd:transparent host-btn"
-            href="/host/main"
-            >예약 관리</a
+            href="/host/reservations"
+            >예약 관리</NuxtLink
           >
         </li>
         <span class="separator"></span>
         <li class="header-menu">
-          <a
+          <NuxtLink
             class="n-btn n-btn:hover n-btn-bd:transparent host-btn"
-            href="/host/main"
-            >리뷰 모아보기</a
+            href="/host/programs"
+            >리뷰 모아보기</NuxtLink
           >
         </li>
       </ul>
 
       <ul class="header-menus:icon-only md:show">
         <li class="header-menu">
-          <a
+          <NuxtLink
             class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:dashboard"
-            href="/host/main"
-            >대시보드</a
+            href="/host/programs"
+            >대시보드</NuxtLink
           >
         </li>
         <li class="header-menu">
-          <a
+          <NuxtLink
             class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:chat"
-            href="/host/main"
-            >Chat</a
+            href="/host/programs"
+            >Chat</NuxtLink
           >
         </li>
         <li class="header-menu">
-          <a
+          <NuxtLink
             class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:alert"
-            href="/host/main"
-            >알림</a
+            href="/host/programs"
+            >알림</NuxtLink
           >
         </li>
       </ul>
@@ -117,7 +119,7 @@
           <div class="profile-info">
             <p class="nickname">호스트 닉네임</p>
             <div class="account-setting">
-              <a href="" class="n-icon n-deco n-icon:setting">내 계정관리</a>
+              <a href="#" class="n-icon n-deco n-icon:setting">내 계정관리</a>
             </div>
           </div>
         </section>
@@ -130,18 +132,18 @@
               >
             </li>
             <li>
-              <a href="#" class="menu n-icon n-deco n-icon:create"
-                >프로그램 등록</a
+              <NuxtLink href="/host/programs/new" class="menu n-icon n-deco n-icon:create"
+                >프로그램 등록</NuxtLink
               >
             </li>
             <li>
-              <a href="#" class="menu n-icon n-deco n-icon:programs"
-                >프로그램 관리</a
+              <NuxtLink href="/host/programs" class="menu n-icon n-deco n-icon:programs"
+                >프로그램 관리</NuxtLink
               >
             </li>
             <li>
-              <a href="#" class="menu n-icon n-deco n-icon:check_doc"
-                >예약 관리</a
+              <NuxtLink href="/host/reservations" class="menu n-icon n-deco n-icon:check_doc"
+                >예약 관리</NuxtLink
               >
             </li>
             <li>
@@ -163,7 +165,7 @@
           </ul>
           <ul class="aside-menu bd-color:transparent">
             <li>
-              <a href="#" class="menu n-icon n-deco n-icon:logout">로그아웃</a>
+              <div @click.prevent="logoutHandler" style="cursor: pointer" class="menu n-icon n-deco n-icon:logout">로그아웃</div>
             </li>
           </ul>
         </nav>
@@ -181,4 +183,15 @@
     </section>
   </header>
 </template>
-<script setup lang="ts"></script>
+<script setup>
+const userDetails = useUserDetails();
+const logoutHandler = async () => {
+  console.log("logoutHandler");
+  userDetails.logout();
+  if(process.client) {
+    return navigateTo("/signin");
+  }
+}
+
+
+</script>
