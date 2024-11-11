@@ -1,6 +1,8 @@
 <script setup>
 
 // props
+import {useAuthFetch} from "~/composables/useAuthFetch.js";
+
 const props = defineProps({
   tab: {
     type: String,
@@ -78,7 +80,7 @@ const resetSelectedStatusesHandler = () => {
 
 const config = useRuntimeConfig();
 
-const { data } = await useFetch(`host/published-programs/status`, {
+const { data } = await useAuthFetch(`host/published-programs/status`, {
   baseURL: config.public.apiBase
 });
 

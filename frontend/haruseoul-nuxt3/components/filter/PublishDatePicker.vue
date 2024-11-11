@@ -1,5 +1,6 @@
 <script setup>
 import {ref, watch, watchEffect} from 'vue';
+import {useAuthFetch} from "~/composables/useAuthFetch.js";
 
 // emit
 const emit = defineEmits(['selectionChanged'])
@@ -167,7 +168,7 @@ const publishedProgramQuery = computed(() => (
 
 /*=== fetch ==========================================================================================================*/
 // 캘린더에 개설불가능한 날짜 표시를 위한 개설프로그램 목록 fetch
-const {data: publishedData, refresh: publishedRefresh} = await useFetch(`host/published-programs`, {
+const {data: publishedData, refresh: publishedRefresh} = await useAuthFetch(`host/published-programs`, {
   baseURL: config.public.apiBase,
   params: computed(() => publishedProgramQuery.value)
 });
