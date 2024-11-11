@@ -56,7 +56,9 @@ const signinHandler = async () => {
 
   let response = await useDataFetch("auth/signin",{
     method: "POST",
-    contentType: "application/json",
+    headers :{
+      "Content-Type": "application/json"
+    },
     body:{
       userId: userId.value,
       userPwd: userPwd.value
@@ -65,12 +67,14 @@ const signinHandler = async () => {
   let userInfo = jwtDecode(response.token)
   userDetails.login({
     id: userInfo.id,
-    username: userInfo.username,
+    userId: userInfo.userId,
+    username: userInfo.name,
     birth: userInfo.birth,
     email: userInfo.email,
     token: response.token,
+
   });
-  console.log(userInfo)
+  console.log("회원정보:",userInfo)
   const returnURL = route.query.returnURL;
   console.log("리턴url:",returnURL);
   return navigateTo(returnURL);
