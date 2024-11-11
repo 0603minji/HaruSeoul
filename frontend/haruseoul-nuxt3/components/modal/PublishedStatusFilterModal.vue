@@ -15,7 +15,7 @@ const props = defineProps({
 });
 
 // emit
-const emit = defineEmits(['closeModal']);
+const emit = defineEmits(['closeModal', 'updateListByTab']);
 
 
 // Selected Statuses 개설된 프로그램 상태 1.모집중 2.폐지임박 3.종료 4.취소 5.획정대기 6.확정
@@ -27,29 +27,18 @@ watchEffect(() => {
 })
 
 
-/*
-** 현재 탭에 따라서 상태필터 조정 **
-1. 예정된 일정 : finished, canceled 체크되어있으면 1풀고 2emit하고 3비활성
-2. 지난 일정 : finnished 외 동일
-3. 취소된 일정 : canceled 외 동일
-*/
-// Watch the selected tab and adjust the status list accordingly
-watchEffect(() => {
-  if (props.tab === 'canceled') {
-    selectedStatuses.value = selectedStatuses.value.filter(status => status !== 'canceled');
-  } else if (props.tab === 'finished') {
-    selectedStatuses.value = selectedStatuses.value.filter(status => status !== 'finished');
-  }
-  // emit('updateListByTab', selectedStatuses.value);
-});
-
 // Computed property to check if a status should be disabled based on the tab
 const isStatusDisabled = (statusName) => {
-  if (props.tab === 'canceled') {
+  console.log('isStatusDisabled called. tab: ', props.tab);
+  console.log('  statusName : ', statusName)
+  if (props.tab.toLowerCase() === 'canceled') {
+    console.log('   ', statusName !== 'canceled')
     return statusName !== 'canceled';
-  } else if (props.tab === 'finished') {
+  } else if (props.tab.toLowerCase() === 'finished') {
+    console.log('   ', statusName !== 'finished')
     return statusName !== 'finished';
   } else {
+    console.log('   ', statusName === 'finished' || statusName === 'canceled')
     return statusName === 'finished' || statusName === 'canceled';
   }
 };
@@ -110,9 +99,9 @@ const { data } = await useAuthFetch(`host/published-programs/status`, {
             <li v-for="status in data.statusDtos">
               <label>
                 <input type="checkbox"
-                       :disabled="!isStatusDisabled(status.name)"
                        v-model="selectedStatuses"
                        :checked="selectedStatuses.includes(status.name)"
+                       :disabled="isStatusDisabled(status.name)"
                        :value="status.id">
                 <span>{{ status.name }}</span>
               </label>
