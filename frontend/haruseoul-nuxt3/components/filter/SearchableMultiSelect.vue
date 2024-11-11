@@ -1,23 +1,37 @@
 <script setup>
 // emit
+import {useAuthFetch} from "~/composables/useAuthFetch.js";
+
 const emit = defineEmits(['selectionChanged'])
 
 // Props
 const props = defineProps({
-  options: {
+  selectedOptions: {
     type: Array,
-    required: true,
-  },
-  initialOptions: {
-    type: Array,
+    default: []
   }
 });
 
+const userDetails = useUserDetails();
+const hostId = userDetails.id.value;
+
 // State
 const isDropdownVisible = ref(false);
-const searchTerm = ref('');
-const selectedOptions = ref([...props.initialOptions]);
-const filteredOptions = ref([...props.options]);
+const searchTerm = ref(''); // 검색어
+const selectedOptions = ref(props.selectedOptions); // 부모컴포넌트에서 전달된 값으로 초기화
+const options = ref([]); // 선택가능한 모든 옵션
+const filteredOptions = ref([]); // 초기값: 선택가능한 모든 옵션
+
+/*
+  options 초기화
+  1. PublishedProgram테이블에서 mIds로 모든 distinct pIds를 얻어온다. host/published-programs/distinct?hostId=?
+  2. Program테이블에서 pIds로 검색해서 {id: 1, title: '제목'}객체 배열을 생성 후 초기화
+*/
+
+const { data: pIds } = await useAuthFetch(`host/published-programs/distinct?mId=${hostId}`);
+const { data } = await useAuthFetch(`host/programs/user/${hostId});
+
+
 
 // Methods
 const toggleDropdown = () => {

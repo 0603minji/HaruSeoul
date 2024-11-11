@@ -2,6 +2,7 @@ package com.m2j2.haruseoul.repository;
 
 import com.m2j2.haruseoul.entity.PublishedProgram;
 
+import com.m2j2.haruseoul.host.program.dto.ProgramFilterDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,5 +34,8 @@ public interface PublishedProgramRepository extends JpaRepository<PublishedProgr
     List<Long> findProgramIdsByDateRange(@Param("startDate") LocalDate startDate,
                                          @Param("endDate") LocalDate endDate);
 
+    @Query("SELECT DISTINCT pp.program.id FROM PublishedProgram pp " +
+            "WHERE pp.program.member.id = :hostId")
+    List<Long> findDistinctProgramIdsByHostId(@Param("hostId") Long hostId);
 }
 
