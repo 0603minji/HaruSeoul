@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 Long id = jwtUtil.extractUserId(token);
                 String userId = jwtUtil.extractUsername(token);
-                String name = jwtUtil.extractUsername(token);
+                String name = jwtUtil.extractName(token);
                 String nickname = jwtUtil.extractNickname(token);
                 String email = jwtUtil.extractEmail(token);
                 LocalDate birthday = jwtUtil.extractBirthday(token);

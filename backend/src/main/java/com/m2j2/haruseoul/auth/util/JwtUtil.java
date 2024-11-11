@@ -91,7 +91,7 @@ public class JwtUtil {
     public String generateToken(HaruSeoulUserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", userDetails.getId());
-        claims.put("username", userDetails.getUsername());
+        claims.put("userId", userDetails.getUsername());
         claims.put("name", userDetails.getName());
         claims.put("email", userDetails.getEmail());
         claims.put("birth", userDetails.getBirth().format(DateTimeFormatter.ISO_DATE));

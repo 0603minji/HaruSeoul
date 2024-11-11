@@ -1,17 +1,20 @@
 export default () => {
     const id = useState('id', () => null);
-    const username = useState('username', () => null);
+    const userId = useState('userId', () => null);
     const email = useState('email', () => null);
     const birth = useState('birth', () => null);
+    const username = useState('username', () => null);
     // const roles = useState('roles', () => []);
     const token = useState('token', () => null);
 
     const isAnonymous = () => {
-        return !username.value || !token.value;
+        return !userId.value || !token.value;
     }
 
     const login = (loginInfo) => {
+        console.log("유저디테일에서 확인용:",loginInfo);
         id.value = loginInfo.id;
+        userId.value = loginInfo.userId;
         username.value = loginInfo.username;
         email.value = loginInfo.email;
         birth.value = loginInfo.birth;
@@ -20,25 +23,27 @@ export default () => {
 
         if (process.client) {
             localStorage.setItem('id', JSON.stringify(loginInfo.id));
-            localStorage.setItem('username', loginInfo.username);
+            localStorage.setItem('userId', loginInfo.userId);
             localStorage.setItem('email', loginInfo.email);
             localStorage.setItem('birth', loginInfo.birth);
-            // localStorage.setItem('roles', JSON.stringify(loginInfo.roles)); //[] -> "[]"
+            localStorage.setItem('username', loginInfo.username);
             localStorage.setItem('token', loginInfo.token);
+            // localStorage.setItem('roles', JSON.stringify(loginInfo.roles)); //[] -> "[]"
         }
-        console.log(username.value);
+
     }
 
     const loadUserFromStorage = async () => {
         if (process.client) {
-            const storedUsername = localStorage.getItem('username');
+            const storedUserId = localStorage.getItem('userId');
             const storedToken = localStorage.getItem('token');
 
-            if (storedUsername && storedToken) {
-                id.value = JSON.parse(localStorage.getItem('id'));
+            if (storedUserId && storedToken) {
+                userId.value = storedUserId;
                 token.value = storedToken;
+                id.value = JSON.parse(localStorage.getItem('id'));
+                username.value = localStorage.getItem('username');
                 birth.value = localStorage.getItem('birth');
-                username.value = storedUsername;
                 email.value = localStorage.getItem('email');
             }
         }
@@ -46,9 +51,10 @@ export default () => {
 
     const logout = () => {
         id.value = null;
-        username.value = null;
+        userId.value = null;
         email.value = null;
         birth.value = null;
+        username.value = null;
         // roles.value = [];
         token.value = null;
     }
@@ -57,15 +63,16 @@ export default () => {
 
     return {
         id,
-        username,
+        userId,
         email,
         birth,
-        // roles,
+        username,
         token,
+        // roles,
         isAnonymous,
         loadUserFromStorage,
         login,
-        // hasRole,
         logout
+        // hasRole,
     }
 }
