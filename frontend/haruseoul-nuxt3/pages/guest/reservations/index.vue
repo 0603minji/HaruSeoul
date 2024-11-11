@@ -4,6 +4,7 @@ import axios from "axios";
 import Status from "~/components/filter/Status.vue";
 import { useRoute } from "vue-router";
 import Pager from "~/components/Pager.vue";
+import ReservationCancelModal from "~/components/modal/ReservationCancelModal.vue";
 
 const reservations = ref([]);
 const selectedStatus = ref(0);
@@ -18,9 +19,13 @@ const hasPreviousPage = ref(false); // 이전 페이지가 있는지
 const hasNextPage = ref(false); // 다음 페이지가 있는지
 const currentPage = ref(1); // 현제 페이지 초기값은 1
 
+// const isModalVisible = ref(false); // 모달 표시 여부
+// const selectedReservationId = ref(null); // 선택된 예약 ID
+// 예약 취소 모달 상태
+const modalRef = ref(null);
 
 // 예약 목록을 가져오는 함수
-const fetchReservations = async (pageNum) => {
+const fetchReservations = async () => {
   try {
     const params = {
       s: Array.isArray(selectedStatus.value) ? selectedStatus.value.join(",") : null,
@@ -28,20 +33,21 @@ const fetchReservations = async (pageNum) => {
       // m: memberId.value
     };
 
-    const response = await axios.get("http://localhost:8080/api/v1/guest/reservations", { params:params });
+    const response = await axios.get("http://localhost:8080/api/v1/guest/reservations", { params });
 
     console.log("API 응답:", response.data);
 
     reservations.value = response.data.reservations;
     totalRowCount.value = response.data.totalRowCount;
     totalPageCount.value = response.data.totalPageCount;
-    
+
     hasPreviousPage.value = currentPage.value > 1;
     hasNextPage.value = currentPage.value < totalPageCount.value;
-    startNum.value = pageNumbers[0];
-    pageNumbers.value = Array.from({ length: 5 }, (_, startNum) => startNum + 1);
-    
-    // startNum.value = response.data.startNum;
+
+    // 5개씩 페이지 번호를 나누기
+    startNum.value = Math.floor((currentPage.value - 1) / 5) * 5 + 1;
+    pageNumbers.value = Array.from({ length: Math.min(5, totalPageCount.value - startNum.value + 1) }, (_, index) => startNum.value + index);
+
 
     // 각 예약의 날짜 차이를 계산하여 dDay 속성을 추가합니다.
     const currentDate = new Date();
@@ -70,33 +76,61 @@ const StatusChangeHandler = async (status) => {
 };
 
 // 페이지 클릭 핸들러
-const pageClickHandler = async (newPage) => {
+const pageClickHandler = (newPage) => {
   if (newPage < 1 || newPage > totalPageCount.value) {
     alert("마지막 페이지 입니다.");
     return;
   }
+}
 
-  currentPage.value = route.query.p;
-} 
+// 예약 취소 버튼 클릭 시 모달 열기
+const handleCancelClick = (reservationId) => {
+  if (modalRef.value) {
+    modalRef.value.openModal(reservationId);
+  } else {
+    console.error("모달이 로드되지 않았습니다.");
+  }
+};
+
+// 예약 취소 처리 함수
+const cancelReservation = async (rId) => {
+  try {
+    const currentTime = new Date().toISOString();
+    const response = await axios.put(`http://localhost:8080/api/v1/guest/reservations/${rId}/cancel`, {
+      delete_date: currentTime,
+    });
+
+    if (response.data.success) {
+      console.log("예약이 취소되었습니다.");
+      fetchReservations();  // 예약 목록 갱신
+    } else {
+      console.error("예약 취소 중 오류 발생");
+    }
+  } catch (error) {
+    console.error("예약 취소 중 오류 발생:", error);
+  }
+};
+
+// 모달에서 취소 이벤트 처리
+const handleCancelEvent = (rId) => {
+  cancelReservation(rId); // 예약 취소 함수 호출
+};
 
 // 페이지가 변경될 때 쿼리 문자열을 업데이트
 watch(
-  () => route.query.p,
-  (newPage) => {
-    currentPage.value = parseInt(newPage) || 1; // 현재 페이지를 선택한 페이지로 업데이트
-    fetchReservations(); // 새로운 페이지에 따라 예약 목록 갱신
-  }
+    () => route.query.p,
+    (newPage) => {
+      currentPage.value = parseInt(newPage); // 쿼리 값이 없을 때 기본값을 1로 설정
+      fetchReservations();
+    }
 );
 
 // 초기 예약 데이터 로드
 onMounted(() => {
-  currentPage.value = route.query.p || 1;
+  route.query.p = 1;
   fetchReservations();
 });
 </script>
-
-
-
 
 <template>
   <main>
@@ -128,6 +162,7 @@ onMounted(() => {
               style="border-color: #DB4455; color: #DB4455;">
                 취소됨
               </span>
+              <span style="font-weight: bold; padding: 5px;">[{{ r.id }}]</span>
             </div>
           </div>
 
@@ -165,15 +200,19 @@ onMounted(() => {
                 <div class="d:flex flex-direction:column">
                   <div class="card-info">
                     <span class="n-icon n-icon:calendar n-deco">진행일</span>
-                    <span v-if="r.dDay > 1">
+                    <span v-if="r.dDay >= 0">
 
                       {{ r.date }}
-                      <span v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3)" style="color: #DB4455;">
+                      <span v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3) && (r.dDay > 0)" style="color: #DB4455;">
                         (D-{{ r.dDay }})
                       </span>
 
                       <span v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
                         (D-{{ r.dDay }})
+                      </span>
+
+                      <span v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay === 0)" style="color: #DB4455;">
+                        (D-day)
                       </span>
                       
                     </span>
@@ -188,7 +227,9 @@ onMounted(() => {
                 <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
                   class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#" class="n-btn" style="color: #DB4455; --btn-border-color:#DB4455;">예약 취소</a>
+                  <a href="#" class="n-btn" style="color: #DB4455; --btn-border-color:#DB4455;" @click="handleCancelClick(reservation.id)">
+                    예약 취소
+                  </a>
                   <a href="#"
                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
                 </div>
@@ -213,7 +254,9 @@ onMounted(() => {
           <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
             class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-            <a href="#" class="n-btn" style="color: #DB4455; --btn-border-color:#DB4455;">예약 취소</a>
+            <a href="#" class="n-btn" style="color: #DB4455; --btn-border-color:#DB4455;" @click="handleCancelClick(reservationId)">
+              예약 취소
+            </a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
           </div>
 
@@ -227,6 +270,8 @@ onMounted(() => {
             <a href="#" class="n-btn bg-color:main-1 color:base-1" style="max-width: 278px;">호스트 문의</a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
           </div>
+
+          <ReservationCancelModal ref="modalRef" @cancel="handleCancelEvent" />
 
         </div>
       </div>
