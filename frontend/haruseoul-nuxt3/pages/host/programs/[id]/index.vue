@@ -1,11 +1,12 @@
 <script setup>
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import axios from "axios";
-import { reactive } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 
 // import { useFetch } from '@nuxtjs/composition-api'
 
 const route = useRoute()
+const router = useRouter();
 const id = route.params.id
 const oneProgram = reactive({});
 const durationHour = ref(0);
@@ -55,6 +56,24 @@ const fetchOneProgram = async () => {
 
 };
 
+const goToIntro = () => {
+    router.push({ path: '/host/programs/new', hash: '#intro' });
+};
+const goToDetail = () => {
+    router.push({ path: '/host/programs/new', hash: '#detail' });
+};
+const goToCourse = () => {
+    router.push({ path: '/host/programs/new', hash: '#course' });
+};
+const goToInclusion = () => {
+    router.push({ path: '/host/programs/new', hash: '#inclusion' });
+};
+const goToCaution = () => {
+    router.push({ path: '/host/programs/new', hash: '#caution' });
+};
+const goToImage = () => {
+    router.push({ path: '/host/programs/new', hash: '#image' });
+};
 </script>
 
 <template>
@@ -113,7 +132,7 @@ const fetchOneProgram = async () => {
                             {{ c }}
                         </div>
                         <div class="edit-btn">
-                            <button class="n-icon n-icon:edit"></button>
+                            <button class="n-icon n-icon:edit" @click="goToIntro"></button>
                         </div>
                     </div>
                     <!--========= 프로그램 제목 + 평점리뷰 + 가격 =========-->
@@ -123,7 +142,7 @@ const fetchOneProgram = async () => {
                                 {{ oneProgram.value.title }}
                             </p>
                             <div class="edit-btn">
-                                <button class="n-icon n-icon:edit"></button>
+                                <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                             </div>
                         </div>
                         <div class="rating-review">
@@ -133,7 +152,7 @@ const fetchOneProgram = async () => {
                             <span>/</span>
                             <span>5.0</span>
                             <span>(Reviews)</span>
-
+                            window.location.hash = '#inclusion';
                             <div class="price">
                                 <div class="n-icon n-icon:price n-deco"
                                     style="display: flex; justify-content: center; align-items: center; height: inherit; font-size: var(--font-size-10); gap: 0;"
@@ -146,7 +165,7 @@ const fetchOneProgram = async () => {
                                 </div>
                             </div>
                             <div class="edit-btn">
-                                <button class="n-icon n-icon:edit"></button>
+                                <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                             </div>
                         </div>
                     </div>
@@ -170,7 +189,7 @@ const fetchOneProgram = async () => {
                                                         {{ oneProgram.value.language }}
                                                     </span>
                                                     <div class="edit-btn m-left:3">
-                                                        <button class="n-icon n-icon:edit"></button>
+                                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
@@ -180,7 +199,7 @@ const fetchOneProgram = async () => {
                                                     </span>
                                                     <span>(min/max)</span>
                                                     <div class="edit-btn m-left:3">
-                                                        <button class="n-icon n-icon:edit"></button>
+                                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
@@ -189,7 +208,7 @@ const fetchOneProgram = async () => {
                                                     </span>
                                                     <span>hours</span>
                                                     <div class="edit-btn m-left:3">
-                                                        <button class="n-icon n-icon:edit"></button>
+                                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
@@ -198,7 +217,7 @@ const fetchOneProgram = async () => {
                                                         {{ oneProgram.value.route[0].address }}
                                                     </span>
                                                     <div class="edit-btn m-left:3">
-                                                        <button class="n-icon n-icon:edit"></button>
+                                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -245,7 +264,7 @@ const fetchOneProgram = async () => {
                                 <div class="content-header">
                                     <span class="title">Program Introduction</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                     </div>
                                 </div>
                                 <div class="text">
@@ -265,18 +284,19 @@ const fetchOneProgram = async () => {
                                 <div class="content-header">
                                     <span class="title">Course</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                     </div>
                                 </div>
                                 <div class="details">
                                     <div class="map-img-wrapper">
                                         <img class="map-img" src="/public/image/map.png" alt="코스지도">
                                     </div>
-
+<!-- ============================================== -->
+ <!-- ================================================== -->
                                     <section class="n-course-flow">
                                         <div v-for="(route, index) in oneProgram.value.route"
                                             v-if="oneProgram.value && oneProgram.value.route">
-                                            <!--     출발지    -->
+                                            <!-- 경유지 -->
                                             <div :class="`point ${index !== 0 && index !== oneProgram.value.route.length - 1 ? 'drop-by' : ''}`">
 
                                                 <div class="icon-wrapper">
@@ -321,6 +341,8 @@ const fetchOneProgram = async () => {
                             </div>
                         </div>
                     </section>
+<!-- ======================================= -->
+ <!-- ========================================== -->
 
                     <!--==============  만나는 장소  + 포함사항 + 꼭알아두세요 =================-->
                     <section id="meeting-location" class="program">
@@ -332,7 +354,7 @@ const fetchOneProgram = async () => {
                                 <div class="content-header">
                                     <span class="title">Meeting Point</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                     </div>
                                 </div>
                                 <div class="details">
@@ -359,7 +381,7 @@ const fetchOneProgram = async () => {
                                 <div class="content-header">
                                     <span class="title">Inclusion</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                     </div>
                                 </div>
                                 <div class="details">
@@ -388,7 +410,7 @@ const fetchOneProgram = async () => {
                                 <div class="content-header">
                                     <span class="title">Notice</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                     </div>
                                 </div>
                                 <div class="details">
