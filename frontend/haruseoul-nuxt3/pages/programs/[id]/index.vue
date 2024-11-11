@@ -609,9 +609,6 @@ onMounted(() => {
     });
   };
 
-
-
-
   const loadMap2 = () => {
     const container = document.getElementById('map2');
     if (!container) {
