@@ -7,6 +7,7 @@ import PublishProgramModal from "~/components/modal/PublishProgramModal.vue";
 import PublishedStatusFilterModal from "~/components/modal/PublishedStatusFilterModal.vue";
 import {useAuthFetch} from "~/composables/useAuthFetch.js";
 import {useDataFetch} from "~/composables/useDataFetch.js";
+import ProgramFilterModal from "~/components/modal/ProgramFilterModal.vue";
 
 //=== function =========================================================================================================
 // 2024-11-26 -> 24.11.26 Tue
@@ -52,6 +53,8 @@ const createQuery = () => {
   const result = {mIds: hostId};
 
   if (page.value) result.p = page.value;
+  if (pageSize.value) result.pageSize = pageSize.value;
+
   // tab filtering
   if (tab.value === "finished" || tab.value === "canceled") {
     result.tab = tab.value;
@@ -85,10 +88,7 @@ const createQuery = () => {
 // $fetch
 const fetchData = async () => {
   const query = createQuery();
-  const data = await useDataFetch(`host/published-programs`, {
-    baseURL: config.public.apiBase,
-    query: query
-  });
+  const data = await useDataFetch(`host/published-programs`, { query: query });
 
   // api query -> user query
   const keysToExclude = ["mIds", "pageSize"];
@@ -134,14 +134,10 @@ const tabChangeHandler = (newTab) => {
   console.log('tabChangeHandler called')
   tab.value = newTab;
   console.log('tab: ', tab.value);
-
-  // 프로그램 상태필터 disabled처리하고 선택되어있는건 체크해제
-  // statusFilterModal에게 props로 현재 탭 통지
-
   fetchData();
-
 }
 
+// 필터모달에서 업데이트한 변수들로 쿼리 만들어서 패치
 const updateDateFilterQuery = (selectedDates) => {
   console.log('updateDateFilterQuery called')
   // [date객체, date객체] -> "2024-11-26,2024-11-28"
@@ -170,6 +166,16 @@ const updateStatusFilterQuery = (SelectedStatuses) => {
   fetchData();
 }
 
+const updateProgramFilterQuery = (selectedPrograms) => {
+  console.log('updateProgramFilterQuery called')
+  selectedPrograms.value = selectedPrograms;
+  // selectedPrograms [ {id:1, title: },{id:2, title: }..  ] => String pIds: '1,2,..'
+  pIds.value = selectedPrograms.value
+      .map(program => program.id) // [1, 2, 3..]
+      .join(","); // '1,2,3...'
+  fetchData();
+}
+
 // 모든 필터 초기화
 const resetFilterHandler = () => {
   // 쿼리초기화하고 다시 fetch
@@ -183,20 +189,33 @@ const resetFilterHandler = () => {
   reRenderTrigger.value = !reRenderTrigger.value;
 }
 
+
+
+
+
+
 // === 모달창 ===========================================================================================================
 const isModalVisible = ref("");
 
 const OpenDateRangeFilterModalHandler = () => isModalVisible.value = "DateRangeFilterModal";
 const OpenPublishedStatusFilterModalHandler = () => isModalVisible.value = "PublishedStatusFilterModal";
+const OpenProgramFilterModalHandler = () => isModalVisible.value = "ProgramFilterModal";
 const OpenPublishProgramModalHandler = () => isModalVisible.value = "PublishProgramModal";
 
 
+
+
+
+
 // === 변수 =============================================================================================================
-const config = useRuntimeConfig();
 const route = useRoute();
 const router = useRouter();
+const userDetails = useUserDetails();
 
-const hostId = 4; // 프론트에서 저장하고 있는 인증정보에 접근해서 얻어와야함
+
+const hostId = userDetails.id.value; // 프론트에서 저장하고 있는 인증정보에 접근해서 얻어와야함
+console.log('hostId: ', hostId)
+
 
 // PublishedProgramResponseDto
 const pages = ref([1, 2, 3, 4, 5]);
@@ -206,6 +225,7 @@ let currentPageRowCount;
 let hasNextPage;
 let hasPreviousPage;
 const publishedPrograms = ref([]);
+
 
 // query에 들어가는 변수들
 // 최초 페이지 접속 시 query에 쓸 변수 초기화. 이후에는 emit event함수로 초기화 후 fetch후 publishedPrograms갱신
@@ -223,7 +243,6 @@ const order = ref(null); // 예정된 일정: desc or null, 지난, 취소된 �
   3. canceled : ?tab=canceled
 */
 const tab = ref(route.query.tab);
-
 watchEffect(() => {
   console.log('index');
   console.log('     -> dates: ', dates.value);
@@ -236,6 +255,7 @@ watchEffect(() => {
   console.log('     -> tab: ', tab.value);
 });
 
+
 // 필터모달에서 보내온 값 저장, 필터모달에게 props로 전달할 변수
 // 최초 url접속 시 쿼리스트링에서 받아온 값(statuses등으로) 초기화됨
 const selectedStatuses = ref(statuses.value ? statuses.value.split(",") : []);
@@ -244,27 +264,49 @@ console.log("index selectedStatues :", selectedStatuses.value);
 const selectedDates = ref(dates.value ? dates.value.split(",").map(dateString => new Date(dateString + 'T00:00:00.000+09:00')) : []);
 console.log("index selectedDates :", selectedDates.value);
 
+const selectedPrograms = ref(pIds.value ? pIds.value.split(",") : []);
+console.log("index selectedPrograms :", selectedPrograms.value);
 
+
+// 모든 필터 초기화 시 필터모달 다시 렌더링으로 구현
 const reRenderTrigger = ref(false);
 
-/*=== fetch ==========================================================================================================*/
-// 최초에 예정된 일정만 fetch
-// const {data} = await useFetch(`host/published-programs`, {
-//   baseURL: config.public.apiBase,
-//   query: createQuery()
-// })
 
-const {data} = await useAuthFetch(`host/published-programs`, {
-  query: createQuery()
-});
+
+
+
+/*=== fetch ==========================================================================================================*/
+const { data } = await useAuthFetch(`host/published-programs`, { query: createQuery() });
 
 // data.value에 PublishedProgramResponseDto가 담겨있음
-// 한 데이터를 변수에 할당
 mapFetchedData(data.value);
 </script>
 
 <template>
   <main>
+    <!-- === 모달 =================================================================================================== -->
+    <DateRangeFilterModal :key="reRenderTrigger" :class="{'show': isModalVisible === 'DateRangeFilterModal'}"
+                          :selectedDates="selectedDates"
+                          @close-modal="(selected) => { updateDateFilterQuery(selected); isModalVisible = '';}"/>
+    <PublishedStatusFilterModal :key="reRenderTrigger"
+                                :class="{'show': isModalVisible === 'PublishedStatusFilterModal'}"
+                                :tab="tab"
+                                :selectedStatuses="selectedStatuses"
+                                @update-list-by-tab="updateStatusFilterQuery(selected)"
+                                @close-modal="(selected) => { updateStatusFilterQuery(selected); isModalVisible = '';}"/>
+    <ProgramFilterModal :key="reRenderTrigger"
+                                :class="{'show': isModalVisible === 'ProgramFilterModal'}"
+                                :selectedPrograms="selectedPrograms"
+                                @close-modal="isModalVisible = ''"
+                                @updateSelectedPrograms="updateProgramFilterQuery(selected)"/>
+    <PublishProgramModal :class="{'show': isModalVisible === 'PublishProgramModal'}"
+                         @close-modal="() => { fetchData(); isModalVisible = ''; }"/>
+
+    <!-- 모달창 떴을 때 배경처리   -->
+    <div :class="{'active': isModalVisible}" class="backdrop"></div>
+  <!-- ============================================================================================================= -->
+
+
 
     <section class="layout-body"> <!-- main 내 모든 -->
       <!--=== heading ==========================================-->
@@ -319,9 +361,8 @@ mapFetchedData(data.value);
                 </li>
                 <li><a @click.prevent="OpenPublishedStatusFilterModalHandler" href=""
                        :class="{'active': statuses}"
-                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
-                  상태</a></li>
-                <li><a href=""
+                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램 상태</a></li>
+                <li><a @click.prevent="OpenProgramFilterModalHandler" href=""
                        class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1">프로그램</a>
                 </li>
               </ul>
@@ -451,22 +492,6 @@ mapFetchedData(data.value);
         </aside>
       </div>
     </section>
-
-    <!-- 모달   -->
-    <DateRangeFilterModal :key="reRenderTrigger" :class="{'show': isModalVisible === 'DateRangeFilterModal'}"
-                          :selectedDates="selectedDates"
-                          @close-modal="(selected) => { updateDateFilterQuery(selected); isModalVisible = '';}"/>
-    <PublishedStatusFilterModal :key="reRenderTrigger"
-                                :class="{'show': isModalVisible === 'PublishedStatusFilterModal'}"
-                                :tab="tab"
-                                :selectedStatuses="selectedStatuses"
-                                @update-list-by-tab="updateStatusFilterQuery(selected)"
-                                @close-modal="(selected) => { updateStatusFilterQuery(selected); isModalVisible = '';}"/>
-    <PublishProgramModal :class="{'show': isModalVisible === 'PublishProgramModal'}" :host-id="hostId"
-                         @close-modal="() => { fetchData(); isModalVisible = ''; }"/>
-
-    <!-- 모달창 떴을 때 배경처리   -->
-    <div :class="{'active': isModalVisible}" class="backdrop"></div>
   </main>
 </template>
 

@@ -1,6 +1,5 @@
 package com.m2j2.haruseoul.host.publishedProgram.controller;
 
-import com.m2j2.haruseoul.entity.PublishedProgram;
 import com.m2j2.haruseoul.host.publishedProgram.dto.*;
 import com.m2j2.haruseoul.host.publishedProgram.service.PublishedProgramService;
 import org.springframework.http.HttpStatus;
@@ -31,6 +30,12 @@ public class PublishedProgramController {
                                                               @RequestParam(name = "order", defaultValue = "desc") String order,
                                                               @RequestParam(name = "tab", required = false) String tab) {
         return ResponseEntity.ok(service.getList(memberIds, dates, statusIds, programIds, page, pageSize, sortBy, order, tab));
+    }
+
+    // distinct pp.program.id from PublishedPrograms pp where pp.program.regMemberId = ?
+    @GetMapping("/distinct")
+    public ResponseEntity<List<Long>> getDistinctProgramIds(@RequestParam(required = false) Long mId) {
+        return ResponseEntity.ok(service.getDistinctProgramIds(mId));
     }
 
     @PostMapping

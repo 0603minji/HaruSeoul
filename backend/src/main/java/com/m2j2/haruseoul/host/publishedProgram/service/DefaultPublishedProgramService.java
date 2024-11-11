@@ -108,7 +108,9 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
             선택된 탭 내에서 유효한 옵션 중 체크된 것들로만 쿼리
             ex. 예정된 탭에서 유효한 옵션: 1,2,5,6. 체크된 옵션:2,3,4 => 체크된 옵션 중 3,4는 유효하지 않으므로 유효한 2옵션으로만 쿼리
         */
-        
+        if (statusIds == null)
+            statusIds = new ArrayList<>();
+
         // tab : todo(예정된 예약) s=1,2,5,6일 때
         switch (tab) {
             case "todo" -> {
@@ -154,6 +156,11 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
 
         // 그 밖의 유효하지 않은 tab값들은 무시
         return getList(memberIds, dates, statusIds, programIds, page, pageSize, sortBy, order);
+    }
+
+    @Override
+    public List<Long> getDistinctProgramIds(Long hostId) {
+        return publishedProgramRepository.findDistinctProgramIdsByHostId(hostId);
     }
 
     @Override
