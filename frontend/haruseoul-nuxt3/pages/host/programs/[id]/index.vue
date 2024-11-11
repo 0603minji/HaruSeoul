@@ -22,9 +22,19 @@ onMounted(() => {
     fetchOneProgram();
 })
 
+
+const token = localStorage.getItem("token");
+
+
 const fetchOneProgram = async () => {
     const response = await axios.get(
-        "http://localhost:8080/api/v1/host/programs/" + id
+        "http://localhost:8080/api/v1/host/programs/" + id,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        }
+
     );
     oneProgram.value = response.data;
     console.log("data :", oneProgram.value);
@@ -115,9 +125,7 @@ const goToImage = () => {
                 <section class="bg-color:base-1 width:10p">
                     <h1 class="d:none">대표 이미지 + 카테고리 + 프로그램 제목 + 평점리뷰 + 가격</h1>
                     <!--=====  대표 이미지 =====-->
-                    <div class="edit-btn">
-                        <button class="n-icon n-icon:edit" @click="goToIntro"></button>
-                    </div>
+
                     <div class="thumbnail-wrapper">
                         <button class="n-btn thumbnail-btn thumbnail-btn:left"><span
                                 class="n-icon n-icon:arrow_left"></span>
@@ -130,9 +138,9 @@ const goToImage = () => {
 
                         <div class="thumbnail-btn thumbnail-btn:num n-deco">1/5</div>
                         <div class="edit-btn">
-                                <button class="n-icon n-icon:edit" @click="goToImage"></button>
-                            </div>
-                        
+                            <button class="n-icon n-icon:edit" @click="goToImage"></button>
+                        </div>
+
                     </div>
                     <!--==== 카테고리 ====-->
                     <div class="categories">
@@ -161,7 +169,6 @@ const goToImage = () => {
                             <span>/</span>
                             <span>5.0</span>
                             <span>(Reviews)</span>
-                            window.location.hash = '#inclusion';
                             <div class="price">
                                 <div class="n-icon n-icon:price n-deco"
                                     style="display: flex; justify-content: center; align-items: center; height: inherit; font-size: var(--font-size-10); gap: 0;"
@@ -701,7 +708,7 @@ const goToImage = () => {
 /* btn */
 
 .edit-btn {
-    position: absolute;
+    /* position: absolute; */
     bottom: 10px;
     right: 10px;
     z-index: 5;
