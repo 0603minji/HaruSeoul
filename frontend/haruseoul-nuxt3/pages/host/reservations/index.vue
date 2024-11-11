@@ -255,7 +255,6 @@ const reRenderTrigger = ref(false);
 // })
 
 const {data} = await useAuthFetch(`host/published-programs`, {
-  baseURL: config.public.apiBase,
   query: createQuery()
 });
 
