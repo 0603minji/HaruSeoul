@@ -57,6 +57,15 @@ export default () => {
         username.value = null;
         // roles.value = [];
         token.value = null;
+        if (process.client) {
+            localStorage.removeItem('id');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('email');
+            localStorage.removeItem('birth');
+            localStorage.removeItem('username');
+            localStorage.removeItem('token');
+        }
+
     }
 
     // const hasRole = role => roles.value.includes(role);
