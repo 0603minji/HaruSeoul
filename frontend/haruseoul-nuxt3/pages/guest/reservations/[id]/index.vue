@@ -2,6 +2,8 @@
 import { onMounted, ref } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
+import {useReservationFetch} from "~/composables/useReservationFetch.js";
+import ReservationCancelModal from "~/components/modal/ReservationCancelModal.vue";
 
 const reservation = ref({
   guest: {},
@@ -24,9 +26,20 @@ const reservationCard = computed(() => reservation.value.reservationCard);
 
 const fetchreservation = async (rId) => {
   const params = { rId: rId };
-  const response = await axios.get(`http://localhost:8080/api/v1/guest/reservations/${rId}`, { params: params });
+  const token = localStorage.getItem("token");
+  const response = await useReservationFetch(`guest/reservations/${rId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+        params: params,
+        //  이 URL에 params 객체를 함께 전송하여 필터링된 결과를
+        //  response 변수에 받기
+      }
+  );
 
-  reservation.value = response.data;
+
+  reservation.value = response;
   console.log(reservation.value);
   console.log(guest.value);
   console.log(host.value);
@@ -55,6 +68,28 @@ function copy() {
     console.error("복사 실패:", err);
   });
 }
+
+// 예약취소--------------------------------------------------------------------------------
+
+const showModal = ref(false); // 모달을 표시할지 여부를 결정하는 변수
+const currentReservationId = ref(null); // 취소할 예약의 ID 저장
+
+// 예약 취소 버튼 클릭 핸들러
+const handleCancelClick = (reservationId) => {
+  console.log("취소 클릭 ID:", reservationId); // ID가 제대로 넘어오는지 확인
+  currentReservationId.value = reservationId;  // 클릭한 예약의 ID 설정
+  showModal.value = true;  // 모달을 표시
+};
+
+// 모달을 열 때
+const openModal = () => {
+  showModal.value = true;
+};
+
+// 모달을 닫을 때
+const closeModal = () => {
+  showModal.value = false;
+};
 
 // 생명주기 함수
 
@@ -164,7 +199,9 @@ onMounted(() => {
                 <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
                   class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#" class="n-btn" style="color: #DB4455; --btn-border-color:#DB4455;">예약 취소</a>
+                  <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal" style="color: #DB4455; --btn-border-color:#DB4455;">
+                    예약 취소
+                  </a>
                   <a href="#"
                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
                 </div>
@@ -189,7 +226,9 @@ onMounted(() => {
           <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
             class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-            <a href="#" class="n-btn" style="color: #DB4455; --btn-border-color:#DB4455;">예약 취소</a>
+            <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal" style="color: #DB4455; --btn-border-color:#DB4455;">
+              예약 취소
+            </a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
           </div>
 
@@ -199,8 +238,8 @@ onMounted(() => {
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
           </div>
 
-          <div v-else-if="r.statusName === 'Canceled'" class="card-footer margin-top:2" style="justify-content: right;">
-            <a href="#" class="n-btn bg-color:main-1 color:base-1" style="max-width: 278px;">호스트 문의</a>
+          <div v-else-if="r.statusName === 'Canceled'" class="card-footer margin-top:2" style="padding-left: 10px; justify-content: space-between;">
+            <a href="#" class="n-btn bg-color:main-1 color:base-1" style="max-width: 478px;">호스트 문의</a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
           </div>
         </div>
@@ -229,13 +268,42 @@ onMounted(() => {
                 </div>
                 <div class="info">
                   <span class="info-form">휴대폰 번호</span>
-                  <span class="info-input">+82 01012341234</span>
+                  <span class="info-input">(+82)10-5678-1234</span>
                 </div>
                 <div class="info">
                   <span class="info-form">SNS</span>
-                  <span class="info-input n-icon n-icon:instagram">@instagram</span>
+                  <span class="info-input n-icon n-icon:instagram">@idididid</span>
                 </div>
               </div>
+            </details>
+          </div>
+        </section>
+
+        <section v-if="host">
+          <h1>호스트정보</h1>
+          <div>
+            <details open>
+              <summary class="collapse">
+                <span class="title">호스트 정보</span>
+                <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
+              </summary>
+              <!-- 프로필 카드 -->
+              <section class="profile-card">
+                <h1>프로필 카드</h1>
+                <div class="overview">
+                  <div class="img-wrapper">
+                    <img src="/public/image/profile.png" alt="호스트프사" />
+                  </div>
+                  <div>
+                    <div>{{ host.memberName }}</div>
+                    <div class="n-icon n-icon:star n-deco" style="--deco-gap: 3px">
+                      <span>{{ host.programRating }} / 5.0</span>
+                      <span>({{ host.ratingCount }})</span>
+                    </div>
+                  </div>
+                </div>
+                <a href="" class="n-btn n-btn:hover">프로필보기</a>
+              </section>
             </details>
           </div>
         </section>
@@ -244,20 +312,20 @@ onMounted(() => {
           <h1>요청사항 정보</h1>
           <div>
             <details open>
-              <summary class="collapse" style="padding-bottom: 0;">
+              <summary class="collapse">
                 <span class="title">요청 정보</span>
                 <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
               </summary>
               <div class="details">
                 <div class="info" style="flex-direction: column; align-items: center;">
-                  <span class="info-form" style="width: max-content; color: var(--color-main-3);">[ Host ]</span>
+                  <span class="info-form" style="width: max-content; color: var(--color-main-3);">[ Host → Guest ]</span>
                   <span class="info-input" style="max-width: 700px; color: var(--color-main-3)">{{
-                    requirement.hostRequirement }}</span>
+                      requirement.hostRequirement }}</span>
                 </div>
                 <div class="info" style="flex-direction: column; align-items: center;">
-                  <span class="info-form">[ Guest ]</span>
+                  <span class="info-form">[ Guest → Host ]</span>
                   <span class="info-input" style="max-width: 700px;">{{
-                    requirement.guestRequirement }}</span>
+                      requirement.guestRequirement }}</span>
                 </div>
               </div>
             </details>
@@ -292,35 +360,6 @@ onMounted(() => {
                   <a class="n-btn n-btn:hover" href="#">영수증 보기</a>
                 </div>
               </div>
-            </details>
-          </div>
-        </section>
-
-        <section v-if="host">
-          <h1>호스트정보</h1>
-          <div>
-            <details open>
-              <summary class="collapse">
-                <span class="title">호스트 정보</span>
-                <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
-              </summary>
-              <!-- 프로필 카드 -->
-              <section class="profile-card">
-                <h1>프로필 카드</h1>
-                <div class="overview">
-                  <div class="img-wrapper">
-                    <img src="/public/image/profile.png" alt="호스트프사" />
-                  </div>
-                  <div>
-                    <div>{{ host.memberName }}</div>
-                    <div class="n-icon n-icon:star n-deco" style="--deco-gap: 3px">
-                      <span>{{ host.programRating }} / 5.0</span>
-                      <span>({{ host.ratingCount }})</span>
-                    </div>
-                  </div>
-                </div>
-                <a href="" class="n-btn n-btn:hover">프로필보기</a>
-              </section>
             </details>
           </div>
         </section>
@@ -503,6 +542,14 @@ onMounted(() => {
               --btn-border-color: var(--color-base-5);
             ">예약 내역 삭제</a>
         </div>
+
+        <!-- 예약 취소 모달 -->
+        <ReservationCancelModal
+            v-if="showModal"
+            :showModal="showModal"
+            :currentReservationId="currentReservationId"
+            @close="closeModal"
+        />
       </section>
     </section>
   </main>
@@ -723,6 +770,11 @@ onMounted(() => {
     justify-content: left;
   }
 }
+
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 
 /* --- */
 

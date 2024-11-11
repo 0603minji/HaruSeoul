@@ -38,6 +38,9 @@ public class Reservation {
     @CreationTimestamp
     private Instant regDate;
 
+    @Column(name = "delete_date")
+    private Instant deleteDate;
+
     @Column(name = "group_size", nullable = false)
     private Integer groupSize;
 
