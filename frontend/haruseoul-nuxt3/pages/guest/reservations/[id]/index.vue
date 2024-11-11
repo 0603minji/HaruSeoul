@@ -138,10 +138,21 @@ onMounted(() => {
                 <div class="d:flex flex-direction:column">
                   <div class="card-info">
                     <span class="n-icon n-icon:calendar n-deco">진행일</span>
-                    <span>
+                    <span v-if="r.dDay >= 0">
+
                       {{ r.date }}
-                      <span v-if="r.dDay <= 3" style="color: #DB4455;">(D-{{ r.dDay }})</span>
-                      <span v-else>(D-{{ r.dDay }})</span>
+                      <span v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3) && (r.dDay > 0)" style="color: #DB4455;">
+                        (D-{{ r.dDay }})
+                      </span>
+
+                      <span v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
+                        (D-{{ r.dDay }})
+                      </span>
+
+                      <span v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay === 0)" style="color: #DB4455;">
+                        (D-day)
+                      </span>
+
                     </span>
                   </div>
                   <div class="card-info">
@@ -230,7 +241,7 @@ onMounted(() => {
         </section>
 
         <section v-if="requirement">
-          <h1>요청 정보</h1>
+          <h1>요청사항 정보</h1>
           <div>
             <details open>
               <summary class="collapse" style="padding-bottom: 0;">
@@ -238,14 +249,14 @@ onMounted(() => {
                 <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
               </summary>
               <div class="details">
-                <div class="info" style="align-items: center;">
-                  <span class="info-form" style="width: max-content; color: var(--color-main-3);">호스트 요청 사항</span>
-                  <span class="info-input" style="max-width: 500px; color: var(--color-main-3)">{{
+                <div class="info" style="flex-direction: column; align-items: center;">
+                  <span class="info-form" style="width: max-content; color: var(--color-main-3);">[ Host ]</span>
+                  <span class="info-input" style="max-width: 700px; color: var(--color-main-3)">{{
                     requirement.hostRequirement }}</span>
                 </div>
-                <div class="info" style="align-items: center;">
-                  <span class="info-form">게스트 요청 사항</span>
-                  <span class="info-input" style="max-width: 500px;">{{
+                <div class="info" style="flex-direction: column; align-items: center;">
+                  <span class="info-form">[ Guest ]</span>
+                  <span class="info-input" style="max-width: 700px;">{{
                     requirement.guestRequirement }}</span>
                 </div>
               </div>
