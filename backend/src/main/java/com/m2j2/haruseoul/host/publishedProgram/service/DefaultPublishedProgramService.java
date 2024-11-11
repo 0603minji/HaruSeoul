@@ -108,7 +108,6 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
         // 1. 선택된 필터가 없을 때 statusIds == null => statusIds = List.of(1L,2L,5L,6L)
         if (tab.equals("todo") && statusIds == null)
             return getList(memberIds, dates, List.of(1L,2L,5L,6L), programIds, page, pageSize, sortBy, order);
-
         // 2. 선택된 필터가 하나라도 있을 때 !statusId.isEmpty() => statusIds.retainAll(List.of(1L,2L,5L,6L))
         if (tab.equals("todo") && !statusIds.isEmpty()) {
             // statusIds(선택된 필터)와 1,2,5,6의 교집합
@@ -118,12 +117,24 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
         }
 
         // tab : finished(지난 예약) s=3
-        if (tab.equals("finished"))
+        if (tab.equals("finished") && statusIds == null)
             return getList(memberIds, dates, List.of(3L), programIds, page, pageSize, sortBy, order);
+        if (tab.equals("finished") && !statusIds.isEmpty()) {
+            // statusIds(선택된 필터)와 3의 교집합
+            List<Long> retained = new ArrayList<>(Arrays.asList(3L));
+            retained.retainAll(statusIds);
+            return getList(memberIds, dates, retained, programIds, page, pageSize, sortBy, order);
+        }
 
         // tab : canceled(취소된 예약) s=4
         if (tab.equals("canceled"))
             return getList(memberIds, dates, List.of(4L), programIds, page, pageSize, sortBy, order);
+        if (tab.equals("canceled") && !statusIds.isEmpty()) {
+            // statusIds(선택된 필터)와 4의 교집합
+            List<Long> retained = new ArrayList<>(Arrays.asList(4L));
+            retained.retainAll(statusIds);
+            return getList(memberIds, dates, retained, programIds, page, pageSize, sortBy, order);
+        }
 
         // 그 밖의 유효하지 않은 값들
         return getList(memberIds, dates, statusIds, programIds, page, pageSize, sortBy, order);
