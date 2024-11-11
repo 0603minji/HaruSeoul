@@ -1,3 +1,81 @@
+<script setup>
+import { useRoute, useRouter } from 'vue-router'
+import axios from "axios";
+import { reactive, ref, onMounted } from 'vue';
+
+// import { useFetch } from '@nuxtjs/composition-api'
+
+const route = useRoute()
+const router = useRouter();
+const id = route.params.id
+const oneProgram = reactive({});
+const durationHour = ref(0);
+const durationMinute = ref(0);
+const inclusionLines = ref('');
+const exclusionLines = ref('');
+const packingListLines = ref('');
+const cautionLines = ref('');
+// const { data: programData } = await useFetch(() => `/api/programs/${id}`)
+
+onMounted(() => {
+    console.log(id);
+    fetchOneProgram();
+})
+
+const fetchOneProgram = async () => {
+    const response = await axios.get(
+        "http://localhost:8080/api/v1/host/programs/" + id
+    );
+    oneProgram.value = response.data;
+    console.log("data :", oneProgram.value);
+    console.log("data :", oneProgram.value.categoryNames);
+
+    durationHour.value = parseInt(oneProgram.value.endTimeHour) - parseInt(oneProgram.value.startTimeHour);
+    durationMinute.value = parseInt(oneProgram.value.endTimeMinute) - parseInt(oneProgram.value.startTimeMinute);
+    if (durationMinute.value < 0) {
+        durationMinute.value = durationMinute.value + 60;
+        durationHour.value = durationHour.value - 1;
+    }
+    if (durationMinute.value === 30) {
+        durationMinute.value = 5;
+    }
+    console.log("durationHour.value : ", durationHour.value);
+    console.log("duration minute : ", durationMinute.value);
+
+
+
+    const inclusion = oneProgram.value.inclusion === null ? '' : oneProgram.value.inclusion;
+    const exclusion = oneProgram.value.exclusion === null ? '' : oneProgram.value.exclusion;
+    const packingList = oneProgram.value.packingList === null ? '' : oneProgram.value.packingList;
+    const caution = oneProgram.value.caution === null ? '' : oneProgram.value.caution;
+    
+    inclusionLines.value  = inclusion.split('\n');
+    exclusionLines.value = exclusion.split('\n');
+    packingListLines.value = packingList.split('\n');
+    cautionLines.value = caution.split('\n');
+
+};
+
+const goToIntro = () => {
+    router.push({ path: '/host/programs/new', hash: '#intro' });
+};
+const goToDetail = () => {
+    router.push({ path: '/host/programs/new', hash: '#detail' });
+};
+const goToCourse = () => {
+    router.push({ path: '/host/programs/new', hash: '#course' });
+};
+const goToInclusion = () => {
+    router.push({ path: '/host/programs/new', hash: '#inclusion' });
+};
+const goToCaution = () => {
+    router.push({ path: '/host/programs/new', hash: '#caution' });
+};
+const goToImage = () => {
+    router.push({ path: '/host/programs/new', hash: '#image' });
+};
+</script>
+
 <template>
     <main>
         <section class="main-wrapper">
@@ -49,35 +127,37 @@
                     </div>
                     <!--==== 카테고리 ====-->
                     <div class="categories">
-                        <div class="n-panel-tag category">
-                            Activity
-                        </div>
-                        <div class="n-panel-tag category">
-                            Food
+                        <div v-if="oneProgram.value && oneProgram.value.categoryNames" class="n-panel-tag category"
+                            v-for="c in oneProgram.value.categoryNames">
+                            {{ c }}
                         </div>
                         <div class="edit-btn">
-                            <button class="n-icon n-icon:edit"></button>
+                            <button class="n-icon n-icon:edit" @click="goToIntro"></button>
                         </div>
                     </div>
                     <!--========= 프로그램 제목 + 평점리뷰 + 가격 =========-->
                     <div class="info">
                         <div style="display: flex; align-items: center;">
-                            <p class="title">
-                                Drinks & Bites in Seoul Tour
+                            <p class="title" v-if="oneProgram.value && oneProgram.value.title">
+                                {{ oneProgram.value.title }}
                             </p>
                             <div class="edit-btn">
-                                <button class="n-icon n-icon:edit"></button>
+                                <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                             </div>
                         </div>
                         <div class="rating-review">
-                            <span class="n-icon n-icon:star n-deco">3.5</span>
+                            <span class="n-icon n-icon:star n-deco" v-if="oneProgram.value">
+                                {{ oneProgram.value.rating === null ? '0.0' : oneProgram.value.rating }}
+                            </span>
                             <span>/</span>
                             <span>5.0</span>
-                            <span>(13 Reviews)</span>
+                            <span>(Reviews)</span>
+                            window.location.hash = '#inclusion';
                             <div class="price">
                                 <div class="n-icon n-icon:price n-deco"
-                                    style="display: flex; justify-content: center; align-items: center; height: inherit; font-size: var(--font-size-10); gap: 0;">
-                                    35,000
+                                    style="display: flex; justify-content: center; align-items: center; height: inherit; font-size: var(--font-size-10); gap: 0;"
+                                    v-if="oneProgram.value && oneProgram.value.price">
+                                    {{ oneProgram.value.price }}
                                 </div>
                                 <div
                                     style="display: flex; justify-content: center; align-items: center; height: inherit; margin-left: var(--gap-1); font-size: var(--font-size-6);">
@@ -85,7 +165,7 @@
                                 </div>
                             </div>
                             <div class="edit-btn">
-                                <button class="n-icon n-icon:edit"></button>
+                                <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                             </div>
                         </div>
                     </div>
@@ -104,33 +184,40 @@
                                         <div class="list-container">
                                             <ul>
                                                 <li class="list-content">
-                                                    <span class="n-icon n-icon:globe n-deco">
-                                                        English
+                                                    <span class="n-icon n-icon:globe n-deco"
+                                                        v-if="oneProgram.value && oneProgram.value.language">
+                                                        {{ oneProgram.value.language }}
                                                     </span>
                                                     <div class="edit-btn m-left:3">
-                                                        <button class="n-icon n-icon:edit"></button>
+                                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
-                                                    <span class="n-icon n-icon:people n-deco">2/5</span>
+                                                    <span class="n-icon n-icon:people n-deco" v-if="oneProgram.value">
+                                                        {{ oneProgram.value.groupSizeMin }}/{{
+                                                        oneProgram.value.groupSizeMax }}
+                                                    </span>
                                                     <span>(min/max)</span>
                                                     <div class="edit-btn m-left:3">
-                                                        <button class="n-icon n-icon:edit"></button>
+                                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
-                                                    <span class="n-icon n-icon:clock n-deco">3.5</span>
+                                                    <span class="n-icon n-icon:clock n-deco">
+                                                        {{ durationHour }}.{{ durationMinute }}
+                                                    </span>
                                                     <span>hours</span>
                                                     <div class="edit-btn m-left:3">
-                                                        <button class="n-icon n-icon:edit"></button>
+                                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
-                                                    <span class="n-icon n-icon:placeholder n-deco">Jong-ro Station 3rd
-                                                        Exit
+                                                    <span class="n-icon n-icon:placeholder n-deco"
+                                                        v-if="oneProgram.value && oneProgram.value.route">
+                                                        {{ oneProgram.value.route[0].address }}
                                                     </span>
                                                     <div class="edit-btn m-left:3">
-                                                        <button class="n-icon n-icon:edit"></button>
+                                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -177,25 +264,12 @@
                                 <div class="content-header">
                                     <span class="title">Program Introduction</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                     </div>
                                 </div>
                                 <div class="text">
-                                    <p class="p-summary">
-                                        Fall in love with the best nightlife hot spots in Jung-Gu. If you're looking for
-                                        a
-                                        perfect night out in Seoul this drinks and bites tour is the life of the party!
-                                        Me, your local host is a nightlife expert and is up to date with current hot
-                                        spots
-                                        and
-                                        hip
-                                        venues, so ask away and enjoy the city mingling with the locals.
-                                        Visit some of the best spots in town and have a drink together with a typical
-                                        local
-                                        bite
-                                        like
-                                        makgeolli and tteobokki.
-                                        I’m desired to feel you happy by let you make your unforgettable Seoul!
+                                    <p class="p-summary" v-if="oneProgram.value && oneProgram.value.detail">
+                                        {{ oneProgram.value.detail }}
                                     </p>
                                     <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">see more</button>
                                 </div>
@@ -203,8 +277,6 @@
                         </div>
                     </section>
 
-
-                    <!--===============  코스 =================-->
                     <section id="course-information" class="program">
                         <h1>Course</h1>
                         <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
@@ -212,155 +284,65 @@
                                 <div class="content-header">
                                     <span class="title">Course</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                     </div>
                                 </div>
                                 <div class="details">
                                     <div class="map-img-wrapper">
                                         <img class="map-img" src="/public/image/map.png" alt="코스지도">
                                     </div>
-
+<!-- ============================================== -->
+ <!-- ================================================== -->
                                     <section class="n-course-flow">
-                                        <!--     출발지    -->
-                                        <div class="point">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <span class="n-icon n-icon:placeholder">위치아이콘</span>
+                                        <div v-for="(route, index) in oneProgram.value.route"
+                                            v-if="oneProgram.value && oneProgram.value.route">
+                                            <!-- 경유지 -->
+                                            <div :class="`point ${index !== 0 && index !== oneProgram.value.route.length - 1 ? 'drop-by' : ''}`">
+
+                                                <div class="icon-wrapper">
+                                                    <span class="n-icon n-icon:rectangle">막대기</span>
+                                                    <span :class="`n-icon n-icon:${index === 0 ? 'placeholder' : 'number' + index}`">위치아이콘</span>
+                                                </div>
+
+
+                                                <div class="point-detail">
+                                                    <div class="n-panel-tag n-panel-tag:time">
+                                                        <span class="n-icon n-icon:clock n-deco">
+                                                            {{ route.startTimeHour }}:{{ route.startTimeMinute }}
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="point-name">{{ route.title }}</span>
+                                                        <span> ({{ route.duration }}min)</span>
+                                                        <div class="point-info">{{ route.description }}</div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="point-detail">
-                                                <div class="n-panel-tag n-panel-tag:time">
-                                                    <span class="n-icon n-icon:clock n-deco">
-                                                        16:00
-                                                    </span>
+
+                                            <!--   이동 수단   -->
+                                            <div class="transport">
+                                                <div class="icon-wrapper">
+                                                    <span class="n-icon n-icon:rectangle">막대기</span>
+                                                    <div class="img-wrapper">
+                                                        <img src="/assets/image/icon/bus.png" alt="이동수단">
+                                                    </div>
                                                 </div>
                                                 <div>
-                                                    <span class="point-name">Title</span>
-                                                    <span>(duration)</span>
-                                                    <div class="point-info">Info</div>
+
+                                                    <div class="transport-detail">
+                                                        <p>{{ route.transportationName }}</p>
+                                                        <p>({{ route.transportationDuration }} min)</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <!--   이동 수단   -->
-                                        <div class="transport">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <div class="img-wrapper">
-                                                    <img src="/assets/image/icon/bus.png" alt="이동수단">
-                                                </div>
-                                            </div>
-                                            <div>
-
-                                                <div class="transport-detail">
-                                                    <p>Bus</p>
-                                                    <p>(transportation duration)</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <!--     경유지    -->
-                                        <div class="point drop-by">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <span class="n-icon n-icon:number1">위치아이콘</span>
-                                            </div>
-                                            <div class="point-detail">
-                                                <div class="n-panel-tag n-panel-tag:time">
-                                                    <span class="n-icon n-icon:clock n-deco">
-                                                        17:00
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span class="point-name">Title</span>
-                                                    <span>(duration)</span>
-                                                    <div class="point-info">Info</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!--   이동 수단   -->
-                                        <div class="transport">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <div class="img-wrapper">
-                                                    <img src="/assets/image/icon/subway.png" alt="이동수단">
-                                                </div>
-                                            </div>
-                                            <div>
-
-                                                <div class="transport-detail">
-                                                    <p>Subway</p>
-                                                    <p>(transportation duration)</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <!--     경유지    -->
-                                        <div class="point drop-by">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <span class="n-icon n-icon:number1">위치아이콘</span>
-                                            </div>
-                                            <div class="point-detail">
-                                                <div class="n-panel-tag n-panel-tag:time">
-                                                    <span class="n-icon n-icon:clock n-deco">
-                                                        19:00
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span class="point-name">Title</span>
-                                                    <span>(duration)</span>
-                                                    <div class="point-info">Info</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!--   이동 수단   -->
-                                        <div class="transport">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <div class="img-wrapper">
-                                                    <img src="/assets/image/icon/walk.png" alt="이동수단">
-                                                </div>
-                                            </div>
-                                            <div>
-
-                                                <div class="transport-detail">
-                                                    <p>Walk</p>
-                                                    <p>(transportation duration)</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <!--     도착지    -->
-                                        <div class="point">
-                                            <div class="icon-wrapper">
-                                                <span class="n-icon n-icon:rectangle">막대기</span>
-                                                <span class="n-icon n-icon:placeholder">위치아이콘</span>
-                                            </div>
-                                            <div class="point-detail">
-                                                <div class="n-panel-tag n-panel-tag:time">
-                                                    <span class="n-icon n-icon:clock n-deco">
-                                                        23:00
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span class="point-name">Title</span>
-                                                    <span>(duration)</span>
-                                                    <div class="point-info">Info</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
                                     </section>
                                 </div>
                             </div>
                         </div>
                     </section>
+<!-- ======================================= -->
+ <!-- ========================================== -->
 
                     <!--==============  만나는 장소  + 포함사항 + 꼭알아두세요 =================-->
                     <section id="meeting-location" class="program">
@@ -372,20 +354,19 @@
                                 <div class="content-header">
                                     <span class="title">Meeting Point</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                     </div>
                                 </div>
                                 <div class="details">
                                     <section style="padding-top: 0;">
                                         <h1>만나는장소</h1>
                                         <div class="info-container">
-                                            <p>Gang-nam Station 11th Exit</p>
+                                            <p v-if="oneProgram.value && oneProgram.value.route">{{ oneProgram.value.route[0].title }}</p>            
                                             <div
                                                 style="display:flex; align-items: center; padding: var(--gap-3) 0; color: var(--color-base-7);">
                                                 <span class="n-icon n-icon:placeholder"
                                                     style="margin-right: var(--gap-1);">위치아이콘</span>
-                                                <span style="margin-right: var(--gap-1);">Yeoksam-dong, Gangnam-gu,
-                                                    Seoul</span>
+                                                <span style="margin-right: var(--gap-1);" v-if="oneProgram.value && oneProgram.value.route">{{ oneProgram.value.route[0].address }}</span>
                                             </div>
                                         </div>
                                         <div class="map-img-wrapper">
@@ -400,7 +381,7 @@
                                 <div class="content-header">
                                     <span class="title">Inclusion</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                     </div>
                                 </div>
                                 <div class="details">
@@ -408,14 +389,16 @@
                                         <h1>포함사항</h1>
                                         <div class="list-container">
                                             <ul style="padding-left: 0;">
-                                                <li class="info-input n-icon n-icon:success-circle-green">Entrance Fee
+                                                <li class="info-input n-icon n-icon:success-circle-green" v-for="inclusion in inclusionLines" >
+                                                    {{ inclusion }}
                                                 </li>
-                                                <li class="info-input n-icon n-icon:success-circle-green">Lunch Fee</li>
                                             </ul>
                                         </div>
                                         <div class="list-container">
                                             <ul style="padding-left: 0;">
-                                                <li class="info-input n-icon n-icon:error">Personal expenses</li>
+                                                <li class="info-input n-icon n-icon:error" v-for="exclusion in exclusionLines" >
+                                                    {{exclusion}}
+                                                </li>
                                             </ul>
                                         </div>
                                     </section>
@@ -427,7 +410,7 @@
                                 <div class="content-header">
                                     <span class="title">Notice</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
                                     </div>
                                 </div>
                                 <div class="details">
@@ -439,10 +422,7 @@
                                         <div style="padding: 0 var(--gap-6);">
                                             <h2 class="info-form n-icon n-icon:success-decagon">Essentials</h2>
                                             <ul>
-                                                <li class="list-content">Comfortable shoes</li>
-                                                <li class="list-content">Personal expenses</li>
-                                                <li class="list-content">Passport</li>
-                                                <li class="list-content">Identification card</li>
+                                                <li class="list-content" v-for="packingList in packingListLines">{{packingList}}</li>
                                             </ul>
                                         </div>
 
@@ -450,6 +430,8 @@
                                         <div style="padding: var(--gap-6); padding-bottom: 0;">
                                             <h2 class="info-form n-icon n-icon:caution">Caution</h2>
                                             <ul>
+                                                <li class="list-content" v-for="caution in cautionLines">{{ caution }}</li>
+                                                <!-- 
                                                 <li class="list-content">Extensive walking</li>
                                                 <li class="list-content">A lot of outdoor activities</li>
                                                 <li class="list-content">This program allows changes in travel dates and
@@ -460,7 +442,8 @@
                                                     if there is a forecast of 10mm
                                                     or more of rainfall per hour or temperatures below -5°C, according
                                                     to the Korea Meteorological Administration's forecast
-                                                    for the scheduled travel day.</li>
+                                                    for the scheduled travel day.</li> 
+                                                    -->
                                             </ul>
                                         </div>
 
@@ -498,7 +481,8 @@
 
                                     <div
                                         style="display:flex; justify-content: space-between; align-items: center; padding: 0 var(--gap-6);">
-                                        <span style="display:flex; align-items: center; width: auto; height: 30px;">60 Results</span>
+                                        <span style="display:flex; align-items: center; width: auto; height: 30px;">60
+                                            Results</span>
                                         <div style="display: flex;">
                                             <a href="" class="n-icon n-icon:arrow_swap">정렬 아이콘</a>
                                             <span>Latest</span>

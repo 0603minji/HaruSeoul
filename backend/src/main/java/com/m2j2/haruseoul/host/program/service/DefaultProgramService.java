@@ -121,8 +121,8 @@ public class DefaultProgramService implements ProgramService {
                 .detail(programCreateDto.getDetail())
                 .member(regMember.get())
                 .language(programCreateDto.getLanguage())
-                .startTime(getLocalTime(programCreateDto.getStartTimeHour(), programCreateDto.getStartTimeMinute()))
-                .endTime(getLocalTime(programCreateDto.getEndTimeHour(), programCreateDto.getEndTimeMinute()))
+                .startTime(getLocalTimeByHourAndMinute(programCreateDto.getStartTimeHour(), programCreateDto.getStartTimeMinute()))
+                .endTime(getLocalTimeByHourAndMinute(programCreateDto.getEndTimeHour(), programCreateDto.getEndTimeMinute()))
                 .groupSizeMin(programCreateDto.getGroupSizeMin())
                 .groupSizeMax(programCreateDto.getGroupSizeMax())
                 .price(programCreateDto.getPrice())
@@ -168,8 +168,9 @@ public class DefaultProgramService implements ProgramService {
                     .description(routeCreateDto.getDescription())
                     .duration(getLocalTimeByDuration(routeCreateDto.getDuration()))
                     .order(routeCreateDto.getOrder())
+                    .startTime(getLocalTimeByHourAndMinute(routeCreateDto.getStartTimeHour(), routeCreateDto.getStartTimeMinute()))
                     .transportation(newTransportation)
-                    .transportationDuration(getLocalTime("00", routeCreateDto.getTransportationDuration()))
+                    .transportationDuration(getLocalTimeByHourAndMinute("00", routeCreateDto.getTransportationDuration()))
                     .build();
             routes.add(route);
         }
@@ -179,6 +180,13 @@ public class DefaultProgramService implements ProgramService {
         return savedProgram;
     }
 
+    private LocalTime getLocalTimeByHourAndMinute(String hour, String minute){
+        int intHour = (hour ==  null ? 0 : Integer.parseInt(hour));
+        int intMinute = (minute == null ? 0 : Integer.parseInt(minute));
+
+        return LocalTime.of(intHour, intMinute);
+    }
+
     private LocalTime getLocalTimeByDuration(Integer duration) {
         if (duration == null) return LocalTime.of(0, 0);
 
@@ -186,33 +194,6 @@ public class DefaultProgramService implements ProgramService {
         int minute = duration % 60;
         return LocalTime.of(hour, minute);
     }
-
-    /**
-     * String 타입의 시간, 분 정보를 받아서 LocalTime 으로 변경해주는 함수.
-     * 왜 변경 할까?
-     * ㄴ DB 에 저장하는 entity 의 자료형이 LocalTime 이기 때문에 변환한다.
-     */
-    private LocalTime getLocalTime(String timeHour, String timeMinute) {
-        String timeString = timeFormatter(timeHour) + ":" + timeFormatter(timeMinute); // 문자열로 결합
-        return LocalTime.parse(timeString); // "HH:mm" 형식이어야 함
-    }
-
-    /**
-     * 시간이 한 자리 수 일때, 두 자리 수로 변경해주는 함수.
-     * 왜 해줘야 해?
-     * ㄴ LocalTime 자료형으로 파싱되려면 00:00 형태이어야하기 때문에 시, 분을 각각 두자리로 표현 필요
-     */
-
-    private String timeFormatter(String time) { // 0, 5, 10, 15, 23
-        if (time == null || time.length() == 0) {
-            return "00";
-        }
-        if (time.length() == 1) {
-            return "0" + time;
-        }
-        return time;
-    }
-
     //  ====== 호스트 프로그램 수정 메서드 ==============================
     @Override
     @Transactional
@@ -235,8 +216,8 @@ public class DefaultProgramService implements ProgramService {
         oldProgram.setTitle(programUpdateDto.getTitle());
         oldProgram.setDetail(programUpdateDto.getDetail());
         oldProgram.setLanguage(programUpdateDto.getLanguage());
-        oldProgram.setStartTime(getLocalTime(programUpdateDto.getStartTimeHour(), programUpdateDto.getStartTimeMinute()));
-        oldProgram.setEndTime(getLocalTime(programUpdateDto.getEndTimeHour(), programUpdateDto.getEndTimeMinute()));
+        oldProgram.setStartTime(getLocalTimeByHourAndMinute(programUpdateDto.getStartTimeHour(), programUpdateDto.getStartTimeMinute()));
+        oldProgram.setEndTime(getLocalTimeByHourAndMinute(programUpdateDto.getEndTimeHour(), programUpdateDto.getEndTimeMinute()));
         oldProgram.setGroupSizeMin(programUpdateDto.getGroupSizeMin());
         oldProgram.setGroupSizeMax(programUpdateDto.getGroupSizeMax());
         oldProgram.setPrice(programUpdateDto.getPrice());
@@ -305,11 +286,21 @@ public class DefaultProgramService implements ProgramService {
     }
 
     public ProgramListDto getOneProgram(Long pId) {
+        //  프로그램 id로 Program 엔티티를 조회
+        //  없는 경우(null)를 위해 Optional 객체에 저장
         Optional<Program> programOptional = programRepository.findById(pId);
-
+        //  programOptional이 isEmpty인 경우
+        //  null을 반환하여 메서드 종료
         if(!programOptional.isPresent()) return null;
+        //  programOptional이 isEmpty가 아닌 경우
+        //  get 메서드로 Program 객체를 추출
         Program program = programOptional.get();
-        ProgramListDto programListDto = ProgramMapper.mapToDto(program);
+        
+        //  routeRepository를 통해 Program(프로그램 id)에 속한 Route 객체 리스트를 조회
+        List<Route> routes = routeRepository.findByProgramId(pId);
+        //  조회한 Program 객체와 Route 리스트를 ProgramListDto로 변환
+        ProgramListDto programListDto = ProgramMapper.mapToDto(program, routes);
+
         return programListDto;
     }
 }

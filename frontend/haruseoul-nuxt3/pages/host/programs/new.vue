@@ -7,7 +7,12 @@ const categories = ref([]);
 const routeComponentCount = ref(1);
 const programCreateDto = reactive({
   categoryIds: [],
-  routes: [], // route 객체를 여러개 가진 List
+  routes: [{
+    title: '',
+    address: '',
+    description: ''
+  }
+  ], // route 객체를 여러개 가진 List
   images: [],
   groupSizeMin: 2,
   groupSizeMax: 2,
@@ -19,12 +24,13 @@ const programCreateDto = reactive({
   endTimeHour: "00",
   endTimeMinute: "00",
   price: 0,
-  inclusion:'',
-  exclusion:'',
-  packingList:'',
-  caution:'',
-  requirement:''
+  inclusion: '',
+  exclusion: '',
+  packingList: '',
+  caution: '',
+  requirement: ''
 });
+
 
 //================Fetch Functions==============
 const fetchCategories = async () => {
@@ -54,10 +60,52 @@ const addRouteFunction = () => {
 
 
 const createProgram = async () => {
+  // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
+  if (programCreateDto.title.length === 0) {
+    if (confirm("프로그램 제목은 필수입력입니다.\n입력 후 저장가능합니다.\n나가시겠습니까?")) {
+      window.location.href = "/host/programs";
+    }
+    return;
+  }
+
+  //  2. 입력받았지만 유효성 통과 X
+  if (checkIntroValidation() || checkDetailValidation() || checkCourseValidation()
+    || checkInclusionValidation() || checkCautionValidation()) {
+    alert("입력이 올바르지 않습니다. 재입력 후 저장해주세요");
+    return;
+  }
+
+  //  3. 입력된것이 유효성 통과 O 하지만 모두 입력 X
+  //      : case 작성할 수 없음
+
+
+  //  4. 1번 2번 케이스를 지나면 무조건, 입력 모두 받았고 유효성 통과 O
+  alert("모든 내용이 올바르게 입력되었습니다. 작성완료 상태로 저장됩니다.");
   sendCreateRequest(2, "Unpublished");
 }
 
 const tempSave = async () => {
+  // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
+  if (programCreateDto.title.length === 0) {
+    if (confirm("프로그램 제목은 필수입력입니다.\n입력 후 저장가능합니다.\n나가시겠습니까?")) {
+      window.location.href = "/host/programs";
+    }
+    return;
+  }
+
+  //  2. 입력받았지만 유효성 통과 X
+  if (checkIntroValidation() || checkDetailValidation() || checkCourseValidation()
+    || checkInclusionValidation() || checkCautionValidation()) {
+    alert("입력이 올바르지 않습니다. 재입력 후 저장해주세요");
+    return;
+  }
+
+  //  3. 입력된것이 유효성 통과 O 하지만 모두 입력 X
+  //      : case 작성할 수 없음
+
+
+  //  4. 1번 2번 케이스를 지나면 무조건, 입력 모두 받았고 유효성 통과 O
+  alert("작성중 상태로 저장됩니다.");
   sendCreateRequest(2, "In Progress");
 }
 
@@ -109,11 +157,7 @@ const plusGroupSizeMin = () => {
 
 //======== Validation Checking Functions =============
 const checkIntroValidation = () => {
-  if (titleValidation() || detailValidation()) {
-    alert("입력이 올바르지 않습니다.");
-    return;
-  }
-  window.location.hash = '#detail';
+  return (titleValidation() || detailValidation());
 }
 
 const titleValidation = () => {
@@ -126,11 +170,7 @@ const detailValidation = () => {
 }
 
 const checkDetailValidation = () => {
-  if (endTimeValidation() || groupSizeMinValidation()) {
-    alert("입력이 올바르지 않습니다.");
-    return;
-  }
-  window.location.hash = "#course";
+  return (endTimeValidation() || groupSizeMinValidation());
 }
 
 const endTimeValidation = () => {
@@ -155,44 +195,33 @@ const priceValidation = () => {
 }
 
 const checkCourseValidation = () => {
-  if (programCreateDto.routes.length === 0) {
-    window.location.hash = "#inclusion";
-  }
   for (let index = 0; index < routeComponentCount.value; index++) {
     // title
     let routeTitle = programCreateDto.routes[index].title;
     if ((routeTitle.length > 60) || (routeTitle.length > 0 && routeTitle.length < 3)) {
-      alert("입력이 올바르지 않습니다.");
-      return;
+      return true;
     }
 
     // address 
     let routeAddress = programCreateDto.routes[index].address;
     if ((routeAddress.length > 60) || (routeAddress.length > 0 && routeAddress.length < 3)) {
-      alert("입력이 올바르지 않습니다.");
-      return;
+      return true;
     }
 
     // description 
     let routeDescription = programCreateDto.routes[index].description;
     if ((routeDescription.length > 60) || (routeDescription.length > 0 && routeDescription.length < 3)) {
-      alert("입력이 올바르지 않습니다.");
-      return;
+      return true;
     }
   }
-  window.location.hash = "#inclusion";
 };
 
 const checkInclusionValidation = () => {
-  if(inclusionValidation() || exclusionValidation()){
-    alert("입력이 올바르지 않습니다.");
-    return true;
-  }
-  window.location.hash = "#caution"
+  return (inclusionValidation() || exclusionValidation());
 }
 
 const inclusionValidation = () => {
-  return (programCreateDto.inclusion.length > 1000); 
+  return (programCreateDto.inclusion.length > 1000);
 }
 
 const exclusionValidation = () => {
@@ -201,23 +230,19 @@ const exclusionValidation = () => {
 
 
 const checkCautionValidation = () => {
-  if(packingListValidation() || cautionValidation() || requirementValidation()){
-    alert("입력이 올바르지 않습니다.");
-    return true;
-  }
-  window.location.hash = "#image"
+  return (packingListValidation() || cautionValidation() || requirementValidation());
 }
 
 const packingListValidation = () => {
-  return (programCreateDto.packingList.length > 1000); 
+  return (programCreateDto.packingList.length > 1000);
 }
 
 const cautionValidation = () => {
-  return (programCreateDto.caution.length > 1000); 
+  return (programCreateDto.caution.length > 1000);
 }
 
 const requirementValidation = () => {
-  return (programCreateDto.requirement.length > 1000); 
+  return (programCreateDto.requirement.length > 1000);
 }
 </script>
 
@@ -290,7 +315,7 @@ const requirementValidation = () => {
 
         <div class="button-group">
           <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
-          <a class="n-btn n-btn-bg-color:main" @click="checkIntroValidation">다음</a>
+          <a class="n-btn n-btn-bg-color:main" href="#detail">다음</a>
         </div>
       </section>
 
@@ -340,11 +365,7 @@ const requirementValidation = () => {
             <p class="time-unit">시</p>
             <select id="" name="" class="input-select" v-model="programCreateDto.startTimeMinute">
               <option value="00">00</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
               <option value="30">30</option>
-              <option value="40">40</option>
-              <option value="50">50</option>
             </select>
             <p class="time-unit">분</p>
           </div>
@@ -383,15 +404,11 @@ const requirementValidation = () => {
             <p class="time-unit">시</p>
             <select id="" name="" class="input-select" v-model="programCreateDto.endTimeMinute">
               <option value="00">00</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
               <option value="30">30</option>
-              <option value="40">40</option>
-              <option value="50">50</option>
             </select>
             <p class="time-unit">분</p>
           </div>
-          
+
         </div>
         <div style="margin-bottom: 30px;">
           <div class="d:flex form-group gap:8">
@@ -428,7 +445,7 @@ const requirementValidation = () => {
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#intro">이전</a></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" @click="checkDetailValidation">다음</a></div>
+          <div><a class="n-btn n-btn-bg-color:main" href="#course">다음</a></div>
         </div>
 
       </section>
@@ -453,7 +470,7 @@ const requirementValidation = () => {
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#detail">이전</a></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" @click="checkCourseValidation">다음</a></div>
+          <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">다음</a></div>
         </div>
         <!-- =================== route 종료 ======================== -->
       </section>
@@ -466,7 +483,7 @@ const requirementValidation = () => {
           <p class="fw:100 p-bottom:2">List all the features that are included in the price so customers
             understand the value for money of
             your activity. Start a new line for each one.</p>
-            <p v-show="inclusionValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
+          <p v-show="inclusionValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
           <label for="included" class="d:none">포함 항목을 작성하세요</label>
           <textarea id="included" name="included" rows="4" cols="50" class="input-textarea"
             placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.inclusion"></textarea>
@@ -480,7 +497,7 @@ const requirementValidation = () => {
             see
             that isn't included in the
             price. This allows customers to appropriately set their expectations.</p>
-            <p v-show="exclusionValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
+          <p v-show="exclusionValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
           <label for="not-included" class="d:none">미포함 항목을 작성하세요</label>
           <textarea id="not-included" name="not-included" rows="4" cols="50" class="input-textarea"
             placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.exclusion"></textarea>
@@ -490,7 +507,7 @@ const requirementValidation = () => {
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#course">이전</a></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" @click="checkInclusionValidation">다음</a></div>
+          <div><a class="n-btn n-btn-bg-color:main" href="#caution">다음</a></div>
         </div>
       </section>
 
@@ -501,8 +518,8 @@ const requirementValidation = () => {
           <div class="font-size:9 fw:bold p-bottom:4">준비물 <span class="font-size:6 fw:1">(선택사항)</span></div>
           <p class="fw:100 p-bottom:2">Such as a towel for a boat tour, or comfortable shoes for a hike.
             This information appears on the activity details page & voucher.</p>
-            <p v-show="packingListValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
-            <label for="preparation" class="d:none">준비 항목을 작성하세요</label>
+          <p v-show="packingListValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
+          <label for="preparation" class="d:none">준비 항목을 작성하세요</label>
           <textarea id="preparation" name="preparation" rows="4" cols="50" class="input-textarea"
             placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.packingList"></textarea>
           <p class="text-align:end p-bottom:4">{{ programCreateDto.packingList.length }}/ 1000</p>
@@ -512,8 +529,8 @@ const requirementValidation = () => {
           <p class="fw:100 p-bottom:2">Add any remaining information that customers must know before they
             book.
             This information appears on the activity details page.</p>
-            <p v-show="cautionValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
-            <label for="notice" class="d:none">주의사항을 작성하세요</label>
+          <p v-show="cautionValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
+          <label for="notice" class="d:none">주의사항을 작성하세요</label>
           <textarea id="notice" name="notice" rows="4" class="input-textarea" cols="50"
             placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.caution"></textarea>
           <p class="text-align:end p-bottom:4">{{ programCreateDto.caution.length }} / 1000</p>
@@ -522,8 +539,8 @@ const requirementValidation = () => {
           <div class="font-size:9 fw:bold p-bottom:4">요청사항 <span class="font-size:6 fw:1">(선택사항)</span></div>
           <p class="fw:100 p-bottom:2">
             Pls enter any requests the guest may have (ex : vegetarian meal requests can be accommodated).</p>
-            <p v-show="requirementValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
-            <label for="request" class="d:none">요청 사항을 작성하세요</label>
+          <p v-show="requirementValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
+          <label for="request" class="d:none">요청 사항을 작성하세요</label>
           <textarea id="request" name="request" class="input-textarea" rows="4" cols="50"
             placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.requirement"></textarea>
           <p class="text-align:end p-bottom:4">{{ programCreateDto.requirement.length }}/ 1000</p>
@@ -531,7 +548,7 @@ const requirementValidation = () => {
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">이전</a></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" @click="checkCautionValidation">다음</a></div>
+          <div><a class="n-btn n-btn-bg-color:main" href="#image">다음</a></div>
         </div>
       </section>
 
