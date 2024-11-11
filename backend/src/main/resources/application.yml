@@ -5,3 +5,7 @@ spring:
 server:
   servlet:
     context-path: /api/v1
+
+haruSeoul:
+  jwt:
+    secret: "PB9xJN6EKidqQqdy3rmKIps88QuEuECdHEZ9RCH5b79pj7k1rUHgFwWZnUwjHwppDO8xRYImzBkQe311aTuOPg=="

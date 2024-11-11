@@ -2,7 +2,7 @@
   <main class="container">
     <div class="title">Welcome</div>
 
-    <form @submit.prevent="handleLogin">
+    <form @submit.prevent="signinHandler">
       <div class="form-group">
         <label for="id">ID</label>
         <div class="button-container">
@@ -41,30 +41,43 @@
 
 <script setup>
 import {ref} from 'vue';
-import axios from 'axios';
+import {jwtDecode} from "jwt-decode";
+
 
 const userId = ref('');
 const userPwd = ref('');
-const rememberMe = ref(false);
+const route = useRoute();
+const userDetails = useUserDetails();
+// const rememberMe = ref(false);
 
 
-const handleLogin = async () => {
-  try {
-    const response = await axios.post('http://localhost:8080/api/v1/signin', {
+const signinHandler = async () => {
+  console.log("로그인버튼 작동중");
+
+  let response = await useDataFetch("auth/signin",{
+    method: "POST",
+    headers :{
+      "Content-Type": "application/json"
+    },
+    body:{
       userId: userId.value,
-      userPwd: userPwd.value,
-    }, { withCredentials: true }); // 세션 기반 인증을 위한 옵션
-
-    if (response.status === 200) {
-      alert('로그인 성공!');
-      navigateTo('/programs');
+      userPwd: userPwd.value
     }
-  } catch (error) {
-    console.log(userId.value,userPwd.value);
+  });
+  let userInfo = jwtDecode(response.token)
+  userDetails.login({
+    id: userInfo.id,
+    userId: userInfo.userId,
+    username: userInfo.name,
+    birth: userInfo.birth,
+    email: userInfo.email,
+    token: response.token,
 
-    alert('로그인 정보가 올바르지 않습니다.');
-  }
-
+  });
+  console.log("회원정보:",userInfo)
+  const returnURL = route.query.returnURL;
+  console.log("리턴url:",returnURL);
+  return navigateTo(returnURL);
 
 };
 </script>

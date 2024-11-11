@@ -1,43 +1,43 @@
-<script setup>
-</script>
 <template>
-  <header th:fragment="header" class="n-global-header n-global-header:guest">
-    <h1 class="n-heading:2">HaruSeoul</h1>
+  <header class="n-global-header n-global-header:guest">
+    <NuxtLink href="/" class="n-heading:2">
+      <img src="/assets/image/icon/logo.svg" alt="">
+    </NuxtLink>
 
     <nav class="header-menu-container ml:auto">
       <h1 class="d:none">헤더메뉴</h1>
 
       <div class="d:flex align-items:center">
-        <a class="n-btn n-btn:hover" href="/host/main">호스트 되기</a>
+        <NuxtLink class="n-btn n-btn:hover" href="/host/programs">호스트 되기</NuxtLink>
       </div>
 
       <ul class="header-menus:icon-only md:show">
         <li class="header-menu">
-          <a
+          <NuxtLink
             class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:ticket"
-            href="/host/main"
-            >내 예약</a
+            href="/guest/reservations"
+            >내 예약</NuxtLink
           >
         </li>
         <li class="header-menu">
-          <a
+          <NuxtLink
             class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:wishlist"
-            href="/host/main"
-            >찜 목록</a
+            href="/guest/reservations"
+            >찜 목록</NuxtLink
           >
         </li>
         <li class="header-menu">
-          <a
+          <NuxtLink
             class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:chat"
-            href="/host/main"
-            >Chat</a
+            href="/guest/reservations"
+            >Chat</NuxtLink
           >
         </li>
         <li class="header-menu">
-          <a
+          <NuxtLink
             class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:alert"
-            href="/host/main"
-            >알림</a
+            href="/guest/reservations"
+            >알림</NuxtLink
           >
         </li>
       </ul>
@@ -62,7 +62,7 @@
         for="menu-toggle"
         class="n-icon n-icon:list n-icon-size:6 margin-left:3 cursor:pointer"
       ></label>
-      <input id="menu-toggle" class="n-aside-hider" type="checkbox" />
+      <input id="menu-toggle" class="n-aside-hider" type="checkbox"/>
 
       <div class="bg-darkened"></div>
 
@@ -92,7 +92,7 @@
           <div class="profile-info">
             <p class="nickname">게스트 닉네임</p>
             <div class="account-setting">
-              <a href="" class="n-icon n-deco n-icon:setting">내 계정관리</a>
+              <a href="#" class="n-icon n-deco n-icon:setting">내 계정관리</a>
             </div>
           </div>
         </section>
@@ -100,7 +100,7 @@
           <h1 class="d:none">게스트 로그인 어사이드 메뉴</h1>
           <ul class="aside-menu">
             <li>
-              <a href="#" class="menu n-icon n-deco n-icon:ticket">내 예약</a>
+              <a href="/guest/reservations" class="menu n-icon n-deco n-icon:ticket">내 예약</a>
             </li>
             <li>
               <a href="#" class="menu n-icon n-deco n-icon:wishlist">찜 목록</a>
@@ -119,7 +119,7 @@
           </ul>
           <ul class="aside-menu bd-color:transparent">
             <li>
-              <a href="#" class="menu n-icon n-deco n-icon:logout">로그아웃</a>
+              <div @click.prevent="logoutHandler" style="cursor:pointer;" class="menu n-icon n-deco n-icon:logout">로그아웃</div>
             </li>
           </ul>
         </nav>
@@ -137,6 +137,18 @@
     </section>
   </header>
 </template>
+
+<script setup>
+const userDetails = useUserDetails();
+const logoutHandler = async () => {
+  console.log("logoutHandler");
+  userDetails.logout();
+  if(process.client) {
+    return navigateTo("/signin");
+  }
+}
+</script>
+
 <style>
 
 </style>
