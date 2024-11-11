@@ -60,7 +60,11 @@
             }
 
             .n-icon\:placeholder:after, .n-icon\:placeholder:before,
-            .n-icon\:number1:after, .n-icon\:number1:before{
+            .n-icon\:number1:after, .n-icon\:number1:before,
+            .n-icon\:number2:after, .n-icon\:number2:before,
+            .n-icon\:number3:after, .n-icon\:number3:before,
+            .n-icon\:number4:after, .n-icon\:number4:before,
+            .n-icon\:number5:after, .n-icon\:number5:before{
                 position: absolute;
                 top: 36%; /* 상단에 위치 */
                 left: 50%; /* 수평 중앙 정렬 */
