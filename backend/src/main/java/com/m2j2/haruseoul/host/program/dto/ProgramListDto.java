@@ -25,7 +25,15 @@ public class ProgramListDto {
 
     private LocalTime endTime;
 
+    private String endTimeHour;
+
+    private String endTimeMinute;
+
     private LocalTime startTime;
+
+    private String startTimeHour;
+
+    private String startTimeMinute;
 
     private String status;
 
@@ -44,6 +52,18 @@ public class ProgramListDto {
     private List<String> categoryNames;
 
     private Long memberId;
+
+    private List<RouteCreateDto> route;
+
+    private String inclusion;
+
+    private String exclusion;
+
+    private String packingList;
+
+    private String caution;
+
+    private String requirement;
 
 //    private List<Image> images;
 //
