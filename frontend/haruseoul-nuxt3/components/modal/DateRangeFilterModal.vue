@@ -1,21 +1,29 @@
 <script setup>
 import DateRangePicker from "~/components/filter/DateRangePicker.vue";
 
+// props
+const props = defineProps({
+  selectedDates: {
+    type: Array,
+    default: []
+  }
+});
+
 // emit
 const emit = defineEmits(['closeModal']);
 
 // Selected dates 프로그램 검색기간 [시작일 , 끝] or [날짜]
-let selectedDates = [];
+const selectedDates = ref(props.selectedDates);
 
 // Handle selection change
 const updateSelectedDates = (selectedOptions) => {
-  selectedDates = selectedOptions;
+  selectedDates.value = selectedOptions;
   console.log('******* ProgramFilterModal: updateSelectedDates called');
-  console.log('         ->  selectedDates: ', selectedDates);
+  console.log('         ->  selectedDates: ', selectedDates.value);
 };
 
 const closeModal = () => {
-  emit('closeModal', selectedDates);
+  emit('closeModal', selectedDates.value);
 }
 
 </script>
@@ -28,7 +36,7 @@ const closeModal = () => {
     </header>
 
     <form @submit.prevent="closeModal" class="popup-body" action="">
-      <DateRangePicker @selection-changed="updateSelectedDates"/>
+      <DateRangePicker :selectedDates="selectedDates" @selection-changed="updateSelectedDates"/>
 
       <div class="submit">
         <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>

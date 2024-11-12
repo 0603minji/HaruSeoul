@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import {useAuthFetch} from "~/composables/useAuthFetch.js";
 
 // emit
 const emit = defineEmits(['selectionChanged'])
@@ -9,12 +10,12 @@ const props = defineProps({
   defaultProgramId: {
     type: Number,
     default: null
-  },
-  hostId: {
-    type: Number,
-    required: true
   }
 });
+
+
+
+
 
 // === variables =======================================================================================================
 const isDropdownVisible = ref(false);
@@ -22,6 +23,10 @@ const searchTerm = ref(''); // 옵션리스트에서 필터링할 검색어
 const selectedOption = ref(null); // 옵션리스트에서 선택된 옵션
 const programOptions = ref([]); // 선택가능한 모든 프로그램 옵션리스트
 const filteredOptions = ref([]); // 옵션리스트에서 검색어로 필터링된 리스트
+const userDetails = useUserDetails();
+
+
+
 
 /*=== function =======================================================================================================*/
 const toggleDropdown = () => {
@@ -58,6 +63,10 @@ const onInput = (event) => {
   filterOptions();
 };
 
+
+
+
+
 // === fetch ===========================================================================================================
 // Every Possible options for the select box
 const programQuery = {
@@ -68,10 +77,7 @@ const config = useRuntimeConfig();
 
 // 프로그램 선택창에 개설가능한 모든 프로그램 옵션을 표시하기 위한 개설가능프로그램목록 fetch
 // default 선택값은 props.defaultProgramId
-const {data: programData} = await useFetch(`host/programs/user/${props.hostId}`, {
-  baseURL: config.public.apiBase,
-  params: programQuery
-});
+const { data: programData } = await useAuthFetch(`host/programs/user/${userDetails.id.value}`, { params: programQuery });
 
 programOptions.value = programData.value;
 // filteredOptions 초기화, 검색어가 입력되어있을 경우, 필터링

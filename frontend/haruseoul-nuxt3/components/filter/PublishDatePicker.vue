@@ -1,18 +1,15 @@
 <script setup>
 import {ref, watch, watchEffect} from 'vue';
+import {useAuthFetch} from "~/composables/useAuthFetch.js";
 
 // emit
 const emit = defineEmits(['selectionChanged'])
 
-// Props
-const props = defineProps({
-  hostId: {
-    type: Number,
-    required: true
-  }
-});
+
+
 
 /*=== variables =======================================================================================================*/
+const userDetails = useUserDetails();
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 const rangeStart = new Date(today); // 개설가능 시작일
@@ -47,6 +44,8 @@ const config = useRuntimeConfig();
   }
 ]; */
 const datesWithScedules = ref([]);
+
+
 
 
 /*=== function =======================================================================================================*/
@@ -105,7 +104,7 @@ const emitSelectionChanged = () => {
 
 
 // --- 개설가능일 계산용 rangeStart, rangeEnd------------------------------------------------------------------------------
-// query ?mIds=props.hostId&s=1,2,5,6&d=개설가능첫날,끝날
+// query ?mIds=4&s=1,2,5,6&d=개설가능첫날,끝날
 // today + startOffset부터 개설가능
 const startOffset = 3;
 // today + startOffset부터 publishableRange만큼 개설가능
@@ -149,7 +148,7 @@ const dates = computed(() => {
 // dates가 변하면 update
 const publishedProgramQuery = computed(() => (
     {
-      mIds: props.hostId,
+      mIds: userDetails.id.value,
       s: [1, 2, 5, 6].join(","),
       d: [dates.value.at(0), dates.value.at(-1)] // 달력에 표시된 첫날 ~ 끝날 dates.getFirst getLast 한국시간 자정
           .map((date) =>
@@ -167,7 +166,7 @@ const publishedProgramQuery = computed(() => (
 
 /*=== fetch ==========================================================================================================*/
 // 캘린더에 개설불가능한 날짜 표시를 위한 개설프로그램 목록 fetch
-const {data: publishedData, refresh: publishedRefresh} = await useFetch(`host/published-programs`, {
+const {data: publishedData, refresh: publishedRefresh} = await useAuthFetch(`host/published-programs`, {
   baseURL: config.public.apiBase,
   params: computed(() => publishedProgramQuery.value)
 });
