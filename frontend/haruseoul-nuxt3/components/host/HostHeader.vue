@@ -70,13 +70,13 @@
       </ul>
 
       <div class="profile-img-container lg:show">
-        <a href="" class="profile-img-wrapper">
+        <NuxtLink href="/mypage" class="profile-img-wrapper">
           <img
             class="profile-img"
             src="/image/profile_cat.png"
             alt="게스트 프로필 사진"
           />
-        </a>
+        </NuxtLink>
       </div>
     </nav>
 
@@ -117,9 +117,9 @@
             />
           </div>
           <div class="profile-info">
-            <p class="nickname">호스트 닉네임</p>
+            <p class="nickname">{{data.nickname}}</p>
             <div class="account-setting">
-              <a href="#" class="n-icon n-deco n-icon:setting">내 계정관리</a>
+              <NuxtLink href="/mypage" class="n-icon n-deco n-icon:setting">내 계정관리</NuxtLink>
             </div>
           </div>
         </section>
@@ -165,7 +165,10 @@
           </ul>
           <ul class="aside-menu bd-color:transparent">
             <li>
-              <div @click.prevent="logoutHandler" style="cursor: pointer" class="menu n-icon n-deco n-icon:logout">로그아웃</div>
+              <NuxtLink v-if="data.value" style="cursor: pointer" class="menu n-icon n-deco n-icon:logout" href="/signin">로그인</NuxtLink>
+            </li>
+            <li>
+              <div v-if="!data.value" @click.prevent="logoutHandler" style="cursor: pointer" class="menu n-icon n-deco n-icon:logout">로그아웃</div>
             </li>
           </ul>
         </nav>
@@ -185,6 +188,14 @@
 </template>
 <script setup>
 const userDetails = useUserDetails();
+
+const memberId = localStorage.getItem("id");
+const data = ref({});
+
+const response = await useDataFetch(`members/${memberId}`);
+data.value = response;
+
+
 const logoutHandler = async () => {
   console.log("logoutHandler");
   userDetails.logout();

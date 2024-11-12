@@ -9,7 +9,7 @@ import com.m2j2.haruseoul.host.program.dto.ProgramUpdateDto;
 import java.util.List;
 
 public interface ProgramService {
-    ProgramResponseDto getList(List<Long> programIds, List<Long> categoryIds,
+    ProgramResponseDto getList(Long id, List<Long> programIds, List<Long> categoryIds,
                                List<String> statuses, int pageNum, int cardsPerPage);
 
     List<ProgramFilterDto> getList(Long hostId, List<String> statuses);
