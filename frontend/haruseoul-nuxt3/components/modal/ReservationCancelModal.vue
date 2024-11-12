@@ -1,15 +1,20 @@
 <script setup>
+import { useRouter } from 'vue-router'
+import { nextTick } from 'vue';
 import {ref, defineProps, defineEmits} from 'vue';
+import {useReservationFetch} from "~/composables/useReservationFetch.js";
+
+const router = useRouter();
 
 const props = defineProps({
   showModal: Boolean,
-  currentReservationId: Number
+  selectedReservationId: Number,
+  fetchReservations: Function
 });
 
 const emit = defineEmits(['close', 'cancel']);
 
 const errorMessage = ref('');
-const successMessage = ref('');
 
 // 모달 닫기
 const closeModal = () => {
@@ -24,7 +29,7 @@ const cancelReservation = async () => {
 
     // API 요청 보내기
     await useReservationFetch(
-        `guest/reservations/${props.currentReservationId}/cancel`,
+        `guest/reservations/${props.selectedReservationId}/cancel`,
         {
           method: "PUT",  // 예약을 취소하는 PUT 요청
           headers: {
@@ -42,13 +47,19 @@ const cancelReservation = async () => {
     // 모달 닫기
     closeModal();
 
-    // 새로고침
-    window.location.reload(); // 페이지 새로고침
+    // 예약 취소 후, p=1 위치로 리다이렉트
+    await router.push({path: '/guest/reservations', query: {p: 1}});
+
+    // nextTick: 데이터가 변경되는 DOM 처리가 완료된 후에, 진행되도록 해주는 함수, Vue3부터 지원
+    await nextTick(() => {
+      props.fetchReservations(); // 쿼리 파라미터가 바뀌면 fetch 호출
+    });
 
   } catch (error) {
     errorMessage.value = '예약 취소 실패: ' + error.message;
   }
 };
+
 </script>
 
 <template>

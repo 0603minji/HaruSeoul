@@ -114,6 +114,7 @@ public class DefaultReservationService implements ReservationService {
         String meetingSpotAddress = meetingSpot.getAddress();
         System.out.println(meetingSpotAddress);
         ReservationDetailProgramDto reservationDetailProgramDto = ReservationDetailProgramDto.builder()
+                .programId(reservationProgram.getId())
                 .programStartTime(String.valueOf(reservationProgram.getStartTime()))
                 .meetingSpotTitle(meetingSpotTitle)
                 .meetingSpotAddress(meetingSpotAddress)
