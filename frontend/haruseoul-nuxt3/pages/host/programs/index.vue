@@ -339,21 +339,23 @@ const goToEditPage = (id) => {
                 </li>
                 <li>
                   <a href=""
-                     class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
+                     class=" n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
                     상태</a>
                 </li>
                 <li>
                   <a href=""
-                     class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a>
+                     class=" n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a>
                 </li>
               </ul>
             </div>
 
             <div class="reset-box">
               <div class="gradation"></div>
-              <a href="" class="icon-box n-deco1 n-icon n-icon:reset">
-                초기화
-              </a>
+              <div class="btn-box">
+              <span style="cursor: pointer" class="reset-btn icon-box n-deco1 n-icon n-icon:reset">
+                reset
+              </span>
+              </div>
             </div>
           </section>
 

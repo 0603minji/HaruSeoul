@@ -6,6 +6,7 @@ import RouteTemplete from "./routeTemplete.vue";
 const categories = ref([]);
 const routeComponentCount = ref(1);
 const programCreateDto = reactive({
+  regMemberId:'',
   categoryIds: [],
   routes: [{
     title: '',
@@ -31,6 +32,8 @@ const programCreateDto = reactive({
   requirement: ''
 });
 const activeSection = ref('#intro');
+
+const regMemberId = localStorage.getItem("id");
 
 
 //================Fetch Functions==============
@@ -63,8 +66,8 @@ const addRouteFunction = () => {
 const createProgram = async () => {
   // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
   if (programCreateDto.title.length === 0) {
-    if (confirm("프로그램 제목은 필수입력입니다.\n입력 후 저장가능합니다.\n나가시겠습니까?")) {
-      return navigateTo("/host/programs");
+    if (confirm("프로그램 제목은 필수입력입니다.\n입력 후 저장가능합니다.")) {
+      return;
     }
     return;
   }
@@ -81,16 +84,14 @@ const createProgram = async () => {
 
 
   //  4. 1번 2번 케이스를 지나면 무조건, 입력 모두 받았고 유효성 통과 O
+  await sendCreateRequest(regMemberId, "Unpublished");
   alert("모든 내용이 올바르게 입력되었습니다. 작성완료 상태로 저장됩니다.");
-  sendCreateRequest(2, "Unpublished");
 }
 
 const tempSave = async () => {
   // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
   if (programCreateDto.title.length === 0) {
-    if (confirm("프로그램 제목은 필수입력입니다.\n입력 후 저장가능합니다.\n나가시겠습니까?")) {
-      return navigateTo("/host/programs");
-    }
+    alert("프로그램 제목은 필수입력입니다.\n입력 후 저장가능합니다.");
     return;
   }
 
@@ -107,14 +108,15 @@ const tempSave = async () => {
 
   //  4. 1번 2번 케이스를 지나면 무조건, 입력 모두 받았고 유효성 통과 O
   alert("작성중 상태로 저장됩니다.");
-  sendCreateRequest(2, "In Progress");
+  await sendCreateRequest(regMemberId, "In Progress");
+  return navigateTo("/host/programs");
 }
 
 const token = localStorage.getItem("token");
 
 const sendCreateRequest = async (regMemberId, status) => {
   try {
-    programCreateDto.regMemberId = localStorage.getItem("id");
+    programCreateDto.regMemberId = regMemberId;
     programCreateDto.status = status
     const response = await axios.post("http://localhost:8080/api/v1/host/programs", programCreateDto, {
       headers: {
@@ -127,7 +129,7 @@ const sendCreateRequest = async (regMemberId, status) => {
 
 
     // 요청 성공 후 페이지 이동
-    window.location.href = "/host/programs";
+    return navigateTo("/host/programs");
 
   } catch (error) {
     console.error("Error creating program:", error);
@@ -254,6 +256,14 @@ const setActiveSection = (section) => {
   activeSection.value = section;
 }
 
+const scrollToSection = (sectionId) => {
+  // 해시값을 변경하여 해당 섹션만 보이도록 설정
+  window.location.hash = sectionId;
+  activeSection.value = sectionId; // 활성화된 섹션 업데이트
+};
+
+
+
 </script>
 
 
@@ -262,31 +272,50 @@ const setActiveSection = (section) => {
     <nav class="n-bar-underline-create">
       <h1>목차</h1>
       <ul class="item-wrapper padding-x:6 justify-content:flex-start">
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#intro' }"
-          @click="setActiveSection('#intro')">
-          <a href="#intro" class="">소개</a>
+        <li
+            class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+            :class="{ active: activeSection === '#intro' }"
+            @click="scrollToSection('#intro')"
+        >
+          소개
         </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#detail' }"
-          @click="setActiveSection('#detail')">
-          <a href="#detail" class="">세부사항</a>
+        <li
+            class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+            :class="{ active: activeSection === '#detail' }"
+            @click="scrollToSection('#detail')"
+        >
+          세부사항
         </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#course' }"
-          @click="setActiveSection('#course')">
-          <a href="#course" class="">코스</a>
+        <li
+            class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+            :class="{ active: activeSection === '#course' }"
+            @click="scrollToSection('#course')"
+        >
+          코스
         </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#inclusion' }"
-          @click="setActiveSection('#inclusion')">
-          <a href="#inclusion" class="">포함사항</a>
+        <li
+            class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+            :class="{ active: activeSection === '#inclusion' }"
+            @click="scrollToSection('#inclusion')"
+        >
+          포함사항
         </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#caution' }"
-          @click="setActiveSection('#caution')">
-          <a href="#caution" class="">추가정보</a>
+        <li
+            class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+            :class="{ active: activeSection === '#caution' }"
+            @click="scrollToSection('#caution')"
+        >
+          추가정보
         </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#image' }"
-          @click="setActiveSection('#image')">
-          <a href="#image" class="">사진</a>
+        <li
+            class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+            :class="{ active: activeSection === '#image' }"
+            @click="scrollToSection('#image')"
+        >
+          사진
         </li>
       </ul>
+
     </nav>
 
     <form method="post" action="" enctype="multipart/form-data">
@@ -691,6 +720,12 @@ const setActiveSection = (section) => {
 
 </template>
 <style scoped>
+.full-link {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 /* 경고 문구 스타일 */
 .warning {
   color: red;
@@ -741,6 +776,7 @@ const setActiveSection = (section) => {
   }
 
   .item-wrapper {
+    //position: relative;
     --bar-gap: 16px;
     align-items: center;
     justify-content: space-between;
@@ -1465,6 +1501,12 @@ textarea {
     display: none;
     /*visibility: visible;*/
   }
+  .full-link{
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
 
   /* active 상태에서 줄 색상을 변경 */
   .item-wrapper>.active::after {
@@ -1523,12 +1565,6 @@ input[type="number"].no-spinner {
   -moz-appearance: textfield;
 }
 
-
-/*======== 목차 active 스타일 ========*/
-.n-bar-underline-create .item-wrapper .active {
-  background-color: var(--color-main-4);
-  color: var(--color-base-1);
-}
 
 .n-bar-underline-create .item-wrapper .active::after {
   visibility: visible;
