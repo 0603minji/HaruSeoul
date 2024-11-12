@@ -15,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DefaultReservationService implements ReservationService {
@@ -52,7 +49,6 @@ public class DefaultReservationService implements ReservationService {
     public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, int pageNum) {
 
         Sort sort = Sort.by("publishedProgram.date").ascending();
-//        Sort sort = Sort.by("regDate").descending();
         Pageable pageable = PageRequest.of(pageNum-1, 6, sort);
 
         // 요청 페이지 번호 확인
@@ -214,15 +210,16 @@ public class DefaultReservationService implements ReservationService {
         // 삭제 날짜를 현재 시간으로 설정합니다.
         reservation.setDeleteDate(Instant.now());  // 삭제 일자를 현재 시간으로 설정 (LocalDateTime으로 변경 가능)
 
-        // 상태를 '취소됨'으로 변경 (id=4)
-        Status cancelledStatus = statusRepository.findById(4L)
-                .orElseThrow(() -> new IllegalArgumentException("상태 ID 4를 찾을 수 없습니다."));
-
-        // PublishedProgram의 상태를 취소됨(4)으로 업데이트
-        reservation.getPublishedProgram().setStatus(cancelledStatus);
+//        // 상태를 '취소됨'으로 변경 (id=4)
+//        Status cancelledStatus = statusRepository.findById(4L)
+//                .orElseThrow(() -> new IllegalArgumentException("상태 ID 4를 찾을 수 없습니다."));
+//
+//        // PublishedProgram의 상태를 취소됨(4)으로 업데이트
+//        reservation.getPublishedProgram().setStatus(cancelledStatus);
 
         // 예약을 업데이트합니다.
         reservationRepository.save(reservation);
+
 
         // 로그를 남겨서 예약 삭제에 대한 기록을 남길 수 있습니다.
         System.out.println("Reservation with ID " + reservationId + " has been soft deleted at " + Instant.now());
