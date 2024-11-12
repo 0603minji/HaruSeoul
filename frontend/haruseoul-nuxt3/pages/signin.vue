@@ -52,31 +52,34 @@ const userDetails = useUserDetails();
 
 
 const signinHandler = async () => {
-  console.log("로그인버튼 작동중");
 
-  let response = await useDataFetch("auth/signin", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: {
-      userId: userId.value,
-      userPwd: userPwd.value
-    }
-  });
-  let userInfo = jwtDecode(response.token)
-  userDetails.login({
-    id: userInfo.id,
-    userId: userInfo.userId,
-    username: userInfo.name,
-    birth: userInfo.birth,
-    email: userInfo.email,
-    token: response.token,
+  
+  console.log("로그인 버튼 작동 중");
 
-  });
-  console.log("회원정보:", userInfo)
+  try {
+    let response = await useDataFetch("auth/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: {
+        userId: userId.value,
+        userPwd: userPwd.value
+      }
+    });
 
-  // 온전한 returnURL 복구
+    let userInfo = jwtDecode(response.token);
+    userDetails.login({
+      id: userInfo.id,
+      userId: userInfo.userId,
+      username: userInfo.name,
+      birth: userInfo.birth,
+      email: userInfo.email,
+      token: response.token
+    });
+
+    console.log("회원 정보:", userInfo);
+    // 온전한 returnURL 복구
   console.log('조각난 리턴url: ', route.query);
   let originalReturnURL = route.query.returnURL; // host/reservations?p=1
   Object.entries(route.query)
@@ -88,7 +91,16 @@ const signinHandler = async () => {
 
   return navigateTo(originalReturnURL);
 
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      alert("존재하지 않는 아이디입니다.");
+    } else {
+      console.error("로그인 중 오류 발생:", error);
+      alert("로그인에 실패했습니다. 다시 시도해주세요.");
+    }
+  }
 };
+
 </script>
 
 <style scoped>

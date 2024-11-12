@@ -79,10 +79,9 @@ public class DefaultMemberService implements MemberService {
 
     @Override
     public void delete(Long id) {
-        if (!memberRepository.existsById(id)) {
-            throw new IllegalArgumentException("해당 ID가 존재하지 않습니다. 이미 삭제되었거나 없는 계정입니다.");
-        }
-        memberRepository.deleteById(id);
+        Member member = memberRepository.findById(id).orElse(null);
+        member.setStatus("deleted");
+        memberRepository.save(member);
     }
 
 }
