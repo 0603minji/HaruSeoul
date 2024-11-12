@@ -5,6 +5,7 @@ import { useReservationFetch } from "~/composables/useReservationFetch.js";
 import Status from "~/components/filter/Status.vue";
 import Pager from "~/components/Pager.vue";
 import ReservationCancelModal from "~/components/modal/ReservationCancelModal.vue";
+import useShare from '~/composables/useShare';
 
 const reservations = ref([]);
 const selectedStatus = ref(0);
@@ -20,6 +21,13 @@ const hasPreviousPage = ref(false); // 이전 페이지가 있는지
 const hasNextPage = ref(false); // 다음 페이지가 있는지
 const currentPage = ref(1); // 현제 페이지 초기값은 1
 
+const { shareToKakao } = useShare();  // useShare 모듈에서 shareToKakao 함수 가져오기
+
+// 버튼 클릭 시 공유 함수 호출
+const handleShare = (url) => {
+  shareToKakao(url);  // 여기서 원하는 URL을 넣어 공유
+};
+
 // 예약 목록을 가져오는 함수
 const fetchReservations = async () => {
   try {
@@ -28,12 +36,14 @@ const fetchReservations = async () => {
       pageNum: isNaN(currentPage.value) || currentPage.value <= 0 ? 1 : currentPage.value,
     };
 
+    console.log("params:", params);  // params 확인용 로그
+
     const token = localStorage.getItem("token");
 
     const response = await useReservationFetch("guest/reservations",
         {
           headers: {
-            Authorization: `Bearer ${token.value}`,
+            Authorization: `Bearer ${token}`,
           },
           params: params,
           //  이 URL에 params 객체를 함께 전송하여 필터링된 결과를
@@ -53,7 +63,6 @@ const fetchReservations = async () => {
     // 5개씩 페이지 번호를 나누기
     startNum.value = Math.floor((currentPage.value - 1) / 5) * 5 + 1;
     pageNumbers.value = Array.from({ length: Math.min(5, totalPageCount.value - startNum.value + 1) }, (_, index) => startNum.value + index);
-
 
     // 각 예약의 날짜 차이를 계산하여 dDay 속성을 추가합니다.
     const currentDate = new Date();
@@ -82,8 +91,9 @@ const fetchReservations = async () => {
 const StatusChangeHandler = async (status) => {
   selectedStatus.value = status;
   currentPage.value = 1; // 상태 변경 시 페이지 초기화
-  router.replace({ query: { ...route.query, p: 1 } }); // status 를 변경할때 p=1로 초기화
-  fetchReservations();
+  await router.replace({ query: { ...route.query, p: 1 } }); // status 를 변경할때 p=1로 초기화
+  console.log("현재 URL:", window.location.href);  // URL 확인
+  await fetchReservations();
 };
 
 // 페이지 클릭 핸들러
@@ -97,18 +107,13 @@ const pageClickHandler = (newPage) => {
 // 예약취소--------------------------------------------------------------------------------
 
 const showModal = ref(false); // 모달을 표시할지 여부를 결정하는 변수
-const currentReservationId = ref(null); // 취소할 예약의 ID 저장
+const selectedReservationId = ref(null); // 취소할 예약의 ID 저장
 
 // 예약 취소 버튼 클릭 핸들러
 const handleCancelClick = (reservationId) => {
   console.log("취소 클릭 ID:", reservationId); // ID가 제대로 넘어오는지 확인
-  currentReservationId.value = reservationId;  // 클릭한 예약의 ID 설정
-  showModal.value = true;  // 모달을 표시
-};
-
-// 모달을 열 때
-const openModal = () => {
-  showModal.value = true;
+  selectedReservationId.value = reservationId;  // 클릭한 예약의 ID 설정
+  showModal.value = true;  // 누르면 모달을 표시하게끔
 };
 
 // 모달을 닫을 때
@@ -241,20 +246,23 @@ onMounted(() => {
                     예약 취소
                   </a>
                   <a href="#"
-                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+                     @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
                 </div>
 
                 <div v-else-if="r.statusName === 'Finished'" class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
                   <a href="#" class="n-btn">리뷰 작성</a>
                   <a href="#"
-                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+                     @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
                 </div>
 
                 <div v-else-if="r.statusName === 'Canceled'" class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
                   <a href="#"
-                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+                     @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
                 </div>
 
               </div>
@@ -267,25 +275,29 @@ onMounted(() => {
             <a href="#" class="n-btn" @click="handleCancelClick(r.id)" style="color: #DB4455; --btn-border-color:#DB4455;">
               예약 취소
             </a>
-            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+               @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
           </div>
 
           <div v-else-if="r.statusName === 'Finished'" class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
             <a href="#" class="n-btn">리뷰 작성</a>
-            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+               @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
           </div>
 
           <div v-else-if="r.statusName === 'Canceled'" class="card-footer margin-top:2" style="padding-left: 10px; justify-content: space-between;">
             <a href="#" class="n-btn bg-color:main-1 color:base-1" style="max-width: 478px;">호스트 문의</a>
-            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+               @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
           </div>
 
           <!-- 예약 취소 모달 -->
           <ReservationCancelModal
               v-if="showModal"
               :showModal="showModal"
-              :currentReservationId="currentReservationId"
+              :selectedReservationId="selectedReservationId"
+              :fetchReservations="fetchReservations"
               @close="closeModal"
           />
 

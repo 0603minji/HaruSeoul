@@ -1,9 +1,9 @@
 <script setup>
-import { onMounted, ref } from "vue";
-import axios from "axios";
-import { useRoute } from "vue-router";
+import {onMounted, ref} from "vue";
+import {useRoute} from "vue-router";
 import {useReservationFetch} from "~/composables/useReservationFetch.js";
 import ReservationCancelModal from "~/components/modal/ReservationCancelModal.vue";
+import useShare from '~/composables/useShare';
 
 const reservation = ref({
   guest: {},
@@ -21,11 +21,17 @@ const program = computed(() => reservation.value.program);
 const requirement = computed(() => reservation.value.requirement);
 const reservationCard = computed(() => reservation.value.reservationCard);
 
+const {shareToKakao} = useShare();  // useShare 모듈에서 shareToKakao 함수 가져오기
+
+// 버튼 클릭 시 공유 함수 호출
+const handleShare = (url) => {
+  shareToKakao(url);  // 여기서 원하는 URL을 넣어 공유
+};
 
 // 데이터 함수
 
 const fetchreservation = async (rId) => {
-  const params = { rId: rId };
+  const params = {rId: rId};
   const token = localStorage.getItem("token");
   const response = await useReservationFetch(`guest/reservations/${rId}`,
       {
@@ -69,6 +75,7 @@ function copy() {
   });
 }
 
+
 // 예약취소--------------------------------------------------------------------------------
 
 const showModal = ref(false); // 모달을 표시할지 여부를 결정하는 변수
@@ -91,14 +98,63 @@ const closeModal = () => {
   showModal.value = false;
 };
 
+
 // 생명주기 함수
 
 onMounted(() => {
+
   const rId = route.params.id;
   if (rId) {
     fetchreservation(rId);  // rId가 있을 때만 데이터를 가져옵니다.
   }
-});
+
+  // 지도 API
+  const loadMap = () => {
+    const container = document.getElementById('map');
+    if (!container) {
+      console.warn("Map container not found. Skipping map initialization.");
+      return;
+    }
+
+    const options = {
+      center: new kakao.maps.LatLng(33.450701, 126.570667), // 기본 중심 좌표
+      level: 3
+    };
+    const map = new kakao.maps.Map(container, options);
+
+    if (program.meetingSpotAddress.value) {
+      const geocoder = new kakao.maps.services.Geocoder();
+
+      geocoder.addressSearch(program.meetingSpotAddress.value, (result, status) => {
+        if (status === kakao.maps.services.Status.OK) {
+          const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+          map.setCenter(coords);
+
+          new kakao.maps.Marker({
+            map: map,
+            position: coords
+          });
+        } else {
+          console.error('주소를 찾을 수 없습니다.');
+        }
+      });
+    } else {
+      console.log("주소가 없어 기본 좌표를 표시합니다.");
+    }
+  };
+
+  if (window.kakao && window.kakao.maps) {
+    loadMap();
+  } else {
+    const interval = setInterval(() => {
+      if (window.kakao && window.kakao.maps) {
+        loadMap();
+        clearInterval(interval);
+      }
+    }, 100)
+  }
+
+})
 </script>
 
 <template>
@@ -134,7 +190,7 @@ onMounted(() => {
               </span>
 
               <span v-else-if="r.statusName === 'Canceled'" class="n-panel-tag not-submitted"
-                style="border-color: #DB4455; color: #DB4455;">
+                    style="border-color: #DB4455; color: #DB4455;">
                 취소됨
               </span>
             </div>
@@ -142,7 +198,7 @@ onMounted(() => {
 
           <div class="card-main">
             <div class="img-wrapper">
-              <img src="/public/image/program_01.png" alt="대표사진" />
+              <img src="/public/image/program_01.png" alt="대표사진"/>
             </div>
 
             <div class="card-info-wrapper">
@@ -161,7 +217,7 @@ onMounted(() => {
                   </span>
 
                   <span v-else-if="r.statusName === 'Canceled'" class="n-panel-tag not-submitted"
-                    style="border-color: #DB4455; color: #DB4455;">
+                        style="border-color: #DB4455; color: #DB4455;">
                     취소됨
                   </span>
                 </div>
@@ -176,15 +232,20 @@ onMounted(() => {
                     <span v-if="r.dDay >= 0">
 
                       {{ r.date }}
-                      <span v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3) && (r.dDay > 0)" style="color: #DB4455;">
+                      <span
+                          v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3) && (r.dDay > 0)"
+                          style="color: #DB4455;">
                         (D-{{ r.dDay }})
                       </span>
 
-                      <span v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
+                      <span
+                          v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
                         (D-{{ r.dDay }})
                       </span>
 
-                      <span v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay === 0)" style="color: #DB4455;">
+                      <span
+                          v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay === 0)"
+                          style="color: #DB4455;">
                         (D-day)
                       </span>
 
@@ -197,26 +258,30 @@ onMounted(() => {
                 </div>
 
                 <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
-                  class="card-footer-responsive">
+                     class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal" style="color: #DB4455; --btn-border-color:#DB4455;">
+                  <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal"
+                     style="color: #DB4455; --btn-border-color:#DB4455;">
                     예약 취소
                   </a>
                   <a href="#"
-                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+                     @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
                 </div>
 
                 <div v-else-if="r.statusName === 'Finished'" class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
                   <a href="#" class="n-btn">리뷰 작성</a>
                   <a href="#"
-                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+                     @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
                 </div>
 
                 <div v-else-if="r.statusName === 'Canceled'" class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
                   <a href="#"
-                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+                     @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
                 </div>
 
               </div>
@@ -224,23 +289,28 @@ onMounted(() => {
           </div>
 
           <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
-            class="card-footer margin-top:2">
+               class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-            <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal" style="color: #DB4455; --btn-border-color:#DB4455;">
+            <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal"
+               style="color: #DB4455; --btn-border-color:#DB4455;">
               예약 취소
             </a>
-            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+               @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
           </div>
 
           <div v-else-if="r.statusName === 'Finished'" class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
             <a href="#" class="n-btn">리뷰 작성</a>
-            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+               @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
           </div>
 
-          <div v-else-if="r.statusName === 'Canceled'" class="card-footer margin-top:2" style="padding-left: 10px; justify-content: space-between;">
+          <div v-else-if="r.statusName === 'Canceled'" class="card-footer margin-top:2"
+               style="padding-left: 10px; justify-content: space-between;">
             <a href="#" class="n-btn bg-color:main-1 color:base-1" style="max-width: 478px;">호스트 문의</a>
-            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding-y:0">공유하기</a>
+            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+               @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
           </div>
         </div>
       </div>
@@ -292,7 +362,7 @@ onMounted(() => {
                 <h1>프로필 카드</h1>
                 <div class="overview">
                   <div class="img-wrapper">
-                    <img src="/public/image/profile.png" alt="호스트프사" />
+                    <img src="/public/image/profile.png" alt="호스트프사"/>
                   </div>
                   <div>
                     <div>{{ host.memberName }}</div>
@@ -304,62 +374,6 @@ onMounted(() => {
                 </div>
                 <a href="" class="n-btn n-btn:hover">프로필보기</a>
               </section>
-            </details>
-          </div>
-        </section>
-
-        <section v-if="requirement">
-          <h1>요청사항 정보</h1>
-          <div>
-            <details open>
-              <summary class="collapse">
-                <span class="title">요청 정보</span>
-                <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
-              </summary>
-              <div class="details">
-                <div class="info" style="flex-direction: column; align-items: center;">
-                  <span class="info-form" style="width: max-content; color: var(--color-main-3);">[ Host → Guest ]</span>
-                  <span class="info-input" style="max-width: 700px; color: var(--color-main-3)">{{
-                      requirement.hostRequirement }}</span>
-                </div>
-                <div class="info" style="flex-direction: column; align-items: center;">
-                  <span class="info-form">[ Guest → Host ]</span>
-                  <span class="info-input" style="max-width: 700px;">{{
-                      requirement.guestRequirement }}</span>
-                </div>
-              </div>
-            </details>
-          </div>
-        </section>
-
-        <section>
-          <h1>결제정보</h1>
-          <div>
-            <details open>
-              <summary class="collapse">
-                <span class="title">결제 정보</span>
-                <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
-              </summary>
-              <div class="details">
-                <div class="info">
-                  <span class="info-form">결제일</span>
-                  <span class="info-input">2024.9.10 19:24GMT</span>
-                </div>
-                <div class="info">
-                  <span class="info-form">결제수단</span>
-                  <div style="padding-right: 0">
-                    <span class="info-input" style="justify-content: right">Credit card</span>
-                    <span class="info-input n-icon n-icon:credit_card">1234 1245 1234 1234</span>
-                  </div>
-                </div>
-                <div class="info" style="margin-bottom: 13px; align-items: center">
-                  <span class="info-form">결제금액</span>
-                  <span class="info-input">30,000 (KRW)</span>
-                </div>
-                <div style="display: flex; justify-content: end">
-                  <a class="n-btn n-btn:hover" href="#">영수증 보기</a>
-                </div>
-              </div>
             </details>
           </div>
         </section>
@@ -399,10 +413,7 @@ onMounted(() => {
                               <button @click="copy" class="copy-btn">주소복사</button>
                             </div>
                           </div>
-                          <div class="map-img-wrapper">
-                            <img class="map-img" src="/public/image/map.png" alt="map" />
-                            <!--             나중에 이미지 데이터 바인딩               -->
-                          </div>
+                          <div class="map-img-wrapper" id="map" style="width: 100%; height: 400px;"></div>
                         </section>
                       </div>
                     </div>
@@ -523,6 +534,65 @@ onMounted(() => {
                     </div>
                   </div>
                 </section>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section v-if="requirement">
+          <h1>요청사항 정보</h1>
+          <div>
+            <details open>
+              <summary class="collapse">
+                <span class="title">요청 정보</span>
+                <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
+              </summary>
+              <div class="details">
+                <div class="info" style="flex-direction: column; align-items: center;">
+                  <span class="info-form"
+                        style="width: max-content; color: var(--color-main-3);">[ Host → Guest ]</span>
+                  <span class="info-input" style="max-width: 700px; color: var(--color-main-3)">{{
+                      requirement.hostRequirement
+                    }}</span>
+                </div>
+                <div class="info" style="flex-direction: column; align-items: center;">
+                  <span class="info-form">[ Guest → Host ]</span>
+                  <span class="info-input" style="max-width: 700px;">{{
+                      requirement.guestRequirement
+                    }}</span>
+                </div>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section>
+          <h1>결제정보</h1>
+          <div>
+            <details open>
+              <summary class="collapse">
+                <span class="title">결제 정보</span>
+                <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
+              </summary>
+              <div class="details">
+                <div class="info">
+                  <span class="info-form">결제일</span>
+                  <span class="info-input">2024.9.10 19:24GMT</span>
+                </div>
+                <div class="info">
+                  <span class="info-form">결제수단</span>
+                  <div style="padding-right: 0">
+                    <span class="info-input" style="justify-content: right">Credit card</span>
+                    <span class="info-input n-icon n-icon:credit_card">1234 1245 1234 1234</span>
+                  </div>
+                </div>
+                <div class="info" style="margin-bottom: 13px; align-items: center">
+                  <span class="info-form">결제금액</span>
+                  <span class="info-input">30,000 (KRW)</span>
+                </div>
+                <div style="display: flex; justify-content: end">
+                  <a class="n-btn n-btn:hover" href="#">영수증 보기</a>
+                </div>
               </div>
             </details>
           </div>
@@ -669,7 +739,7 @@ onMounted(() => {
       border-bottom: var(--border-width-2) solid var(--color-base-3);
     }
 
-    >section>div {
+    > section > div {
       padding: 0 var(--gap-6);
     }
   }
