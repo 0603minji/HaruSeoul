@@ -478,8 +478,109 @@ mapFetchedData(data.value);
           </section>
         </div>
 
+        <!-- @media (min-width: 768px) 필터 aside  -->
         <aside class="layout-main-aside">
+          <header class="n-title">
+            <h1 class="">Filter</h1>
+            <div>
+              <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;"
+                      @click="filterInit">
+                초기화
+              </button>
+            </div>
+          </header>
+          <div class="filters">
+            <!-- 기간 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">카테고리</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
 
+              <form action="" class="form">
+                <div class="modal-checkbox">
+                  <label><input class="categoryAll" type="checkbox"
+                                @change="selectCategoryAll"/>All</label>
+                  <label v-for="c in categories" :key="c.id">
+                    <input class="categoryIds" type="checkbox" @change="selectCategory"
+                           :value="c.id" v-model="selectedCategories"/>{{ c.name }}
+                  </label>
+                </div>
+              </form>
+            </details>
+            <!-- 프로그램 상태 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">프로그램 상태</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
+
+              <form action="" class="form">
+                <div class="modal-checkbox">
+                  <label><input class="statusCheckboxAll" type="checkbox"
+                                @change="selectStatusAll"/>전체</label>
+                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
+                                :value="'In Progress'" v-model="selectedStatus"/>작성중</label>
+                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
+                                :value="'Unpublished'" v-model="selectedStatus"/>작성완료</label>
+                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
+                                :value="'Published'" v-model="selectedStatus"/>모집중</label>
+                </div>
+              </form>
+              <form @submit.prevent="closeModal" class="popup-body" action="">
+                <!-- 상태 체크박스  -->
+                <section class="status-selector">
+                  <header class="title">
+                    <h1 class="font-size:8">프로그램 상태</h1>
+                    <button
+                        @click.prevent="resetSelectedStatusesHandler"
+                        class="margin-left:auto n-btn n-btn:hover n-btn-bd:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-deco color:sub-1">
+                      초기화
+                    </button>
+                  </header>
+
+                  <section class="status-container">
+                    <ul>
+                      <li v-for="status in data.statusDtos">
+                        <label>
+                          <input type="checkbox"
+                                 v-model="selectedStatuses"
+                                 :checked="selectedStatuses.includes(status.name)"
+                                 :disabled="isStatusDisabled(status.name)"
+                                 :value="status.id">
+                          <span>{{ status.name }}</span>
+                        </label>
+                      </li>
+                    </ul>
+
+                  </section>
+
+                </section>
+
+                <div class="submit">
+                  <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>
+                </div>
+              </form>
+            </details>
+            <!-- 프로그램 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">프로그램</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
+
+              <form action="" class="form">
+                <div class="modal-checkbox">
+                  <label><input class="programidAll" type="checkbox"
+                                @change="selectProgramAll"/>All</label>
+                  <label v-for="p in programTitles" :key="p.id">
+                    <input class="programids" type="checkbox" @change="selectProgram" :value="p.id"
+                           v-model="selectedProgramIds"/>{{ p.title }}
+                  </label>
+                </div>
+              </form>
+            </details>
+          </div>
         </aside>
       </div>
     </section>
@@ -545,6 +646,7 @@ mapFetchedData(data.value);
 
         .n-card {
           position: relative;
+          box-shadow: 5px 5px 10px 0.5px var(--color-base-3);
 
           .card-header {
             .left {
@@ -610,10 +712,23 @@ mapFetchedData(data.value);
 
     .layout-main-aside {
       display: none;
+      flex-direction: column;
       flex-shrink: 0;
       width: 250px;
       margin: 0 16px;
-      background-color: var(--color-base-3);
+
+      /* mj host/programs */
+      .n-title {
+        --title-font-size: var(--font-size-9);
+        /* 18 */
+        --title-font-weight: 600;
+        /* semi bold */
+        --title-padding: 16px 4px;
+
+        .n-icon {
+          --icon-size: var(--icon-size-4);
+        }
+      }
     }
   }
 }
@@ -639,7 +754,8 @@ mapFetchedData(data.value);
 
     .n-title {
       > div {
-        margin-right: calc(16px + 250px + 16px - 20px);
+        /* 일정추가 버튼 위치 조정용 */
+        /*margin-right: calc(16px + 250px + 16px - 20px);*/
       }
     }
 
@@ -649,6 +765,13 @@ mapFetchedData(data.value);
 
       .layout-main-aside {
         display: flex;
+
+        /* mj host/programs */
+        .filters {
+          padding: 0 16px;
+          border: 1px solid var(--color-base-3);
+          border-radius: 12px;
+        }
       }
     }
   }

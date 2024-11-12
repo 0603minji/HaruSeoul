@@ -15,16 +15,12 @@ const props = defineProps({
 });
 
 // emit
-const emit = defineEmits(['closeModal', 'updateListByTab']);
+const emit = defineEmits(['closeModal']);
 
 
 // Selected Statuses 개설된 프로그램 상태 1.모집중 2.폐지임박 3.종료 4.취소 5.획정대기 6.확정
 // props로 초기화
 const selectedStatuses = ref(props.selectedStatuses);
-
-watchEffect(() => {
-  console.log('selectedStatuses: ', selectedStatuses.value);
-})
 
 
 // Computed property to check if a status should be disabled based on the tab
@@ -44,13 +40,7 @@ const isStatusDisabled = (StatusName) => {
   }
 };
 
-// const updateStatusListByTab = (tab) => {
-//   if (tab === "canceled") {
-//     selectedStatuses.value = selectedStatuses.value.filter(status => status !== "canceled");
-//     emit('closeModal', selectedStatuses.value);
-//
-//   }
-// };
+
 
 // Handle selection change
 // const updateSelectedStatuses = (selectedOptions) => {
