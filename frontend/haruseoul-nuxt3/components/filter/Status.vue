@@ -7,12 +7,17 @@ const statuses = ref([]);
 const selectedStatus = ref(0);
 const selectedReservations = ref([]);  // 선택된 예약 목록
 const emit = defineEmits(['selectStatusIds']);
+const token = localStorage.getItem("token");
 
 //================Fetch Function==========
 // 상태를 가져오는 비동기 함수
 const fetchStatuses = async () => {
   try {
-    const response = await axios.get("http://localhost:8080/api/v1/statuses");
+    const response = await axios.get("http://localhost:8080/api/v1/statuses", {
+      headers: {
+        Authorization: `Bearer ${token}` // JWT 토큰 추가
+      }
+    });
     console.log("Fetched statuses:", response.data);  // 데이터 확인 로그
     statuses.value = response.data.filter(status => ![1, 2, 5].includes(status.id));
     // 불러오고 필터링하면 css gap 이 적용되므로, 결제완료 상태를 필터링하여 가져와야 한다.
@@ -30,7 +35,11 @@ onMounted(() => {
 // 예약 목록을 가져오는 비동기 함수
 const fetchReservations = async (statusIds) => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/v1/guest/reservations?s=${statusIds}`);
+    const response = await axios.get(`http://localhost:8080/api/v1/guest/reservations?s=${statusIds}`, {
+      headers: {
+        Authorization: `Bearer ${token}` // JWT 토큰 추가
+      }
+    });
     console.log("Fetched reservations:", response.data);  // 데이터 확인 로그
     selectedReservations.value = response.data; // 예약 목록 저장
   } catch (error) {

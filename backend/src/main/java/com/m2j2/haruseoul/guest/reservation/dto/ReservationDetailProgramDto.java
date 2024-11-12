@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReservationDetailProgramDto {
 
+    private Long programId;
+
     private String programStartTime;
 
     private String meetingSpotTitle; // 만나는 장소 요약 제목
