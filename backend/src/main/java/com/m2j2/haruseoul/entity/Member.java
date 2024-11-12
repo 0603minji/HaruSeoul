@@ -53,6 +53,9 @@ public class Member {
     @Column(name = "birth", nullable = false)
     private LocalDate birth;
 
+    @Column(name = "status")
+    private String status;
+
     @OneToMany(mappedBy = "member")
     @JsonManagedReference
     private List<Program> programs;

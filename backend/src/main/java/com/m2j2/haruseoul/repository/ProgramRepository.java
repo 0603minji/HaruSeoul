@@ -75,6 +75,17 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
     @Query("SELECT p.id FROM Program p WHERE p.member.id = :memberId")
     List<Long> findIdByMemberId(@Param("memberId") Long memberId);
 
+    @Query("from Program p " +
+            "where (:statuses is null or p.status in :statuses) " +
+            "and (:mId is null or p.member.id = :mId)" +
+            "and (:pIds is null or p.id in :pIds)")
+    Page<Program> findAllByMid(
+            @Param("mId") Long id,
+            @Param("pIds") List<Long> programIds,
+            @Param("statuses") List<String> statuses,
+            Pageable pageable
+    );
+
 }
 
 

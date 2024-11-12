@@ -52,7 +52,7 @@ public class DefaultProgramService implements ProgramService {
 
     @Override
     @Transactional
-    public ProgramResponseDto getList(List<Long> pIds, List<Long> cIds, List<String> statuses, int pageNum, int cardsPerPage) {
+    public ProgramResponseDto getList(Long id,List<Long> pIds, List<Long> cIds, List<String> statuses, int pageNum, int cardsPerPage) {
 
         Sort sort = Sort.by("regDate").descending();
         Pageable pageable = PageRequest.of(pageNum - 1, cardsPerPage, sort);
@@ -77,7 +77,7 @@ public class DefaultProgramService implements ProgramService {
             pIds = pIdsFromCategory;
 
 
-        Page<Program> programPage = programRepository.findAll(pIds, statuses, pageable);
+        Page<Program> programPage = programRepository.findAllByMid(id,pIds, statuses, pageable);
         List<ProgramListDto> programListDtos = programPage.getContent()
                 .stream()
                 .map(ProgramMapper::mapToDto)
