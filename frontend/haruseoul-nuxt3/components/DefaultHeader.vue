@@ -90,7 +90,7 @@
             />
           </div>
           <div class="profile-info">
-            <p class="nickname">{{data.nickname}}</p>
+            <p class="nickname">닉네임</p>
             <div class="account-setting">
               <NuxtLink href="/mypage" class="n-icon n-deco n-icon:setting">내 계정관리</NuxtLink>
             </div>
@@ -119,10 +119,10 @@
           </ul>
           <ul class="aside-menu bd-color:transparent">
             <li>
-              <NuxtLink v-if="!memberId" style="cursor: pointer" class="menu n-icon n-deco n-icon:logout" href="/signin">로그인</NuxtLink>
+              <NuxtLink style="cursor: pointer" class="menu n-icon n-deco n-icon:logout" href="/signin">로그인</NuxtLink>
             </li>
             <li>
-              <div v-if="memberId" @click.prevent="logoutHandler" style="cursor: pointer" class="menu n-icon n-deco n-icon:logout">로그아웃</div>
+              <div @click.prevent="logoutHandler" style="cursor: pointer" class="menu n-icon n-deco n-icon:logout">로그아웃</div>
             </li>
           </ul>
         </nav>
@@ -147,11 +147,11 @@ import {useDataFetch} from "~/composables/useDataFetch.js";
 const userDetails = useUserDetails();
 
 
-const memberId = localStorage.getItem("id");
-const data = ref({});
-
-const response = await useDataFetch(`members/${memberId}`);
-data.value = response;
+// const memberId = localStorage.getItem("id");
+// const data = ref({});
+//
+// const response = await useDataFetch(`members/${memberId}`);
+// data.value = response;
 
 
 const logoutHandler = async () => {
