@@ -82,7 +82,7 @@ const getDisplayValue = (statusId) => {
   if (statusId === 3) {
     return "이용완료"; // s.id가 3일 때 표시할 값
   }
-  if (statusId === 4) {
+  if (statusId === 4 || reservation.value.deleteDate != null)  {
     return "취소됨"; // s.id가 4일 때 표시할 값
   }
   return ""; // 매핑이 없을 경우 기본값 반환
