@@ -20,10 +20,6 @@ const props = defineProps({
   defaultProgramId: {
     type: Number,
     default: null
-  },
-  hostId: {
-    type: Number,
-    required: true
   }
 });
 
@@ -35,6 +31,10 @@ watch(() => props.defaultProgramId,
 
 const reRenderTrigger = ref(false);
 
+
+
+
+
 /*=== variables ======================================================================================================*/
 // Selected option
 const selectedProgram = ref(null); // 초기값 = props.defaultProgramId에 해당하는 programFilterDto {id: 16, title: "abdav"}
@@ -45,7 +45,10 @@ let selectedDates = ref([]);
 // submit버튼을 누를 수 있는 상태인지? 프로그램, 날짜 모두 선택되어야함
 const isPublishable = computed(() => selectedDates.value.length > 0 && selectedProgram.value != null);
 
-const config = useRuntimeConfig();
+const userDetails = useUserDetails();
+
+
+
 
 // === function ========================================================================================================
 // Handle selection change
@@ -67,7 +70,7 @@ const submitHandler = async () => {
     return;
 
   const publishedProgramCreateDto = {
-    regMemberId: props.hostId,
+    regMemberId: userDetails.id.value,
     programId: selectedProgram.value.id,
     dates: selectedDates.value.map((date) =>
         new Intl.DateTimeFormat('ko-KR', {
@@ -116,10 +119,10 @@ const closeModal = () => {
 
     <form @submit.prevent="submitHandler" class="popup-body" action="">
       <!--프로그램 선택-->
-      <SearchableSelect :key="reRenderTrigger" :host-id="props.hostId" :default-program-id="props.defaultProgramId"
+      <SearchableSelect :key="reRenderTrigger" :default-program-id="props.defaultProgramId"
                         @selection-changed="updateSelectedProgram"/>
       <!-- 진행일 선택 -->
-      <PublishDatePicker :key="reRenderTrigger" :host-id="props.hostId" @selection-changed="updateSelectedDates"/>
+      <PublishDatePicker :key="reRenderTrigger" @selection-changed="updateSelectedDates"/>
 
       <div class="submit">
         <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1" :title="'Please select program and dates.'"

@@ -7,10 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import com.m2j2.haruseoul.entity.Status;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 public interface PublishedProgramRepository extends JpaRepository<PublishedProgram, Long> {
@@ -33,5 +31,8 @@ public interface PublishedProgramRepository extends JpaRepository<PublishedProgr
     List<Long> findProgramIdsByDateRange(@Param("startDate") LocalDate startDate,
                                          @Param("endDate") LocalDate endDate);
 
+    @Query("SELECT DISTINCT pp.program.id FROM PublishedProgram pp " +
+            "WHERE pp.program.member.id = :hostId")
+    List<Long> findDistinctProgramIdsByHostId(@Param("hostId") Long hostId);
 }
 

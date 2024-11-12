@@ -52,6 +52,8 @@ const userDetails = useUserDetails();
 
 
 const signinHandler = async () => {
+
+  
   console.log("로그인 버튼 작동 중");
 
   try {
@@ -77,9 +79,17 @@ const signinHandler = async () => {
     });
 
     console.log("회원 정보:", userInfo);
-    const returnURL = route.query.returnURL;
-    console.log("리턴 URL:", returnURL);
-    return navigateTo(returnURL);
+    // 온전한 returnURL 복구
+  console.log('조각난 리턴url: ', route.query);
+  let originalReturnURL = route.query.returnURL; // host/reservations?p=1
+  Object.entries(route.query)
+      .filter(([key, value]) => key !== 'returnURL')
+      .forEach(([key, value]) => {
+        originalReturnURL += `&${key}=${value}`;
+      });
+  console.log('originalReturnUrl: ', originalReturnURL);
+
+  return navigateTo(originalReturnURL);
 
   } catch (error) {
     if (error.response && error.response.status === 401) {
@@ -187,6 +197,7 @@ label {
   box-sizing: border-box;
   width: 100%;
 }
+
 .n-btn-background-color\:sub {
   margin: 20px 0;
   box-sizing: border-box;
