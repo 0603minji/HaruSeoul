@@ -26,10 +26,10 @@ const hostId = userDetails.id.value;
 // State
 const isDropdownVisible = ref(false);
 const searchTerm = ref(''); // 검색어
-const selectedOptions = ref([]); // 아래에서 부모컴포넌트에서 전달된 값으로 초기화
+const selectedOptions = ref([]); // 아래에서 부모컴포넌트에서 전달된 값으로 초기화. 부모에게 emit할 배열
 // todo: 개설되면 새로 options fetch해야함
 const options = ref([]); // 선택가능한 모든 옵션
-const filteredOptions = ref([]); // 초기값: 선택가능한 모든 옵션
+const filteredOptions = ref([]); // 초기값: 선택가능한 모든 옵션. options기반으로 filterOptons()로 생성 후 드롭다운에 표시
 
 
 
@@ -37,7 +37,9 @@ const filteredOptions = ref([]); // 초기값: 선택가능한 모든 옵션
 
 // === functions =======================================================================================================
 const toggleDropdown = () => isDropdownVisible.value = !isDropdownVisible.value;
+const closeDropdown = () => isDropdownVisible.value = false;
 
+// 검색어를 적용해서 filteredOptions를 업데이트
 const filterOptions = () => {
   console.log('       filterOptions called,')
   const searchLower = searchTerm.value.toLowerCase();
@@ -91,13 +93,20 @@ console.log('SearchableMultiSelect,    selectedOptions: ', selectedOptions.value
 // filteredOptions 초기화
 filterOptions();
 
-watch(()=>props.toggleDropdown, toggleDropdown);
+
+
+
+
+// 모달창을 때, 드롭다운 collapse
+watch(()=>props.toggleDropdown, closeDropdown);
 
 // Watcher to reset the filtered options when options prop changes
 watch(
     () => props.selectedOptionIds,
     (newOptions) => {
-      selectedOptions.value = options.value.filter(option => newOptions.includes(option.id));
+      console.log('SearchableMultiSelect watch,    props.selectedOptionIds: ', newOptions)
+      console.log('SearchableMultiSelect watch,    options: ', options.value)
+      selectedOptions.value = options.value.filter(option => newOptions.includes(String(option.id)));
       console.log('SearchableMultiSelect watch,    selectedOptions: ', selectedOptions.value)
       filterOptions();
     },
