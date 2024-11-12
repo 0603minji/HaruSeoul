@@ -52,34 +52,45 @@ const userDetails = useUserDetails();
 
 
 const signinHandler = async () => {
-  console.log("로그인버튼 작동중");
+  console.log("로그인 버튼 작동 중");
 
-  let response = await useDataFetch("auth/signin",{
-    method: "POST",
-    headers :{
-      "Content-Type": "application/json"
-    },
-    body:{
-      userId: userId.value,
-      userPwd: userPwd.value
+  try {
+    let response = await useDataFetch("auth/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: {
+        userId: userId.value,
+        userPwd: userPwd.value
+      }
+    });
+
+    let userInfo = jwtDecode(response.token);
+    userDetails.login({
+      id: userInfo.id,
+      userId: userInfo.userId,
+      username: userInfo.name,
+      birth: userInfo.birth,
+      email: userInfo.email,
+      token: response.token
+    });
+
+    console.log("회원 정보:", userInfo);
+    const returnURL = route.query.returnURL;
+    console.log("리턴 URL:", returnURL);
+    return navigateTo(returnURL);
+
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      alert("존재하지 않는 아이디입니다.");
+    } else {
+      console.error("로그인 중 오류 발생:", error);
+      alert("로그인에 실패했습니다. 다시 시도해주세요.");
     }
-  });
-  let userInfo = jwtDecode(response.token)
-  userDetails.login({
-    id: userInfo.id,
-    userId: userInfo.userId,
-    username: userInfo.name,
-    birth: userInfo.birth,
-    email: userInfo.email,
-    token: response.token,
-
-  });
-  console.log("회원정보:",userInfo)
-  const returnURL = route.query.returnURL;
-  console.log("리턴url:",returnURL);
-  return navigateTo(returnURL);
-
+  }
 };
+
 </script>
 
 <style scoped>
