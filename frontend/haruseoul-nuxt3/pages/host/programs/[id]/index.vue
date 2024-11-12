@@ -22,9 +22,19 @@ onMounted(() => {
     fetchOneProgram();
 })
 
+
+const token = localStorage.getItem("token");
+
+
 const fetchOneProgram = async () => {
     const response = await axios.get(
-        "http://localhost:8080/api/v1/host/programs/" + id
+        "http://localhost:8080/api/v1/host/programs/" + id,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        }
+
     );
     oneProgram.value = response.data;
     console.log("data :", oneProgram.value);
@@ -48,8 +58,8 @@ const fetchOneProgram = async () => {
     const exclusion = oneProgram.value.exclusion === null ? '' : oneProgram.value.exclusion;
     const packingList = oneProgram.value.packingList === null ? '' : oneProgram.value.packingList;
     const caution = oneProgram.value.caution === null ? '' : oneProgram.value.caution;
-    
-    inclusionLines.value  = inclusion.split('\n');
+
+    inclusionLines.value = inclusion.split('\n');
     exclusionLines.value = exclusion.split('\n');
     packingListLines.value = packingList.split('\n');
     cautionLines.value = caution.split('\n');
@@ -115,15 +125,22 @@ const goToImage = () => {
                 <section class="bg-color:base-1 width:10p">
                     <h1 class="d:none">대표 이미지 + 카테고리 + 프로그램 제목 + 평점리뷰 + 가격</h1>
                     <!--=====  대표 이미지 =====-->
+
                     <div class="thumbnail-wrapper">
                         <button class="n-btn thumbnail-btn thumbnail-btn:left"><span
                                 class="n-icon n-icon:arrow_left"></span>
                         </button>
                         <img src="/public/image/thumbnail.png" alt="대표사진" class="thumbnail-img">
+
                         <button class="n-btn thumbnail-btn thumbnail-btn:right"><span
                                 class="n-icon n-icon:arrow_right"></span>
                         </button>
+
                         <div class="thumbnail-btn thumbnail-btn:num n-deco">1/5</div>
+                        <div class="edit-btn">
+                            <button class="n-icon n-icon:edit" @click="goToImage"></button>
+                        </div>
+
                     </div>
                     <!--==== 카테고리 ====-->
                     <div class="categories">
@@ -142,7 +159,7 @@ const goToImage = () => {
                                 {{ oneProgram.value.title }}
                             </p>
                             <div class="edit-btn">
-                                <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
+                                <button class="n-icon n-icon:edit" @click="goToIntro"></button>
                             </div>
                         </div>
                         <div class="rating-review">
@@ -152,7 +169,6 @@ const goToImage = () => {
                             <span>/</span>
                             <span>5.0</span>
                             <span>(Reviews)</span>
-                            window.location.hash = '#inclusion';
                             <div class="price">
                                 <div class="n-icon n-icon:price n-deco"
                                     style="display: flex; justify-content: center; align-items: center; height: inherit; font-size: var(--font-size-10); gap: 0;"
@@ -165,7 +181,7 @@ const goToImage = () => {
                                 </div>
                             </div>
                             <div class="edit-btn">
-                                <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
+                                <button class="n-icon n-icon:edit" @click="goToDetail"></button>
                             </div>
                         </div>
                     </div>
@@ -189,17 +205,17 @@ const goToImage = () => {
                                                         {{ oneProgram.value.language }}
                                                     </span>
                                                     <div class="edit-btn m-left:3">
-                                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
+                                                        <button class="n-icon n-icon:edit" @click="goToDetail"></button>
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
                                                     <span class="n-icon n-icon:people n-deco" v-if="oneProgram.value">
                                                         {{ oneProgram.value.groupSizeMin }}/{{
-                                                        oneProgram.value.groupSizeMax }}
+                                                            oneProgram.value.groupSizeMax }}
                                                     </span>
                                                     <span>(min/max)</span>
                                                     <div class="edit-btn m-left:3">
-                                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
+                                                        <button class="n-icon n-icon:edit" @click="goToDetail"></button>
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
@@ -208,7 +224,7 @@ const goToImage = () => {
                                                     </span>
                                                     <span>hours</span>
                                                     <div class="edit-btn m-left:3">
-                                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
+                                                        <button class="n-icon n-icon:edit" @click="goToDetail"></button>
                                                     </div>
                                                 </li>
                                                 <li class="list-content">
@@ -217,7 +233,7 @@ const goToImage = () => {
                                                         {{ oneProgram.value.route[0].address }}
                                                     </span>
                                                     <div class="edit-btn m-left:3">
-                                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
+                                                        <button class="n-icon n-icon:edit" @click="goToCourse"></button>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -264,7 +280,7 @@ const goToImage = () => {
                                 <div class="content-header">
                                     <span class="title">Program Introduction</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToIntro"></button>
                                     </div>
                                 </div>
                                 <div class="text">
@@ -284,24 +300,26 @@ const goToImage = () => {
                                 <div class="content-header">
                                     <span class="title">Course</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToCourse"></button>
                                     </div>
                                 </div>
                                 <div class="details">
                                     <div class="map-img-wrapper">
                                         <img class="map-img" src="/public/image/map.png" alt="코스지도">
                                     </div>
-<!-- ============================================== -->
- <!-- ================================================== -->
+                                    <!-- ============================================== -->
+                                    <!-- ================================================== -->
                                     <section class="n-course-flow">
                                         <div v-for="(route, index) in oneProgram.value.route"
                                             v-if="oneProgram.value && oneProgram.value.route">
                                             <!-- 경유지 -->
-                                            <div :class="`point ${index !== 0 && index !== oneProgram.value.route.length - 1 ? 'drop-by' : ''}`">
+                                            <div
+                                                :class="`point ${index !== 0 && index !== oneProgram.value.route.length - 1 ? 'drop-by' : ''}`">
 
                                                 <div class="icon-wrapper">
                                                     <span class="n-icon n-icon:rectangle">막대기</span>
-                                                    <span :class="`n-icon n-icon:${index === 0 ? 'placeholder' : 'number' + index}`">위치아이콘</span>
+                                                    <span
+                                                        :class="`n-icon n-icon:${index === 0 ? 'placeholder' : 'number' + index}`">위치아이콘</span>
                                                 </div>
 
 
@@ -341,8 +359,8 @@ const goToImage = () => {
                             </div>
                         </div>
                     </section>
-<!-- ======================================= -->
- <!-- ========================================== -->
+                    <!-- ======================================= -->
+                    <!-- ========================================== -->
 
                     <!--==============  만나는 장소  + 포함사항 + 꼭알아두세요 =================-->
                     <section id="meeting-location" class="program">
@@ -354,19 +372,22 @@ const goToImage = () => {
                                 <div class="content-header">
                                     <span class="title">Meeting Point</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToCourse"></button>
                                     </div>
                                 </div>
                                 <div class="details">
                                     <section style="padding-top: 0;">
                                         <h1>만나는장소</h1>
                                         <div class="info-container">
-                                            <p v-if="oneProgram.value && oneProgram.value.route">{{ oneProgram.value.route[0].title }}</p>            
+                                            <p v-if="oneProgram.value && oneProgram.value.route">{{
+                                                oneProgram.value.route[0].title }}</p>
                                             <div
                                                 style="display:flex; align-items: center; padding: var(--gap-3) 0; color: var(--color-base-7);">
                                                 <span class="n-icon n-icon:placeholder"
                                                     style="margin-right: var(--gap-1);">위치아이콘</span>
-                                                <span style="margin-right: var(--gap-1);" v-if="oneProgram.value && oneProgram.value.route">{{ oneProgram.value.route[0].address }}</span>
+                                                <span style="margin-right: var(--gap-1);"
+                                                    v-if="oneProgram.value && oneProgram.value.route">{{
+                                                        oneProgram.value.route[0].address }}</span>
                                             </div>
                                         </div>
                                         <div class="map-img-wrapper">
@@ -381,7 +402,7 @@ const goToImage = () => {
                                 <div class="content-header">
                                     <span class="title">Inclusion</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToInclusion"></button>
                                     </div>
                                 </div>
                                 <div class="details">
@@ -389,15 +410,17 @@ const goToImage = () => {
                                         <h1>포함사항</h1>
                                         <div class="list-container">
                                             <ul style="padding-left: 0;">
-                                                <li class="info-input n-icon n-icon:success-circle-green" v-for="inclusion in inclusionLines" >
+                                                <li class="info-input n-icon n-icon:success-circle-green"
+                                                    v-for="inclusion in inclusionLines">
                                                     {{ inclusion }}
                                                 </li>
                                             </ul>
                                         </div>
                                         <div class="list-container">
                                             <ul style="padding-left: 0;">
-                                                <li class="info-input n-icon n-icon:error" v-for="exclusion in exclusionLines" >
-                                                    {{exclusion}}
+                                                <li class="info-input n-icon n-icon:error"
+                                                    v-for="exclusion in exclusionLines">
+                                                    {{ exclusion }}
                                                 </li>
                                             </ul>
                                         </div>
@@ -410,7 +433,7 @@ const goToImage = () => {
                                 <div class="content-header">
                                     <span class="title">Notice</span>
                                     <div class="edit-btn m-left:3">
-                                        <button class="n-icon n-icon:edit" @click="goToProgramUpdate"></button>
+                                        <button class="n-icon n-icon:edit" @click="goToCaution"></button>
                                     </div>
                                 </div>
                                 <div class="details">
@@ -422,7 +445,8 @@ const goToImage = () => {
                                         <div style="padding: 0 var(--gap-6);">
                                             <h2 class="info-form n-icon n-icon:success-decagon">Essentials</h2>
                                             <ul>
-                                                <li class="list-content" v-for="packingList in packingListLines">{{packingList}}</li>
+                                                <li class="list-content" v-for="packingList in packingListLines">
+                                                    {{ packingList }}</li>
                                             </ul>
                                         </div>
 
@@ -430,7 +454,8 @@ const goToImage = () => {
                                         <div style="padding: var(--gap-6); padding-bottom: 0;">
                                             <h2 class="info-form n-icon n-icon:caution">Caution</h2>
                                             <ul>
-                                                <li class="list-content" v-for="caution in cautionLines">{{ caution }}</li>
+                                                <li class="list-content" v-for="caution in cautionLines">{{ caution }}
+                                                </li>
                                                 <!-- 
                                                 <li class="list-content">Extensive walking</li>
                                                 <li class="list-content">A lot of outdoor activities</li>
@@ -614,6 +639,7 @@ const goToImage = () => {
 
     .thumbnail-wrapper,
     .map-img-wrapper {
+        position: relative;
         background-color: var(--color-base-3);
 
         .thumbnail-img {
@@ -682,6 +708,10 @@ const goToImage = () => {
 /* btn */
 
 .edit-btn {
+    /* position: absolute; */
+    bottom: 10px;
+    right: 10px;
+    z-index: 5;
     background-color: var(--color-sub-2);
     display: flex;
     align-items: center;

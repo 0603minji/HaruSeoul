@@ -30,6 +30,7 @@ const programCreateDto = reactive({
   caution: '',
   requirement: ''
 });
+const activeSection = ref('#intro');
 
 
 //================Fetch Functions==============
@@ -63,7 +64,7 @@ const createProgram = async () => {
   // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
   if (programCreateDto.title.length === 0) {
     if (confirm("프로그램 제목은 필수입력입니다.\n입력 후 저장가능합니다.\n나가시겠습니까?")) {
-      window.location.href = "/host/programs";
+      return navigateTo("/host/programs");
     }
     return;
   }
@@ -88,7 +89,7 @@ const tempSave = async () => {
   // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
   if (programCreateDto.title.length === 0) {
     if (confirm("프로그램 제목은 필수입력입니다.\n입력 후 저장가능합니다.\n나가시겠습니까?")) {
-      window.location.href = "/host/programs";
+      return navigateTo("/host/programs");
     }
     return;
   }
@@ -109,14 +110,17 @@ const tempSave = async () => {
   sendCreateRequest(2, "In Progress");
 }
 
+const token = localStorage.getItem("token");
+
 const sendCreateRequest = async (regMemberId, status) => {
   try {
-    programCreateDto.regMemberId = regMemberId;
+    programCreateDto.regMemberId = localStorage.getItem("id");
     programCreateDto.status = status
     const response = await axios.post("http://localhost:8080/api/v1/host/programs", programCreateDto, {
       headers: {
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
-      }
+      },
     });
     console.log("Program created successfully:", response.data);
 
@@ -244,6 +248,12 @@ const cautionValidation = () => {
 const requirementValidation = () => {
   return (programCreateDto.requirement.length > 1000);
 }
+
+
+const setActiveSection = (section) => {
+  activeSection.value = section;
+}
+
 </script>
 
 
@@ -252,13 +262,30 @@ const requirementValidation = () => {
     <nav class="n-bar-underline-create">
       <h1>목차</h1>
       <ul class="item-wrapper padding-x:6 justify-content:flex-start">
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#intro" class="">소개</a></li>
-        <li class="n-btn:hover n-btn n-btn-border:none n-btn-radius:0"><a href="#detail" class="">세부사항</a></li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#course" class="">코스</a></li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#inclusion" class="">포함사항</a>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#intro' }"
+          @click="setActiveSection('#intro')">
+          <a href="#intro" class="">소개</a>
         </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#caution" class="">추가정보</a></li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"><a href="#image" class="">사진</a></li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#detail' }"
+          @click="setActiveSection('#detail')">
+          <a href="#detail" class="">세부사항</a>
+        </li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#course' }"
+          @click="setActiveSection('#course')">
+          <a href="#course" class="">코스</a>
+        </li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#inclusion' }"
+          @click="setActiveSection('#inclusion')">
+          <a href="#inclusion" class="">포함사항</a>
+        </li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#caution' }"
+          @click="setActiveSection('#caution')">
+          <a href="#caution" class="">추가정보</a>
+        </li>
+        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#image' }"
+          @click="setActiveSection('#image')">
+          <a href="#image" class="">사진</a>
+        </li>
       </ul>
     </nav>
 
@@ -464,8 +491,8 @@ const requirementValidation = () => {
         </div>
         <div class="map">지도</div>
         <div class="d:flex jc:end m-top:5">
-          <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center" @click="addRouteFunction">+
-            경유지</button>
+            <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center" @click="addRouteFunction">+
+              경유지</button>
         </div>
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#detail">이전</a></div>
@@ -1494,5 +1521,22 @@ input[type="number"].no-spinner::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"].no-spinner {
   -moz-appearance: textfield;
+}
+
+
+/*======== 목차 active 스타일 ========*/
+.n-bar-underline-create .item-wrapper .active {
+  background-color: var(--color-main-4);
+  color: var(--color-base-1);
+}
+
+.n-bar-underline-create .item-wrapper .active::after {
+  visibility: visible;
+  background-color: var(--color-main-1);
+  /* 활성화된 항목의 하단 줄 색상 */
+}
+
+.n-bar-underline-create .item-wrapper .active:hover::after {
+  background-color: var(--color-main-1);
 }
 </style>
