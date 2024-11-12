@@ -75,14 +75,14 @@ const selectReservations = async (statusIds) => {
 };
 
 // Function to get the display value based on s.id
-const getDisplayValue = (statusId) => {
+const getDisplayValue = (statusId, reservation) => {
   if (statusId === 6) {
     return "예약확정"; // s.id가 6일 때 표시할 값
   }
   if (statusId === 3) {
     return "이용완료"; // s.id가 3일 때 표시할 값
   }
-  if (statusId === 4 || reservation.value.deleteDate != null)  {
+  if (statusId === 4 || reservation.deleteDate != null)  {
     return "취소됨"; // s.id가 4일 때 표시할 값
   }
   return ""; // 매핑이 없을 경우 기본값 반환

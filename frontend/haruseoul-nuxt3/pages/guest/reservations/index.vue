@@ -165,15 +165,15 @@ onMounted(() => {
                 결제완료
               </span>
 
-              <span v-else-if="r.statusName === 'Finished'" class="n-panel-tag not-submitted">
+              <span v-else-if="r.statusName === 'Finished' && !r.deleteDate" class="n-panel-tag not-submitted">
                 이용완료
               </span>
 
-              <span v-else-if="r.statusName === 'Confirmed'" class="n-panel-tag not-submitted">
+              <span v-else-if="r.statusName === 'Confirmed' && !r.deleteDate" class="n-panel-tag not-submitted">
                 예약확정
               </span>
 
-              <span v-else-if="r.statusName === 'Canceled'" class="n-panel-tag not-submitted"
+              <span v-else-if="r.statusName === 'Canceled' || r.deleteDate != null" class="n-panel-tag not-submitted"
               style="border-color: #DB4455; color: #DB4455;">
                 취소됨
               </span>

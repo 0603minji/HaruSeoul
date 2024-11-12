@@ -18,7 +18,7 @@ public class ReservationCreateDto {
 
     private Long regMemberId;
 
-    private LocalDate reservationDate;
+    private LocalDate pickedDate;
 
     private Integer reservationGroupSize;
 

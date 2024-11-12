@@ -520,10 +520,23 @@
         </section>
 
         <!-- 찜 -->
-        <div class="floating-bar">
+        <div class="floating-bar" style="z-index: 10;"><!--   지도에 잡아먹혀서 z-index     -->
           <button class="n-btn picked"><span class="n-icon n-icon:bookmark_simple">찜</span></button>
-          <label class="n-btn book"><span>예약하기</span><input type="checkbox" id="bookCheckbox"/></label>
+<!--          <a class="n-btn book" @click.prevent="OpenDateRangeFilterModalHandler"><span>예약하기</span><input type="checkbox" id="bookCheckbox"/></a>-->
+          <!--    로그인 안된 사람이 누르면, 로그인페이지로 이동시켜야함 / 로그인한 사람이 누르면 모달창 띄움   -->
         </div>
+
+        <!-- === 모달 =================================================================================================== -->
+<!--        <DateRangeFilterModal :key="reRenderTrigger" :class="{'show': isModalVisible === 'DateRangeFilterModal'}"-->
+<!--                              :selectedDates="selectedDates"-->
+<!--                              @close-modal="(selected) => { updateDateFilterQuery(selected); isModalVisible = '';}"/>-->
+
+<!--        <PublishProgramModal :class="{'show': isModalVisible === 'PublishProgramModal'}"-->
+<!--                             @close-modal="() => { fetchData(); isModalVisible = ''; }"/>-->
+
+<!--        &lt;!&ndash; 모달창 떴을 때 배경처리   &ndash;&gt;-->
+<!--        <div :class="{'active': isModalVisible}" class="backdrop"></div>-->
+        <!-- ============================================================================================================= -->
       </section>
     </section>
   </main>
@@ -534,6 +547,8 @@
 import {ref, onMounted} from 'vue';
 import {useFetch} from '#app';
 import {useRoute} from 'vue-router';
+import PublishProgramModal from "~/components/modal/PublishProgramModal.vue";
+import DateRangeFilterModal from "~/components/modal/DateRangeFilterModal.vue";
 
 const route = useRoute();
 const programId = ref(route.params.id); // route에서 programId를 가져옴
@@ -729,6 +744,66 @@ watchEffect(() => {
   console.log("Error:", error.value);
 });
 
+
+// === 모달창 ===========================================================================================================
+// const isModalVisible = ref("");
+//
+// const OpenDateRangeFilterModalHandler = () => isModalVisible.value = "DateRangeFilterModal";
+// const OpenPublishProgramModalHandler = () => isModalVisible.value = "PublishProgramModal";
+// const dates = ref(route.query.d); // 검색할 기간의 시작일, 말일. PublishedProgramFilter에서 emit으로 받아올 것
+//
+// // $fetch
+// const fetchData = async () => {
+//   const query = createQuery();
+//   const data = await useDataFetch(`host/published-programs`, { query: query });
+//
+//   // api query -> user query
+//   const keysToExclude = ["mIds", "pageSize"];
+//   let userQuery = Object.fromEntries(
+//       Object.entries(query).filter(([key, value]) => {
+//         // 'mIds'와 'pageSize'를 제외하고 'tab'이 'finished'나 'canceled'가 아닌 경우 'tab'을 제외시킨다
+//         if (keysToExclude.includes(key)) return false;
+//         return !(key === 'tab' && value !== 'finished' && value !== 'canceled');
+//       })
+//   );
+//
+//   console.log('     index fetchData called')
+//   console.log('           >> query :', query)
+//   console.log('           >> userQuery :', userQuery)
+//
+//   // url에 쿼리스트링 push
+//   await router.push({path: route.path, query: userQuery});
+//
+//   mapFetchedData(data);
+// }
+//
+// // 필터모달에서 업데이트한 변수들로 쿼리 만들어서 패치
+// const updateDateFilterQuery = (selectedDates) => {
+//   console.log('updateDateFilterQuery called')
+//   // [date객체, date객체] -> "2024-11-26,2024-11-28"
+//   dates.value = selectedDates
+//       .map((date) =>
+//           new Intl.DateTimeFormat("ko-KR", {
+//             year: "numeric",
+//             month: "2-digit",
+//             day: "2-digit",
+//             timeZone: "Asia/Seoul",
+//           })
+//               .format(date)
+//               .replace(/\. /g, "-")
+//               .replace(".", "")
+//       )
+//       .join(",");
+//   console.log('   ->  dates쿼리: ', dates.value);
+//
+//   fetchData();
+// }
+//
+// const selectedDates = ref(dates.value ? dates.value.split(",").map(dateString => new Date(dateString + 'T00:00:00.000+09:00')) : []);
+// console.log("index selectedDates :", selectedDates.value);
+//
+// // 모든 필터 초기화 시 필터모달 다시 렌더링으로 구현
+// const reRenderTrigger = ref(false);
 
 </script>
 
