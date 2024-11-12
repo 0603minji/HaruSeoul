@@ -15,7 +15,7 @@
         </div>
         <div class="info-row">
           <span class="label">비밀번호</span>
-          <span class="value"><NuxtLink class="edit-link" href="/change-password">변경</NuxtLink></span>
+          <span class="value"><NuxtLink class="edit-link" href="/mypage/pwd-check">변경</NuxtLink></span>
         </div>
         <div class="info-row">
           <span class="label">이름</span>
@@ -32,8 +32,20 @@
       </section>
 
       <section class="profile-footer">
-        <button class="delete-account-button">계정 삭제하기</button>
+        <button @click="openDeleteModal" class="delete-account-button">계정 삭제하기</button>
       </section>
+
+      <transition name="modal">
+        <div v-if="showDeleteModal" class="modal-background">
+          <div class="modal-content">
+            <h2>정말 삭제하시겠습니까?</h2>
+            <div class="modal-buttons">
+              <button @click="confirmDelete" class="confirm-button">확인</button>
+              <button @click="closeDeleteModal" class="cancel-button">취소</button>
+            </div>
+          </div>
+        </div>
+      </transition>
     </div>
   </main>
 </template>
@@ -108,6 +120,53 @@
   cursor: pointer;
 }
 
+   /* 모달 스타일 */
+ .modal-background {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.5);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   z-index: 1000;
+ }
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.confirm-button {
+  background-color: #ff4d4f;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background-color: #ccc;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 @media (min-width: 768px) {
   .container {
     max-width: 768px;
@@ -121,10 +180,34 @@ import {useDataFetch} from "~/composables/useDataFetch.js";
 
 const memberId = localStorage.getItem("id");
 const data = ref({});
+const showDeleteModal = ref(false);
+const userDetails = useUserDetails();
+
 
 const response = await useDataFetch(`members/${memberId}`);
 // console.log("응답 데이타", response);
 data.value = response;
 console.log(data.value);
+
+const openDeleteModal = () => {
+  showDeleteModal.value = true;
+};
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false;
+};
+
+const confirmDelete = async () => {
+
+  const response = await useDataFetch(`members/${memberId}`, {
+    method: "DELETE",
+  })
+  console.log("계정 삭제 확인");
+  closeDeleteModal();
+  userDetails.logout();
+  if (process.client) {
+    navigateTo("/signin");
+  }
+};
 
 </script>

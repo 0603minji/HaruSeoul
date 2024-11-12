@@ -284,10 +284,14 @@
             </div>
 
             <div class="reset-box">
-              <span @click.prevent="resetFilters" style="cursor: pointer" class="icon-box n-deco1 n-icon n-icon:reset">
-                초기화
+              <div class="gradation"></div>
+              <div class="btn-box">
+              <span @click.prevent="resetFilters" style="cursor: pointer" class="reset-btn icon-box n-deco1 n-icon n-icon:reset">
+                reset
               </span>
+              </div>
             </div>
+
 
             <!-- 모달 -->
             <transition name="modal">
@@ -390,7 +394,6 @@
                       </div>
                     </div>
                   </div>
-
 
                   <div v-if="selectedModal === 'duration'">
                     <input type="radio" class="radio" name="duration" :value="null" v-model="duration"
@@ -521,7 +524,7 @@ const startTime = ref(1);
 const language = ref(null);
 
 const selectedModal = ref(null);
-const modalPosition = ref({ top: '0px', left: '0px' });
+const modalPosition = ref({top: '0px', left: '0px'});
 const isPeriodActive = ref(false);
 const isPriceActive = ref(false);
 const isCategoryActive = ref(false);
@@ -529,9 +532,6 @@ const isLanguageActive = ref(false);
 const isStartTimeActive = ref(false);
 const isGroupSizeActive = ref(false);
 const isDurationActive = ref(false);
-
-
-
 
 
 const fetchCategories = async () => {
@@ -588,6 +588,7 @@ const resetProgramsAndFetch = () => {
 };
 
 watch([selectedCategoryIds, startDate, endDate, minPrice, maxPrice, groupSizeMin, groupSizeMax, duration, startTime, language], resetProgramsAndFetch);
+
 watch([startDate, endDate], ([newStartDate, newEndDate]) => {
   isPeriodActive.value = !!newStartDate || !!newEndDate;
 });
@@ -601,7 +602,7 @@ watch(language, (newLanguage) => {
   isLanguageActive.value = !!newLanguage;
 });
 watch(startTime, (newStartTime) => {
-  isStartTimeActive.value = !!newStartTime;
+  isStartTimeActive.value = newStartTime !== 1;
 });
 watch([groupSizeMin, groupSizeMax], ([newGroupSizeMin, newGroupSizeMax]) => {
   isGroupSizeActive.value = !!newGroupSizeMin || !!newGroupSizeMax;
@@ -691,13 +692,13 @@ const closeModal = () => {
   selectedModal.value = null;
 };
 
-const applyPeriodFilter = () => isPeriodActive.value = true;
-const applyPriceFilter = () => isPriceActive.value = true;
-const applyCategoryFilter = () => isCategoryActive.value = true;
-const applyLanguageFilter = () => isLanguageActive.value = true;
-const applyStartTimeFilter = () => isStartTimeActive.value = true;
-const applyGroupSizeFilter = () => isGroupSizeActive.value = true;
-const applyDurationFilter = () => isDurationActive.value = true;
+// const applyPeriodFilter = () => isPeriodActive.value = true;
+// const applyPriceFilter = () => isPriceActive.value = true;
+// const applyCategoryFilter = () => isCategoryActive.value = true;
+// const applyLanguageFilter = () => isLanguageActive.value = true;
+// const applyStartTimeFilter = () => isStartTimeActive.value = true;
+// const applyGroupSizeFilter = () => isGroupSizeActive.value = true;
+// const applyDurationFilter = () => isDurationActive.value = true;
 
 
 onMounted(() => {
