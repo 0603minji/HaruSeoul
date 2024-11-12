@@ -27,26 +27,13 @@ const formatDate = (dateString) => {
 
 // 한국날짜 D-day("2024-11-26") 입력하면 현재 한국시간 기준으로 d-day계산
 const calculateKoreanDDay = (enteredDate) => {
-  const koreaTimeOffset = 9 * 60; // UTC+9 in minutes
+  const koreaTimeOffset = 9 * 60 * 60 * 1000; // UTC+9 in minutes
+  const targetDate = new Date(enteredDate + 'T00:00:00+09:00');
+  const today = new Date();
 
-  // Create the entered date (midnight of the entered date in Korean Time)
-  const targetDateKST = new Date(enteredDate);
-  targetDateKST.setHours(0, 0, 0, 0); // Set to midnight of the entered date in local time
+  const timediff = targetDate.getTime() - today.getTime();
 
-  // Adjust the entered date to Korean Time (add UTC+9)
-  const targetDateInKST = new Date(targetDateKST.getTime() - koreaTimeOffset * 60000);
-
-  // Calculate the time difference in milliseconds
-  const timeDifference = targetDateInKST.getTime() - Date.now();
-
-  // Convert the time difference to days
-  const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
-  /*
-    daysDiff = 0 : D-day
-    daysDiff > 0 : D-daysDiff
-    daysDiff < 0 : D+daysDiff (화면에 출력 안할 것)
-  */
-  return daysDifference;
+  return Math.ceil(timediff/ (24*3600*1000));
 }
 
 const createQuery = () => {
