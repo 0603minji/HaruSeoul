@@ -160,7 +160,7 @@ public class DefaultReservationService implements ReservationService {
 
     @Override
     @Transactional
-    public void create(ReservationCreateDto reservationCreateDto) {
+    public Reservation create(ReservationCreateDto reservationCreateDto) {
 
         // 예약할때 받은 공개 프로그램 ID로 공개 프로그램 가져오기
         PublishedProgram publishedProgram = publishedProgramRepository.findById(reservationCreateDto.getPublishedProgramId()).orElseThrow(() ->
@@ -198,6 +198,8 @@ public class DefaultReservationService implements ReservationService {
         else {
             throw new IllegalStateException("예약 불가: 총 그룹 인원이 " + programGroupMaxSize + " 명을 초과할 수 없습니다.");
         }
+
+        return reservation;
     }
 
     @Override

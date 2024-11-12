@@ -15,10 +15,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "where (:sIds is null or r.publishedProgram.status.id in :sIds)" +
             "and (:mIds is null or r.member.id in :mIds)")
     Page<Reservation> findAll(@Param("sIds") List<Long> sIds, @Param("mIds") List<Long> mIds, Pageable pageable);
-
-    @Query("from Reservation r " +
-            "where (:sIds is null or r.publishedProgram.status.id in :sIds)" +
-            "and (:mIds is null or r.member.id in :mIds)" +
-            "and (r.deleteDate is null)")
-    List<Reservation> findByDeleteDateIsNull(@Param("sIds") List<Long> sIds, @Param("mIds") List<Long> mIds, @Param("deleteDate") Date deleteDate);
 }

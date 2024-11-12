@@ -8,6 +8,7 @@ import java.util.Date;
 public class ReservationMapper {
 
     public static ReservationListDto mapToDto(Reservation reservation) {
+
         return ReservationListDto.builder()
                 .id(reservation.getId())
                 .hostId(reservation.getPublishedProgram().getProgram().getMember().getId())
