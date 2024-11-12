@@ -29,17 +29,17 @@ watchEffect(() => {
 
 // Computed property to check if a status should be disabled based on the tab
 const isStatusDisabled = (StatusName) => {
-  console.log('isStatusDisabled called. tab: ', props.tab);
-  console.log('   statusName : ', StatusName.toLowerCase())
+  // console.log('isStatusDisabled called. tab: ', props.tab);
+  // console.log('   statusName : ', StatusName.toLowerCase())
   const statusName = StatusName.toLowerCase();
   if (props.tab === 'canceled') {
-    console.log('     isStatusDisabled: ', statusName !== 'canceled')
+    // console.log('     isStatusDisabled: ', statusName !== 'canceled')
     return statusName !== 'canceled';
   } else if (props.tab === 'finished') {
-    console.log('     isStatusDisabled: ', statusName !== 'finished')
+    // console.log('     isStatusDisabled: ', statusName !== 'finished')
     return statusName !== 'finished';
   } else {
-    console.log('     isStatusDisabled: ', statusName === 'finished' || statusName === 'canceled')
+    // console.log('     isStatusDisabled: ', statusName === 'finished' || statusName === 'canceled')
     return statusName === 'finished' || statusName === 'canceled';
   }
 };

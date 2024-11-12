@@ -162,17 +162,16 @@ const updateDateFilterQuery = (selectedDates) => {
 const updateStatusFilterQuery = (SelectedStatuses) => {
   console.log('updateStatusFilterQuery called');
   selectedStatuses.value = SelectedStatuses;
+  console.log('   -> selectedStatuses: ', selectedStatuses.value)
   statuses.value = SelectedStatuses.join(",");
   fetchData();
 }
 
-const updateProgramFilterQuery = (selectedPrograms) => {
+const updateProgramFilterQuery = (selected) => {
   console.log('updateProgramFilterQuery called')
-  selectedPrograms.value = selectedPrograms;
-  // selectedPrograms [ {id:1, title: },{id:2, title: }..  ] => String pIds: '1,2,..'
-  pIds.value = selectedPrograms.value
-      .map(program => program.id) // [1, 2, 3..]
-      .join(","); // '1,2,3...'
+  console.log('selected: ', selected) // [{id: , title: }]
+  selectedProgramIds.value = selected.map(program => String(program.id)); // ["1", "2"...]
+  pIds.value = selectedProgramIds.value.join(","); // '1,2,3...'
   fetchData();
 }
 
@@ -184,6 +183,10 @@ const resetFilterHandler = () => {
   pIds.value = "";
   page.value = "1";
   fetchData();
+
+  selectedDates.value = [];
+  selectedProgramIds.value = [];
+  selectedStatuses.value = [];
 
   // 모달창에 저장된 선택값들도 초기화. 필터모달 다시 랜더링
   reRenderTrigger.value = !reRenderTrigger.value;
@@ -264,8 +267,8 @@ console.log("index selectedStatues :", selectedStatuses.value);
 const selectedDates = ref(dates.value ? dates.value.split(",").map(dateString => new Date(dateString + 'T00:00:00.000+09:00')) : []);
 console.log("index selectedDates :", selectedDates.value);
 
-const selectedPrograms = ref(pIds.value ? pIds.value.split(",") : []);
-console.log("index selectedPrograms :", selectedPrograms.value);
+const selectedProgramIds = ref(pIds.value ? pIds.value.split(",") : []);
+console.log("index selectedProgramIds :", selectedProgramIds.value);
 
 
 // 모든 필터 초기화 시 필터모달 다시 렌더링으로 구현
@@ -292,13 +295,13 @@ mapFetchedData(data.value);
                                 :class="{'show': isModalVisible === 'PublishedStatusFilterModal'}"
                                 :tab="tab"
                                 :selectedStatuses="selectedStatuses"
-                                @update-list-by-tab="updateStatusFilterQuery(selected)"
+                                @update-list-by-tab="updateStatusFilterQuery"
                                 @close-modal="(selected) => { updateStatusFilterQuery(selected); isModalVisible = '';}"/>
     <ProgramFilterModal :key="reRenderTrigger"
                                 :class="{'show': isModalVisible === 'ProgramFilterModal'}"
-                                :selectedPrograms="selectedPrograms"
+                                :selectedProgramIds="selectedProgramIds"
                                 @close-modal="isModalVisible = ''"
-                                @updateSelectedPrograms="updateProgramFilterQuery(selected)"/>
+                                @updateSelectedPrograms="updateProgramFilterQuery"/>
     <PublishProgramModal :class="{'show': isModalVisible === 'PublishProgramModal'}"
                          @close-modal="() => { fetchData(); isModalVisible = ''; }"/>
 
@@ -363,6 +366,7 @@ mapFetchedData(data.value);
                        :class="{'active': statuses}"
                        class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램 상태</a></li>
                 <li><a @click.prevent="OpenProgramFilterModalHandler" href=""
+                       :class="{'active': pIds}"
                        class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1">프로그램</a>
                 </li>
               </ul>

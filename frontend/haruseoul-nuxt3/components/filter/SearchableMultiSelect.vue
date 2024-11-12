@@ -6,11 +6,19 @@ const emit = defineEmits(['selectionChanged'])
 
 // Props
 const props = defineProps({
-  selectedOptions: {
+  selectedOptionIds: {
     type: Array,
     default: []
+  },
+  toggleDropdown: {
+    type: Boolean,
+    default: false
   }
 });
+
+
+console.log('SearchableMultiSelect,    props.selectedOptionIds: ', props.selectedOptionIds);
+
 
 const userDetails = useUserDetails();
 const hostId = userDetails.id.value;
@@ -18,31 +26,28 @@ const hostId = userDetails.id.value;
 // State
 const isDropdownVisible = ref(false);
 const searchTerm = ref(''); // 검색어
-const selectedOptions = ref(props.selectedOptions); // 부모컴포넌트에서 전달된 값으로 초기화
+const selectedOptions = ref([]); // 아래에서 부모컴포넌트에서 전달된 값으로 초기화
+// todo: 개설되면 새로 options fetch해야함
 const options = ref([]); // 선택가능한 모든 옵션
 const filteredOptions = ref([]); // 초기값: 선택가능한 모든 옵션
 
-/*
-  options 초기화
-  1. PublishedProgram테이블에서 mIds로 모든 distinct pIds를 얻어온다. host/published-programs/distinct?hostId=?
-  2. Program테이블에서 pIds로 검색해서 {id: 1, title: '제목'}객체 배열을 생성 후 초기화
-*/
-
-const { data: pIds } = await useAuthFetch(`host/published-programs/distinct?mId=${hostId}`);
 
 
-// Methods
-const toggleDropdown = () => {
-  isDropdownVisible.value = !isDropdownVisible.value;
-};
+
+
+// === functions =======================================================================================================
+const toggleDropdown = () => isDropdownVisible.value = !isDropdownVisible.value;
 
 const filterOptions = () => {
+  console.log('       filterOptions called,')
   const searchLower = searchTerm.value.toLowerCase();
-  filteredOptions.value = props.options.filter(option =>
-      option.name.toLowerCase().includes(searchLower)
+  filteredOptions.value = options.value.filter(option =>
+      option.title.toLowerCase().includes(searchLower)
   );
+  console.log('           -> filteredOptions: ', filteredOptions.value)
 };
 
+// 옵션이 체크되거나 체크해제되면 selectedOptions에 추가, 삭제, 정렬 후 emit
 const toggleOption = (option) => {
   const index = selectedOptions.value.findIndex((selected) => selected.id === option.id);
   if (index > -1) {
@@ -63,16 +68,40 @@ const clearSearch = () => {
 };
 
 const programFilterResetHandler = () => {
-  selectedOptions.value = [...props.initialOptions];
+  selectedOptions.value = [];
   emit('selectionChanged', selectedOptions.value);
 };
 
+
+/*
+  options 초기화
+  1. PublishedProgram테이블에서 mIds로 모든 distinct pIds를 얻어온다. host/published-programs/distinct?hostId=?
+  2. Program테이블에서 pIds로 검색해서 {id: 1, title: '제목'}객체 배열을 생성 후 초기화
+*/
+
+const {data} = await useAuthFetch(`host/published-programs/distinct?mId=${hostId}`);
+options.value = data.value.programFilterListDtos; // [{id: 1, title: 'daf'},...]
+console.log('       프로그램필터 모든 옵션. options: ', options.value);
+
+// selectedOptions 초기화. props.selectedOptionIds -> options.filter
+selectedOptions.value = options.value.filter(option => props.selectedOptionIds.includes(String(option.id)));
+console.log('SearchableMultiSelect,    selectedOptions: ', selectedOptions.value)
+
+
+// filteredOptions 초기화
+filterOptions();
+
+watch(()=>props.toggleDropdown, toggleDropdown);
+
 // Watcher to reset the filtered options when options prop changes
 watch(
-    () => props.options,
+    () => props.selectedOptionIds,
     (newOptions) => {
-      filteredOptions.value = newOptions;
-    }
+      selectedOptions.value = options.value.filter(option => newOptions.includes(option.id));
+      console.log('SearchableMultiSelect watch,    selectedOptions: ', selectedOptions.value)
+      filterOptions();
+    },
+    {deep: true}
 );
 
 // watch(
@@ -98,11 +127,11 @@ watch(
       </button>
     </div>
 
-    <div class="searchable-select">
+    <div class="searchable-multi-select">
       <!-- Select box that toggles the dropdown -->
       <div class="select-box">
         <div @click="toggleDropdown" class="status" v-if="!isDropdownVisible">
-          <p class="margin-right:auto" v-if="selectedOptions.length===1">{{ selectedOptions.at(0).name }}</p>
+          <p class="margin-right:auto" v-if="selectedOptions.length===1">{{ selectedOptions.at(0).title }}</p>
           <p class="margin-right:auto" v-if="selectedOptions.length>1">{{ selectedOptions.length }} selected</p>
           <p class="margin-right:auto" v-if="selectedOptions.length===0">프로그램을 선택하세요.</p>
           <span class="n-icon n-icon:arrow_down margin-left:auto">드롭다운 보기</span>
@@ -120,20 +149,54 @@ watch(
                 class="clear-search n-icon n-icon:exit n-icon-color:base-6 n-icon-size:4">검색어 초기화</span>
           <span @click="toggleDropdown" class="n-icon n-icon:arrow_up">드롭다운 닫기</span>
         </div>
+
+        <!-- Dropdown list -->
+        <div v-if="isDropdownVisible" class="dropdown">
+          <!--selected 드롭다운에서 선택된 옵션들 따로 표시해주는 목록박스-->
+          <!--
+          <ul>
+            <li class="select-count" v-if="searchTerm===''&&selectedOptions.length!==0">
+              {{ selectedOptions.length }} selected
+            </li>
+            <li class="selected-option"
+                v-if="searchTerm===''"
+                v-for="(option, index) in selectedOptions"
+                :key="option.id"
+                :class="{'last-selected-option': index === selectedOptions.length-1}">
+              <label>
+                <input
+                    type="checkbox"
+                    :value="option"
+                    checked
+                    @change="toggleOption(option)"
+                />
+                {{ option.title }}
+              </label>
+            </li>
+          </ul>-->
+          <ul>
+            <li v-if="filteredOptions.length===0" class="padding:2">검색결과가 없습니다.</li>
+
+            <!--not selected & filtered-->
+            <li class="filtered-option" v-for="option in filteredOptions" :key="option.id">
+              <label>
+                <input
+                    type="checkbox"
+                    :value="option"
+                    :checked="selectedOptions.some(selected => selected.id === option.id)"
+                    @change="toggleOption(option)"
+                />
+                {{ option.title }}
+              </label>
+            </li>
+          </ul>
+        </div>
       </div>
 
-      <!-- Dropdown list -->
-      <div v-if="isDropdownVisible" class="dropdown">
+      <div class="selected-list-container">
         <ul>
-          <!--selected-->
-          <li class="select-count" v-if="searchTerm===''&&selectedOptions.length!==0">
-            {{ selectedOptions.length }} selected
-          </li>
-          <li class="selected-option"
-              v-if="searchTerm===''"
-              v-for="(option, index) in selectedOptions"
-              :key="option.id"
-              :class="{'last-selected-option': index === selectedOptions.length-1}">
+          <li  v-for="(option, index) in selectedOptions"
+               :key="option.id">
             <label>
               <input
                   type="checkbox"
@@ -141,23 +204,7 @@ watch(
                   checked
                   @change="toggleOption(option)"
               />
-              {{ option.name }}
-            </label>
-          </li>
-        </ul>
-        <ul>
-          <li v-if="filteredOptions.length===0" class="padding:2">검색결과가 없습니다.</li>
-
-          <!--not selected & filtered-->
-          <li class="filtered-option" v-for="option in filteredOptions" :key="option.id">
-            <label>
-              <input
-                  type="checkbox"
-                  :value="option"
-                  :checked="selectedOptions.some(selected => selected.id === option.id)"
-                  @change="toggleOption(option)"
-              />
-              {{ option.name }}
+              {{ option.title }}
             </label>
           </li>
         </ul>
@@ -184,7 +231,7 @@ watch(
     }
   }
 
-  .searchable-select {
+  .searchable-multi-select {
     position: relative;
     //width: 200px;
     //padding: 0 10px;
@@ -192,6 +239,8 @@ watch(
 
     .select-box {
       //padding: 8px;
+      position: relative;
+      margin-bottom: 30px;
 
       .status {
         display: flex;
@@ -216,52 +265,70 @@ watch(
           flex-grow: 1;
         }
       }
-    }
 
-    .dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      border: 1px solid #ccc;
-      border-radius: 0 0 6px 6px;
-      background-color: #fff;
-      max-height: 400px;
-      overflow-y: auto;
-      z-index: 1000;
+      .dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        border: 1px solid #ccc;
+        border-radius: 0 0 6px 6px;
+        background-color: #fff;
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 1000;
 
-      ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
+        ul {
+          list-style-type: none;
+          padding: 0;
+          margin: 0;
 
-        li {
-          label {
-            padding: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
+          li {
+            label {
+              padding: 8px;
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              cursor: pointer;
+            }
           }
-        }
 
-        .filtered-option:hover {
-          background-color: #f0f0f0;
-        }
+          .filtered-option:hover {
+            background-color: #f0f0f0;
+          }
 
-        .select-count {
-          padding: 8px;
-        }
+          .select-count {
+            padding: 8px;
+          }
 
-        .selected-option, .select-count {
-          background-color: #e1e0e0;
-        }
+          .selected-option, .select-count {
+            background-color: #e1e0e0;
+          }
 
-        .last-selected-option {
-          padding-bottom: 8px;
+          .last-selected-option {
+            padding-bottom: 8px;
+          }
         }
       }
     }
+
+
+    .selected-list-container {
+      --bg-color: #f5f5f5;
+
+      //max-width: 768px;
+      //min-width: 250px;
+      width: 100%;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+      background-color: var(--bg-color);
+      border-radius: 25px;
+      box-shadow: 0 3px 2px 0 var(--color-base-3);
+    }
+
   }
 }
 </style>
