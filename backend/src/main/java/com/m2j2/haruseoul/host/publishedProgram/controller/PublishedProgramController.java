@@ -34,8 +34,8 @@ public class PublishedProgramController {
 
     // distinct pp.program.id from PublishedPrograms pp where pp.program.regMemberId = ?
     @GetMapping("/distinct")
-    public ResponseEntity<List<Long>> getDistinctProgramIds(@RequestParam(required = false) Long mId) {
-        return ResponseEntity.ok(service.getDistinctProgramIds(mId));
+    public ResponseEntity<PublishedProgramProgramFilterResponseDto> getAllDistinct(@RequestParam(required = false) Long mId) {
+        return ResponseEntity.ok(service.getProgramFilterList(mId));
     }
 
     @PostMapping

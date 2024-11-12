@@ -2,16 +2,13 @@ package com.m2j2.haruseoul.repository;
 
 import com.m2j2.haruseoul.entity.PublishedProgram;
 
-import com.m2j2.haruseoul.host.program.dto.ProgramFilterDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import com.m2j2.haruseoul.entity.Status;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 public interface PublishedProgramRepository extends JpaRepository<PublishedProgram, Long> {

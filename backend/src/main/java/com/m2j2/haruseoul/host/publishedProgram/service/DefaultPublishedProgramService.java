@@ -1,6 +1,7 @@
 package com.m2j2.haruseoul.host.publishedProgram.service;
 
 import com.m2j2.haruseoul.entity.*;
+import com.m2j2.haruseoul.host.program.dto.ProgramFilterListDto;
 import com.m2j2.haruseoul.host.publishedProgram.dto.*;
 import com.m2j2.haruseoul.repository.ProgramRepository;
 import com.m2j2.haruseoul.repository.PublishedProgramRepository;
@@ -159,8 +160,17 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
     }
 
     @Override
-    public List<Long> getDistinctProgramIds(Long hostId) {
-        return publishedProgramRepository.findDistinctProgramIdsByHostId(hostId);
+    public PublishedProgramProgramFilterResponseDto getProgramFilterList(Long hostId) {
+        List<Long> pIds = publishedProgramRepository.findDistinctProgramIdsByHostId(hostId);
+        List<Program> programs = programRepository.findAllList(hostId, pIds, null);
+        // program -> programFilterListDto
+        List<ProgramFilterListDto> programFilterListDtos = programs.stream()
+                .map(program -> modelMapper.map(program, ProgramFilterListDto.class))
+                .toList();
+
+        return PublishedProgramProgramFilterResponseDto.builder()
+                .programFilterListDtos(programFilterListDtos)
+                .build();
     }
 
     @Override

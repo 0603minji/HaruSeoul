@@ -29,8 +29,6 @@ const filteredOptions = ref([]); // 초기값: 선택가능한 모든 옵션
 */
 
 const { data: pIds } = await useAuthFetch(`host/published-programs/distinct?mId=${hostId}`);
-const { data } = await useAuthFetch(`host/programs/user/${hostId});
-
 
 
 // Methods
