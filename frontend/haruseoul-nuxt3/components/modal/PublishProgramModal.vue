@@ -86,8 +86,14 @@ const submitHandler = async () => {
 
   try {
     console.log('          ->  POST host/published-programs');
-    const response = await axios.post(`${config.public.apiBase}host/published-programs`, publishedProgramCreateDto);
-    console.log('          PublishedProgram post result: ', response.data);
+    let response = await useDataFetch("host/published-programs", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: publishedProgramCreateDto
+    });
+    console.log('          PublishedProgram post result: ', response);
     // 포스트된 결과를 반영하여 모달창 달력 업데이트
 
   } catch (error) {
