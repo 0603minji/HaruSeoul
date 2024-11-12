@@ -13,5 +13,5 @@ public interface PublishedProgramService {
     PublishedProgramResponseDto getList(List<Long> memberIds, List<LocalDate> dates, List<Long> statusIds, List<Long> programIds,
                                         Integer page, Integer pageSize, String sort, String order, String tab);
     boolean delete(Long id);
-    List<Long> getDistinctProgramIds(Long hostId);
+    PublishedProgramProgramFilterResponseDto getProgramFilterList(Long hostId);
 }

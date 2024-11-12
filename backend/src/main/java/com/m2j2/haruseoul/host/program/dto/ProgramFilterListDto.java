@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProgramFilterDto {
+public class ProgramFilterListDto {
     private Long id;
     private String title;
 }

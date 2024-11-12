@@ -12,14 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -94,11 +91,11 @@ public class DefaultProgramService implements ProgramService {
     }
 
     @Override
-    public List<ProgramFilterDto> getList(Long hostId, List<String> statuses) {
-        List<Program> programs = programRepository.findAllList(hostId, null, statuses);
+    public List<ProgramFilterListDto> getList(Long hostId, List<Long> pIds, List<String> statuses) {
+        List<Program> programs = programRepository.findAllList(hostId, pIds, statuses);
 
         return programs.stream()
-                .map(program -> mapper.map(program, ProgramFilterDto.class))
+                .map(program -> mapper.map(program, ProgramFilterListDto.class))
                 .toList();
     }
 
