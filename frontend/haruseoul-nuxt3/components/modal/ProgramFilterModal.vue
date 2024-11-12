@@ -6,19 +6,18 @@ const emit = defineEmits(['closeModal', 'updateSelectedPrograms']);
 
 // Props
 const props = defineProps({
-  selectedPrograms: {
+  selectedProgramIds: {
     type: Array,
     default: []
   }
 });
 
-
+console.log('programFilterModal,   props.selectedProgramIds: ', props.selectedProgramIds)
 
 
 //=== 변수 ==============================================================================================================
 // Selected option
-const selectedPrograms = ref(props.selectedPrograms);
-
+const toggleDropdown = ref(false); // 자식인 SearchableMultiSelect의 드롭다운 상태를 props로 초기화. 모달창 닫을 때 드롭다운이 켜져있으면 같이 끔
 
 
 
@@ -27,10 +26,10 @@ const selectedPrograms = ref(props.selectedPrograms);
 // === function ========================================================================================================
 // Handle selection change
 const updateSelection = (selectedOptions) => {
-  selectedPrograms.value = selectedOptions;
-  console.log('******* updateSelection called', selectedPrograms.value);
-  emit('updateSelectedPrograms', selectedPrograms);
+  console.log('******* updateSelection called', selectedOptions);
+  emit('updateSelectedPrograms', selectedOptions);
 };
+
 
 
 </script>
@@ -39,12 +38,13 @@ const updateSelection = (selectedOptions) => {
   <aside class="popup modal">
     <header class="popup-header">
       <h1 class="font-size:9">필터</h1>
-      <button @click.prevent="emit('closeModal')" class="n-btn n-btn:hover n-btn-border:transparent n-icon n-icon:exit">닫기</button>
+      <button @click.prevent="emit('closeModal'); toggleDropdown = !toggleDropdown" class="n-btn n-btn:hover n-btn-border:transparent n-icon n-icon:exit">닫기</button>
     </header>
 
-    <form @submit.prevent="emit('closeModal')" class="popup-body" action="">
+    <form @submit.prevent="emit('closeModal'); toggleDropdown = !toggleDropdown" class="popup-body" action="">
       <!--프로그램 선택-->
-      <SearchableMultiSelect :selected-options="selectedPrograms"
+      <SearchableMultiSelect :selected-option-ids="props.selectedProgramIds"
+                             :toggle-dropdown="toggleDropdown"
                              @selection-changed="updateSelection"/>
 
       <div class="submit">
