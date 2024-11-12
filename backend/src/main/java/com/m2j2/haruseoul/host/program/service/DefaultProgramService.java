@@ -108,15 +108,13 @@ public class DefaultProgramService implements ProgramService {
     @Transactional
     public Program create(ProgramCreateDto programCreateDto) {
         //Program program = mapper.map(programCreateDto, Program.class);
-        Optional<Member> regMember = memberRepository.findById(programCreateDto.getRegMemberId());
-        if (regMember.isPresent() == false) {
-            log.error("[ 에러 ] 등록되지 않은 사용자 입니다");
-            return null;
-        }
+        Long regMemberId = programCreateDto.getRegMemberId();
+        Member regMember = memberRepository.findById(regMemberId).orElse(null);
+
         Program program = Program.builder()
                 .title(programCreateDto.getTitle())
                 .detail(programCreateDto.getDetail())
-                .member(regMember.get())
+                .member(regMember)
                 .language(programCreateDto.getLanguage())
                 .startTime(getLocalTimeByHourAndMinute(programCreateDto.getStartTimeHour(), programCreateDto.getStartTimeMinute()))
                 .endTime(getLocalTimeByHourAndMinute(programCreateDto.getEndTimeHour(), programCreateDto.getEndTimeMinute()))
@@ -174,6 +172,8 @@ public class DefaultProgramService implements ProgramService {
 
         log.info("{}", routes.size());
         routeRepository.saveAll(routes);
+
+
         return savedProgram;
     }
 
@@ -285,6 +285,7 @@ public class DefaultProgramService implements ProgramService {
     public ProgramListDto getOneProgram(Long pId) {
         //  프로그램 id로 Program 엔티티를 조회
         //  없는 경우(null)를 위해 Optional 객체에 저장
+
         Optional<Program> programOptional = programRepository.findById(pId);
         //  programOptional이 isEmpty인 경우
         //  null을 반환하여 메서드 종료
