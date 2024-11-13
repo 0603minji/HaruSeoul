@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProgramDetailMemberDto {
 
+    private Long hostId;
+
     private String hostName;
 //    private String hostProfileImg;
 

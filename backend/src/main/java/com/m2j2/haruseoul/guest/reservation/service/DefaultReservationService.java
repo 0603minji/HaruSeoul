@@ -2,9 +2,7 @@ package com.m2j2.haruseoul.guest.reservation.service;
 
 import com.m2j2.haruseoul.entity.*;
 import com.m2j2.haruseoul.guest.reservation.dto.*;
-import com.m2j2.haruseoul.guest.reservation.mapper.ReservationMapper;
 import com.m2j2.haruseoul.repository.*;
-import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -57,12 +54,20 @@ public class DefaultReservationService implements ReservationService {
         // Status ID가 없는 경우 해당 회원의 전체 예약 조회, Status ID가 있으면
         Page<Reservation> reservations = reservationRepository.findAll(sIds, mIds, pageable);
 
+        modelMapper.typeMap(Reservation.class, ReservationListDto.class)
+                .addMappings(mapper -> {
+                    mapper.map(src -> src.getPublishedProgram().getDate(), ReservationListDto::setDate);
+                    mapper.map(src -> src.getPublishedProgram().getProgram().getTitle(), ReservationListDto::setProgramTitle);
+                    mapper.map(src -> src.getPublishedProgram().getProgram().getMember().getId(), ReservationListDto::setHostId);
+                    mapper.map(src -> src.getPublishedProgram().getStatus().getName(), ReservationListDto::setStatusName);
+                });
+
         // 결과 확인
         System.out.println("Total reservations fetched: " + reservations.getTotalElements());
 
         List<ReservationListDto> reservationListDto = reservations.getContent()
                 .stream()
-                .map(ReservationMapper::mapToDto)
+                .map(reservation -> modelMapper.map(reservation, ReservationListDto.class))
                 .toList();
 
         long totalRowCount = reservations.getTotalElements();
@@ -91,7 +96,7 @@ public class DefaultReservationService implements ReservationService {
                     mapper.map(src -> src.getPublishedProgram().getStatus().getName(), ReservationListDto::setStatusName);
                     mapper.map(src -> src.getPublishedProgram().getProgram().getTitle(), ReservationListDto::setProgramTitle);
                     mapper.map(src -> src.getPublishedProgram().getDate(), ReservationListDto::setDate);
-                    mapper.map(Reservation::getGroupSize, ReservationListDto::setGroupSize);
+                    mapper.map(Reservation::getNumberOfGuest, ReservationListDto::setNumberOfGuest);
                 });
 
         // ReservationListDto reservationCard
@@ -160,7 +165,7 @@ public class DefaultReservationService implements ReservationService {
 
     @Override
     @Transactional
-    public Reservation create(ReservationCreateDto reservationCreateDto) {
+    public ReservationCreatedDto create(ReservationCreateDto reservationCreateDto) {
 
         // 예약할때 받은 공개 프로그램 ID로 공개 프로그램 가져오기
         PublishedProgram publishedProgram = publishedProgramRepository.findById(reservationCreateDto.getPublishedProgramId()).orElseThrow(() ->
@@ -168,22 +173,23 @@ public class DefaultReservationService implements ReservationService {
         );
 
         // 예약하는 멤버 ID로 멤버 가져오기
-        Member member = memberRepository.findById(reservationCreateDto.getRegMemberId()).orElseThrow(() ->
+        Member member = memberRepository.findById(reservationCreateDto.getGuestId()).orElseThrow(() ->
                 new IllegalArgumentException("MemberId not found with id")
         );
 
         Reservation reservation = Reservation.builder()
                 .publishedProgram(publishedProgram)
                 .member(member)
-                .groupSize(reservationCreateDto.getReservationGroupSize())
+                .numberOfGuest(reservationCreateDto.getNumberOfGuest())
                 .requirement(reservationCreateDto.getReservationRequirement())
                 .build();
 
         reservationRepository.save(reservation);
+        System.out.println(reservation.getId());
 
         // reservation 의 group_size 들로 해당 publishedProgram 의 group_size_current 합산
         int groupSizeCurrent = publishedProgram.getGroupSizeCurrent(); // 공개된 프로그램의 현재 진행 인원 수
-        int reservationGroupSize = reservationCreateDto.getReservationGroupSize(); // 예약 인원 수
+        int reservationGroupSize = reservationCreateDto.getNumberOfGuest(); // 예약 인원 수
 
         Program reservationProgram = programRepository.findById(publishedProgram.getProgram().getId()).orElse(null);
         assert reservationProgram != null;
@@ -199,7 +205,7 @@ public class DefaultReservationService implements ReservationService {
             throw new IllegalStateException("예약 불가: 총 그룹 인원이 " + programGroupMaxSize + " 명을 초과할 수 없습니다.");
         }
 
-        return reservation;
+        return null;
     }
 
     @Override

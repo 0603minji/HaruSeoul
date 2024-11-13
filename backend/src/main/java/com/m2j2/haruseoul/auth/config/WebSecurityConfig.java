@@ -63,8 +63,8 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((auth) ->
                         auth
-                                .requestMatchers("/host/**").authenticated()
-                                .requestMatchers("/guest/**").authenticated()
+//                                .requestMatchers("/host/**").authenticated()
+//                                .requestMatchers("/guest/**").authenticated()
                                 .anyRequest().permitAll()
 
 
