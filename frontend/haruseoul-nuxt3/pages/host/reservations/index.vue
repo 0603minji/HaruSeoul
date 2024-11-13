@@ -10,6 +10,7 @@ import {useDataFetch} from "~/composables/useDataFetch.js";
 import ProgramFilterModal from "~/components/modal/ProgramFilterModal.vue";
 import PublishedStatusAsideFilter from "~/components/filter/PublishedStatusAsideFilter.vue";
 import ProgramAsideFilter from "~/components/filter/ProgramAsideFilter.vue";
+import DateRangeAsideFilter from "~/components/filter/DateRangeAsideFilter.vue";
 
 //=== function =========================================================================================================
 // 2024-11-26 -> 24.11.26 Tue
@@ -127,10 +128,12 @@ const tabChangeHandler = (newTab) => {
 }
 
 // 필터모달에서 업데이트한 변수들로 쿼리 만들어서 패치
-const updateDateFilterQuery = (selectedDates) => {
+const updateDateFilterQuery = (SelectedDates) => {
   console.log('updateDateFilterQuery called')
+  selectedDates.value = SelectedDates;
+
   // [date객체, date객체] -> "2024-11-26,2024-11-28"
-  dates.value = selectedDates
+  dates.value = SelectedDates
       .map((date) =>
           new Intl.DateTimeFormat("ko-KR", {
             year: "numeric",
@@ -481,31 +484,15 @@ mapFetchedData(data.value);
           </header>
           <div class="filters">
             <!-- 기간 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">카테고리</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-                <div class="modal-checkbox">
-                  <label><input class="categoryAll" type="checkbox"
-                                @change="selectCategoryAll"/>All</label>
-                  <label v-for="c in categories" :key="c.id">
-                    <input class="categoryIds" type="checkbox" @change="selectCategory"
-                           :value="c.id" v-model="selectedCategories"/>{{ c.name }}
-                  </label>
-                </div>
-              </form>
-            </details>
+            <DateRangeAsideFilter :key="reRenderTrigger"
+                                  :selectedDates="selectedDates"
+                                  @close-modal="(selected) => { updateDateFilterQuery(selected); isModalVisible = '';}"/>
 
             <!-- 프로그램 상태 필터 -->
             <PublishedStatusAsideFilter :key="reRenderTrigger"
                                         :tab="tab"
                                         :selectedStatuses="selectedStatuses"
                                         @updateSelectedStatuses="updateStatusFilterQuery"/>
-
-
 
             <!-- 프로그램 필터 -->
             <ProgramAsideFilter :key="reRenderTrigger"
