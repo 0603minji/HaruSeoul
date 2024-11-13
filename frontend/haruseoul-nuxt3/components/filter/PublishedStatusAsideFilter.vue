@@ -15,7 +15,7 @@ const props = defineProps({
 });
 
 // emit
-const emit = defineEmits(['closeModal']);
+const emit = defineEmits(['closeModal', 'updateSelectedStatuses']);
 
 
 // Selected Statuses 개설된 프로그램 상태 1.모집중 2.폐지임박 3.종료 4.취소 5.획정대기 6.확정
