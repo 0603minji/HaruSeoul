@@ -65,96 +65,106 @@ const onOptionChange = () => {
 }
 
 
-
 const {data} = await useAuthFetch(`host/published-programs/status`);
 
 </script>
 
 <template>
+  <!-- 상태 체크박스  -->
+  <section class="status-selector">
+    <header class="title">
+      <h1 class="font-size:8">프로그램 상태</h1>
+      <button
+          @click.prevent="resetSelectedStatusesHandler"
+          class="reset-btn margin-left:auto n-btn n-btn:hover n-btn-bd:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 color:sub-1"
+          :class="{'show': selectedStatuses.length>0 }">
+        초기화
+      </button>
+    </header>
 
+    <ul class="status-container">
+      <li v-for="status in data.statusDtos">
+        <label>
+          <input type="checkbox"
+                 v-model="selectedStatuses"
+                 :checked="selectedStatuses.includes(status.name)"
+                 :disabled="isStatusDisabled(status.name)"
+                 @change="onOptionChange"
+                 :value="status.id">
+          <span>{{ status.name }}</span>
+        </label>
+      </li>
+    </ul>
 
-  <form class="popup-body" action="">
-    <!-- 상태 체크박스  -->
-    <section class="status-selector">
-      <header class="title">
-        <h1 class="font-size:8">프로그램 상태</h1>
-        <button
-            @click.prevent="resetSelectedStatusesHandler"
-            class="margin-left:auto n-btn n-btn:hover n-btn-bd:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-deco color:sub-1">
-          초기화
-        </button>
-      </header>
-
-      <section class="status-container">
-        <ul>
-          <li v-for="status in data.statusDtos">
-            <label>
-              <input type="checkbox"
-                     v-model="selectedStatuses"
-                     :checked="selectedStatuses.includes(status.name)"
-                     :disabled="isStatusDisabled(status.name)"
-                     @change="onOptionChange"
-                     :value="status.id">
-              <span>{{ status.name }}</span>
-            </label>
-          </li>
-        </ul>
-      </section>
-    </section>
-  </form>
-
+  </section>
 </template>
 
 <style scoped>
 
-.popup-body {
+
+/*=== 프로그램 상태 선택박스 =========================================================================================*/
+
+.status-selector {
+  --bg-color: #f5f5f5;
+  --status-color-disabled: rgba(0, 23, 84, 0.3);
+
   display: flex;
   flex-direction: column;
-  padding: 0 10px;
   overflow-y: auto;
 
-  /*=== 프로그램 상태 선택박스 =========================================================================================*/
+  .title {
+    display: flex;
+    height: 32px;
+    align-items: center;
+    margin-bottom: 8px;
 
-  .status-selector {
-    --bg-color: #f5f5f5;
-    --status-color-disabled: rgba(0, 23, 84, 0.15);
+    h1 {
+      font-weight: 600;
+    }
 
+    .reset-btn {
+      --btn-padding: 8px 10px;
+      display: none;
+    }
+
+    .reset-btn.show {
+      display: flex;
+    }
+  }
+
+  .status-container {
+    //max-width: 768px;
+    //min-width: 250px;
+    width: 100%;
+    height: auto;
     display: flex;
     flex-direction: column;
+    padding: 0 8px;
+    //background-color: var(--bg-color);
+    border-radius: 6px;
+    /*box-shadow: 0 3px 2px 0 var(--color-base-3);*/
 
-    .title {
-      display: flex;
-      height: 32px;
-      padding: 0 0 0 10px;
-      align-items: center;
-      margin-bottom: 12px;
+    li {
+      padding: 4px;
 
-      button {
-        --btn-padding: 8px 10px;
+      label {
+        display: flex;
+        gap: 6px;
+
+      }
+      label:has(input:disabled) {
+        color: var(--status-color-disabled);
       }
     }
-
-    .status-container {
-      //max-width: 768px;
-      //min-width: 250px;
-      width: 100%;
-      height: 160px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding: 20px;
-      background-color: var(--bg-color);
-      border-radius: 25px;
-      box-shadow: 0 3px 2px 0 var(--color-base-3);
-    }
-  }
-
-  /*================================================================================================================*/
-
-  .submit {
-    margin-left: auto;
-    padding: 20px 0;
   }
 }
+
+/*================================================================================================================*/
+
+.submit {
+  margin-left: auto;
+  padding: 20px 0;
+}
+
 
 </style>
