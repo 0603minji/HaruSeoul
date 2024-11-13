@@ -127,14 +127,15 @@ watch(
 </script>
 <template>
   <div class="program-selector">
-    <div class="title">
-      <p class="font-size:8">프로그램 선택</p>
+    <header class="title">
+      <h1 class="font-size:8">프로그램 선택</h1>
       <button
-          class="margin-left:auto n-btn n-btn:hover n-btn-bd:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-deco color:sub-1"
+          class="reset-btn margin-left:auto n-btn n-btn:hover n-btn-bd:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 color:sub-1"
+          :class="{'show': selectedOptions.length>0 }"
           @click.prevent="programFilterResetHandler">
         초기화
       </button>
-    </div>
+    </header>
 
     <div class="searchable-multi-select">
       <!-- Select box that toggles the dropdown -->
@@ -142,7 +143,7 @@ watch(
         <div @click="toggleDropdown" class="status" v-if="!isDropdownVisible">
           <p class="margin-right:auto" v-if="selectedOptions.length===1">{{ selectedOptions.at(0).title }}</p>
           <p class="margin-right:auto" v-if="selectedOptions.length>1">{{ selectedOptions.length }} selected</p>
-          <p class="margin-right:auto" v-if="selectedOptions.length===0">프로그램을 선택하세요.</p>
+          <p class="margin-right:auto" v-if="selectedOptions.length===0">Select programs.</p>
           <span class="n-icon n-icon:arrow_down margin-left:auto">드롭다운 보기</span>
         </div>
 
@@ -202,7 +203,7 @@ watch(
         </div>
       </div>
 
-      <div class="selected-list-container">
+      <div class="selected-list-container" v-if="selectedOptions.length>0">
         <ul>
           <li  v-for="(option, index) in selectedOptions"
                :key="option.id">
@@ -226,17 +227,23 @@ watch(
 .program-selector {
   display: flex;
   flex-direction: column;
-  margin-bottom: 30px;
 
   .title {
     display: flex;
     height: 32px;
-    padding: 0 0 0 10px;
     align-items: center;
     margin-bottom: 8px;
 
-    button {
+    h1 {
+      font-weight: 600;
+    }
+
+    .reset-btn {
       --btn-padding: 8px 10px;
+      display: none;
+    }
+    .reset-btn.show {
+      display: flex;
     }
   }
 
@@ -244,18 +251,17 @@ watch(
     position: relative;
     //width: 200px;
     //padding: 0 10px;
-    margin: 0 10px;
 
     .select-box {
       //padding: 8px;
       position: relative;
-      margin-bottom: 30px;
+      margin-bottom: 16px;
 
       .status {
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 8px;
+        padding: 4px 8px;
         border: 1px solid #ccc;
         border-radius: 6px;
         cursor: pointer;
@@ -265,12 +271,13 @@ watch(
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 8px;
+        padding: 4px 8px;
         border: 1px solid #ccc;
         border-radius: 6px 6px 0 0;
         cursor: pointer;
 
         input {
+          min-width: 2ch;
           flex-grow: 1;
         }
       }
@@ -328,14 +335,18 @@ watch(
       //max-width: 768px;
       //min-width: 250px;
       width: 100%;
-      height: 300px;
+      height: auto;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      padding: 20px;
+      padding: 8px 8px;
       background-color: var(--bg-color);
-      border-radius: 25px;
+      border-radius: 6px;
       box-shadow: 0 3px 2px 0 var(--color-base-3);
+
+      li {
+        padding: 4px;
+      }
     }
 
   }

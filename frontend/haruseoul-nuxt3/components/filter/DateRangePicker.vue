@@ -13,7 +13,7 @@ const props = defineProps({
   }
 });
 
-watch(()=>props.resetToggle, (newOne) => resetSelectedDatesHandler());
+watch(()=>props.resetToggle, (newOne) => { resetSelectedDatesHandler();  });
 
 // emit
 const emit = defineEmits(['selectionChanged'])

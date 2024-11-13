@@ -43,7 +43,7 @@ const config = useRuntimeConfig();
     schedules: [programs]
   }
 ]; */
-const datesWithScedules = ref([]);
+const datesWithSchedules = ref([]);
 
 
 
@@ -51,7 +51,7 @@ const datesWithScedules = ref([]);
 /*=== function =======================================================================================================*/
 const updateDatesWithSchedules = (dates, publishedPrograms) => {
   // dates로 datesWithPrograms [{date: , schedules: []}] update
-  datesWithScedules.value = dates.map(date => {
+  datesWithSchedules.value = dates.map(date => {
     // date와 진행일이 같은 프로그램들만 골라내서 schedules에 담기
     const schedules = publishedPrograms.filter(program => {
       // console.log('date        : ', date.toISOString(), date.toLocaleString());
@@ -250,7 +250,7 @@ watch(selectedDates, emitSelectionChanged);
 
       <ol class="day-grid">
         <!--dateSchedule = {date: Date객체, [publishedProgramListDto]}-->
-        <li v-for="dateSchedule in datesWithScedules"
+        <li v-for="dateSchedule in datesWithSchedules"
             :class="{
             'month-prev': dateSchedule.date.getMonth() === (selectedMonth-1<0 ? 11 : selectedMonth-1),
             'month-next': dateSchedule.date.getMonth() === (selectedMonth+1>11 ? 0 : selectedMonth+1),

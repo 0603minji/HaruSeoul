@@ -35,28 +35,11 @@ const updateSelection = (selectedOptions) => {
 </script>
 
 <template>
-    <form @submit.prevent="emit('closeModal'); toggleDropdown = !toggleDropdown" class="popup-body" action="">
       <!--프로그램 선택-->
-      <SearchableMultiSelect :selected-option-ids="props.selectedProgramIds"
+      <SearchableMultiSelectAsideFilter :selected-option-ids="props.selectedProgramIds"
                              :toggle-dropdown="toggleDropdown"
                              @selection-changed="updateSelection"/>
-
-      <div class="submit">
-        <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>
-      </div>
-    </form>
 </template>
 
 <style scoped>
-  .popup-body {
-    display: flex;
-    flex-direction: column;
-    padding: 0 10px;
-    overflow-y: auto;
-
-    .submit {
-      margin-left: auto;
-      padding: 20px 0;
-    }
-  }
 </style>

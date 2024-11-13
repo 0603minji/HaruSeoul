@@ -176,6 +176,7 @@ const resetFilterHandler = () => {
   page.value = "1";
   fetchData();
 
+  // 필터에게 props로 전달해서 필터도 초기화
   selectedDates.value = [];
   selectedProgramIds.value = [];
   selectedStatuses.value = [];
@@ -476,8 +477,8 @@ mapFetchedData(data.value);
           <header class="n-title">
             <h1 class="">Filter</h1>
             <div>
-              <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;"
-                      @click="filterInit">
+              <button class="n-btn n-btn:hover n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;"
+                      @click.prevent="resetFilterHandler">
                 초기화
               </button>
             </div>
@@ -486,14 +487,14 @@ mapFetchedData(data.value);
             <!-- 기간 필터 -->
             <DateRangeAsideFilter :key="reRenderTrigger"
                                   :selectedDates="selectedDates"
-                                  @close-modal="(selected) => { updateDateFilterQuery(selected); isModalVisible = '';}"/>
-
+                                  @emit-selected-dates="(selected) => { updateDateFilterQuery(selected); isModalVisible = '';}"/>
+            <span class="separator"></span>
             <!-- 프로그램 상태 필터 -->
             <PublishedStatusAsideFilter :key="reRenderTrigger"
                                         :tab="tab"
                                         :selectedStatuses="selectedStatuses"
                                         @updateSelectedStatuses="updateStatusFilterQuery"/>
-
+            <span class="separator"></span>
             <!-- 프로그램 필터 -->
             <ProgramAsideFilter :key="reRenderTrigger"
                                 :selectedProgramIds="selectedProgramIds"
@@ -523,6 +524,7 @@ mapFetchedData(data.value);
 
   .layout-main {
     display: flex;
+    margin-bottom: 30px;
 
     .layout-main-list {
       flex-grow: 1;
@@ -629,23 +631,31 @@ mapFetchedData(data.value);
     }
 
     .layout-main-aside {
-      display: flex;
+      display: none;
       flex-direction: column;
       flex-shrink: 0;
       width: 250px;
       margin: 0 16px;
-
-      /* mj host/programs */
 
       .n-title {
         --title-font-size: var(--font-size-9);
         /* 18 */
         --title-font-weight: 600;
         /* semi bold */
-        --title-padding: 16px 4px;
+        --title-padding: 6px 4px 14px 4px;
 
         .n-icon {
           --icon-size: var(--icon-size-4);
+          padding: 8px;
+        }
+      }
+
+      .filters {
+        .separator {
+          display: flex;
+          width: 216px;
+          height: 1px;
+          background-color: var(--color-base-3);
         }
       }
     }
@@ -688,7 +698,10 @@ mapFetchedData(data.value);
         /* mj host/programs */
 
         .filters {
-          padding: 0 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          padding: 16px;
           border: 1px solid var(--color-base-3);
           border-radius: 12px;
         }
