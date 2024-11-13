@@ -32,12 +32,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <aside class="popup modal">
-    <header class="popup-header">
-      <h1 class="font-size:9">필터</h1>
-      <button @click.prevent="closeModal" class="n-btn n-btn:hover n-btn-border:transparent n-icon n-icon:exit">닫기</button>
-    </header>
-
+  <aside class="popup">
     <form @submit.prevent="closeModal" class="popup-body" action="">
       <DateRangePicker :selectedDates="selectedDates" @selection-changed="updateSelectedDates"/>
 
@@ -49,28 +44,6 @@ const closeModal = () => {
 </template>
 
 <style scoped>
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed;
-  z-index: 1000; /* Sit on top */
-  left: 50%;
-  bottom: 0;
-  transform: translate(-50%, 100%); /* 초기에 바닥에 숨어있음 */
-  width: 100%;
-  min-width: 350px;
-  max-width: 500px;
-  max-height: 100vh;
-  //background-color: white;
-  //border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
-}
-
-.modal.show {
-  display: flex;
-  transform: translate(-50% ,0); /* 아래에서 등장 */
-}
-
 .popup {
   border-radius: 16px 16px 0 0;
   background-color: var(--color-base-1);

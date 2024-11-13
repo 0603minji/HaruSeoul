@@ -33,7 +33,11 @@ const maxDate = new Date(yearOptions.at(-1), 11, 31); // 검색가능한 기간 
 const selectedYear = ref(initialYear);
 const selectedMonth = ref(initialMonth);
 // 선택된 날짜들
-const selectedDates = ref(props.selectedDates);
+const selectedDates = ref([]);
+watchEffect(() => {
+  selectedDates.value = props.selectedDates;
+})
+
 // selectedDates가 변할 때마다 날짜순 정렬 후 emit
 watch(selectedDates, (newDates) => {
       // 선택된 날짜가 2개일 때만 정렬
