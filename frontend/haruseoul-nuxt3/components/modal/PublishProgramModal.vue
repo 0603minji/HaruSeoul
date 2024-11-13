@@ -148,7 +148,7 @@ const closeModal = () => {
   bottom: 0;
   transform: translate(-50%, 100%); /* 초기에 바닥에 숨어있음 */
   width: 100%;
-  min-width: 350px;
+  min-width: 300px;
   max-width: 500px;
   max-height: 100vh;
   //background-color: white;

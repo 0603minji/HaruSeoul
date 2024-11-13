@@ -636,6 +636,9 @@ mapFetchedData(data.value);
       flex-shrink: 0;
       width: 250px;
       margin: 0 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
 
       .n-title {
         --title-font-size: var(--font-size-9);
@@ -701,7 +704,7 @@ mapFetchedData(data.value);
           display: flex;
           flex-direction: column;
           gap: 24px;
-          padding: 16px;
+          padding: 16px 16px 32px 16px;
           border: 1px solid var(--color-base-3);
           border-radius: 12px;
         }
