@@ -150,7 +150,7 @@ const {data} = await useAuthFetch(`host/published-programs/status`);
       label {
         display: flex;
         gap: 6px;
-
+        align-items: center;
       }
       label:has(input:disabled) {
         color: var(--status-color-disabled);

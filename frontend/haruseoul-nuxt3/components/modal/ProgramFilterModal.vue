@@ -63,9 +63,10 @@ const updateSelection = (selectedOptions) => {
   bottom: 0;
   transform: translate(-50%, 100%); /* 초기에 바닥에 숨어있음 */
   width: 100%;
-  min-width: 350px;
+  min-width: 300px;
   max-width: 500px;
   max-height: 100vh;
+  min-height: 500px;
   //background-color: white;
   //border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -108,6 +109,7 @@ const updateSelection = (selectedOptions) => {
     flex-direction: column;
     padding: 0 10px;
     overflow-y: auto;
+    height: 400px;
 
     .submit {
       margin-left: auto;

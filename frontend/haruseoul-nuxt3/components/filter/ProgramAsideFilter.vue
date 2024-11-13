@@ -1,5 +1,6 @@
 <script setup>
 import SearchableMultiSelect from "~/components/filter/SearchableMultiSelect.vue";
+import SearchableMultiSelectAsideFilter from "~/components/filter/SearchableMultiSelectAsideFilter.vue";
 
 // emit
 const emit = defineEmits(['closeModal', 'updateSelectedPrograms']);

@@ -44,7 +44,6 @@ const isStatusDisabled = (StatusName) => {
 };
 
 
-
 // Handle selection change
 // const updateSelectedStatuses = (selectedOptions) => {
 //   selectedStatuses.value = selectedOptions;
@@ -61,7 +60,7 @@ const resetSelectedStatusesHandler = () => {
   selectedStatuses.value = [];
 }
 
-const { data } = await useAuthFetch(`host/published-programs/status`);
+const {data} = await useAuthFetch(`host/published-programs/status`);
 
 </script>
 
@@ -69,7 +68,8 @@ const { data } = await useAuthFetch(`host/published-programs/status`);
   <aside class="popup modal">
     <header class="popup-header">
       <h1 class="font-size:9">필터</h1>
-      <button @click.prevent="closeModal" class="n-btn n-btn:hover n-btn-border:transparent n-icon n-icon:exit">닫기</button>
+      <button @click.prevent="closeModal" class="n-btn n-btn:hover n-btn-border:transparent n-icon n-icon:exit">닫기
+      </button>
     </header>
 
     <form @submit.prevent="closeModal" class="popup-body" action="">
@@ -84,21 +84,18 @@ const { data } = await useAuthFetch(`host/published-programs/status`);
           </button>
         </header>
 
-        <section class="status-container">
-          <ul>
-            <li v-for="status in data.statusDtos">
-              <label>
-                <input type="checkbox"
-                       v-model="selectedStatuses"
-                       :checked="selectedStatuses.includes(status.name)"
-                       :disabled="isStatusDisabled(status.name)"
-                       :value="status.id">
-                <span>{{ status.name }}</span>
-              </label>
-            </li>
-          </ul>
-
-        </section>
+        <ul class="status-container">
+          <li v-for="status in data.statusDtos">
+            <label>
+              <input type="checkbox"
+                     v-model="selectedStatuses"
+                     :checked="selectedStatuses.includes(status.name)"
+                     :disabled="isStatusDisabled(status.name)"
+                     :value="status.id">
+              <span>{{ status.name }}</span>
+            </label>
+          </li>
+        </ul>
 
       </section>
 
@@ -118,7 +115,7 @@ const { data } = await useAuthFetch(`host/published-programs/status`);
   bottom: 0;
   transform: translate(-50%, 100%); /* 초기에 바닥에 숨어있음 */
   width: 100%;
-  min-width: 350px;
+  min-width: 300px;
   max-width: 500px;
   max-height: 100vh;
   //background-color: white;
@@ -129,7 +126,7 @@ const { data } = await useAuthFetch(`host/published-programs/status`);
 
 .modal.show {
   display: flex;
-  transform: translate(-50% ,0); /* 아래에서 등장 */
+  transform: translate(-50%, 0); /* 아래에서 등장 */
 }
 
 .popup {
@@ -165,9 +162,10 @@ const { data } = await useAuthFetch(`host/published-programs/status`);
     overflow-y: auto;
 
     /*=== 프로그램 상태 선택박스 =========================================================================================*/
+
     .status-selector {
       --bg-color: #f5f5f5;
-      --status-color-disabled: rgba(0, 23, 84, 0.15);
+      --status-color-disabled: rgba(0, 23, 84, 0.3);
 
       display: flex;
       flex-direction: column;
@@ -188,16 +186,28 @@ const { data } = await useAuthFetch(`host/published-programs/status`);
         //max-width: 768px;
         //min-width: 250px;
         width: 100%;
-        height: 160px;
-        display: flex;
-        flex-direction: column;
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2열로 배치 */
         gap: 12px;
-        padding: 20px;
+        padding: 30px;
         background-color: var(--bg-color);
         border-radius: 25px;
         box-shadow: 0 3px 2px 0 var(--color-base-3);
+
+        li > label {
+          display: flex;
+          gap: 6px;
+          align-items: center;
+
+        }
+
+        li > label:has(input:disabled) {
+          color: var(--status-color-disabled);
+        }
       }
     }
+
     /*================================================================================================================*/
 
     .submit {
