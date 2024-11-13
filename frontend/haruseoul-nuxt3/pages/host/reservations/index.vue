@@ -8,6 +8,7 @@ import PublishedStatusFilterModal from "~/components/modal/PublishedStatusFilter
 import {useAuthFetch} from "~/composables/useAuthFetch.js";
 import {useDataFetch} from "~/composables/useDataFetch.js";
 import ProgramFilterModal from "~/components/modal/ProgramFilterModal.vue";
+import PublishedStatusAsideFilter from "~/components/filter/PublishedStatusAsideFilter.vue";
 
 //=== function =========================================================================================================
 // 2024-11-26 -> 24.11.26 Tue
@@ -33,7 +34,7 @@ const calculateKoreanDDay = (enteredDate) => {
 
   const timediff = targetDate.getTime() - today.getTime();
 
-  return Math.ceil(timediff/ (24*3600*1000));
+  return Math.ceil(timediff / (24 * 3600 * 1000));
 }
 
 const createQuery = () => {
@@ -75,7 +76,7 @@ const createQuery = () => {
 // $fetch
 const fetchData = async () => {
   const query = createQuery();
-  const data = await useDataFetch(`host/published-programs`, { query: query });
+  const data = await useDataFetch(`host/published-programs`, {query: query});
 
   // api query -> user query
   const keysToExclude = ["mIds", "pageSize"];
@@ -180,10 +181,6 @@ const resetFilterHandler = () => {
 }
 
 
-
-
-
-
 // === 모달창 ===========================================================================================================
 const isModalVisible = ref("");
 
@@ -191,10 +188,6 @@ const OpenDateRangeFilterModalHandler = () => isModalVisible.value = "DateRangeF
 const OpenPublishedStatusFilterModalHandler = () => isModalVisible.value = "PublishedStatusFilterModal";
 const OpenProgramFilterModalHandler = () => isModalVisible.value = "ProgramFilterModal";
 const OpenPublishProgramModalHandler = () => isModalVisible.value = "PublishProgramModal";
-
-
-
-
 
 
 // === 변수 =============================================================================================================
@@ -262,11 +255,8 @@ console.log("index selectedProgramIds :", selectedProgramIds.value);
 const reRenderTrigger = ref(false);
 
 
-
-
-
 /*=== fetch ==========================================================================================================*/
-const { data } = await useAuthFetch(`host/published-programs`, { query: createQuery() });
+const {data} = await useAuthFetch(`host/published-programs`, {query: createQuery()});
 
 // data.value에 PublishedProgramResponseDto가 담겨있음
 mapFetchedData(data.value);
@@ -282,20 +272,18 @@ mapFetchedData(data.value);
                                 :class="{'show': isModalVisible === 'PublishedStatusFilterModal'}"
                                 :tab="tab"
                                 :selectedStatuses="selectedStatuses"
-                                @update-list-by-tab="updateStatusFilterQuery"
                                 @close-modal="(selected) => { updateStatusFilterQuery(selected); isModalVisible = '';}"/>
     <ProgramFilterModal :key="reRenderTrigger"
-                                :class="{'show': isModalVisible === 'ProgramFilterModal'}"
-                                :selectedProgramIds="selectedProgramIds"
-                                @close-modal="isModalVisible = ''"
-                                @updateSelectedPrograms="updateProgramFilterQuery"/>
+                        :class="{'show': isModalVisible === 'ProgramFilterModal'}"
+                        :selectedProgramIds="selectedProgramIds"
+                        @close-modal="isModalVisible = ''"
+                        @updateSelectedPrograms="updateProgramFilterQuery"/>
     <PublishProgramModal :class="{'show': isModalVisible === 'PublishProgramModal'}"
                          @close-modal="() => { fetchData(); isModalVisible = ''; }"/>
 
     <!-- 모달창 떴을 때 배경처리   -->
     <div :class="{'active': isModalVisible}" class="backdrop"></div>
-  <!-- ============================================================================================================= -->
-
+    <!-- ============================================================================================================= -->
 
 
     <section class="layout-body"> <!-- main 내 모든 -->
@@ -351,7 +339,8 @@ mapFetchedData(data.value);
                 </li>
                 <li><a @click.prevent="OpenPublishedStatusFilterModalHandler" href=""
                        :class="{'active': statuses}"
-                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램 상태</a></li>
+                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
+                  상태</a></li>
                 <li><a @click.prevent="OpenProgramFilterModalHandler" href=""
                        :class="{'active': pIds}"
                        class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1">프로그램</a>
@@ -508,60 +497,15 @@ mapFetchedData(data.value);
                 </div>
               </form>
             </details>
+
             <!-- 프로그램 상태 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">프로그램 상태</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
+            <PublishedStatusAsideFilter :key="reRenderTrigger"
+                                        :tab="tab"
+                                        :selectedStatuses="selectedStatuses"
+                                        @updateSelectedStatuses="updateStatusFilterQuery"/>
 
-              <form action="" class="form">
-                <div class="modal-checkbox">
-                  <label><input class="statusCheckboxAll" type="checkbox"
-                                @change="selectStatusAll"/>전체</label>
-                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
-                                :value="'In Progress'" v-model="selectedStatus"/>작성중</label>
-                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
-                                :value="'Unpublished'" v-model="selectedStatus"/>작성완료</label>
-                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
-                                :value="'Published'" v-model="selectedStatus"/>모집중</label>
-                </div>
-              </form>
-              <form @submit.prevent="closeModal" class="popup-body" action="">
-                <!-- 상태 체크박스  -->
-                <section class="status-selector">
-                  <header class="title">
-                    <h1 class="font-size:8">프로그램 상태</h1>
-                    <button
-                        @click.prevent="resetSelectedStatusesHandler"
-                        class="margin-left:auto n-btn n-btn:hover n-btn-bd:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-deco color:sub-1">
-                      초기화
-                    </button>
-                  </header>
 
-                  <section class="status-container">
-                    <ul>
-                      <li v-for="status in data.statusDtos">
-                        <label>
-                          <input type="checkbox"
-                                 v-model="selectedStatuses"
-                                 :checked="selectedStatuses.includes(status.name)"
-                                 :disabled="isStatusDisabled(status.name)"
-                                 :value="status.id">
-                          <span>{{ status.name }}</span>
-                        </label>
-                      </li>
-                    </ul>
 
-                  </section>
-
-                </section>
-
-                <div class="submit">
-                  <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1">확인</button>
-                </div>
-              </form>
-            </details>
             <!-- 프로그램 필터 -->
             <details open class="filter">
               <summary class="collapse">
@@ -711,13 +655,14 @@ mapFetchedData(data.value);
     }
 
     .layout-main-aside {
-      display: none;
+      display: flex;
       flex-direction: column;
       flex-shrink: 0;
       width: 250px;
       margin: 0 16px;
 
       /* mj host/programs */
+
       .n-title {
         --title-font-size: var(--font-size-9);
         /* 18 */
@@ -767,6 +712,7 @@ mapFetchedData(data.value);
         display: flex;
 
         /* mj host/programs */
+
         .filters {
           padding: 0 16px;
           border: 1px solid var(--color-base-3);
