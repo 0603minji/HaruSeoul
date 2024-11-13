@@ -20,7 +20,10 @@ const emit = defineEmits(['closeModal']);
 
 // Selected Statuses 개설된 프로그램 상태 1.모집중 2.폐지임박 3.종료 4.취소 5.획정대기 6.확정
 // props로 초기화
-const selectedStatuses = ref(props.selectedStatuses);
+const selectedStatuses = ref([]);
+watchEffect(() => {
+  selectedStatuses.value = props.selectedStatuses;
+})
 
 
 // Computed property to check if a status should be disabled based on the tab
