@@ -9,6 +9,7 @@ import {useAuthFetch} from "~/composables/useAuthFetch.js";
 import {useDataFetch} from "~/composables/useDataFetch.js";
 import ProgramFilterModal from "~/components/modal/ProgramFilterModal.vue";
 import PublishedStatusAsideFilter from "~/components/filter/PublishedStatusAsideFilter.vue";
+import ProgramAsideFilter from "~/components/filter/ProgramAsideFilter.vue";
 
 //=== function =========================================================================================================
 // 2024-11-26 -> 24.11.26 Tue
@@ -507,23 +508,9 @@ mapFetchedData(data.value);
 
 
             <!-- 프로그램 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">프로그램</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-                <div class="modal-checkbox">
-                  <label><input class="programidAll" type="checkbox"
-                                @change="selectProgramAll"/>All</label>
-                  <label v-for="p in programTitles" :key="p.id">
-                    <input class="programids" type="checkbox" @change="selectProgram" :value="p.id"
-                           v-model="selectedProgramIds"/>{{ p.title }}
-                  </label>
-                </div>
-              </form>
-            </details>
+            <ProgramAsideFilter :key="reRenderTrigger"
+                                :selectedProgramIds="selectedProgramIds"
+                                @updateSelectedPrograms="updateProgramFilterQuery"/>
           </div>
         </aside>
       </div>
