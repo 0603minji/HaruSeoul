@@ -109,7 +109,7 @@
       <div class="bg-darkened"></div>
 
       <!--어사이드-->
-      <aside class="n-aside">
+      <aside class="n-aside" style="height: 100vh; overflow-y: auto;">
         <header class="aside-header">
           <h1>게스트 로그인 어사이드</h1>
           <label
