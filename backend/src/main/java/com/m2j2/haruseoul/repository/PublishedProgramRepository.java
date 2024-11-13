@@ -1,7 +1,6 @@
 package com.m2j2.haruseoul.repository;
 
 import com.m2j2.haruseoul.entity.PublishedProgram;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +14,12 @@ public interface PublishedProgramRepository extends JpaRepository<PublishedProgr
     @Query("from PublishedProgram pp " +
             "where pp.program.member.id in :mIds")
     List<PublishedProgram> findByHostIds(@Param("mIds") List<Long> memberIds);
+
+    // 특정 프로그램 ID에 해당하며 status가 종료, 취소인것 말고는 공개 프로그램 모두 조회
+    @Query("from PublishedProgram pp " +
+            "where pp.program.id = :pId " +
+            "and pp.status.id in (1, 2, 5, 6)")
+    List<PublishedProgram> findByProgramId(@Param("pId") Long programId);
 
     @Query("from PublishedProgram pp " +
             "where (:mIds is null or pp.program.member.id in :mIds) " +

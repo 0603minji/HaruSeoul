@@ -4,7 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useReservationFetch } from "~/composables/useReservationFetch.js";
 import Status from "~/components/filter/Status.vue";
 import Pager from "~/components/Pager.vue";
-import ReservationCancelModal from "~/components/modal/ReservationCancelModal.vue";
+import ReservationCancelModal from "~/components/modal/CancelReservationModal.vue";
 import useShare from '~/composables/useShare';
 
 const reservations = ref([]);
@@ -12,6 +12,7 @@ const selectedStatus = ref(0);
 
 const route = useRoute();
 const router = useRouter(); // router 인스턴스 가져오기
+const userDetails = useUserDetails();
 
 const startNum = ref(1); // 시작 페이지
 const totalRowCount = ref(0); // 총 개수
@@ -20,6 +21,7 @@ const pageNumbers = ref([]); // 5개 페이징에 담길 번호들
 const hasPreviousPage = ref(false); // 이전 페이지가 있는지
 const hasNextPage = ref(false); // 다음 페이지가 있는지
 const currentPage = ref(1); // 현제 페이지 초기값은 1
+const guestId = userDetails.id.value;
 
 const { shareToKakao } = useShare();  // useShare 모듈에서 shareToKakao 함수 가져오기
 
@@ -34,6 +36,7 @@ const fetchReservations = async () => {
     const params = {
       s: Array.isArray(selectedStatus.value) ? selectedStatus.value.join(",") : [1,2,3,4,5,6],
       pageNum: isNaN(currentPage.value) || currentPage.value <= 0 ? 1 : currentPage.value,
+      m: guestId
     };
 
     console.log("params:", params);  // params 확인용 로그

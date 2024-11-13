@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import {useReservationFetch} from "~/composables/useReservationFetch.js";
-import ReservationCancelModal from "~/components/modal/ReservationCancelModal.vue";
+import ReservationCancelModal from "~/components/modal/CancelReservationModal.vue";
 import useShare from '~/composables/useShare';
 
 const reservation = ref({

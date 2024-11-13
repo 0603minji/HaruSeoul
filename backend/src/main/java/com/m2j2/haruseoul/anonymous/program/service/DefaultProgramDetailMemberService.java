@@ -23,7 +23,10 @@ public class DefaultProgramDetailMemberService implements ProgramDetailMemberSer
         String regMemberName = memberRepository.getNameById(regMemberId);
 
         ProgramDetailMemberDto programDetailMemberDto
-                = ProgramDetailMemberDto.builder().hostName(regMemberName).build();
+                = ProgramDetailMemberDto.builder()
+                .hostId(regMemberId)
+                .hostName(regMemberName)
+                .build();
         return programDetailMemberDto;
     }
 }

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @Builder
@@ -18,13 +17,14 @@ public class ReservationListDto {
     
     private Long hostId; // host 문의
 
+    // publishedProgram 의 status name
     private String statusName;
 
     private String programTitle;
 
     private LocalDate date;
 
-    private Integer groupSize;
+    private Integer numberOfGuest;
 
 //    private String src;
 }
