@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 import java.util.List;
@@ -35,5 +36,5 @@ public class ProgramCreateDto {
     private String caution; // 주의사항
     private String requirement; // 요청사항
     private String status;
-    private List<ImageCreateDto> images;
+//    private List<MultipartFile> images;
 }

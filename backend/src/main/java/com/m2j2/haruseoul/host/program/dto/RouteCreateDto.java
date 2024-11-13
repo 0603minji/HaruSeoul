@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 
-@Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Builder
 public class RouteCreateDto {
-    private Long id;
+
     private Long transportationId;
     private Integer order;
     private String title;
