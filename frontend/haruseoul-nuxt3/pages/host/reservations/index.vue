@@ -525,6 +525,7 @@ mapFetchedData(data.value);
   .layout-main {
     display: flex;
     margin-bottom: 30px;
+    position: relative;
 
     .layout-main-list {
       flex-grow: 1;
@@ -636,8 +637,8 @@ mapFetchedData(data.value);
       flex-shrink: 0;
       width: 250px;
       margin: 0 16px;
-      position: sticky;
-      top: 0;
+      /*position: sticky; layout-main-list의 카드와 z-index로 오버랩핑이 되지 않는 문제가 발생해 일단 주석처리
+      top: 0;*/
       height: 100vh;
 
       .n-title {
