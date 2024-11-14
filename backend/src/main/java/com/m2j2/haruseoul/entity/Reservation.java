@@ -1,14 +1,12 @@
 package com.m2j2.haruseoul.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,8 +39,8 @@ public class Reservation {
     @Column(name = "delete_date")
     private Instant deleteDate;
 
-    @Column(name = "group_size", nullable = false)
-    private Integer groupSize;
+    @Column(name = "number_of_guest", nullable = false)
+    private Integer numberOfGuest;
 
     @Column(name = "requirement")
     private String requirement;

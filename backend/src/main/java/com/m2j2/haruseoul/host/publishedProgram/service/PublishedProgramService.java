@@ -1,5 +1,6 @@
 package com.m2j2.haruseoul.host.publishedProgram.service;
 
+import com.m2j2.haruseoul.entity.PublishedProgram;
 import com.m2j2.haruseoul.host.publishedProgram.dto.*;
 
 import java.time.LocalDate;
@@ -14,4 +15,5 @@ public interface PublishedProgramService {
                                         Integer page, Integer pageSize, String sort, String order, String tab);
     boolean delete(Long id);
     PublishedProgramProgramFilterResponseDto getProgramFilterList(Long hostId);
+    OnGoingPublishedProgramListDto findByProgramId(Long pId);
 }

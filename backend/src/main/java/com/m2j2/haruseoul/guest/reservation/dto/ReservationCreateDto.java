@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.Date;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -16,12 +13,9 @@ public class ReservationCreateDto {
 
     private Long publishedProgramId;
 
-    private Long regMemberId;
+    private Long guestId;
 
-    private LocalDate reservationDate;
-
-    private Integer reservationGroupSize;
+    private Integer numberOfGuest;
 
     private String reservationRequirement;
-
 }
