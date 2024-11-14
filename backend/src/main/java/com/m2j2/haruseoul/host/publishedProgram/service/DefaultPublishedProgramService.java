@@ -107,6 +107,39 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
 
     @Override
     public PublishedProgramResponseDto getList(List<Long> memberIds, List<LocalDate> dates, List<Long> statusIds, List<Long> programIds,
+                                               String sortBy, String order) {
+        Sort sort = order.equals("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        LocalDate start = dates == null ? null : dates.getFirst();
+        LocalDate end = dates == null ? null : dates.getLast();
+
+        List<PublishedProgram> allUnpaged = publishedProgramRepository.findAllUnpaged(memberIds, start, end, statusIds, programIds, sort);
+
+        // List<ppListDto>----------------------------------------------------------------------------------------------
+        modelMapper.typeMap(PublishedProgram.class, PublishedProgramListDto.class)
+                .addMappings(mapper -> {
+                    mapper.map(src -> src.getProgram().getGroupSizeMax(), PublishedProgramListDto::setGroupSizeMax);
+                    mapper.map(src -> src.getProgram().getGroupSizeMin(), PublishedProgramListDto::setGroupSizeMin);
+                    mapper.map(
+                            src -> Optional.ofNullable(src.getProgram().getImages())
+                                    .map(images -> images.stream()
+                                            .sorted(Comparator.comparing(Image::getOrder))
+                                            .toList())
+                                    .orElse(Collections.emptyList()),
+                            PublishedProgramListDto::setImages
+                    );
+                });
+
+        List<PublishedProgramListDto> publishedProgramListDtos = allUnpaged.stream()
+                .map(publishedProgram -> modelMapper.map(publishedProgram, PublishedProgramListDto.class))
+                .toList();
+
+        return PublishedProgramResponseDto.builder()
+                .publishedPrograms(publishedProgramListDtos)
+                .build();
+    }
+
+    @Override
+    public PublishedProgramResponseDto getList(List<Long> memberIds, List<LocalDate> dates, List<Long> statusIds, List<Long> programIds,
                                                Integer page, Integer pageSize, String sortBy, String order, String tab) {
         // tab : null
         if (tab == null)
@@ -165,6 +198,7 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
         // 그 밖의 유효하지 않은 tab값들은 무시
         return getList(memberIds, dates, statusIds, programIds, page, pageSize, sortBy, order);
     }
+
 
     @Override
     public OnGoingPublishedProgramListDto findByProgramId(Long pId) {
