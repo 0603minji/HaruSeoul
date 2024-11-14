@@ -1,94 +1,3 @@
-<script setup>
-
-import { onMounted, defineProps, defineEmits, reactive, watch } from "vue";
-import axios from "axios";
-
-
-onMounted(() => {
-    fetchTransportationIds();
-});
-
-const transportationIds = ref([]);
-
-//  부모가 자식한테 전달할 때
-//  defineProps : 부모 컴포넌트로부터 전달된 props를 사용하기 위한 함수
-//  부모 컴포넌트가 order라는 데이터 전달 (oreder : 몇번째 route컴포넌트인지)
-const props = defineProps(['order']);
-
-//  자식이 부모한테 전달할 때
-//  defineEmits : 자식 컴포넌트가 부모 컴포넌트로 이벤트를 전달하는 함수
-//  emit('updateRoute', data) 형태로 이벤트 발생
-//  첫 번째 인자 : updateRoute라는 이벤트
-//  두 번째 인자 : 부모에게 전달할 데이터
-const emit = defineEmits(['updateRoute']);
-
-
-//  reactive : 반응형 객체로 만드는 함수
-//             객체 값이 변화하면 관련된 UI를 업데이트.
-//  route라는 반응형 객체 안에 여러 데이터를 저장
-const route = reactive({
-    title: '',
-    order: props.order, // 현재 길이를 기준으로 순서를 설정
-    address: '',
-    description: '',
-    duration: 0,
-    transportationId: 0,
-    transportationDuration: 0
-});
-
-
-//===================== Fetch Functions ====================
-const fetchTransportationIds = async () => {
-    const response = await axios.get("http://localhost:8080/api/v1/transportation");
-    transportationIds.value = response.data;
-}
-
-
-//  부모 컴포넌트로 데이터를 보내는 함수
-//  emit으로 updateRoute 이벤트를 발생시킴
-//  그 안에 현재 route 객체를 전달
-//  { ...route } : route 객체의 복사본을 만들어 데이터를 전달하는 역할
-const updateParent = () => {
-    emit('updateRoute', { ...route });
-};
-
-
-//  watch : 특정 데이터를 감시하는 함수
-//  route 객체가 변경될 때마다 자동으로 updateParent 함수를 호출
-//  { deep: true } 옵션 : route 객체의 하위 속성(내부 속성들)까지 감시
-watch(route, () => {
-    updateParent();
-}, { deep: true });
-
-const minusDuration = () => {
-    if (route.duration == 0) {
-        return;
-    }
-    route.duration -= 10
-}
-
-const plusDuration = () => {
-    if (route.duration == 600) {
-        return;
-    }
-    route.duration += 10
-}
-
-//====== Validation Checking Functions =========================
-
-const titleValidation = () => {
-    return ((route.title.length > 60) || (route.title.length > 0 && route.title.length < 3));
-}
-
-const addressValidation = () => {
-    return ((route.address.length > 60) || (route.address.length > 0 && route.address.length < 3));
-}
-
-const descriptionValidation = () => {
-    return ((route.description.length > 60) || (route.description.length > 0 && route.description.length < 3));
-}
-</script>
-
 <template>
     <section>
         <div class="course-card">
@@ -220,6 +129,114 @@ const descriptionValidation = () => {
         </div>
     </section>
 </template>
+
+<script setup>
+
+import { onMounted, defineProps, defineEmits, reactive, watch } from "vue";
+import axios from "axios";
+
+
+onMounted(() => {
+  fetchTransportationIds();
+});
+
+const transportationIds = ref([]);
+
+//  부모가 자식한테 전달할 때
+//  defineProps : 부모 컴포넌트로부터 전달된 props를 사용하기 위한 함수
+//  부모 컴포넌트가 order라는 데이터 전달 (oreder : 몇번째 route컴포넌트인지)
+const props = defineProps(['order']);
+
+//  자식이 부모한테 전달할 때
+//  defineEmits : 자식 컴포넌트가 부모 컴포넌트로 이벤트를 전달하는 함수
+//  emit('updateRoute', data) 형태로 이벤트 발생
+//  첫 번째 인자 : updateRoute라는 이벤트
+//  두 번째 인자 : 부모에게 전달할 데이터
+const emit = defineEmits(['updateRoute','validationPassed']);
+
+
+//  reactive : 반응형 객체로 만드는 함수
+//             객체 값이 변화하면 관련된 UI를 업데이트.
+//  route라는 반응형 객체 안에 여러 데이터를 저장
+const route = reactive({
+  title: '',
+  order: props.order, // 현재 길이를 기준으로 순서를 설정
+  address: '',
+  description: '',
+  duration: 0,
+  transportationId: 0,
+  transportationDuration: 0
+});
+
+console.log("컴포넌트루트:", route);
+
+
+//===================== Fetch Functions ====================
+const fetchTransportationIds = async () => {
+  const response = await axios.get("http://localhost:8080/api/v1/transportation");
+  transportationIds.value = response.data;
+}
+
+//  부모 컴포넌트로 데이터를 보내는 함수
+//  emit으로 updateRoute 이벤트를 발생시킴
+//  그 안에 현재 route 객체를 전달
+//  { ...route } : route 객체의 복사본을 만들어 데이터를 전달하는 역할
+const updateParent = () => {
+  if (route.title || route.address || route.description || route.duration > 0 || route.transportationId || route.transportationDuration > 0) {
+    emit('updateRoute',route.order, { ...route });
+  }
+};
+
+
+
+//  watch : 특정 데이터를 감시하는 함수
+//  route 객체가 변경될 때마다 자동으로 updateParent 함수를 호출
+//  { deep: true } 옵션 : route 객체의 하위 속성(내부 속성들)까지 감시
+watch(route, () => {
+  updateParent();
+  checkValidation();
+}, { deep: true });
+
+const minusDuration = () => {
+  if (route.duration == 0) {
+    return;
+  }
+  route.duration -= 10
+}
+
+const plusDuration = () => {
+  if (route.duration == 600) {
+    return;
+  }
+  route.duration += 10
+}
+
+//====== Validation Checking Functions =========================
+
+const titleValidation = () => {
+  return ((route.title.length > 60) || (route.title.length > 0 && route.title.length < 3));
+}
+
+const addressValidation = () => {
+  return ((route.address.length > 60) || (route.address.length > 0 && route.address.length < 3));
+}
+
+const descriptionValidation = () => {
+  return ((route.description.length > 60) || (route.description.length > 0 && route.description.length < 3));
+}
+
+// 유효성 검사 통과 확인 후 부모에 이벤트 발생
+// 유효성 검사 통과 확인 후 부모에 이벤트 발생
+const checkValidation = () => {
+  if (!titleValidation() && !addressValidation() && !descriptionValidation()) {
+    emit('validationPassed', props.order - 1, true); // props.order - 1로 index 값 전달
+  } else {
+    emit('validationPassed', props.order - 1, false); // 유효성 검사 실패 시 false 전달
+  }
+};
+
+
+</script>
 
 <style scoped>
 .intro,

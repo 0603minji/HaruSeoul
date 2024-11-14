@@ -1,7 +1,14 @@
 spring:
   profiles:
     active: test #dev #test
-
+  web:
+    resources:
+      static-locations: file:./uploads/
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 500MB
+      max-request-size: 1024MB
 server:
   servlet:
     context-path: /api/v1
@@ -9,3 +16,6 @@ server:
 haruSeoul:
   jwt:
     secret: "PB9xJN6EKidqQqdy3rmKIps88QuEuECdHEZ9RCH5b79pj7k1rUHgFwWZnUwjHwppDO8xRYImzBkQe311aTuOPg=="
+
+file:
+  upload-dir: ./uploads

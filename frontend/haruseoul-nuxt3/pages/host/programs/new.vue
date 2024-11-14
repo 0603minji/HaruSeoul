@@ -1,292 +1,52 @@
-<script setup>
-import { onMounted, ref, reactive } from "vue";
-import axios from "axios";
-import RouteTemplete from "./routeTemplete.vue";
-
-const categories = ref([]);
-const routeComponentCount = ref(1);
-const programCreateDto = reactive({
-  categoryIds: [],
-  routes: [{
-    title: '',
-    address: '',
-    description: ''
-  }
-  ], // route 객체를 여러개 가진 List
-  images: [],
-  groupSizeMin: 2,
-  groupSizeMax: 2,
-  title: '',
-  detail: '',
-  language: "English",
-  startTimeHour: "00",
-  startTimeMinute: "00",
-  endTimeHour: "00",
-  endTimeMinute: "00",
-  price: 0,
-  inclusion: '',
-  exclusion: '',
-  packingList: '',
-  caution: '',
-  requirement: ''
-});
-const activeSection = ref('#intro');
-
-
-//================Fetch Functions==============
-const fetchCategories = async () => {
-  const response = await axios.get("http://localhost:8080/api/v1/categories");
-  categories.value = response.data;
-}
-
-//================LifeCycle Functions==================
-onMounted(() => {
-  if (!window.location.hash) {
-    window.location.hash = '#intro';
-  }
-  fetchCategories();
-})
-
-//==================Data Functions=====================
-//  자식 컴포넌트로부터 데이터를 받아 업데이트하는 함수
-//  자식 컴포넌트가 emit으로 발생시킨 이벤트
-const updateRoute = (index, data) => {
-  programCreateDto.routes[index - 1] = data;
-};
-
-//  호출될 때마다 routeComponentCount 값을 증가
-const addRouteFunction = () => {
-  routeComponentCount.value++;
-}
-
-
-const createProgram = async () => {
-  // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
-  if (programCreateDto.title.length === 0) {
-    if (confirm("프로그램 제목은 필수입력입니다.\n입력 후 저장가능합니다.\n나가시겠습니까?")) {
-      return navigateTo("/host/programs");
-    }
-    return;
-  }
-
-  //  2. 입력받았지만 유효성 통과 X
-  if (checkIntroValidation() || checkDetailValidation() || checkCourseValidation()
-    || checkInclusionValidation() || checkCautionValidation()) {
-    alert("입력이 올바르지 않습니다. 재입력 후 저장해주세요");
-    return;
-  }
-
-  //  3. 입력된것이 유효성 통과 O 하지만 모두 입력 X
-  //      : case 작성할 수 없음
-
-
-  //  4. 1번 2번 케이스를 지나면 무조건, 입력 모두 받았고 유효성 통과 O
-  alert("모든 내용이 올바르게 입력되었습니다. 작성완료 상태로 저장됩니다.");
-  sendCreateRequest(2, "Unpublished");
-}
-
-const tempSave = async () => {
-  // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
-  if (programCreateDto.title.length === 0) {
-    if (confirm("프로그램 제목은 필수입력입니다.\n입력 후 저장가능합니다.\n나가시겠습니까?")) {
-      return navigateTo("/host/programs");
-    }
-    return;
-  }
-
-  //  2. 입력받았지만 유효성 통과 X
-  if (checkIntroValidation() || checkDetailValidation() || checkCourseValidation()
-    || checkInclusionValidation() || checkCautionValidation()) {
-    alert("입력이 올바르지 않습니다. 재입력 후 저장해주세요");
-    return;
-  }
-
-  //  3. 입력된것이 유효성 통과 O 하지만 모두 입력 X
-  //      : case 작성할 수 없음
-
-
-  //  4. 1번 2번 케이스를 지나면 무조건, 입력 모두 받았고 유효성 통과 O
-  alert("작성중 상태로 저장됩니다.");
-  sendCreateRequest(2, "In Progress");
-}
-
-const token = localStorage.getItem("token");
-
-const sendCreateRequest = async (regMemberId, status) => {
-  try {
-    programCreateDto.regMemberId = localStorage.getItem("id");
-    programCreateDto.status = status
-    const response = await axios.post("http://localhost:8080/api/v1/host/programs", programCreateDto, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-    });
-    console.log("Program created successfully:", response.data);
-
-
-
-    // 요청 성공 후 페이지 이동
-    window.location.href = "/host/programs";
-
-  } catch (error) {
-    console.error("Error creating program:", error);
-  }
-}
-
-const minusGroupSizeMax = () => {
-  if (programCreateDto.groupSizeMax > 2) {
-    programCreateDto.groupSizeMax -= 1;
-  }
-};
-
-const plusGroupSizeMax = () => {
-  if (programCreateDto.groupSizeMax < 5) {
-    programCreateDto.groupSizeMax += 1;
-  }
-};
-
-const minusGroupSizeMin = () => {
-  if (programCreateDto.groupSizeMin > 2) {
-    programCreateDto.groupSizeMin -= 1;
-  }
-};
-
-const plusGroupSizeMin = () => {
-  if (programCreateDto.groupSizeMin < 5) {
-    programCreateDto.groupSizeMin += 1;
-  }
-};
-
-
-//======== Validation Checking Functions =============
-const checkIntroValidation = () => {
-  return (titleValidation() || detailValidation());
-}
-
-const titleValidation = () => {
-  return (programCreateDto.title.length > 60)
-    || (programCreateDto.title.length > 0 && programCreateDto.title.length < 3);
-}
-
-const detailValidation = () => {
-  return (programCreateDto.detail.length > 1000) || (programCreateDto.detail.length > 0 && programCreateDto.detail.length < 10);
-}
-
-const checkDetailValidation = () => {
-  return (endTimeValidation() || groupSizeMinValidation());
-}
-
-const endTimeValidation = () => {
-  if (programCreateDto.endTimeHour < programCreateDto.startTimeHour) {
-    return true;
-  }
-  if ((programCreateDto.endTimeHour == programCreateDto.startTimeHour) &&
-    (programCreateDto.endTimeMinute < programCreateDto.startTimeMinute)) {
-    return true;
-  }
-  return false;
-}
-
-const groupSizeMinValidation = () => {
-  return programCreateDto.groupSizeMin > programCreateDto.groupSizeMax;
-}
-
-const priceValidation = () => {
-  if (programCreateDto.price < 0) {
-    programCreateDto.price = 0;
-  }
-}
-
-const checkCourseValidation = () => {
-  for (let index = 0; index < routeComponentCount.value; index++) {
-    // title
-    let routeTitle = programCreateDto.routes[index].title;
-    if ((routeTitle.length > 60) || (routeTitle.length > 0 && routeTitle.length < 3)) {
-      return true;
-    }
-
-    // address 
-    let routeAddress = programCreateDto.routes[index].address;
-    if ((routeAddress.length > 60) || (routeAddress.length > 0 && routeAddress.length < 3)) {
-      return true;
-    }
-
-    // description 
-    let routeDescription = programCreateDto.routes[index].description;
-    if ((routeDescription.length > 60) || (routeDescription.length > 0 && routeDescription.length < 3)) {
-      return true;
-    }
-  }
-};
-
-const checkInclusionValidation = () => {
-  return (inclusionValidation() || exclusionValidation());
-}
-
-const inclusionValidation = () => {
-  return (programCreateDto.inclusion.length > 1000);
-}
-
-const exclusionValidation = () => {
-  return (programCreateDto.exclusion.length > 1000);
-}
-
-
-const checkCautionValidation = () => {
-  return (packingListValidation() || cautionValidation() || requirementValidation());
-}
-
-const packingListValidation = () => {
-  return (programCreateDto.packingList.length > 1000);
-}
-
-const cautionValidation = () => {
-  return (programCreateDto.caution.length > 1000);
-}
-
-const requirementValidation = () => {
-  return (programCreateDto.requirement.length > 1000);
-}
-
-
-const setActiveSection = (section) => {
-  activeSection.value = section;
-}
-
-</script>
-
-
 <template>
   <main>
     <nav class="n-bar-underline-create">
       <h1>목차</h1>
       <ul class="item-wrapper padding-x:6 justify-content:flex-start">
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#intro' }"
-          @click="setActiveSection('#intro')">
-          <a href="#intro" class="">소개</a>
+        <li
+            class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+            :class="{ active: activeSection === '#intro' }"
+            @click.prevent="scrollToSection('#intro')"
+        >
+          소개
         </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#detail' }"
-          @click="setActiveSection('#detail')">
-          <a href="#detail" class="">세부사항</a>
+        <li
+            class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+            :class="{ active: activeSection === '#detail' }"
+            @click.prevent="scrollToSection('#detail')"
+        >
+          세부사항
         </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#course' }"
-          @click="setActiveSection('#course')">
-          <a href="#course" class="">코스</a>
+        <li
+            class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+            :class="{ active: activeSection === '#course' }"
+            @click.prevent="scrollToSection('#course')"
+        >
+          코스
         </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#inclusion' }"
-          @click="setActiveSection('#inclusion')">
-          <a href="#inclusion" class="">포함사항</a>
+        <li
+            class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+            :class="{ active: activeSection === '#inclusion' }"
+            @click.prevent="scrollToSection('#inclusion')"
+        >
+          포함사항
         </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#caution' }"
-          @click="setActiveSection('#caution')">
-          <a href="#caution" class="">추가정보</a>
+        <li
+            class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+            :class="{ active: activeSection === '#caution' }"
+            @click.prevent="scrollToSection('#caution')"
+        >
+          추가정보
         </li>
-        <li class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0" :class="{ active: activeSection === '#image' }"
-          @click="setActiveSection('#image')">
-          <a href="#image" class="">사진</a>
+        <li
+            class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0"
+            :class="{ active: activeSection === '#image' }"
+            @click.prevent="scrollToSection('#image')"
+        >
+          사진
         </li>
       </ul>
+
     </nav>
 
     <form method="post" action="" enctype="multipart/form-data">
@@ -341,11 +101,10 @@ const setActiveSection = (section) => {
         </div>
 
         <div class="button-group">
-          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
           <a class="n-btn n-btn-bg-color:main" href="#detail">다음</a>
         </div>
       </section>
-
 
       <section id="detail" class="detail">
         <h1 class="d:none">개요</h1>
@@ -471,17 +230,20 @@ const setActiveSection = (section) => {
 
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#intro">이전</a></div>
-          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#course">다음</a></div>
         </div>
 
       </section>
+
       <section id="course" class="course">
         <!-- ======================= route 시작 ========================== -->
         <div>
           <h1>코스</h1>
           <RouteTemplete v-for="index in routeComponentCount" :order="index"
-            @updateRoute="updateRoute(index, $event)" />
+            @updateRoute="updateRoute"
+            @validationPassed="handleValidation"
+          />
           <!--
           자식 컴포넌트인 RouteTemplete에 order라는 props를 전달
           @updateRoute : 이벤트 리스너
@@ -491,17 +253,16 @@ const setActiveSection = (section) => {
         </div>
         <div class="map">지도</div>
         <div class="d:flex jc:end m-top:5">
-            <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center" @click="addRouteFunction">+
+            <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center" @click.prevent="addRouteFunction">+
               경유지</button>
         </div>
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#detail">이전</a></div>
-          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">다음</a></div>
         </div>
         <!-- =================== route 종료 ======================== -->
       </section>
-
 
       <section id="inclusion" class="inclusion">
         <h1 class="d:none">포함 사항</h1>
@@ -533,11 +294,10 @@ const setActiveSection = (section) => {
 
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#course">이전</a></div>
-          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#caution">다음</a></div>
         </div>
       </section>
-
 
       <section id="caution" class="caution">
         <h1 class="d:none">추가정보</h1>
@@ -574,7 +334,7 @@ const setActiveSection = (section) => {
         </div>
         <div class="button-group">
           <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">이전</a></div>
-          <button type="button" class="n-btn n-btn-bg-color:main" @click="tempSave">임시저장 후 나가기</button>
+          <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
           <div><a class="n-btn n-btn-bg-color:main" href="#image">다음</a></div>
         </div>
       </section>
@@ -582,99 +342,34 @@ const setActiveSection = (section) => {
       <section id="image" class="images-upload-container">
         <header>
           <h1>사진 업로드</h1>
-          <label class="n-btn n-btn-border:sub n-btn-size:1"><input type="file" id="fileInput"
-              @change="handleFileChange">+ 파일 추가</label>
+          <!-- 파일 선택 시 handleFileSelect 호출 -->
+          <label class="n-btn n-btn-border:sub n-btn-size:1">
+            <input type="file" id="fileInput" @change="handleFileSelect" multiple>+ 파일 추가
+          </label>
         </header>
+
+        <!-- 이미지 미리보기 영역 -->
         <div style="border: 1px solid; border-radius: 10px; padding: 0 20px 20px 20px">
           <div class="upload-images">
-
-            <div class="image-container">
-
-              <div class="image-title-main">
-                <span>대표</span>
-              </div>
-              <div class="image">
-                <div>
-                  <div><img src="/public/image/profile_cat.png" alt="이미지"></div>
-                  <div>
-                    <button>X</button>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="image-container">
-
+            <!-- 미리보기 이미지가 표시되는 영역 -->
+            <div v-for="(image, index) in previewImages" :key="index" class="image-container">
               <div class="image-title">
-                <span>1</span>
+                <span>{{ index === 0 ? '대표' : index }}</span>
               </div>
               <div class="image">
                 <div>
-                  <div><img src="/public/image/home-guest.png" alt="이미지"></div>
-                  <div>
-                    <button>X</button>
+                  <div v-if="image">
+                    <!-- 이미지 미리보기 표시 -->
+                    <img :src="image" alt="이미지 미리보기">
+                    <button @click.prevent="removeImage(index)">X</button>
+                  </div>
+                  <div v-else>
+                    <!-- 이미지가 없을 때 빈 공간 유지 -->
+                    <p>이미지가 없습니다</p>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="image-container">
-              <div class="image-title">
-                <span>2</span>
-              </div>
-              <div class="image">
-                <div>
-                  <div><img src="/public/image/home-host.png" alt="이미지"></div>
-                  <div>
-                    <button>X</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="image-container">
-              <div class="image-title">
-                <span>3</span>
-              </div>
-              <div class="image">
-                <div>
-                  <div><img src="" alt="이미지"></div>
-                  <div>
-                    <button>X</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="image-container">
-              <div class="image-title">
-                <span>4</span>
-              </div>
-              <div class="image">
-                <div>
-                  <div><img src="" alt="이미지"></div>
-                  <div>
-                    <button>X</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="image-container">
-              <div class="image-title">
-                <span>5</span>
-              </div>
-              <div class="image">
-                <div>
-                  <div><img src="" alt="이미지"></div>
-                  <div>
-                    <button>X</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
         <div class="button-group">
@@ -685,12 +380,371 @@ const setActiveSection = (section) => {
           </div>
         </div>
       </section>
+
+
     </form>
   </main>
-
-
 </template>
+
+<script setup>
+import { onMounted, ref, reactive } from "vue";
+import axios from "axios";
+import RouteTemplete from "./routeTemplete.vue";
+
+const categories = ref([]);
+const routeComponentCount = ref(1);
+const validationResults = ref(Array(routeComponentCount.value).fill(false)); // 각 route 유효성 검사 상태
+const regMemberId = localStorage.getItem("id");
+const token = localStorage.getItem("token");
+const programCreateDto = reactive({
+  regMemberId: regMemberId,
+  categoryIds: [],
+  routes: [], // route 객체를 여러개 가진 List
+  images: [],
+  groupSizeMin: 2,
+  groupSizeMax: 2,
+  title: '',
+  detail: '',
+  language: "English",
+  startTimeHour: "00",
+  startTimeMinute: "00",
+  endTimeHour: "00",
+  endTimeMinute: "00",
+  price: 0,
+  status: '',
+  inclusion: '',
+  exclusion: '',
+  packingList: '',
+  caution: '',
+  requirement: ''
+});
+
+const previewImages = ref([]); // 이미지 미리보기 URL 배열
+const imageFiles = ref([]); // 실제 파일 객체 배열
+
+const activeSection = ref();
+
+
+//================Fetch Functions==============
+const fetchCategories = async () => {
+  const response = await axios.get("http://localhost:8080/api/v1/categories");
+  categories.value = response.data;
+}
+
+//================LifeCycle Functions==================
+onMounted(() => {
+  if (!window.location.hash) {
+    window.location.hash = '#intro';
+  }
+  fetchCategories();
+})
+
+//==================Data Functions=====================
+//  자식 컴포넌트로부터 데이터를 받아 업데이트하는 함수
+//  자식 컴포넌트가 emit으로 발생시킨 이벤트
+const updateRoute = (index, data) => {
+  console.log(`Updating route at index ${index}`, data);
+  programCreateDto.routes.splice(index - 1, 1, data);
+  console.log("Updated routes:", programCreateDto.routes);
+};
+
+
+
+//  호출될 때마다 routeComponentCount 값을 증가
+const addRouteFunction = () => {
+  routeComponentCount.value++;
+}
+const handleValidation = (index, isValid) => {
+  console.log(`Updating validation for index ${index}:`, isValid);
+  validationResults.value[index] = isValid;
+  console.log("Current validation results:", validationResults.value);
+};
+
+const allRoutesValid = () => {
+  console.log("Checking if all routes are valid:", validationResults.value);
+  return validationResults.value.every(valid => valid === true);
+};
+
+
+const createProgram = async () => {
+  // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
+  if (
+      !programCreateDto.title ||                    // 제목이 비어 있는지 확인
+      !programCreateDto.detail ||                   // 세부사항이 비어 있는지 확인
+      !programCreateDto.categoryIds.length ||       // 카테고리가 선택되었는지 확인
+      !programCreateDto.groupSizeMax ||
+      !programCreateDto.groupSizeMin ||
+      !programCreateDto.startTimeHour ||
+      !programCreateDto.startTimeMinute ||
+      !programCreateDto.endTimeHour ||
+      !programCreateDto.endTimeMinute ||
+      !programCreateDto.language ||
+      !programCreateDto.price ||
+      !programCreateDto.inclusion ||
+      !programCreateDto.images||
+      programCreateDto.routes.length === 0 ||       // 적어도 하나의 route가 있는지 확인
+      programCreateDto.routes.some(route => !route.title || !route.address) // 각 route가 필수 정보(title, address)를 포함하는지 확인
+  ) {
+    alert("모든 필수 입력 항목을 채워주세요.");
+    return;
+  }
+
+
+  if (!allRoutesValid()) {
+    alert("모든 코스 입력이 유효하지 않습니다. 다시 확인해주세요.");
+    return;
+  }
+
+  //  2. 입력받았지만 유효성 통과 X
+  if (checkIntroValidation() || checkDetailValidation()
+      || checkInclusionValidation() || checkCautionValidation()) {
+    alert("입력이 올바르지 않습니다. 재입력 후 저장해주세요");
+    return;
+  }
+
+  //  3. 입력된것이 유효성 통과 O 하지만 모두 입력 X
+  //      : case 작성할 수 없음
+
+  //  4. 1번 2번 케이스를 지나면 무조건, 입력 모두 받았고 유효성 통과 O
+  programCreateDto.status = 'Unpublished';
+  console.log(programCreateDto.status);
+  await sendCreateRequest();
+  alert("모든 내용이 올바르게 입력되었습니다. 작성완료 상태로 저장됩니다.");
+};
+
+const tempSave = async () => {
+  // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
+  if (programCreateDto.title.length === 0) {
+    alert("프로그램 제목은 필수입력입니다.\n입력 후 저장가능합니다.");
+    return;
+  }
+
+  //  2. 입력받았지만 유효성 통과 X
+  if (checkIntroValidation() || checkDetailValidation()
+      || checkInclusionValidation() || checkCautionValidation()) {
+    alert("입력이 올바르지 않습니다. 재입력 후 저장해주세요");
+    return;
+  }
+
+  //  3. 입력된것이 유효성 통과 O 하지만 모두 입력 X
+  //      : case 작성할 수 없음
+
+  //  4. 1번 2번 케이스를 지나면 무조건, 입력 모두 받았고 유효성 통과 O
+  programCreateDto.status='In Progress'
+  alert("작성중 상태로 저장됩니다.");
+  await sendCreateRequest();
+  return navigateTo("/host/programs");
+}
+
+console.log("Complete DTO:", JSON.parse(JSON.stringify(programCreateDto)));
+
+const sendCreateRequest = async () => {
+
+  const formData = new FormData();
+  // programCreateDto를 JSON 문자열로 변환하고 Blob으로 감싸서 FormData에 추가
+  const programData = {
+    regMemberId: programCreateDto.regMemberId,
+    categoryIds: programCreateDto.categoryIds,
+    routes: programCreateDto.routes,
+    groupSizeMin: programCreateDto.groupSizeMin,
+    groupSizeMax: programCreateDto.groupSizeMax,
+    title: programCreateDto.title,
+    detail: programCreateDto.detail,
+    language: programCreateDto.language,
+    startTimeHour: programCreateDto.startTimeHour,
+    startTimeMinute: programCreateDto.startTimeMinute,
+    endTimeHour: programCreateDto.endTimeHour,
+    endTimeMinute: programCreateDto.endTimeMinute,
+    price: programCreateDto.price,
+    status: programCreateDto.status,
+    inclusion: programCreateDto.inclusion,
+    exclusion: programCreateDto.exclusion,
+    packingList: programCreateDto.packingList,
+    caution: programCreateDto.caution,
+    requirement: programCreateDto.requirement,
+  };
+
+  formData.append("programCreateDto", new Blob([JSON.stringify(programData)], { type: "application/json" }));
+
+  // 선택된 이미지 파일들을 FormData에 추가
+  imageFiles.value.forEach((file) => {
+    formData.append("images", file);
+  });
+
+
+  try {
+    const response = await axios.post("http://localhost:8080/api/v1/host/programs", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        // "Content-Type": "application/json"
+      },
+    });
+
+    // 요청 성공 후 페이지 이동
+    return navigateTo("/host/programs");
+
+  } catch (error) {
+    console.error("Error creating program:", error);
+  }
+}
+
+const minusGroupSizeMax = () => {
+  if (programCreateDto.groupSizeMax > 2) {
+    programCreateDto.groupSizeMax -= 1;
+  }
+};
+
+const plusGroupSizeMax = () => {
+  if (programCreateDto.groupSizeMax < 5) {
+    programCreateDto.groupSizeMax += 1;
+  }
+};
+
+const minusGroupSizeMin = () => {
+  if (programCreateDto.groupSizeMin > 2) {
+    programCreateDto.groupSizeMin -= 1;
+  }
+};
+
+const plusGroupSizeMin = () => {
+  if (programCreateDto.groupSizeMin < 5) {
+    programCreateDto.groupSizeMin += 1;
+  }
+};
+
+// 파일 선택 시 호출
+const handleFileSelect = (event) => {
+  const files = event.target.files;
+  for (const file of files) {
+    const previewUrl = URL.createObjectURL(file); // 미리보기 URL 생성
+    previewImages.value.push(previewUrl); // 미리보기 배열에 URL 추가
+    imageFiles.value.push(file); // 실제 파일 객체 배열에 추가
+  }
+};
+
+// 이미지 삭제 시 호출
+const removeImage = (index) => {
+  // 미리보기 URL 메모리 해제
+  URL.revokeObjectURL(previewImages.value[index]);
+  previewImages.value.splice(index, 1);
+  imageFiles.value.splice(index, 1);
+};
+
+
+
+
+//======== Validation Checking Functions =============
+const checkIntroValidation = () => {
+  return (titleValidation() || detailValidation());
+}
+
+const titleValidation = () => {
+  return (programCreateDto.title.length > 60)
+      || (programCreateDto.title.length > 0 && programCreateDto.title.length < 3);
+}
+
+const detailValidation = () => {
+  return (programCreateDto.detail.length > 1000) || (programCreateDto.detail.length > 0 && programCreateDto.detail.length < 10);
+}
+
+const checkDetailValidation = () => {
+  return (endTimeValidation() || groupSizeMinValidation());
+}
+
+const endTimeValidation = () => {
+  if (programCreateDto.endTimeHour < programCreateDto.startTimeHour) {
+    return true;
+  }
+  if ((programCreateDto.endTimeHour == programCreateDto.startTimeHour) &&
+      (programCreateDto.endTimeMinute < programCreateDto.startTimeMinute)) {
+    return true;
+  }
+  return false;
+}
+
+const groupSizeMinValidation = () => {
+  return programCreateDto.groupSizeMin > programCreateDto.groupSizeMax;
+}
+
+const priceValidation = () => {
+  if (programCreateDto.price < 0) {
+    programCreateDto.price = 0;
+  }
+}
+//
+// const checkCourseValidation = () => {
+//   for (let index = 0; index < routeComponentCount.value; index++) {
+//     // title
+//     let routeTitle = programCreateDto.routes[index].title;
+//     if ((routeTitle.length > 60) || (routeTitle.length > 0 && routeTitle.length < 3)) {
+//       return true;
+//     }
+//
+//     // address
+//     let routeAddress = programCreateDto.routes[index].address;
+//     if ((routeAddress.length > 60) || (routeAddress.length > 0 && routeAddress.length < 3)) {
+//       return true;
+//     }
+//
+//     // description
+//     let routeDescription = programCreateDto.routes[index].description;
+//     if ((routeDescription.length > 60) || (routeDescription.length > 0 && routeDescription.length < 3)) {
+//       return true;
+//     }
+//   }
+// };
+
+const checkInclusionValidation = () => {
+  return (inclusionValidation() || exclusionValidation());
+}
+
+const inclusionValidation = () => {
+  return (programCreateDto.inclusion.length > 1000);
+}
+
+const exclusionValidation = () => {
+  return (programCreateDto.exclusion.length > 1000);
+}
+
+
+const checkCautionValidation = () => {
+  return (packingListValidation() || cautionValidation() || requirementValidation());
+}
+
+const packingListValidation = () => {
+  return (programCreateDto.packingList.length > 1000);
+}
+
+const cautionValidation = () => {
+  return (programCreateDto.caution.length > 1000);
+}
+
+const requirementValidation = () => {
+  return (programCreateDto.requirement.length > 1000);
+}
+
+
+// const setActiveSection = (section) => {
+//   activeSection.value = section;
+// }
+
+const scrollToSection = (sectionId) => {
+  // 해시값을 변경하여 해당 섹션만 보이도록 설정
+  window.location.hash = sectionId;
+  activeSection.value = sectionId; // 활성화된 섹션 업데이트
+};
+
+
+
+</script>
+
 <style scoped>
+.full-link {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 /* 경고 문구 스타일 */
 .warning {
   color: red;
@@ -711,7 +765,7 @@ const setActiveSection = (section) => {
 .caution,
 .images-upload-container {
   display: none;
-  scroll-margin-top: 39px;
+  scroll-margin-top: 100px;
 }
 
 /*현재 타겟 섹션만 보이게 설정*/
@@ -741,6 +795,7 @@ const setActiveSection = (section) => {
   }
 
   .item-wrapper {
+    //position: relative;
     --bar-gap: 16px;
     align-items: center;
     justify-content: space-between;
@@ -1350,7 +1405,7 @@ textarea {
   .inclusion,
   .caution,
   .images-upload-container {
-    scroll-margin-top: 100px;
+    //scroll-margin-top: 100px;
   }
 
 
@@ -1465,6 +1520,12 @@ textarea {
     display: none;
     /*visibility: visible;*/
   }
+  .full-link{
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
 
   /* active 상태에서 줄 색상을 변경 */
   .item-wrapper>.active::after {
@@ -1523,12 +1584,6 @@ input[type="number"].no-spinner {
   -moz-appearance: textfield;
 }
 
-
-/*======== 목차 active 스타일 ========*/
-.n-bar-underline-create .item-wrapper .active {
-  background-color: var(--color-main-4);
-  color: var(--color-base-1);
-}
 
 .n-bar-underline-create .item-wrapper .active::after {
   visibility: visible;
