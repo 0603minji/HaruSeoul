@@ -1,10 +1,8 @@
 package com.m2j2.haruseoul.host.program.service;
 
 import com.m2j2.haruseoul.entity.Program;
-import com.m2j2.haruseoul.host.program.dto.ProgramCreateDto;
-import com.m2j2.haruseoul.host.program.dto.ProgramFilterListDto;
-import com.m2j2.haruseoul.host.program.dto.ProgramResponseDto;
-import com.m2j2.haruseoul.host.program.dto.ProgramUpdateDto;
+import com.m2j2.haruseoul.host.program.dto.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,10 +11,10 @@ public interface ProgramService {
                                List<String> statuses, int pageNum, int cardsPerPage);
 
     List<ProgramFilterListDto> getList(Long hostId, List<Long>pIds, List<String> statuses);
+    List<ProgramTitle> getProgramTitles();
+    Program create(ProgramCreateDto programCreateDto, List<MultipartFile> images);
 
-    Program create(ProgramCreateDto programCreateDto);
-
-    Program update(ProgramUpdateDto programUpdateDto);
+//    Program update(ProgramUpdateDto programUpdateDto);
 
     void delete(Long programId);
 }

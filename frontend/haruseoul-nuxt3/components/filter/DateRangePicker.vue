@@ -6,8 +6,14 @@ const props = defineProps({
   selectedDates: {
     type: Array,
     default: []
+  },
+  resetToggle: {
+    type: Boolean,
+    default: false
   }
 });
+
+watch(()=>props.resetToggle, (newOne) => { resetSelectedDatesHandler();  });
 
 // emit
 const emit = defineEmits(['selectionChanged'])
@@ -34,12 +40,15 @@ const selectedYear = ref(initialYear);
 const selectedMonth = ref(initialMonth);
 // 선택된 날짜들
 const selectedDates = ref(props.selectedDates);
+watch(() => props.selectedDates, newOne => selectedDates.value = newOne);
+
 // selectedDates가 변할 때마다 날짜순 정렬 후 emit
 watch(selectedDates, (newDates) => {
+      console.log('DateRangePicker watch selectedDates run')
       // 선택된 날짜가 2개일 때만 정렬
       if (newDates.length >= 2)
         newDates.sort((a, b) => a - b);
-      emit('selectionChanged', [...newDates]);
+      emit('selectionChanged', newDates);
     },
     {deep: true}
 );
@@ -138,7 +147,7 @@ const isDisabled = (date) => {
 // watchEffect(() => console.log('prev month last date', prevMonthLastDate.value));
 // watchEffect(() => console.log(selectedMonth.value + 1, thisMonthLastDate.value));
 // watchEffect(() => console.log('dates: ', dates.value));
-watchEffect(() => console.log('selectedDates: ', selectedDates.value));
+// watchEffect(() => console.log('selectedDates: ', selectedDates.value));
 </script>
 
 <template>

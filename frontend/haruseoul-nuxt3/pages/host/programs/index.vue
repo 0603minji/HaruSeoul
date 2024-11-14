@@ -1,6 +1,229 @@
-<!-- 1. 로그인 되어있는 해당 호스트에 대한 프로그램만 조회 -->
-<!-- 2. 수정하기 : 페이지 이동 구현 (detail -> new) -->
+<template>
+  <main>
+    <section class="n-layout-mj">
+      <!--=== 헤더 ==========================================-->
+      <header class="n-title">
+        <h1 class="">프로그램 관리</h1>
+        <div>
+          <nuxt-link to="/host/programs/new"
+                     class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록
+          </nuxt-link>
+        </div>
+      </header>
 
+      <section class="d:flex">
+        <section class="layout-list">
+          <!--=== 필터 ==========================================-->
+          <section class="n-filter bg-color:base-1 padding-x:6">
+            <h1 class="d:none">필터</h1>
+
+            <div class="overflow-x:auto">
+              <ul class="item-wrapper padding-y:5">
+                <li>
+                  <a href=""
+                     class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1">프로그램</a>
+                </li>
+                <li>
+                  <a href=""
+                     class=" n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
+                    상태</a>
+                </li>
+                <li>
+                  <a href=""
+                     class=" n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="reset-box">
+              <div class="gradation"></div>
+              <div class="btn-box">
+              <span style="cursor: pointer" class="reset-btn icon-box n-deco1 n-icon n-icon:reset">
+                reset
+              </span>
+              </div>
+            </div>
+          </section>
+
+          <!--=== 프로그램 카드 목록 + 정렬 ==========================================-->
+          <section class="n-layout-mj-cards">
+            <!--정렬-->
+            <header class="list-header bg-color:base-1">
+              <h1 class="d:none">프로그램 목록</h1>
+              <div>
+                <span>{{ totalRowCount }} Result</span>
+                <a href="" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">
+                  정렬
+                </a>
+              </div>
+            </header>
+
+            <!--프로그램 카드 목록 (작성 중) (작성 완료) (모집 중)-->
+            <ul class="n-card-container bg-color:base-1 padding:7">
+              <li v-for="p in programs" :key="p.id" class="n-card bg-color:base-1 padding:6">
+                <h2 class="d:none">프로그램 카드</h2>
+
+                <div class="card-header">
+                  <div class="left">
+                                        <span v-if="p.status === 'In Progress'"
+                                              class="n-panel-tag not-submitted">작성중</span>
+                    <span v-else-if="p.status === 'Published'"
+                          class="n-panel-tag not-submitted">모집중</span>
+                    <span v-else-if="p.status === 'Unpublished'"
+                          class="n-panel-tag not-submitted">작성완료</span>
+                  </div>
+                  <div class="right">
+                    <a @click.prevent="openMore(p.id)" href=""
+                       class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
+                  </div>
+                </div>
+                <div class="card-main">
+                  <div v-if="p.images && p.images.length > 0" class="img-wrapper">
+                    <img :src="getImageSrc(p)" alt="대표사진" />
+                  </div>
+                  <div v-else class="img-wrapper">
+                    <img src="/assets/image/default-program-image.png" alt="대표사진" />
+                  </div>
+                  <div class="card-info-wrapper">
+                    <p class="title">
+                      {{ p.title }}
+                    </p>
+                    <div class="card-info-responsive">
+                      <div>
+                        <div class="card-info">
+                          <span class="n-icon n-icon:star n-deco"></span>
+                          <span>0.0 (0)</span>
+                        </div>
+                        <div class="card-info gap:1">
+                          <span class="category" v-for="(c, index) in p.categoryNames" :key="index">{{ c }}<span
+                              v-if="index < p.categoryNames.length - 1">·</span></span>
+                        </div>
+                      </div>
+
+                      <div class="card-footer-responsive">
+                        <a v-if="p.status === 'In Progress'" href=""
+                           class="n-btn create">작성하기</a>
+                        <a v-else-if="p.status === 'Published'" href="" class="n-btn manage">예약
+                          관리</a>
+                        <a v-else-if="p.status === 'Unpublished'" href=""
+                           class="n-btn open">개설하기</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-footer">
+                  <a href="#" class="n-btn create">작성하기</a>
+                </div>
+              </li>
+            </ul>
+
+            <!-- 페이지네이션 버튼 -->
+            <div class="pagination">
+              <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
+                〈
+              </button>
+
+              <button v-for="page in visiblePages" :key="page" @click="goToPage(page)"
+                      :class="{ active: page === currentPage }">
+                {{ page }}
+              </button>
+
+              <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPageCount">
+                〉
+              </button>
+            </div>
+          </section>
+        </section>
+
+        <!-- 모달 창 -->
+        <div v-if="moreIsOpen" class="more-overlay" @click="closeMore">
+          <div class="more">
+            <div class="more-close">
+              <button @click="closeMore" style="cursor: pointer;">Ⅹ</button>
+            </div>
+            <div class="more-content" @click.stop>
+              <a href="#" class="n-btn" @click.prevent="goToEditPage(selectedProgramId)">수정하기</a>
+              <a href="#" class="n-btn">삭제하기</a>
+            </div>
+          </div>
+        </div>
+
+        <!--=== 필터 반응형 ==========================================-->
+        <aside class="n-filter-aside">
+          <header class="n-title">
+            <h1 class="">Filter</h1>
+            <div>
+              <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;"
+                      @click="filterInit">
+                초기화
+              </button>
+            </div>
+          </header>
+          <div class="filters">
+            <!-- 카테고리 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">카테고리</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
+
+              <form action="" class="form">
+                <div class="modal-checkbox">
+                  <label><input class="categoryAll" type="checkbox"
+                                @change="selectCategoryAll"/>All</label>
+                  <label v-for="c in categories" :key="c.id">
+                    <input class="categoryIds" type="checkbox" @change="selectCategory"
+                           :value="c.id" v-model="selectedCategories"/>{{ c.name }}
+                  </label>
+                </div>
+              </form>
+            </details>
+            <!-- 프로그램 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">프로그램</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
+
+              <form action="" class="form">
+                <div class="modal-checkbox">
+                  <label><input class="programidAll" type="checkbox"
+                                @change="selectProgramAll"/>All</label>
+                  <label v-for="p in programTitles" :key="p.id">
+                    <input class="programids" type="checkbox" @change="selectProgram" :value="p.id"
+                           v-model="selectedProgramIds"/>{{ p.title }}
+                  </label>
+                </div>
+              </form>
+            </details>
+
+            <!-- 프로그램 상태 필터 -->
+            <details open class="filter">
+              <summary class="collapse">
+                <span class="title">프로그램 상태</span>
+                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              </summary>
+
+              <form action="" class="form">
+                <div class="modal-checkbox">
+                  <label><input class="statusCheckboxAll" type="checkbox"
+                                @change="selectStatusAll"/>전체</label>
+                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
+                                :value="'In Progress'" v-model="selectedStatus"/>작성중</label>
+                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
+                                :value="'Unpublished'" v-model="selectedStatus"/>작성완료</label>
+                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
+                                :value="'Published'" v-model="selectedStatus"/>모집중</label>
+                </div>
+              </form>
+            </details>
+          </div>
+        </aside>
+      </section>
+    </section>
+  </main>
+</template>
 
 <script setup>
 import {onMounted, ref, computed} from "vue";
@@ -90,7 +313,6 @@ const fetchPrograms = async (
   const token = localStorage.getItem("token");
 
   const response = await axios.get(
-
       //  axios.get : 비동기적으로 서버의 API로 GET 요청 보냄
       "http://localhost:8080/api/v1/host/programs",
       {
@@ -105,6 +327,7 @@ const fetchPrograms = async (
 
   //  서버로 부터 받은 응답 response
   programs.value = response.data.programs; // response에서 프로그램 목록을 추출해서 저장
+  console.log(programs.value);
   totalRowCount.value = response.data.totalRowCount; //  response에서 총 프로그램수 추출해서 저장
   totalPageCount.value = Math.ceil(totalRowCount.value / cardsPerPage); //response.data.totalPageCount; //  response에서 총 페이지 갯수 추출해서 저장
 };
@@ -127,6 +350,14 @@ const selectCategoryAll = async () => {
     console.error("Error fetching all categories:", error);
   }
 };
+
+const getImageSrc = (program) => {
+  const BASE_URL = 'http://localhost:8080/api/v1/'
+  const image = program.images.find(img => img.order === 1)
+  // 이미지가 있을 경우, 경로 앞에 BASE_URL을 추가
+  return image ? `${BASE_URL}${image.src.startsWith('uploads') ? image.src : image.src}` : `${BASE_URL}uploads/default.jpg`
+}
+
 
 const selectCategory = async () => {
   const allCheckbox = document.querySelector(".categoryAll");
@@ -241,6 +472,14 @@ const selectStatus = async () => {
   }
 };
 
+watchEffect(() => {
+  if (programs.value && programs.value.images && programs.value.images.length > 0) {
+    const mainImage = programs.value.images.find(image => image.order === 1);
+    mainImageSrc.value = mainImage ? `http://localhost:8080/api/v1/${mainImage.src}` : '';
+  }
+});
+
+
 const goToPage = async (page) => {
   if (page >= 1 && page <= totalPageCount.value) {
     currentPage.value = page;
@@ -311,234 +550,6 @@ const goToEditPage = (id) => {
   }
 }
 </script>
-
-<template>
-  <main>
-    <section class="n-layout-mj">
-      <!--=== 헤더 ==========================================-->
-      <header class="n-title">
-        <h1 class="">프로그램 관리</h1>
-        <div>
-          <nuxt-link to="/host/programs/new"
-                     class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">프로그램 등록
-          </nuxt-link>
-        </div>
-      </header>
-
-      <section class="d:flex">
-        <section class="layout-list">
-          <!--=== 필터 ==========================================-->
-          <section class="n-filter bg-color:base-1 padding-x:6">
-            <h1 class="d:none">필터</h1>
-
-            <div class="overflow-x:auto">
-              <ul class="item-wrapper padding-y:5">
-                <li>
-                  <a href=""
-                     class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1">프로그램</a>
-                </li>
-                <li>
-                  <a href=""
-                     class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
-                    상태</a>
-                </li>
-                <li>
-                  <a href=""
-                     class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a>
-                </li>
-              </ul>
-            </div>
-
-            <div class="reset-box">
-              <div class="gradation"></div>
-              <a href="" class="icon-box n-deco1 n-icon n-icon:reset">
-                초기화
-              </a>
-            </div>
-          </section>
-
-          <!--=== 프로그램 카드 목록 + 정렬 ==========================================-->
-          <section class="n-layout-mj-cards">
-            <!--정렬-->
-            <header class="list-header bg-color:base-1">
-              <h1 class="d:none">프로그램 목록</h1>
-              <div>
-                <span>{{ totalRowCount }} Result</span>
-                <a href="" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">
-                  정렬
-                </a>
-              </div>
-            </header>
-
-            <!--프로그램 카드 목록 (작성 중) (작성 완료) (모집 중)-->
-            <ul class="n-card-container bg-color:base-1 padding:7">
-              <li v-for="p in programs" :key="p.id" class="n-card bg-color:base-1 padding:6">
-                <h2 class="d:none">프로그램 카드</h2>
-
-                <div class="card-header">
-                  <div class="left">
-                                        <span v-if="p.status === 'In Progress'"
-                                              class="n-panel-tag not-submitted">작성중</span>
-                    <span v-else-if="p.status === 'Published'"
-                          class="n-panel-tag not-submitted">모집중</span>
-                    <span v-else-if="p.status === 'Unpublished'"
-                          class="n-panel-tag not-submitted">작성완료</span>
-                  </div>
-                  <div class="right">
-                    <a @click.prevent="openMore(p.id)" href=""
-                       class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
-                  </div>
-                </div>
-
-                <div class="card-main">
-                  <div class="img-wrapper">
-                    <img src="/public/image/program_01.png" alt="대표사진"/>
-                  </div>
-
-                  <div class="card-info-wrapper">
-                    <p class="title">
-                      {{ p.title }}
-                    </p>
-                    <div class="card-info-responsive">
-                      <div>
-                        <div class="card-info">
-                          <span class="n-icon n-icon:star n-deco"></span>
-                          <span>0.0 (0)</span>
-                        </div>
-                        <div class="card-info gap:1">
-                                                    <span class="category" v-for="(c, index) in p.categoryNames"
-                                                          :key="index">
-                                                        {{
-                                                        c
-                                                      }}<span v-if="index < p.categoryNames.length - 1">·</span>
-                                                    </span>
-                        </div>
-                      </div>
-
-                      <div class="card-footer-responsive">
-                        <a v-if="p.status === 'In Progress'" href=""
-                           class="n-btn create">작성하기</a>
-                        <a v-else-if="p.status === 'Published'" href="" class="n-btn manage">예약
-                          관리</a>
-                        <a v-else-if="p.status === 'Unpublished'" href=""
-                           class="n-btn open">개설하기</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card-footer">
-                  <a href="aa" class="n-btn create">작성하기</a>
-                </div>
-              </li>
-            </ul>
-
-            <!-- 페이지네이션 버튼 -->
-            <div class="pagination">
-              <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
-                〈
-              </button>
-
-              <button v-for="page in visiblePages" :key="page" @click="goToPage(page)"
-                      :class="{ active: page === currentPage }">
-                {{ page }}
-              </button>
-
-              <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPageCount">
-                〉
-              </button>
-            </div>
-          </section>
-        </section>
-
-        <!-- 모달 창 -->
-        <div v-if="moreIsOpen" class="more-overlay" @click="closeMore">
-          <div class="more">
-            <div class="more-close">
-              <button @click="closeMore" style="cursor: pointer;">Ⅹ</button>
-            </div>
-            <div class="more-content" @click.stop>
-              <a href="#" class="n-btn" @click.prevent="goToEditPage(selectedProgramId)">수정하기</a>
-              <a href="#" class="n-btn">삭제하기</a>
-            </div>
-          </div>
-        </div>
-
-        <!--=== 필터 반응형 ==========================================-->
-        <aside class="n-filter-aside">
-          <header class="n-title">
-            <h1 class="">Filter</h1>
-            <div>
-              <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;"
-                      @click="filterInit">
-                초기화
-              </button>
-            </div>
-          </header>
-          <div class="filters">
-            <!-- 카테고리 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">카테고리</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-                <div class="modal-checkbox">
-                  <label><input class="categoryAll" type="checkbox"
-                                @change="selectCategoryAll"/>All</label>
-                  <label v-for="c in categories" :key="c.id">
-                    <input class="categoryIds" type="checkbox" @change="selectCategory"
-                           :value="c.id" v-model="selectedCategories"/>{{ c.name }}
-                  </label>
-                </div>
-              </form>
-            </details>
-            <!-- 프로그램 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">프로그램</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-                <div class="modal-checkbox">
-                  <label><input class="programidAll" type="checkbox"
-                                @change="selectProgramAll"/>All</label>
-                  <label v-for="p in programTitles" :key="p.id">
-                    <input class="programids" type="checkbox" @change="selectProgram" :value="p.id"
-                           v-model="selectedProgramIds"/>{{ p.title }}
-                  </label>
-                </div>
-              </form>
-            </details>
-
-            <!-- 프로그램 상태 필터 -->
-            <details open class="filter">
-              <summary class="collapse">
-                <span class="title">프로그램 상태</span>
-                <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
-              </summary>
-
-              <form action="" class="form">
-                <div class="modal-checkbox">
-                  <label><input class="statusCheckboxAll" type="checkbox"
-                                @change="selectStatusAll"/>전체</label>
-                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
-                                :value="'In Progress'" v-model="selectedStatus"/>작성중</label>
-                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
-                                :value="'Unpublished'" v-model="selectedStatus"/>작성완료</label>
-                  <label><input class="statusCheckbox" type="checkbox" @change="selectStatus"
-                                :value="'Published'" v-model="selectedStatus"/>모집중</label>
-                </div>
-              </form>
-            </details>
-          </div>
-        </aside>
-      </section>
-    </section>
-  </main>
-</template>
 
 <style scoped>
 .n-card {
