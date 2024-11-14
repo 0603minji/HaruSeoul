@@ -105,14 +105,15 @@ const mapFetchedData = (fetchedData) => {
   publishedPrograms.value = fetchedData.publishedPrograms;
   pages.value = fetchedData.pages;
   totalCount.value = fetchedData.totalCount;
-  totalPages = fetchedData.totalPages;
+  totalPages.value = fetchedData.totalPages;
   currentPageRowCount = fetchedData.currentPageRowCount;
   hasNextPage = fetchedData.hasNextPage;
   hasPreviousPage = fetchedData.hasPreviousPage;
   console.log('mapFetchedData called');
   console.log('   ->  pages: ', pages.value);
+  console.log('   -> startNum: ', startNum.value);
   console.log('   ->  totalCount: ', totalCount.value);
-  console.log('   ->  totalPages: ', totalPages);
+  console.log('   ->  totalPages: ', totalPages.value);
   console.log('   ->  currentPageRowCount: ', currentPageRowCount);
   console.log('   ->  hasNextPage: ', hasNextPage);
   console.log('   ->  hasPreviousPage: ', hasPreviousPage);
@@ -185,6 +186,13 @@ const resetFilterHandler = () => {
   reRenderTrigger.value = !reRenderTrigger.value;
 }
 
+// 페이지네이션
+const pageClickHandler = () => {
+
+}
+
+
+
 
 // === 모달창 ===========================================================================================================
 const isModalVisible = ref("");
@@ -195,7 +203,11 @@ const OpenProgramFilterModalHandler = () => isModalVisible.value = "ProgramFilte
 const OpenPublishProgramModalHandler = () => isModalVisible.value = "PublishProgramModal";
 
 
-// === 변수 =============================================================================================================
+
+
+
+
+// === 변수 todo: 변수 =============================================================================================================
 const route = useRoute();
 const router = useRouter();
 const userDetails = useUserDetails();
@@ -206,9 +218,10 @@ console.log('hostId: ', hostId)
 
 
 // PublishedProgramResponseDto
-const pages = ref([1, 2, 3, 4, 5]);
+const pages = ref([1, 2, 3, 4, 5]); // 페이지네이션
+const startNum = ref(1); // 페이지네이션
 const totalCount = ref();
-let totalPages;
+const totalPages = ref(0);
 let currentPageRowCount;
 let hasNextPage;
 let hasPreviousPage;
@@ -469,6 +482,26 @@ mapFetchedData(data.value);
               </li>
             </ul>
 
+            <!-- mj 페이지네이션 버튼 -->
+            <div class="pagination">
+              <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
+                〈
+              </button>
+
+              <button v-for="page in visiblePages" :key="page" @click="goToPage(page)"
+                      :class="{ active: page === currentPage }">
+                {{ page }}
+              </button>
+
+              <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPageCount">
+                〉
+              </button>
+            </div>
+
+            <!-- Pager 부분 --> <!--todo: pager-->
+            <Pager2 :href="'./reservations'" :page-numbers="pages" :start-num="startNum" :total-pages="totalPages"
+                   @page-change="pageClickHandler" />
+
           </section>
         </div>
 
@@ -627,6 +660,34 @@ mapFetchedData(data.value);
             left: 0;
             z-index: 1;
           }
+        }
+      }
+
+
+      /* ============== 페이지 네이션 ================ */
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+
+        button {
+          padding: 4px 10px;
+          border: none;
+          border-radius: 4px;
+          background-color: var(--color-base-3);
+          cursor: pointer;
+        }
+
+        button.active {
+          color: var(--color-base-1);
+          background-color: var(--color-sub-1);
+        }
+
+        button:disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
         }
       }
     }
