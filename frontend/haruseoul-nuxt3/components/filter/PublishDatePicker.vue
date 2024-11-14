@@ -30,8 +30,6 @@ const prevMonthLastDate = computed(() => new Date(selectedYear.value, selectedMo
 // 이번 달의 마지막 날
 const thisMonthLastDate = computed(() => new Date(selectedYear.value, selectedMonth.value + 1, 0));
 
-const config = useRuntimeConfig();
-
 /*
 [
   {
@@ -167,7 +165,6 @@ const publishedProgramQuery = computed(() => (
 /*=== fetch ==========================================================================================================*/
 // 캘린더에 개설불가능한 날짜 표시를 위한 개설프로그램 목록 fetch
 const {data: publishedData, refresh: publishedRefresh} = await useAuthFetch(`host/published-programs`, {
-  baseURL: config.public.apiBase,
   params: computed(() => publishedProgramQuery.value)
 });
 

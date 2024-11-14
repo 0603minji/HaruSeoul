@@ -119,8 +119,6 @@ const mapFetchedData = (fetchedData) => {
   console.log('   ->  hasNextPage: ', hasNextPage);
   console.log('   ->  hasPreviousPage: ', hasPreviousPage);
   console.log('   ->  publishedPrograms: ', publishedPrograms.value);
-  console.log('   ->  첫번째 pp 대표이미지: ', publishedPrograms.value.at(0).images.at(0).src);
-  console.log('   ->  config.public.apiBase: ', config.public.apiBase);
 }
 
 // tab으로 이동 (예정된, 지난, 취소된)
@@ -411,7 +409,7 @@ mapFetchedData(data.value);
             <ul v-if="publishedPrograms.length" class="n-card-container bg-color:base-1">
 
               <li v-for="pp in publishedPrograms" :key="pp.id" class="n-card n-card:hover padding:6">
-                <a class="n-link-box" href="detail?id=1"></a>
+                <NuxtLink class="n-link-box" :to="`reservations/${pp.id}`"></NuxtLink>
                 <h2 class="d:none">예약 카드</h2>
 
                 <div class="card-header">
@@ -433,7 +431,8 @@ mapFetchedData(data.value);
 
                 <div class="card-main">
                   <div class="img-wrapper">
-                    <img :src="`${config.public.apiBase}${pp.images.at(0).src}`" alt="대표사진">
+                    <img v-if="pp.images.length>0" :src="`${config.public.apiBase}${pp.images.at(0).src}`" alt="대표사진">
+                    <img v-else src="/assets/image/default-program-image.png" alt="대표사진">
                   </div>
 
                   <div class="card-info-wrapper">
