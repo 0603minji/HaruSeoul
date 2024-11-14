@@ -17,17 +17,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
+public class WebSecurityConfig implements WebMvcConfigurer {
 
     private JwtUtil jwtUtil;
 
     public WebSecurityConfig(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:./uploads/");
     }
 
     @Bean
@@ -45,7 +53,7 @@ public class WebSecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//        config.setAllowCredentials(true);
+        config.setAllowCredentials(true);
         config.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
@@ -63,8 +71,9 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((auth) ->
                         auth
-//                                .requestMatchers("/host/**").authenticated()
-//                                .requestMatchers("/guest/**").authenticated()
+                                .requestMatchers("/host/**").authenticated()
+                                .requestMatchers("/guest/**").authenticated()
+                                .requestMatchers("/upload/**").permitAll()
                                 .anyRequest().permitAll()
 
 
@@ -84,7 +93,6 @@ public class WebSecurityConfig {
 
         http
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
 
 
         return http.build();

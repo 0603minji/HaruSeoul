@@ -26,18 +26,17 @@ const hostId = userDetails.id.value;
 // State
 const isDropdownVisible = ref(false);
 const searchTerm = ref(''); // 검색어
-const selectedOptions = ref([]); // 아래에서 부모컴포넌트에서 전달된 값으로 초기화
+const selectedOptions = ref([]); // 아래에서 부모컴포넌트에서 전달된 값으로 초기화. 부모에게 emit할 배열
 // todo: 개설되면 새로 options fetch해야함
 const options = ref([]); // 선택가능한 모든 옵션
-const filteredOptions = ref([]); // 초기값: 선택가능한 모든 옵션
-
-
-
+const filteredOptions = ref([]); // 초기값: 선택가능한 모든 옵션. options기반으로 filterOptons()로 생성 후 드롭다운에 표시
 
 
 // === functions =======================================================================================================
 const toggleDropdown = () => isDropdownVisible.value = !isDropdownVisible.value;
+const closeDropdown = () => isDropdownVisible.value = false;
 
+// 검색어를 적용해서 filteredOptions를 업데이트
 const filterOptions = () => {
   console.log('       filterOptions called,')
   const searchLower = searchTerm.value.toLowerCase();
@@ -91,13 +90,17 @@ console.log('SearchableMultiSelect,    selectedOptions: ', selectedOptions.value
 // filteredOptions 초기화
 filterOptions();
 
-watch(()=>props.toggleDropdown, toggleDropdown);
+
+// 모달창을 때, 드롭다운 collapse
+watch(() => props.toggleDropdown, closeDropdown);
 
 // Watcher to reset the filtered options when options prop changes
 watch(
     () => props.selectedOptionIds,
     (newOptions) => {
-      selectedOptions.value = options.value.filter(option => newOptions.includes(option.id));
+      console.log('SearchableMultiSelect watch,    props.selectedOptionIds: ', newOptions)
+      console.log('SearchableMultiSelect watch,    options: ', options.value)
+      selectedOptions.value = options.value.filter(option => newOptions.includes(String(option.id)));
       console.log('SearchableMultiSelect watch,    selectedOptions: ', selectedOptions.value)
       filterOptions();
     },
@@ -193,22 +196,21 @@ watch(
         </div>
       </div>
 
-      <div class="selected-list-container">
-        <ul>
-          <li  v-for="(option, index) in selectedOptions"
-               :key="option.id">
-            <label>
-              <input
-                  type="checkbox"
-                  :value="option"
-                  checked
-                  @change="toggleOption(option)"
-              />
-              {{ option.title }}
-            </label>
-          </li>
-        </ul>
-      </div>
+      <ul class="selected-list-container">
+        <li v-for="(option, index) in selectedOptions"
+            :key="option.id">
+          <label>
+            <input
+                type="checkbox"
+                :value="option"
+                checked
+                @change="toggleOption(option)"
+            />
+            {{ option.title }}
+          </label>
+        </li>
+        <li v-if="selectedOptions.length===0" style="color: var(--color-base-6)">선택된 프로그램이 없습니다.</li>
+      </ul>
     </div>
   </div>
 
@@ -217,7 +219,6 @@ watch(
 .program-selector {
   display: flex;
   flex-direction: column;
-  margin-bottom: 30px;
 
   .title {
     display: flex;
@@ -240,7 +241,7 @@ watch(
     .select-box {
       //padding: 8px;
       position: relative;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
 
       .status {
         display: flex;
@@ -274,7 +275,7 @@ watch(
         border: 1px solid #ccc;
         border-radius: 0 0 6px 6px;
         background-color: #fff;
-        max-height: 400px;
+        max-height: 300px;
         overflow-y: auto;
         z-index: 1000;
 
@@ -319,7 +320,9 @@ watch(
       //max-width: 768px;
       //min-width: 250px;
       width: 100%;
-      height: 300px;
+      height: auto;
+      max-height: 226px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 12px;

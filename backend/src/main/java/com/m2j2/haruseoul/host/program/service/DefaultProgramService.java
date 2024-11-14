@@ -6,30 +6,42 @@ import com.m2j2.haruseoul.host.program.mapper.ProgramMapper;
 import com.m2j2.haruseoul.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class DefaultProgramService implements ProgramService {
 
-    private ProgramRepository programRepository;
-    private CategoryProgramRepository categoryProgramRepository;
-    private RouteRepository routeRepository;
+    private final ProgramRepository programRepository;
+    private final CategoryProgramRepository categoryProgramRepository;
+    private final RouteRepository routeRepository;
     private final ModelMapper mapper;
-    private MemberRepository memberRepository;
-    private CategoryRepository categoryRepository;
-    private TransportationRepository transportationRepository;
-    private ImageRepository imageRepository;
+    private final MemberRepository memberRepository;
+    private final CategoryRepository categoryRepository;
+    private final TransportationRepository transportationRepository;
+    private final ImageRepository imageRepository;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
 
     //  생성자 주입
     public DefaultProgramService(ProgramRepository programRepository, CategoryProgramRepository categoryProgramRepository,
@@ -49,11 +61,10 @@ public class DefaultProgramService implements ProgramService {
 
     @Override
     @Transactional
-    public ProgramResponseDto getList(Long id,List<Long> pIds, List<Long> cIds, List<String> statuses, int pageNum, int cardsPerPage) {
+    public ProgramResponseDto getList(Long id, List<Long> pIds, List<Long> cIds, List<String> statuses, int pageNum, int cardsPerPage) {
 
         Sort sort = Sort.by("regDate").descending();
         Pageable pageable = PageRequest.of(pageNum - 1, cardsPerPage, sort);
-
 
         List<Long> pIdsFromCategory = null;
 
@@ -74,7 +85,7 @@ public class DefaultProgramService implements ProgramService {
             pIds = pIdsFromCategory;
 
 
-        Page<Program> programPage = programRepository.findAllByMid(id,pIds, statuses, pageable);
+        Page<Program> programPage = programRepository.findAllByMid(id, pIds, statuses, pageable);
         List<ProgramListDto> programListDtos = programPage.getContent()
                 .stream()
                 .map(ProgramMapper::mapToDto)
@@ -91,6 +102,7 @@ public class DefaultProgramService implements ProgramService {
     }
 
     @Override
+    @Transactional
     public List<ProgramFilterListDto> getList(Long hostId, List<Long> pIds, List<String> statuses) {
         List<Program> programs = programRepository.findAllList(hostId, pIds, statuses);
 
@@ -99,6 +111,8 @@ public class DefaultProgramService implements ProgramService {
                 .toList();
     }
 
+    @Override
+    @Transactional
     public List<ProgramTitle> getProgramTitles() {
         return programRepository.findAllByOrderByTitle();
     }
@@ -106,17 +120,15 @@ public class DefaultProgramService implements ProgramService {
 
     @Override
     @Transactional
-    public Program create(ProgramCreateDto programCreateDto) {
-        //Program program = mapper.map(programCreateDto, Program.class);
-        Optional<Member> regMember = memberRepository.findById(programCreateDto.getRegMemberId());
-        if (regMember.isPresent() == false) {
-            log.error("[ 에러 ] 등록되지 않은 사용자 입니다");
-            return null;
-        }
+    public Program create(ProgramCreateDto programCreateDto,List<MultipartFile> images) {
+
+        Long regMemberId = programCreateDto.getRegMemberId();
+        Member regMember = memberRepository.findById(regMemberId).orElse(null);
+
         Program program = Program.builder()
                 .title(programCreateDto.getTitle())
                 .detail(programCreateDto.getDetail())
-                .member(regMember.get())
+                .member(regMember)
                 .language(programCreateDto.getLanguage())
                 .startTime(getLocalTimeByHourAndMinute(programCreateDto.getStartTimeHour(), programCreateDto.getStartTimeMinute()))
                 .endTime(getLocalTimeByHourAndMinute(programCreateDto.getEndTimeHour(), programCreateDto.getEndTimeMinute()))
@@ -130,7 +142,6 @@ public class DefaultProgramService implements ProgramService {
                 .caution(programCreateDto.getCaution())
                 .status(programCreateDto.getStatus())
                 .build();
-
 
         Program savedProgram = programRepository.save(program);
 
@@ -171,14 +182,41 @@ public class DefaultProgramService implements ProgramService {
                     .build();
             routes.add(route);
         }
-
-        log.info("{}", routes.size());
         routeRepository.saveAll(routes);
+
+        // 이미지 저장 로직 추가
+        List<Image> imageEntities = new ArrayList<>();
+        Integer order = 1;
+        for (MultipartFile file : images) {
+            if (file != null && !file.isEmpty()) {
+                String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+                Path filePath = Paths.get(uploadDir, fileName);
+                try {
+                    // 경로가 존재하지 않으면 경로 생성
+                    Files.createDirectories(filePath.getParent());
+                    // 파일 저장
+                    Files.write(filePath, file.getBytes());
+                    // 이미지 객체 생성 및 순서 설정
+                    Image image = Image.builder()
+                            .program(savedProgram)
+                            .src("uploads/"+fileName)      // 파일 이름을 src에 저장
+                            .order(order++)     // 순서 증가
+                            .build();
+                    imageEntities.add(image);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("이미지 저장 중 오류 발생: " + fileName);
+                }
+            }
+        }
+        imageRepository.saveAll(imageEntities);
+
         return savedProgram;
     }
 
-    private LocalTime getLocalTimeByHourAndMinute(String hour, String minute){
-        int intHour = (hour ==  null ? 0 : Integer.parseInt(hour));
+    private LocalTime getLocalTimeByHourAndMinute(String hour, String minute) {
+        int intHour = (hour == null ? 0 : Integer.parseInt(hour));
         int intMinute = (minute == null ? 0 : Integer.parseInt(minute));
 
         return LocalTime.of(intHour, intMinute);
@@ -191,113 +229,115 @@ public class DefaultProgramService implements ProgramService {
         int minute = duration % 60;
         return LocalTime.of(hour, minute);
     }
+
     //  ====== 호스트 프로그램 수정 메서드 ==============================
     @Override
     @Transactional
-    public Program update(ProgramUpdateDto programUpdateDto) {
-
-        //  주어진 프로그램 id로 기존 프로그램 조회
-        //  null 결과반환 대비해서 Optional 타입
-        Optional<Program> programOptional = programRepository.findById(programUpdateDto.getProgramId());
-
-        //  조회 결과 null인 경우 예외 처리
-        if(!programOptional.isPresent()) {
-            log.error("{} is not found", programUpdateDto.getProgramId());
-            return null;
-        }
-
-        //  조회 결과 null이 아닌 경우 조회결과를  Program 객체에 저장
-        Program oldProgram = programOptional.get();
-        
-        //  Program 객체의 각 필드를 ProgramUpdateDto의 값으로 업데이트
-        oldProgram.setTitle(programUpdateDto.getTitle());
-        oldProgram.setDetail(programUpdateDto.getDetail());
-        oldProgram.setLanguage(programUpdateDto.getLanguage());
-        oldProgram.setStartTime(getLocalTimeByHourAndMinute(programUpdateDto.getStartTimeHour(), programUpdateDto.getStartTimeMinute()));
-        oldProgram.setEndTime(getLocalTimeByHourAndMinute(programUpdateDto.getEndTimeHour(), programUpdateDto.getEndTimeMinute()));
-        oldProgram.setGroupSizeMin(programUpdateDto.getGroupSizeMin());
-        oldProgram.setGroupSizeMax(programUpdateDto.getGroupSizeMax());
-        oldProgram.setPrice(programUpdateDto.getPrice());
-        oldProgram.setInclusion(programUpdateDto.getInclusion());
-        oldProgram.setExclusion(programUpdateDto.getExclusion());
-        oldProgram.setPackingList(programUpdateDto.getPackingList());
-        oldProgram.setRequirement(programUpdateDto.getRequirement());
-        oldProgram.setCaution(programUpdateDto.getCaution());
-        oldProgram.setStatus(programUpdateDto.getStatus());
-
-        //  Program 객체를 db에 저장하는 save 메서드 호출
-        Program newProgram = programRepository.save(oldProgram);
-
-        //  카테고리(category) 업데이트
-        //  카테고리 db가 따로 존재하므로 따로 업데이트 필요
-        Long programId = newProgram.getId();
-
-        //  category_program  테이블에 기존 데이터를 삭제
-        categoryProgramRepository.deleteByProgramId(programId);
-
-        //  programUpdateDto에 있는 새로운 카테고리 id 리스트를 categoryIds에 저장
-        List<Long> categoryIds = programUpdateDto.getCategoryIds();
-
-        //  CategoryProgram 객체들을 담는 리스트  newCategoryPrograms
-        List<CategoryProgram> newCategoryPrograms = new ArrayList<>();
-
-        //  categoryIds(List)에서 category(Long) 하나씩 반복
-        for (Long categoryId : categoryIds) {
-            //  category 테이블에서 해당 카테고리 id를 조회
-            //  null 결과 반환 대비해서  Optional 타입
-            Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
-            //  category 테이블에 존재하지 않는 카테고리  id인 경우
-            if(!categoryOptional.isPresent()) {
-                log.error("{} is not found", categoryId);
-                continue;
-            }
-            //  category 테이블에 존재하는 카테고리 id인 경우
-            //  카테고리 id에 해당하는 category 객체를 저장
-            Category category = categoryOptional.get();
-
-            //  category_program 테이블에 저장하기 위한
-            //  CategoryProgram 객체로 빌드 (새로운 카테고리를 함께 빌드)
-            CategoryProgram categoryProgram = CategoryProgram.builder()
-                    .program(newProgram)
-                    .category(category)
-                    .build();
-
-            //  CategoryProgram 객체들을 담는 리스트  newCategoryPrograms
-            //  newCategoryPrograms 리스트에 카테고리 최대 2개에 대한
-            //  각각의 CategoryProgram 객체들을 누적받는 리스트
-            newCategoryPrograms.add(categoryProgram);
-        }
-        
-        //  CategoryProgram 객체들을 누적받은 리스트를
-        //  category_program 테이블에 저장
-        categoryProgramRepository.saveAll(newCategoryPrograms);
-
-        //  todo: 코스(route) 업데이트
-        //  todo: 이미지(image) 업데이트
-        return newProgram;
-    }
+//    public Program update(ProgramUpdateDto programUpdateDto) {
+//
+//        //  주어진 프로그램 id로 기존 프로그램 조회
+//        //  null 결과반환 대비해서 Optional 타입
+//        Optional<Program> programOptional = programRepository.findById(programUpdateDto.getProgramId());
+//
+//        //  조회 결과 null인 경우 예외 처리
+//        if (!programOptional.isPresent()) {
+//            log.error("{} is not found", programUpdateDto.getProgramId());
+//            return null;
+//        }
+//
+//        //  조회 결과 null이 아닌 경우 조회결과를  Program 객체에 저장
+//        Program oldProgram = programOptional.get();
+//
+//        //  Program 객체의 각 필드를 ProgramUpdateDto의 값으로 업데이트
+//        oldProgram.setTitle(programUpdateDto.getTitle());
+//        oldProgram.setDetail(programUpdateDto.getDetail());
+//        oldProgram.setLanguage(programUpdateDto.getLanguage());
+//        oldProgram.setStartTime(getLocalTimeByHourAndMinute(programUpdateDto.getStartTimeHour(), programUpdateDto.getStartTimeMinute()));
+//        oldProgram.setEndTime(getLocalTimeByHourAndMinute(programUpdateDto.getEndTimeHour(), programUpdateDto.getEndTimeMinute()));
+//        oldProgram.setGroupSizeMin(programUpdateDto.getGroupSizeMin());
+//        oldProgram.setGroupSizeMax(programUpdateDto.getGroupSizeMax());
+//        oldProgram.setPrice(programUpdateDto.getPrice());
+//        oldProgram.setInclusion(programUpdateDto.getInclusion());
+//        oldProgram.setExclusion(programUpdateDto.getExclusion());
+//        oldProgram.setPackingList(programUpdateDto.getPackingList());
+//        oldProgram.setRequirement(programUpdateDto.getRequirement());
+//        oldProgram.setCaution(programUpdateDto.getCaution());
+//        oldProgram.setStatus(programUpdateDto.getStatus());
+//
+//        //  Program 객체를 db에 저장하는 save 메서드 호출
+//        Program newProgram = programRepository.save(oldProgram);
+//
+//        //  카테고리(category) 업데이트
+//        //  카테고리 db가 따로 존재하므로 따로 업데이트 필요
+//        Long programId = newProgram.getId();
+//
+//        //  category_program  테이블에 기존 데이터를 삭제
+//        categoryProgramRepository.deleteByProgramId(programId);
+//
+//        //  programUpdateDto에 있는 새로운 카테고리 id 리스트를 categoryIds에 저장
+//        List<Long> categoryIds = programUpdateDto.getCategoryIds();
+//
+//        //  CategoryProgram 객체들을 담는 리스트  newCategoryPrograms
+//        List<CategoryProgram> newCategoryPrograms = new ArrayList<>();
+//
+//        //  categoryIds(List)에서 category(Long) 하나씩 반복
+//        for (Long categoryId : categoryIds) {
+//            //  category 테이블에서 해당 카테고리 id를 조회
+//            //  null 결과 반환 대비해서  Optional 타입
+//            Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+//            //  category 테이블에 존재하지 않는 카테고리  id인 경우
+//            if (!categoryOptional.isPresent()) {
+//                log.error("{} is not found", categoryId);
+//                continue;
+//            }
+//            //  category 테이블에 존재하는 카테고리 id인 경우
+//            //  카테고리 id에 해당하는 category 객체를 저장
+//            Category category = categoryOptional.get();
+//
+//            //  category_program 테이블에 저장하기 위한
+//            //  CategoryProgram 객체로 빌드 (새로운 카테고리를 함께 빌드)
+//            CategoryProgram categoryProgram = CategoryProgram.builder()
+//                    .program(newProgram)
+//                    .category(category)
+//                    .build();
+//
+//            //  CategoryProgram 객체들을 담는 리스트  newCategoryPrograms
+//            //  newCategoryPrograms 리스트에 카테고리 최대 2개에 대한
+//            //  각각의 CategoryProgram 객체들을 누적받는 리스트
+//            newCategoryPrograms.add(categoryProgram);
+//        }
+//
+//        //  CategoryProgram 객체들을 누적받은 리스트를
+//        //  category_program 테이블에 저장
+//        categoryProgramRepository.saveAll(newCategoryPrograms);
+//
+//        //  todo: 코스(route) 업데이트
+//        //  todo: 이미지(image) 업데이트
+//        return newProgram;
+//    }
 
 
     public void delete(Long programId) {
         programRepository.deleteById(programId);
     }
 
-    public ProgramListDto getOneProgram(Long pId) {
-        //  프로그램 id로 Program 엔티티를 조회
-        //  없는 경우(null)를 위해 Optional 객체에 저장
-        Optional<Program> programOptional = programRepository.findById(pId);
-        //  programOptional이 isEmpty인 경우
-        //  null을 반환하여 메서드 종료
-        if(!programOptional.isPresent()) return null;
-        //  programOptional이 isEmpty가 아닌 경우
-        //  get 메서드로 Program 객체를 추출
-        Program program = programOptional.get();
-        
-        //  routeRepository를 통해 Program(프로그램 id)에 속한 Route 객체 리스트를 조회
-        List<Route> routes = routeRepository.findByProgramId(pId);
-        //  조회한 Program 객체와 Route 리스트를 ProgramListDto로 변환
-        ProgramListDto programListDto = ProgramMapper.mapToDto(program, routes);
-
-        return programListDto;
-    }
+//    public ProgramListDto getOneProgram(Long pId) {
+//        //  프로그램 id로 Program 엔티티를 조회
+//        //  없는 경우(null)를 위해 Optional 객체에 저장
+//
+//        Optional<Program> programOptional = programRepository.findById(pId);
+//        //  programOptional이 isEmpty인 경우
+//        //  null을 반환하여 메서드 종료
+//        if (!programOptional.isPresent()) return null;
+//        //  programOptional이 isEmpty가 아닌 경우
+//        //  get 메서드로 Program 객체를 추출
+//        Program program = programOptional.get();
+//
+//        //  routeRepository를 통해 Program(프로그램 id)에 속한 Route 객체 리스트를 조회
+//        List<Route> routes = routeRepository.findByProgramId(pId);
+//        //  조회한 Program 객체와 Route 리스트를 ProgramListDto로 변환
+//        ProgramListDto programListDto = ProgramMapper.mapToDto(program, routes);
+//
+//        return programListDto;
+//    }
 }
