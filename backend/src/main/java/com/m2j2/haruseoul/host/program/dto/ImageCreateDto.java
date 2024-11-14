@@ -15,14 +15,7 @@ import java.util.List;
 public class ImageCreateDto {
 
     private Long programId;
-    private List<ImageDto> imageDtos;
+    private Integer order;
+    private String src;
 
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class ImageDto {
-        private Integer order;
-        private MultipartFile src;
-    }
 }

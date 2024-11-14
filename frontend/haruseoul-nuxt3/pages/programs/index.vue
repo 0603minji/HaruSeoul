@@ -537,6 +537,7 @@ const isDurationActive = ref(false);
 const fetchCategories = async () => {
   const response = await axios.get("http://localhost:8080/api/v1/categories");
   categories.value = response.data;
+
 };
 
 
@@ -570,6 +571,7 @@ const fetchPrograms = async () => {
       programs.value.push(...response.data.programs); // 무한 스크롤로 데이터를 추가
     }
     totalRowCount.value = response.data.totalRowCount;
+    console.log(programs.value);
     // page.value += 1; // 다음 페이지로 증가
     // console.log("Next page to fetch:", page.value); // 디버깅 로그: 증가된 페이지 값
 
