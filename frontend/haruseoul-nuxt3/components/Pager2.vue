@@ -19,8 +19,6 @@ const props = defineProps({
 
 const route = useRoute();
 
-console.log('Pager2, route.query: ', route.query)
-console.log('Pager2, totalPage: ', props.totalPages)
 </script>
 
 <template>
