@@ -8,6 +8,9 @@ import PublishedStatusFilterModal from "~/components/modal/PublishedStatusFilter
 import {useAuthFetch} from "~/composables/useAuthFetch.js";
 import {useDataFetch} from "~/composables/useDataFetch.js";
 import ProgramFilterModal from "~/components/modal/ProgramFilterModal.vue";
+import PublishedStatusAsideFilter from "~/components/filter/PublishedStatusAsideFilter.vue";
+import ProgramAsideFilter from "~/components/filter/ProgramAsideFilter.vue";
+import DateRangeAsideFilter from "~/components/filter/DateRangeAsideFilter.vue";
 
 //=== function =========================================================================================================
 // 2024-11-26 -> 24.11.26 Tue
@@ -27,26 +30,13 @@ const formatDate = (dateString) => {
 
 // 한국날짜 D-day("2024-11-26") 입력하면 현재 한국시간 기준으로 d-day계산
 const calculateKoreanDDay = (enteredDate) => {
-  const koreaTimeOffset = 9 * 60; // UTC+9 in minutes
+  const koreaTimeOffset = 9 * 60 * 60 * 1000; // UTC+9 in minutes
+  const targetDate = new Date(enteredDate + 'T00:00:00+09:00');
+  const today = new Date();
 
-  // Create the entered date (midnight of the entered date in Korean Time)
-  const targetDateKST = new Date(enteredDate);
-  targetDateKST.setHours(0, 0, 0, 0); // Set to midnight of the entered date in local time
+  const timediff = targetDate.getTime() - today.getTime();
 
-  // Adjust the entered date to Korean Time (add UTC+9)
-  const targetDateInKST = new Date(targetDateKST.getTime() - koreaTimeOffset * 60000);
-
-  // Calculate the time difference in milliseconds
-  const timeDifference = targetDateInKST.getTime() - Date.now();
-
-  // Convert the time difference to days
-  const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
-  /*
-    daysDiff = 0 : D-day
-    daysDiff > 0 : D-daysDiff
-    daysDiff < 0 : D+daysDiff (화면에 출력 안할 것)
-  */
-  return daysDifference;
+  return Math.ceil(timediff / (24 * 3600 * 1000));
 }
 
 const createQuery = () => {
@@ -88,7 +78,7 @@ const createQuery = () => {
 // $fetch
 const fetchData = async () => {
   const query = createQuery();
-  const data = await useDataFetch(`host/published-programs`, { query: query });
+  const data = await useDataFetch(`host/published-programs`, {query: query});
 
   // api query -> user query
   const keysToExclude = ["mIds", "pageSize"];
@@ -138,10 +128,12 @@ const tabChangeHandler = (newTab) => {
 }
 
 // 필터모달에서 업데이트한 변수들로 쿼리 만들어서 패치
-const updateDateFilterQuery = (selectedDates) => {
+const updateDateFilterQuery = (SelectedDates) => {
   console.log('updateDateFilterQuery called')
+  selectedDates.value = SelectedDates;
+
   // [date객체, date객체] -> "2024-11-26,2024-11-28"
-  dates.value = selectedDates
+  dates.value = SelectedDates
       .map((date) =>
           new Intl.DateTimeFormat("ko-KR", {
             year: "numeric",
@@ -184,6 +176,7 @@ const resetFilterHandler = () => {
   page.value = "1";
   fetchData();
 
+  // 필터에게 props로 전달해서 필터도 초기화
   selectedDates.value = [];
   selectedProgramIds.value = [];
   selectedStatuses.value = [];
@@ -193,10 +186,6 @@ const resetFilterHandler = () => {
 }
 
 
-
-
-
-
 // === 모달창 ===========================================================================================================
 const isModalVisible = ref("");
 
@@ -204,10 +193,6 @@ const OpenDateRangeFilterModalHandler = () => isModalVisible.value = "DateRangeF
 const OpenPublishedStatusFilterModalHandler = () => isModalVisible.value = "PublishedStatusFilterModal";
 const OpenProgramFilterModalHandler = () => isModalVisible.value = "ProgramFilterModal";
 const OpenPublishProgramModalHandler = () => isModalVisible.value = "PublishProgramModal";
-
-
-
-
 
 
 // === 변수 =============================================================================================================
@@ -275,11 +260,8 @@ console.log("index selectedProgramIds :", selectedProgramIds.value);
 const reRenderTrigger = ref(false);
 
 
-
-
-
 /*=== fetch ==========================================================================================================*/
-const { data } = await useAuthFetch(`host/published-programs`, { query: createQuery() });
+const {data} = await useAuthFetch(`host/published-programs`, {query: createQuery()});
 
 // data.value에 PublishedProgramResponseDto가 담겨있음
 mapFetchedData(data.value);
@@ -295,20 +277,18 @@ mapFetchedData(data.value);
                                 :class="{'show': isModalVisible === 'PublishedStatusFilterModal'}"
                                 :tab="tab"
                                 :selectedStatuses="selectedStatuses"
-                                @update-list-by-tab="updateStatusFilterQuery"
                                 @close-modal="(selected) => { updateStatusFilterQuery(selected); isModalVisible = '';}"/>
     <ProgramFilterModal :key="reRenderTrigger"
-                                :class="{'show': isModalVisible === 'ProgramFilterModal'}"
-                                :selectedProgramIds="selectedProgramIds"
-                                @close-modal="isModalVisible = ''"
-                                @updateSelectedPrograms="updateProgramFilterQuery"/>
+                        :class="{'show': isModalVisible === 'ProgramFilterModal'}"
+                        :selectedProgramIds="selectedProgramIds"
+                        @close-modal="isModalVisible = ''"
+                        @updateSelectedPrograms="updateProgramFilterQuery"/>
     <PublishProgramModal :class="{'show': isModalVisible === 'PublishProgramModal'}"
                          @close-modal="() => { fetchData(); isModalVisible = ''; }"/>
 
     <!-- 모달창 떴을 때 배경처리   -->
     <div :class="{'active': isModalVisible}" class="backdrop"></div>
-  <!-- ============================================================================================================= -->
-
+    <!-- ============================================================================================================= -->
 
 
     <section class="layout-body"> <!-- main 내 모든 -->
@@ -364,7 +344,8 @@ mapFetchedData(data.value);
                 </li>
                 <li><a @click.prevent="OpenPublishedStatusFilterModalHandler" href=""
                        :class="{'active': statuses}"
-                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램 상태</a></li>
+                       class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
+                  상태</a></li>
                 <li><a @click.prevent="OpenProgramFilterModalHandler" href=""
                        :class="{'active': pIds}"
                        class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1">프로그램</a>
@@ -491,8 +472,34 @@ mapFetchedData(data.value);
           </section>
         </div>
 
+        <!-- @media (min-width: 768px) 필터 aside  -->
         <aside class="layout-main-aside">
-
+          <header class="n-title">
+            <h1 class="">Filter</h1>
+            <div>
+              <button class="n-btn n-btn:hover n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;"
+                      @click.prevent="resetFilterHandler">
+                초기화
+              </button>
+            </div>
+          </header>
+          <div class="filters">
+            <!-- 기간 필터 -->
+            <DateRangeAsideFilter :key="reRenderTrigger"
+                                  :selectedDates="selectedDates"
+                                  @emit-selected-dates="(selected) => { updateDateFilterQuery(selected); isModalVisible = '';}"/>
+            <span class="separator"></span>
+            <!-- 프로그램 상태 필터 -->
+            <PublishedStatusAsideFilter :key="reRenderTrigger"
+                                        :tab="tab"
+                                        :selectedStatuses="selectedStatuses"
+                                        @updateSelectedStatuses="updateStatusFilterQuery"/>
+            <span class="separator"></span>
+            <!-- 프로그램 필터 -->
+            <ProgramAsideFilter :key="reRenderTrigger"
+                                :selectedProgramIds="selectedProgramIds"
+                                @updateSelectedPrograms="updateProgramFilterQuery"/>
+          </div>
         </aside>
       </div>
     </section>
@@ -517,6 +524,7 @@ mapFetchedData(data.value);
 
   .layout-main {
     display: flex;
+    margin-bottom: 30px;
 
     .layout-main-list {
       flex-grow: 1;
@@ -558,6 +566,7 @@ mapFetchedData(data.value);
 
         .n-card {
           position: relative;
+          box-shadow: 5px 5px 10px 0.5px var(--color-base-3);
 
           .card-header {
             .left {
@@ -623,10 +632,35 @@ mapFetchedData(data.value);
 
     .layout-main-aside {
       display: none;
+      flex-direction: column;
       flex-shrink: 0;
       width: 250px;
       margin: 0 16px;
-      background-color: var(--color-base-3);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+
+      .n-title {
+        --title-font-size: var(--font-size-9);
+        /* 18 */
+        --title-font-weight: 600;
+        /* semi bold */
+        --title-padding: 6px 4px 14px 4px;
+
+        .n-icon {
+          --icon-size: var(--icon-size-4);
+          padding: 8px;
+        }
+      }
+
+      .filters {
+        .separator {
+          display: flex;
+          width: 216px;
+          height: 1px;
+          background-color: var(--color-base-3);
+        }
+      }
     }
   }
 }
@@ -652,7 +686,8 @@ mapFetchedData(data.value);
 
     .n-title {
       > div {
-        margin-right: calc(16px + 250px + 16px - 20px);
+        /* 일정추가 버튼 위치 조정용 */
+        /*margin-right: calc(16px + 250px + 16px - 20px);*/
       }
     }
 
@@ -662,6 +697,17 @@ mapFetchedData(data.value);
 
       .layout-main-aside {
         display: flex;
+
+        /* mj host/programs */
+
+        .filters {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          padding: 16px 16px 32px 16px;
+          border: 1px solid var(--color-base-3);
+          border-radius: 12px;
+        }
       }
     }
   }

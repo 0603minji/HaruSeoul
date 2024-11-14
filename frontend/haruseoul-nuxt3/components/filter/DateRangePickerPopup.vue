@@ -16,7 +16,7 @@ const props = defineProps({
 watch(()=>props.resetToggle, (newOne) => { resetSelectedDatesHandler();  });
 
 // emit
-const emit = defineEmits(['selectionChanged'])
+const emit = defineEmits(['selectionChanged', 'closePopup'])
 
 
 /*=== 달력 dates 생성 =======================================================================================================*/
@@ -156,8 +156,11 @@ const isDisabled = (date) => {
       <h1 class="font-size:8">기간 선택</h1>
       <button
           @click.prevent="resetSelectedDatesHandler"
-          class="margin-left:auto n-btn n-btn:hover n-btn-bd:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 n-deco color:sub-1">
+          class="reset-btn margin-right:auto n-btn n-btn:hover n-btn-bd:none n-icon n-icon-size:2 n-icon:reset n-icon-color:sub-1 color:sub-1">
         초기화
+      </button>
+      <button @click.prevent="emit('closePopup')" class="close-btn n-btn n-btn:hover n-btn-bd:none n-icon n-icon:exit">
+        팝업닫기
       </button>
     </header>
 
@@ -271,6 +274,7 @@ const isDisabled = (date) => {
 
   display: flex;
   flex-direction: column;
+  width: 300px;
 
   .title {
     display: flex;
@@ -279,8 +283,18 @@ const isDisabled = (date) => {
     align-items: center;
     margin-bottom: 8px;
 
-    button {
+    .reset-btn {
       --btn-padding: 8px 10px;
+      margin-left: 4px;
+    }
+
+    .close-btn {
+      --icon-color: var(--color-base-5);
+      --icon-size: 20px;
+    }
+
+    .close-btn:hover {
+      --icon-color: var(--color-base-7);
     }
   }
 
@@ -298,19 +312,19 @@ const isDisabled = (date) => {
       display: flex;
       flex-grow: 1;
       flex-basis: 0;
-      gap: 4px;
+      gap: 0;
       align-items: center;
       justify-content: center;
 
       .start-date-placeholder, .end-date-placeholder {
-        font-size: 16px;
+        font-size: 14px;
         color: var(--color-base-6);
       }
 
       .start-date, .end-date {
-        font-size: 16px;
+        font-size: 14px;
         cursor: pointer;
-        padding: 6px 10px;
+        padding: 6px 6px;
         border-radius: 12px;
       }
 
@@ -321,7 +335,7 @@ const isDisabled = (date) => {
       .clear-selected-date-icon {
         --btn-bg-color: var(--color-base-3);
         --btn-bg-hover: var(--color-base-3);
-        --icon-size: 16px;
+        --icon-size: 10px;
         --icon-color: var(--color-base-6);
       }
 
@@ -335,7 +349,6 @@ const isDisabled = (date) => {
     //max-width: 768px;
     //min-width: 250px;
     width: 100%;
-    height: 495px;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -423,7 +436,7 @@ const isDisabled = (date) => {
         justify-content: center;
         align-items: center;
 
-        height: 56px;
+        height: 42px;
         border-radius: 4px;
         transition: background-color 0.1s ease, border-color 0.1s ease, color 0.1s ease;
 

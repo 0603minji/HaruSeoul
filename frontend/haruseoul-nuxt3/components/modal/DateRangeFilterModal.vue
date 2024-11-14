@@ -13,7 +13,10 @@ const props = defineProps({
 const emit = defineEmits(['closeModal']);
 
 // Selected dates 프로그램 검색기간 [시작일 , 끝] or [날짜]
-const selectedDates = ref(props.selectedDates);
+const selectedDates = ref([]);
+watchEffect(() => {
+  selectedDates.value = props.selectedDates;
+})
 
 // Handle selection change
 const updateSelectedDates = (selectedOptions) => {
@@ -54,7 +57,7 @@ const closeModal = () => {
   bottom: 0;
   transform: translate(-50%, 100%); /* 초기에 바닥에 숨어있음 */
   width: 100%;
-  min-width: 350px;
+  min-width: 300px;
   max-width: 500px;
   max-height: 100vh;
   //background-color: white;
