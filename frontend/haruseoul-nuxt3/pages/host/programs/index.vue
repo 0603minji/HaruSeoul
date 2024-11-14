@@ -77,13 +77,13 @@
                        class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
                   </div>
                 </div>
-
                 <div class="card-main">
-                  <div class="img-wrapper">
+                  <div v-if="p.images && p.images.length > 0" class="img-wrapper">
                     <img :src="getImageSrc(p)" alt="대표사진" />
-
                   </div>
-
+                  <div v-else class="img-wrapper">
+                    <img src="/assets/image/default-program-image.png" alt="대표사진" />
+                  </div>
                   <div class="card-info-wrapper">
                     <p class="title">
                       {{ p.title }}

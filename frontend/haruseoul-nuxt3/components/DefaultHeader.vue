@@ -50,7 +50,7 @@
         <NuxtLink href="/signin" class="profile-img-wrapper">
           <img
               class="profile-img"
-              src="/assets/image/anonymous.png"
+              src="/assets/image/default-profile.png"
               alt="게스트 프로필 사진"
           />
         </NuxtLink>
