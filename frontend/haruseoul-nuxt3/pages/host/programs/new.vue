@@ -361,7 +361,7 @@
                   <div v-if="image">
                     <!-- 이미지 미리보기 표시 -->
                     <img :src="image" alt="이미지 미리보기">
-                    <button @click="removeImage(index)">X</button>
+                    <button @click.prevent="removeImage(index)">X</button>
                   </div>
                   <div v-else>
                     <!-- 이미지가 없을 때 빈 공간 유지 -->
@@ -765,7 +765,7 @@ const scrollToSection = (sectionId) => {
 .caution,
 .images-upload-container {
   display: none;
-  scroll-margin-top: 39px;
+  scroll-margin-top: 100px;
 }
 
 /*현재 타겟 섹션만 보이게 설정*/
@@ -1405,7 +1405,7 @@ textarea {
   .inclusion,
   .caution,
   .images-upload-container {
-    scroll-margin-top: 100px;
+    //scroll-margin-top: 100px;
   }
 
 
