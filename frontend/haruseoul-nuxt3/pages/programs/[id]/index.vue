@@ -527,15 +527,24 @@
         </div>
 
         <!-- === 모달 =================================================================================================== -->
-        <CreateReservationModal :class="{'show': isModalVisible === 'CreateReservationModal'}"
+        <CreateReservationModal class="CreateReservationModal" :class="{'show': isModalVisible === 'CreateReservationModal'}"
                                 :pId="programId"
                                 :hostId="data.programDetailMemberDto.hostId"
-                             @close-modal="() => { isModalVisible = ''; }"/>
+                                @close-modal="() => { isModalVisible = ''; }"/>
 
         <!-- 모달창 떴을 때 배경처리   -->
         <div :class="{'active': isModalVisible}" class="backdrop"></div>
         <!-- ============================================================================================================= -->
       </section>
+<!--      &lt;!&ndash; === 큰 화면 달력 =================================================================================================== &ndash;&gt;-->
+<!--      <CreateReservationModal class="CreateReservationModal" :class="{'show': isModalVisible === 'CreateReservationModal'}"-->
+<!--                              :pId="programId"-->
+<!--                              :hostId="data.programDetailMemberDto.hostId"-->
+<!--                              @close-modal="() => { isModalVisible = ''; }"/>-->
+
+<!--      &lt;!&ndash; 모달창 떴을 때 배경처리   &ndash;&gt;-->
+<!--      <div :class="{'active': isModalVisible}" class="backdrop"></div>-->
+<!--      &lt;!&ndash; ============================================================================================================= &ndash;&gt;-->
     </section>
   </main>
 </template>
