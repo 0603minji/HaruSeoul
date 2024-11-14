@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PublishedProgramResponseDto {
     private List<Long> pages;
+    private Integer startNum;
     private long totalCount;
     private long totalPages;
     private int currentPageRowCount;

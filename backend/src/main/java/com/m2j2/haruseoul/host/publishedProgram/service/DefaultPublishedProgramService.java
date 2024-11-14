@@ -91,6 +91,7 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
         return PublishedProgramResponseDto.builder()
                 .publishedPrograms(publishedProgramListDtos)
                 .pages(pages)
+                .startNum(startNUm)
                 .totalCount(totalCount)
                 .totalPages(totalPages)
                 .currentPageRowCount(currentPageRowCount)
