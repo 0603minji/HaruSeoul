@@ -520,11 +520,31 @@
         </section>
 
         <!-- 찜 -->
-        <div class="floating-bar">
+        <div class="floating-bar" style="z-index: 10;"><!--   지도에 잡아먹혀서 z-index     -->
           <button class="n-btn picked"><span class="n-icon n-icon:bookmark_simple">찜</span></button>
-          <label class="n-btn book"><span>예약하기</span><input type="checkbox" id="bookCheckbox"/></label>
+          <a class="n-btn book" @click.prevent="OpenCreateReservationModalHandler"><span>예약하기</span><input type="checkbox" id="bookCheckbox"/></a>
+          <!--    로그인 안된 사람이 누르면, 로그인페이지로 이동시켜야함 / 로그인한 사람이 누르면 모달창 띄움   -->
         </div>
+
+        <!-- === 모달 =================================================================================================== -->
+        <CreateReservationModal class="CreateReservationModal" :class="{'show': isModalVisible === 'CreateReservationModal'}"
+                                :pId="programId"
+                                :hostId="data.programDetailMemberDto.hostId"
+                                @close-modal="() => { isModalVisible = ''; }"/>
+
+        <!-- 모달창 떴을 때 배경처리   -->
+        <div :class="{'active': isModalVisible}" class="backdrop"></div>
+        <!-- ============================================================================================================= -->
       </section>
+<!--      &lt;!&ndash; === 큰 화면 달력 =================================================================================================== &ndash;&gt;-->
+<!--      <CreateReservationModal class="CreateReservationModal" :class="{'show': isModalVisible === 'CreateReservationModal'}"-->
+<!--                              :pId="programId"-->
+<!--                              :hostId="data.programDetailMemberDto.hostId"-->
+<!--                              @close-modal="() => { isModalVisible = ''; }"/>-->
+
+<!--      &lt;!&ndash; 모달창 떴을 때 배경처리   &ndash;&gt;-->
+<!--      <div :class="{'active': isModalVisible}" class="backdrop"></div>-->
+<!--      &lt;!&ndash; ============================================================================================================= &ndash;&gt;-->
     </section>
   </main>
 </template>
@@ -534,10 +554,15 @@
 import {ref, onMounted} from 'vue';
 import {useFetch} from '#app';
 import {useRoute} from 'vue-router';
+import router from "#app/plugins/router.js";
+import CreateReservationModal from "~/components/modal/CreateReservationModal.vue";
 
 const route = useRoute();
 const programId = ref(route.params.id); // route에서 programId를 가져옴
 const currentHash = computed(() => route.hash || '');
+const isModalVisible = ref("");
+
+const OpenCreateReservationModalHandler = () => isModalVisible.value = "CreateReservationModal";
 
 onMounted(() => {
   const loadMap1 = () => {
@@ -730,8 +755,9 @@ watchEffect(() => {
 });
 
 
-</script>
+// === 예약하기 모달창 부분 ================================================================================================
 
+</script>
 
 <style scoped>
 .program-detail {
@@ -839,7 +865,7 @@ watchEffect(() => {
 .n-bar-underline {
   position: sticky;
   top: 0;
-  z-index: 1000; /* 다른 콘텐츠보다 위에 오도록 설정 */
+  z-index: 500; /* 다른 콘텐츠보다 위에 오도록 설정 */
   background-color: white; /* 배경색 지정 (필요시 조정) */
   padding: 0;
 }
@@ -1245,5 +1271,22 @@ watchEffect(() => {
 
 
   }
+}
+
+/* 모달창 떴을 때 배경처리용 */
+.backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dark background */
+  backdrop-filter: blur(5px); /* Blur effect */
+  z-index: 999; /* Behind modal but above other content */
+}
+
+.backdrop.active {
+  display: block;
 }
 </style>

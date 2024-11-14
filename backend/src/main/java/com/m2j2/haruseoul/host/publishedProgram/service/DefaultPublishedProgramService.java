@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Service
@@ -157,6 +158,33 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
 
         // 그 밖의 유효하지 않은 tab값들은 무시
         return getList(memberIds, dates, statusIds, programIds, page, pageSize, sortBy, order);
+    }
+
+    @Override
+    public OnGoingPublishedProgramListDto findByProgramId(Long pId) {
+
+        // 특정 프로그램 ID와 상태에 해당하는 프로그램 목록을 조회
+        List<PublishedProgram> onGoingPrograms = publishedProgramRepository.findByProgramId(pId);
+
+        // 조회된 각 프로그램을 PublishedProgramListDto 객체로 매핑하여 리스트 생성
+        List<PublishedProgramListDto> programListDtos = onGoingPrograms.stream()
+                .map(program -> PublishedProgramListDto.builder()
+                        .id(program.getId())
+                        .regDate(program.getRegDate())
+                        .programId(program.getProgram().getId())
+                        .programTitle(program.getProgram().getTitle())
+                        .groupSizeMax(program.getProgram().getGroupSizeMax())
+                        .groupSizeMin(program.getProgram().getGroupSizeMin())
+                        .groupSizeCurrent(program.getGroupSizeCurrent())
+                        .date(program.getDate())
+                        .statusName(program.getStatus().getName())
+                        .build())
+                .toList();
+
+        // 매핑된 DTO 리스트를 OnGoingPublishedProgramListDto 객체에 설정하여 반환
+        return OnGoingPublishedProgramListDto.builder()
+                .onGoingPrograms(programListDtos)
+                .build();
     }
 
     @Override

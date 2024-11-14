@@ -1,9 +1,11 @@
 package com.m2j2.haruseoul.guest.reservation.controller;
 
 import com.m2j2.haruseoul.entity.Reservation;
-import com.m2j2.haruseoul.guest.reservation.dto.*;
+import com.m2j2.haruseoul.guest.reservation.dto.ReservationCreateDto;
+import com.m2j2.haruseoul.guest.reservation.dto.ReservationCreatedDto;
+import com.m2j2.haruseoul.guest.reservation.dto.ReservationDetailResponseDto;
+import com.m2j2.haruseoul.guest.reservation.dto.ReservationResponseDto;
 import com.m2j2.haruseoul.guest.reservation.service.DefaultReservationService;
-import com.m2j2.haruseoul.host.program.dto.ProgramCreateDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,11 +41,9 @@ public class ReservationController {
         return ResponseEntity.ok(reservationDetailResponseDto);
     }
 
-    @PostMapping("/new")
-    public ResponseEntity<Void> create(
-            @RequestBody ReservationCreateDto reservationCreateDto) {
-        reservationService.create(reservationCreateDto);
-        return ResponseEntity.status(201).build();  // 201 Created 응답을 반환
+    @PostMapping
+    public ResponseEntity<ReservationCreatedDto> create(@RequestBody ReservationCreateDto reservationCreateDto) {
+        return ResponseEntity.ok(reservationService.create(reservationCreateDto));
     }
 
     @PutMapping("{rid}/cancel")  // 예약 취소를 위한 PUT 요청

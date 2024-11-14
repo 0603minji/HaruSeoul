@@ -2,9 +2,7 @@ package com.m2j2.haruseoul.guest.reservation.service;
 
 import com.m2j2.haruseoul.entity.*;
 import com.m2j2.haruseoul.guest.reservation.dto.*;
-import com.m2j2.haruseoul.guest.reservation.mapper.ReservationMapper;
 import com.m2j2.haruseoul.repository.*;
-import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,11 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DefaultReservationService implements ReservationService {
@@ -52,7 +46,6 @@ public class DefaultReservationService implements ReservationService {
     public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, int pageNum) {
 
         Sort sort = Sort.by("publishedProgram.date").ascending();
-//        Sort sort = Sort.by("regDate").descending();
         Pageable pageable = PageRequest.of(pageNum-1, 6, sort);
 
         // 요청 페이지 번호 확인
@@ -61,12 +54,20 @@ public class DefaultReservationService implements ReservationService {
         // Status ID가 없는 경우 해당 회원의 전체 예약 조회, Status ID가 있으면
         Page<Reservation> reservations = reservationRepository.findAll(sIds, mIds, pageable);
 
+        modelMapper.typeMap(Reservation.class, ReservationListDto.class)
+                .addMappings(mapper -> {
+                    mapper.map(src -> src.getPublishedProgram().getDate(), ReservationListDto::setDate);
+                    mapper.map(src -> src.getPublishedProgram().getProgram().getTitle(), ReservationListDto::setProgramTitle);
+                    mapper.map(src -> src.getPublishedProgram().getProgram().getMember().getId(), ReservationListDto::setHostId);
+                    mapper.map(src -> src.getPublishedProgram().getStatus().getName(), ReservationListDto::setStatusName);
+                });
+
         // 결과 확인
         System.out.println("Total reservations fetched: " + reservations.getTotalElements());
 
         List<ReservationListDto> reservationListDto = reservations.getContent()
                 .stream()
-                .map(ReservationMapper::mapToDto)
+                .map(reservation -> modelMapper.map(reservation, ReservationListDto.class))
                 .toList();
 
         long totalRowCount = reservations.getTotalElements();
@@ -95,7 +96,7 @@ public class DefaultReservationService implements ReservationService {
                     mapper.map(src -> src.getPublishedProgram().getStatus().getName(), ReservationListDto::setStatusName);
                     mapper.map(src -> src.getPublishedProgram().getProgram().getTitle(), ReservationListDto::setProgramTitle);
                     mapper.map(src -> src.getPublishedProgram().getDate(), ReservationListDto::setDate);
-                    mapper.map(Reservation::getGroupSize, ReservationListDto::setGroupSize);
+                    mapper.map(Reservation::getNumberOfGuest, ReservationListDto::setNumberOfGuest);
                 });
 
         // ReservationListDto reservationCard
@@ -164,7 +165,7 @@ public class DefaultReservationService implements ReservationService {
 
     @Override
     @Transactional
-    public void create(ReservationCreateDto reservationCreateDto) {
+    public ReservationCreatedDto create(ReservationCreateDto reservationCreateDto) {
 
         // 예약할때 받은 공개 프로그램 ID로 공개 프로그램 가져오기
         PublishedProgram publishedProgram = publishedProgramRepository.findById(reservationCreateDto.getPublishedProgramId()).orElseThrow(() ->
@@ -172,22 +173,23 @@ public class DefaultReservationService implements ReservationService {
         );
 
         // 예약하는 멤버 ID로 멤버 가져오기
-        Member member = memberRepository.findById(reservationCreateDto.getRegMemberId()).orElseThrow(() ->
+        Member member = memberRepository.findById(reservationCreateDto.getGuestId()).orElseThrow(() ->
                 new IllegalArgumentException("MemberId not found with id")
         );
 
         Reservation reservation = Reservation.builder()
                 .publishedProgram(publishedProgram)
                 .member(member)
-                .groupSize(reservationCreateDto.getReservationGroupSize())
+                .numberOfGuest(reservationCreateDto.getNumberOfGuest())
                 .requirement(reservationCreateDto.getReservationRequirement())
                 .build();
 
         reservationRepository.save(reservation);
+        System.out.println(reservation.getId());
 
         // reservation 의 group_size 들로 해당 publishedProgram 의 group_size_current 합산
         int groupSizeCurrent = publishedProgram.getGroupSizeCurrent(); // 공개된 프로그램의 현재 진행 인원 수
-        int reservationGroupSize = reservationCreateDto.getReservationGroupSize(); // 예약 인원 수
+        int reservationGroupSize = reservationCreateDto.getNumberOfGuest(); // 예약 인원 수
 
         Program reservationProgram = programRepository.findById(publishedProgram.getProgram().getId()).orElse(null);
         assert reservationProgram != null;
@@ -202,6 +204,8 @@ public class DefaultReservationService implements ReservationService {
         else {
             throw new IllegalStateException("예약 불가: 총 그룹 인원이 " + programGroupMaxSize + " 명을 초과할 수 없습니다.");
         }
+
+        return null;
     }
 
     @Override
@@ -214,15 +218,16 @@ public class DefaultReservationService implements ReservationService {
         // 삭제 날짜를 현재 시간으로 설정합니다.
         reservation.setDeleteDate(Instant.now());  // 삭제 일자를 현재 시간으로 설정 (LocalDateTime으로 변경 가능)
 
-        // 상태를 '취소됨'으로 변경 (id=4)
-        Status cancelledStatus = statusRepository.findById(4L)
-                .orElseThrow(() -> new IllegalArgumentException("상태 ID 4를 찾을 수 없습니다."));
-
-        // PublishedProgram의 상태를 취소됨(4)으로 업데이트
-        reservation.getPublishedProgram().setStatus(cancelledStatus);
+//        // 상태를 '취소됨'으로 변경 (id=4)
+//        Status cancelledStatus = statusRepository.findById(4L)
+//                .orElseThrow(() -> new IllegalArgumentException("상태 ID 4를 찾을 수 없습니다."));
+//
+//        // PublishedProgram의 상태를 취소됨(4)으로 업데이트
+//        reservation.getPublishedProgram().setStatus(cancelledStatus);
 
         // 예약을 업데이트합니다.
         reservationRepository.save(reservation);
+
 
         // 로그를 남겨서 예약 삭제에 대한 기록을 남길 수 있습니다.
         System.out.println("Reservation with ID " + reservationId + " has been soft deleted at " + Instant.now());
