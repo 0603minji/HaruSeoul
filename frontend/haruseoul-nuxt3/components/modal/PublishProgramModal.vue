@@ -86,8 +86,14 @@ const submitHandler = async () => {
 
   try {
     console.log('          ->  POST host/published-programs');
-    const response = await axios.post(`${config.public.apiBase}host/published-programs`, publishedProgramCreateDto);
-    console.log('          PublishedProgram post result: ', response.data);
+    let response = await useDataFetch("host/published-programs", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: publishedProgramCreateDto
+    });
+    console.log('          PublishedProgram post result: ', response);
     // 포스트된 결과를 반영하여 모달창 달력 업데이트
 
   } catch (error) {
@@ -142,7 +148,7 @@ const closeModal = () => {
   bottom: 0;
   transform: translate(-50%, 100%); /* 초기에 바닥에 숨어있음 */
   width: 100%;
-  min-width: 350px;
+  min-width: 300px;
   max-width: 500px;
   max-height: 100vh;
   //background-color: white;
