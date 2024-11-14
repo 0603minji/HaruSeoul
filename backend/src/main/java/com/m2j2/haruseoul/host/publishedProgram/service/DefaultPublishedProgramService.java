@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @Service
@@ -66,6 +63,14 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getProgram().getGroupSizeMax(), PublishedProgramListDto::setGroupSizeMax);
                     mapper.map(src -> src.getProgram().getGroupSizeMin(), PublishedProgramListDto::setGroupSizeMin);
+                    mapper.map(
+                            src -> Optional.ofNullable(src.getProgram().getImages())
+                                    .map(images -> images.stream()
+                                            .sorted(Comparator.comparing(Image::getOrder))
+                                            .toList())
+                                    .orElse(Collections.emptyList()),
+                            PublishedProgramListDto::setImages
+                    );
                 });
 
         List<PublishedProgramListDto> publishedProgramListDtos = publishedProgramPage.stream()

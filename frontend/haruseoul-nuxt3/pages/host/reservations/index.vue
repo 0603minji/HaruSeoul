@@ -91,6 +91,7 @@ const fetchData = async () => {
   );
 
   console.log('     index fetchData called')
+  console.log('           >> fetched data :', data)
   console.log('           >> query :', query)
   console.log('           >> userQuery :', userQuery)
 
@@ -118,6 +119,8 @@ const mapFetchedData = (fetchedData) => {
   console.log('   ->  hasNextPage: ', hasNextPage);
   console.log('   ->  hasPreviousPage: ', hasPreviousPage);
   console.log('   ->  publishedPrograms: ', publishedPrograms.value);
+  console.log('   ->  첫번째 pp 대표이미지: ', publishedPrograms.value.at(0).images.at(0).src);
+  console.log('   ->  config.public.apiBase: ', config.public.apiBase);
 }
 
 // tab으로 이동 (예정된, 지난, 취소된)
@@ -125,6 +128,7 @@ const tabChangeHandler = (newTab) => {
   console.log('tabChangeHandler called')
   tab.value = newTab;
   console.log('tab: ', tab.value);
+  page.value = 1; // 탭이동시 무조건 1page로
   fetchData();
 }
 
@@ -186,9 +190,10 @@ const resetFilterHandler = () => {
   reRenderTrigger.value = !reRenderTrigger.value;
 }
 
-// 페이지네이션
-const pageClickHandler = () => {
-
+// 페이지네이션 입력받은 페이지의 데이터로 패치
+const pageClickHandler = (newPage) => {
+  page.value = newPage;
+  fetchData();
 }
 
 
@@ -211,6 +216,7 @@ const OpenPublishProgramModalHandler = () => isModalVisible.value = "PublishProg
 const route = useRoute();
 const router = useRouter();
 const userDetails = useUserDetails();
+const config = useRuntimeConfig();
 
 
 const hostId = userDetails.id.value; // 프론트에서 저장하고 있는 인증정보에 접근해서 얻어와야함
@@ -427,7 +433,7 @@ mapFetchedData(data.value);
 
                 <div class="card-main">
                   <div class="img-wrapper">
-                    <img src="/public/image/program_01.png" alt="대표사진">
+                    <img :src="`${config.public.apiBase}${pp.images.at(0).src}`" alt="대표사진">
                   </div>
 
                   <div class="card-info-wrapper">
@@ -482,24 +488,8 @@ mapFetchedData(data.value);
               </li>
             </ul>
 
-            <!-- mj 페이지네이션 버튼 -->
-            <div class="pagination">
-              <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
-                〈
-              </button>
-
-              <button v-for="page in visiblePages" :key="page" @click="goToPage(page)"
-                      :class="{ active: page === currentPage }">
-                {{ page }}
-              </button>
-
-              <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPageCount">
-                〉
-              </button>
-            </div>
-
             <!-- Pager 부분 --> <!--todo: pager-->
-            <Pager2 :href="'./reservations'" :page-numbers="pages" :start-num="startNum" :total-pages="totalPages"
+            <Pager2 :page-numbers="pages" :start-num="startNum" :total-pages="totalPages"
                    @page-change="pageClickHandler" />
 
           </section>
@@ -662,34 +652,6 @@ mapFetchedData(data.value);
           }
         }
       }
-
-
-      /* ============== 페이지 네이션 ================ */
-
-      .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin: 20px 0;
-
-        button {
-          padding: 4px 10px;
-          border: none;
-          border-radius: 4px;
-          background-color: var(--color-base-3);
-          cursor: pointer;
-        }
-
-        button.active {
-          color: var(--color-base-1);
-          background-color: var(--color-sub-1);
-        }
-
-        button:disabled {
-          cursor: not-allowed;
-          opacity: 0.5;
-        }
-      }
     }
 
     .layout-main-aside {
@@ -699,7 +661,7 @@ mapFetchedData(data.value);
       width: 250px;
       margin: 0 16px;
       /*position: sticky; layout-main-list의 카드와 z-index로 오버랩핑이 되지 않는 문제가 발생해 일단 주석처리
-      top: 0;*/
+    top: 0;*/
       height: 100vh;
 
       .n-title {
