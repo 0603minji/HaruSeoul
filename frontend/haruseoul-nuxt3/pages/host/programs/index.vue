@@ -75,7 +75,8 @@
                   <div class="right">
                     <div class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9" style="cursor: pointer"
                          @click.prevent="toggleMenu(index)"
-                    >더보기</div>
+                    >더보기
+                    </div>
                   </div>
                   <div v-if="activeMenuIndex[index]" class="menu-dropdown">
                     <ul>
@@ -86,10 +87,10 @@
                 </div>
                 <div class="card-main">
                   <NuxtLink v-if="p.images && p.images.length > 0" :href="`/host/programs/${p.id}`" class="img-wrapper">
-                    <img :src="getImageSrc(p)" alt="대표사진" />
+                    <img :src="getImageSrc(p)" alt="대표사진"/>
                   </NuxtLink>
                   <NuxtLink v-else :href="`/host/programs/${p.id}`" class="img-wrapper">
-                    <img src="/assets/image/default-program-image.png" alt="대표사진" />
+                    <img src="/assets/image/default-program-image.png" alt="대표사진"/>
                   </NuxtLink>
                   <div class="card-info-wrapper">
                     <NuxtLink :href="`/host/programs/${p.id}`" style="cursor: pointer" class="title">
@@ -112,15 +113,18 @@
                             v-if="p.status === 'In Progress'"
                             :href="`/host/programs/${p.id}/edit`"
                             class="n-btn create"
-                        >작성하기</NuxtLink>
+                        >작성하기
+                        </NuxtLink>
                         <button
                             v-else-if="p.status === 'Published'"
                             class="n-btn open"
-                        >추가 개설</button>
+                        >추가 개설
+                        </button>
                         <button
                             v-else-if="p.status === 'Unpublished'"
                             class="n-btn open"
-                        >개설하기</button>
+                        >개설하기
+                        </button>
                       </div>
 
                     </div>
@@ -132,35 +136,38 @@
                       v-if="p.status === 'In Progress'"
                       :href="`/host/programs/${p.id}/edit`"
                       class="n-btn create"
-                  >작성하기</NuxtLink>
+                  >작성하기
+                  </NuxtLink>
                   <NuxtLink
                       v-if="p.status === 'Published'"
                       :href="`/host/programs/reservations`"
                       class="n-btn manage"
-                  >예약 관리</NuxtLink>
+                  >예약 관리
+                  </NuxtLink>
                   <button
                       v-else-if="p.status === 'Unpublished'"
                       class="n-btn open"
-                  >개설하기</button>
+                  >개설하기
+                  </button>
                 </div>
               </li>
             </ul>
 
             <!-- 페이지네이션 버튼 -->
-            <div class="pagination">
-              <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
-                〈
-              </button>
+            <!--            <div class="pagination">-->
+            <!--              <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">-->
+            <!--                〈-->
+            <!--              </button>-->
 
-              <button v-for="page in visiblePages" :key="page" @click="goToPage(page)"
-                      :class="{ active: page === currentPage }">
-                {{ page }}
-              </button>
+            <!--              <button v-for="page in visiblePages" :key="page" @click="goToPage(page)"-->
+            <!--                      :class="{ active: page === currentPage }">-->
+            <!--                {{ page }}-->
+            <!--              </button>-->
 
-              <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPageCount">
-                〉
-              </button>
-            </div>
+            <!--              <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPageCount">-->
+            <!--                〉-->
+            <!--              </button>-->
+            <!--            </div>-->
           </section>
         </section>
 
@@ -170,9 +177,7 @@
           <header class="n-title">
             <h1 class="">Filter</h1>
             <div>
-              <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;"
-                      @click="filterInit">
-                초기화
+              <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;">초기화
               </button>
             </div>
           </header>
@@ -204,16 +209,16 @@
 
               <form action="" class="form">
                 <div class="modal-checkbox">
-                  <label><input class="programidAll" type="checkbox"
-                                @change="selectProgramAll"/>All</label>
-                  <label v-for="p in programTitles" :key="p.id">
-                    <input class="programids" type="checkbox" @change="selectProgram" :value="p.id"
-                           v-model="selectedProgramIds"/>{{ p.title }}
-                  </label>
+
+                  <div>
+                    <label v-for="pt in programTitles" :key="pt.id">
+                      <input type="checkbox"/>{{ pt.title }}
+                    </label>
+                  </div>
+
                 </div>
               </form>
             </details>
-
             <!-- 프로그램 상태 필터 -->
             <details open class="filter">
               <summary class="collapse">
@@ -250,34 +255,24 @@ import {useRouter} from 'vue-router';
 const programs = ref([]); //  서버에서 가져온 프로그램 목록 저장 배열
 const totalRowCount = ref(0); // 서버에서 가져온 총 프로그램 개수 저장
 const totalPageCount = ref(0); //  서버에서 가져온 총 페이지 개수 저장
-const programTitles = ref([]); //  프로그램 id, title들을 저장할 배열
 const selectedProgramIds = ref([]); // 프로그램 필터에서 선택된 프로그램의 id를 저장할 배열
 const categories = ref([]);
 const selectedCategories = ref([]);
 const selectedStatus = ref([]);
 const currentPage = ref(1); //  현재 페이지 번호
 const cardsPerPage = 6; //  한페이지당 표시할 프로그램 카드 수
-// 모달 관련 상태
-const moreIsOpen = ref(false);
 const router = useRouter();
-const selectedProgramId = ref(null);
 const activeMenuIndex = ref({});
-
+const programTitles = ref({});
 
 
 //============= Lifecycle Functions ================
 onMounted(() => {
   //  컴포넌트가 화면에 마운트(렌더링)된 후에 실행
   fetchPrograms(); //  프로그램 목록을 가져오는 함수
-  fetchProgramIds(); //  프로그램의 제목과 ID 목록을 가져오는 함수
   fetchCategories();
+  fetchProgramsTitle();
 
-  const CategoryCheckbox = document.querySelector(".categoryAll");
-  CategoryCheckbox.checked = true;
-  const programCheckbox = document.querySelector(".programidAll");
-  programCheckbox.checked = true;
-  const statusCheckbox = document.querySelector(".statusCheckboxAll");
-  statusCheckbox.checked = true;
 });
 
 //============= Data Functions =======================
@@ -286,19 +281,17 @@ const fetchCategories = async () => {
   categories.value = response.data;
 };
 
-//  서버에서 프로그램 id와 title을 가져와서 programTitles에 저장
-const fetchProgramIds = async () => {
-  const response = await axios.get(
-      "http://localhost:8080/api/v1/titles"
-      //  이 url로 서버에 get 요청 보냄
-      //  응답 결과를 response 변수에 담기
-  );
-  programTitles.value = response.data.map((p) => ({
-    id: p.id,
-    title: p.title,
-  }));
-  //response.data에서 id와 title만 추출하여 programTitles 배열 객체에 저장
-};
+const fetchProgramsTitle = async () => {
+  const userId = localStorage.getItem("id");
+  const token = localStorage.getItem("token");
+  const response = await axios.get(`http://localhost:8080/api/v1/host/programs/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+  programTitles.value = response.data;
+}
 
 //  서버에서 프로그램 데이터를 가져오는 비동기 함수
 const fetchPrograms = async (
@@ -377,7 +370,7 @@ const deleteProgram = async (programId) => {
 
 const toggleMenu = (index) => {
   // 다른 카드의 메뉴는 닫고, 해당 카드만 토글
-  activeMenuIndex.value = { [index]: !activeMenuIndex.value[index] };
+  activeMenuIndex.value = {[index]: !activeMenuIndex.value[index]};
 };
 
 const selectCategoryAll = async () => {
@@ -429,54 +422,6 @@ const selectCategory = async () => {
   }
 };
 
-//  선택된 모든 체크박스를 초기화 (All 선택시)
-const selectProgramAll = async () => {
-  selectedProgramIds.value = [];
-  // 프로그램 필터에서 선택된 프로그램 id들을 담은 selectedPrograms 배열 객체를 비움
-  const checkboxes = document.querySelectorAll(".programids");
-  checkboxes.forEach((checkbox) => {
-    checkbox.checked = false;
-  });
-  //  .programids 클래스를 가진 모든 체크박스를 찾아서 선택 해제
-  try {
-    await fetchPrograms(
-        selectedCategories.value.join(","),
-        null,
-        selectedStatus.value.join(","),
-        null
-    );
-    //  fetchPrograms를 호출하여 모든 프로그램을 서버에서 다시 가져오기
-    //  파라미터를 모두 null로 전달하여 필터 없이 전체 목록 가져오기
-  } catch (error) {
-    console.error("Error fetching all programs:", error);
-  }
-};
-
-//  선택된 프로그램들만 서버에서 가져와 목록을 업데이트하는 함수
-const selectProgram = async () => {
-  const allCheckbox = document.querySelector(".programidAll");
-  if (allCheckbox) {
-    allCheckbox.checked = false;
-  }
-  //  .programidAll 클래스를 가진 모든 체크박스를 찾아 선택을 해제
-
-  //  선택된 체크박스의 id가 존재하는 경우(프로그램 필터에 선택된 체크박스가 있는 경우)
-  if (selectedProgramIds.value.length > 0) {
-    try {
-      // 선택된 id들을 ','로 연결해서 쿼리 파라미터로 전송 (pg=1,2,3)
-      await fetchPrograms(
-          selectedCategories.value.join(","),
-          selectedProgramIds.value.join(","),
-          selectedStatus.value.join(","),
-          null
-      );
-    } catch (error) {
-      console.error("Error fetching selected programs:", error);
-    }
-  } else {
-    console.log("No programs selected.");
-  }
-};
 
 const selectStatusAll = async () => {
   selectedStatus.value = [];
@@ -528,68 +473,43 @@ watchEffect(() => {
 });
 
 
-const goToPage = async (page) => {
-  if (page >= 1 && page <= totalPageCount.value) {
-    currentPage.value = page;
-    await fetchPrograms(
-        selectedCategories.value.join(","),
-        selectedProgramIds.value.join(","),
-        selectedStatus.value.join(","),
-        page
-    );
-  }
-};
-
-
-const visiblePages = computed(() => {
-  const pages = [];
-  let startPage;
-  let endPage;
-
-  if (currentPage.value <= 3) {
-    // 1, 2, 또는 3 페이지일 경우 항상 1부터 5까지 표시
-    startPage = 1;
-    endPage = Math.min(totalPageCount.value, 5);
-  } else if (currentPage.value > totalPageCount.value - 3) {
-    // 마지막 3개 페이지에 가까울 때는 끝에서 5개 페이지 표시
-    startPage = Math.max(1, totalPageCount.value - 4);
-    endPage = totalPageCount.value;
-  } else {
-    // 그 외의 경우 현재 페이지를 중심으로 앞뒤로 2페이지씩 표시
-    startPage = currentPage.value - 2;
-    endPage = currentPage.value + 2;
-  }
-
-  for (let page = startPage; page <= endPage; page++) {
-    pages.push(page);
-  }
-  return pages;
-});
-
-
-// 모달 열기
-const openMore = (id) => {
-  moreIsOpen.value = true;
-  selectedProgramId.value = id;
-};
-
-// 모달 닫기
-const closeMore = () => {
-  moreIsOpen.value = false;
-};
-
-// 필터 초기화
-const filterInit = () => {
-  selectCategoryAll();
-  selectProgramAll();
-  selectStatusAll();
-  const CategoryCheckbox = document.querySelector(".categoryAll");
-  CategoryCheckbox.checked = true;
-  const programCheckbox = document.querySelector(".programidAll");
-  programCheckbox.checked = true;
-  const statusCheckbox = document.querySelector(".statusCheckboxAll");
-  statusCheckbox.checked = true;
-}
+// const goToPage = async (page) => {
+//   if (page >= 1 && page <= totalPageCount.value) {
+//     currentPage.value = page;
+//     await fetchPrograms(
+//         selectedCategories.value.join(","),
+//         selectedStatus.value.join(","),
+//         // selectedProgramIds.value.join(","),
+//         page
+//     );
+//   }
+// };
+//
+//
+// const visiblePages = computed(() => {
+//   const pages = [];
+//   let startPage;
+//   let endPage;
+//
+//   if (currentPage.value <= 3) {
+//     // 1, 2, 또는 3 페이지일 경우 항상 1부터 5까지 표시
+//     startPage = 1;
+//     endPage = Math.min(totalPageCount.value, 5);
+//   } else if (currentPage.value > totalPageCount.value - 3) {
+//     // 마지막 3개 페이지에 가까울 때는 끝에서 5개 페이지 표시
+//     startPage = Math.max(1, totalPageCount.value - 4);
+//     endPage = totalPageCount.value;
+//   } else {
+//     // 그 외의 경우 현재 페이지를 중심으로 앞뒤로 2페이지씩 표시
+//     startPage = currentPage.value - 2;
+//     endPage = currentPage.value + 2;
+//   }
+//
+//   for (let page = startPage; page <= endPage; page++) {
+//     pages.push(page);
+//   }
+//   return pages;
+// });
 
 
 </script>
@@ -618,7 +538,8 @@ const filterInit = () => {
   padding: 8px 12px;
   cursor: pointer;
 }
-.menu-dropdown .edit{
+
+.menu-dropdown .edit {
   padding: 8px 12px;
   cursor: pointer;
 }
