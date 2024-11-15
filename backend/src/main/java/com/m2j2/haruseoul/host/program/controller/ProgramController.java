@@ -1,12 +1,9 @@
 package com.m2j2.haruseoul.host.program.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.m2j2.haruseoul.anonymous.service.DefaultCategoryService;
 import com.m2j2.haruseoul.entity.Program;
 import com.m2j2.haruseoul.host.program.dto.*;
 import com.m2j2.haruseoul.host.program.service.DefaultProgramService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

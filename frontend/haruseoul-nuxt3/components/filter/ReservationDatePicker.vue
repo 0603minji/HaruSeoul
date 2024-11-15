@@ -197,7 +197,7 @@ function updateClassSelected(e) {
 
 /*=== fetch ==========================================================================================================*/
 // 캘린더에 예약불가능한 날짜 표시를 위한 개설프로그램 목록 fetch
-const {data: publishedData, refresh: publishedRefresh} = await useAuthFetch(`host/published-programs`, {
+const {data: publishedData, refresh: publishedRefresh} = await useAuthFetch(`published-programs`, {
   params: computed(() => publishedProgramQuery.value)
 });
 
