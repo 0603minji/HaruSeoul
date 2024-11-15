@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @Service
@@ -66,6 +63,14 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getProgram().getGroupSizeMax(), PublishedProgramListDto::setGroupSizeMax);
                     mapper.map(src -> src.getProgram().getGroupSizeMin(), PublishedProgramListDto::setGroupSizeMin);
+                    mapper.map(
+                            src -> Optional.ofNullable(src.getProgram().getImages())
+                                    .map(images -> images.stream()
+                                            .sorted(Comparator.comparing(Image::getOrder))
+                                            .toList())
+                                    .orElse(Collections.emptyList()),
+                            PublishedProgramListDto::setImages
+                    );
                 });
 
         List<PublishedProgramListDto> publishedProgramListDtos = publishedProgramPage.stream()
@@ -91,11 +96,45 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
         return PublishedProgramResponseDto.builder()
                 .publishedPrograms(publishedProgramListDtos)
                 .pages(pages)
+                .startNum(startNUm)
                 .totalCount(totalCount)
                 .totalPages(totalPages)
                 .currentPageRowCount(currentPageRowCount)
                 .hasNextPage(hasNextPage)
                 .hasPreviousPage(hasPreviousPage)
+                .build();
+    }
+
+    @Override
+    public PublishedProgramResponseDto getList(List<Long> memberIds, List<LocalDate> dates, List<Long> statusIds, List<Long> programIds,
+                                               String sortBy, String order) {
+        Sort sort = order.equals("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        LocalDate start = dates == null ? null : dates.getFirst();
+        LocalDate end = dates == null ? null : dates.getLast();
+
+        List<PublishedProgram> allUnpaged = publishedProgramRepository.findAllUnpaged(memberIds, start, end, statusIds, programIds, sort);
+
+        // List<ppListDto>----------------------------------------------------------------------------------------------
+        modelMapper.typeMap(PublishedProgram.class, PublishedProgramListDto.class)
+                .addMappings(mapper -> {
+                    mapper.map(src -> src.getProgram().getGroupSizeMax(), PublishedProgramListDto::setGroupSizeMax);
+                    mapper.map(src -> src.getProgram().getGroupSizeMin(), PublishedProgramListDto::setGroupSizeMin);
+                    mapper.map(
+                            src -> Optional.ofNullable(src.getProgram().getImages())
+                                    .map(images -> images.stream()
+                                            .sorted(Comparator.comparing(Image::getOrder))
+                                            .toList())
+                                    .orElse(Collections.emptyList()),
+                            PublishedProgramListDto::setImages
+                    );
+                });
+
+        List<PublishedProgramListDto> publishedProgramListDtos = allUnpaged.stream()
+                .map(publishedProgram -> modelMapper.map(publishedProgram, PublishedProgramListDto.class))
+                .toList();
+
+        return PublishedProgramResponseDto.builder()
+                .publishedPrograms(publishedProgramListDtos)
                 .build();
     }
 
@@ -159,6 +198,7 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
         // 그 밖의 유효하지 않은 tab값들은 무시
         return getList(memberIds, dates, statusIds, programIds, page, pageSize, sortBy, order);
     }
+
 
     @Override
     public OnGoingPublishedProgramListDto findByProgramId(Long pId) {
@@ -256,6 +296,8 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
         // 개설할 프로그램 entity
         Program program = programRepository.findById(publishedProgramCreateDto.getProgramId())
                 .orElseThrow(() -> new EntityNotFoundException("Program not found with ID: " + publishedProgramCreateDto.getProgramId()));
+        // 프로그램의 상태를 PUblished로 변경
+        program.setStatus("Published");
 
         // 개설된 프로그램의 status 초기값
         final Long INITIAL_STATUS_ID = STATUS_ON_GOING;
@@ -272,6 +314,9 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
                         .status(initialStatus)
                         .build())
                 .toList();
+
+        // 개설한 프로그램의 상태를 Published로 변경
+        programRepository.save(program);
 
         List<PublishedProgram> savedPublishedPrograms = publishedProgramRepository.saveAll(publishedPrograms);
 

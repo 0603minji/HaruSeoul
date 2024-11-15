@@ -2,6 +2,7 @@
 
 import {ref} from "vue";
 import {useRoute} from 'vue-router';
+import vClickOutside from "v-click-outside";
 import DateRangeFilterModal from "~/components/modal/DateRangeFilterModal.vue";
 import PublishProgramModal from "~/components/modal/PublishProgramModal.vue";
 import PublishedStatusFilterModal from "~/components/modal/PublishedStatusFilterModal.vue";
@@ -91,6 +92,7 @@ const fetchData = async () => {
   );
 
   console.log('     index fetchData called')
+  console.log('           >> fetched data :', data)
   console.log('           >> query :', query)
   console.log('           >> userQuery :', userQuery)
 
@@ -105,14 +107,15 @@ const mapFetchedData = (fetchedData) => {
   publishedPrograms.value = fetchedData.publishedPrograms;
   pages.value = fetchedData.pages;
   totalCount.value = fetchedData.totalCount;
-  totalPages = fetchedData.totalPages;
+  totalPages.value = fetchedData.totalPages;
   currentPageRowCount = fetchedData.currentPageRowCount;
   hasNextPage = fetchedData.hasNextPage;
   hasPreviousPage = fetchedData.hasPreviousPage;
   console.log('mapFetchedData called');
   console.log('   ->  pages: ', pages.value);
+  console.log('   -> startNum: ', startNum.value);
   console.log('   ->  totalCount: ', totalCount.value);
-  console.log('   ->  totalPages: ', totalPages);
+  console.log('   ->  totalPages: ', totalPages.value);
   console.log('   ->  currentPageRowCount: ', currentPageRowCount);
   console.log('   ->  hasNextPage: ', hasNextPage);
   console.log('   ->  hasPreviousPage: ', hasPreviousPage);
@@ -124,6 +127,7 @@ const tabChangeHandler = (newTab) => {
   console.log('tabChangeHandler called')
   tab.value = newTab;
   console.log('tab: ', tab.value);
+  page.value = 1; // 탭이동시 무조건 1page로
   fetchData();
 }
 
@@ -185,6 +189,12 @@ const resetFilterHandler = () => {
   reRenderTrigger.value = !reRenderTrigger.value;
 }
 
+// 페이지네이션 입력받은 페이지의 데이터로 패치
+const pageClickHandler = (newPage) => {
+  page.value = newPage;
+  fetchData();
+}
+
 
 // === 모달창 ===========================================================================================================
 const isModalVisible = ref("");
@@ -195,10 +205,36 @@ const OpenProgramFilterModalHandler = () => isModalVisible.value = "ProgramFilte
 const OpenPublishProgramModalHandler = () => isModalVisible.value = "PublishProgramModal";
 
 
-// === 변수 =============================================================================================================
+// === 팝업 ============================================================================================================
+const morePopupStatus = ref({}); // publishedProgram 카드 header영역 right의 더보기 openMorePopup
+
+const toggleMorePopup = (id) => {
+  console.log(' toggleMorePopup called')
+  // 해당 id가 이미 존재하면 속성을 제거, 없으면 true로 추가
+  if (morePopupStatus.value[id]) {
+    // id에 해당하는 속성이 있다면 제거
+    delete morePopupStatus.value[id];
+  } else {
+    // id에 해당하는 속성이 없다면 true로 추가
+    morePopupStatus.value[id] = true;
+  }
+  console.log('   -> morePopupStatus: ', morePopupStatus.value);
+}
+
+const closeMorePopup = (id) => {
+  console.log(' closeMorePopup called')
+  // 해당 id에 대한 속성을 삭제
+  if (morePopupStatus.value[id])
+    delete morePopupStatus.value[id];
+
+  console.log('   -> morePopupStatus: ', morePopupStatus.value);
+}
+
+// === 변수 todo: 변수 =============================================================================================================
 const route = useRoute();
 const router = useRouter();
 const userDetails = useUserDetails();
+const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지 로드용
 
 
 const hostId = userDetails.id.value; // 프론트에서 저장하고 있는 인증정보에 접근해서 얻어와야함
@@ -206,9 +242,10 @@ console.log('hostId: ', hostId)
 
 
 // PublishedProgramResponseDto
-const pages = ref([1, 2, 3, 4, 5]);
+const pages = ref([1, 2, 3, 4, 5]); // 페이지네이션
+const startNum = ref(1); // 페이지네이션
 const totalCount = ref();
-let totalPages;
+const totalPages = ref(0);
 let currentPageRowCount;
 let hasNextPage;
 let hasPreviousPage;
@@ -392,7 +429,7 @@ mapFetchedData(data.value);
             <ul v-if="publishedPrograms.length" class="n-card-container bg-color:base-1">
 
               <li v-for="pp in publishedPrograms" :key="pp.id" class="n-card n-card:hover padding:6">
-                <a class="n-link-box" href="detail?id=1"></a>
+                <NuxtLink class="n-link-box" :to="`reservations/${pp.id}`"></NuxtLink>
                 <h2 class="d:none">예약 카드</h2>
 
                 <div class="card-header">
@@ -407,14 +444,27 @@ mapFetchedData(data.value);
                     </span>
                   </div>
                   <div class="right">
-                    <a href=""
-                       class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
+                    <button
+                        class="morePopup-btn n-btn n-btn:hover n-btn-bd:none n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9"
+                        @click.prevent="toggleMorePopup(pp.id)">더보기
+                    </button>
+
+                  </div> <!--         더보기 팝업           -->
+                  <div class="morePopup" v-if="morePopupStatus[pp.id]"
+                  v-click-outside="closeMorePopup(id)">
+                    <ul>
+                      <li>예약확정</li>
+                      <li>예약취소</li>
+                      <li>추가개설</li><!-- 취소, 완료된 일정 아닌 나머지 -->
+                      <li>내역삭제</li><!-- only 취소3, 완료된 일정4 -->
+                    </ul>
                   </div>
                 </div>
 
                 <div class="card-main">
                   <div class="img-wrapper">
-                    <img src="/public/image/program_01.png" alt="대표사진">
+                    <img v-if="pp.images.length>0" :src="`${config.public.apiBase}${pp.images.at(0).src}`" alt="대표사진">
+                    <img v-else src="/assets/image/default-program-image.png" alt="대표사진">
                   </div>
 
                   <div class="card-info-wrapper">
@@ -469,6 +519,10 @@ mapFetchedData(data.value);
               </li>
             </ul>
 
+            <!-- Pager 부분 --> <!--todo: pager-->
+            <Pager2 :page-numbers="pages" :start-num="startNum" :total-pages="totalPages"
+                    @page-change="pageClickHandler"/>
+
           </section>
         </div>
 
@@ -477,7 +531,8 @@ mapFetchedData(data.value);
           <header class="n-title">
             <h1 class="">Filter</h1>
             <div>
-              <button class="n-btn n-btn:hover n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;"
+              <button class="n-btn n-btn:hover n-icon n-icon:reset"
+                      style="--icon-color: var(--color-sub-1); cursor: pointer;"
                       @click.prevent="resetFilterHandler">
                 초기화
               </button>
@@ -525,6 +580,7 @@ mapFetchedData(data.value);
   .layout-main {
     display: flex;
     margin-bottom: 30px;
+    position: relative;
 
     .layout-main-list {
       flex-grow: 1;
@@ -569,6 +625,7 @@ mapFetchedData(data.value);
           box-shadow: 5px 5px 10px 0.5px var(--color-base-3);
 
           .card-header {
+            position: relative;
             .left {
               .on-going {
                 --tag-border-color: var(--color-sub-1);
@@ -605,6 +662,45 @@ mapFetchedData(data.value);
               /* a태그는 기본 position이 static. static이면 z-index가 안 먹힘*/
               z-index: 2;
             }
+
+            .right {
+              position: relative;
+
+              .morePopup-btn {
+                position: relative;
+                z-index: 10;
+
+                --btn-border-radius: 8px;
+                --btn-bg-hover: var(--color-base-4);
+              }
+
+
+            }
+            .morePopup {
+              width: 120px;
+              position: absolute;
+              top: 100%; /* 버튼 바로 아래로 위치 */
+              right: 0; /* 버튼의 오른쪽 모서리와 평행하도록 맞춤 */
+              border-radius: 8px;
+              background-color: white;
+              padding: 10px 0;
+              border: 1px solid #ddd;
+              box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+              z-index: 10;
+
+              ul {
+                display: flex;
+                flex-direction: column;
+
+                li {
+                  padding: 6px 16px;
+                  cursor: pointer;
+                }
+                li:hover {
+                  background-color: var(--color-base-2);
+                }
+              }
+            }
           }
 
           .card-main {
@@ -636,8 +732,8 @@ mapFetchedData(data.value);
       flex-shrink: 0;
       width: 250px;
       margin: 0 16px;
-      position: sticky;
-      top: 0;
+      /*position: sticky; layout-main-list의 카드와 z-index로 오버랩핑이 되지 않는 문제가 발생해 일단 주석처리
+    top: 0;*/
       height: 100vh;
 
       .n-title {
