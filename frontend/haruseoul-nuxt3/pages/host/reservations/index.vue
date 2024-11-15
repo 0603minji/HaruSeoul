@@ -2,6 +2,7 @@
 
 import {ref} from "vue";
 import {useRoute} from 'vue-router';
+import vClickOutside from "v-click-outside";
 import DateRangeFilterModal from "~/components/modal/DateRangeFilterModal.vue";
 import PublishProgramModal from "~/components/modal/PublishProgramModal.vue";
 import PublishedStatusFilterModal from "~/components/modal/PublishedStatusFilterModal.vue";
@@ -195,8 +196,6 @@ const pageClickHandler = (newPage) => {
 }
 
 
-
-
 // === 모달창 ===========================================================================================================
 const isModalVisible = ref("");
 
@@ -206,15 +205,36 @@ const OpenProgramFilterModalHandler = () => isModalVisible.value = "ProgramFilte
 const OpenPublishProgramModalHandler = () => isModalVisible.value = "PublishProgramModal";
 
 
+// === 팝업 ============================================================================================================
+const morePopupStatus = ref({}); // publishedProgram 카드 header영역 right의 더보기 openMorePopup
 
+const toggleMorePopup = (id) => {
+  console.log(' toggleMorePopup called')
+  // 해당 id가 이미 존재하면 속성을 제거, 없으면 true로 추가
+  if (morePopupStatus.value[id]) {
+    // id에 해당하는 속성이 있다면 제거
+    delete morePopupStatus.value[id];
+  } else {
+    // id에 해당하는 속성이 없다면 true로 추가
+    morePopupStatus.value[id] = true;
+  }
+  console.log('   -> morePopupStatus: ', morePopupStatus.value);
+}
 
+const closeMorePopup = (id) => {
+  console.log(' closeMorePopup called')
+  // 해당 id에 대한 속성을 삭제
+  if (morePopupStatus.value[id])
+    delete morePopupStatus.value[id];
 
+  console.log('   -> morePopupStatus: ', morePopupStatus.value);
+}
 
 // === 변수 todo: 변수 =============================================================================================================
 const route = useRoute();
 const router = useRouter();
 const userDetails = useUserDetails();
-const config = useRuntimeConfig();
+const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지 로드용
 
 
 const hostId = userDetails.id.value; // 프론트에서 저장하고 있는 인증정보에 접근해서 얻어와야함
@@ -424,8 +444,20 @@ mapFetchedData(data.value);
                     </span>
                   </div>
                   <div class="right">
-                    <a href=""
-                       class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
+                    <button
+                        class="morePopup-btn n-btn n-btn:hover n-btn-bd:none n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9"
+                        @click.prevent="toggleMorePopup(pp.id)">더보기
+                    </button>
+
+                  </div> <!--         더보기 팝업           -->
+                  <div class="morePopup" v-if="morePopupStatus[pp.id]"
+                  v-click-outside="closeMorePopup(id)">
+                    <ul>
+                      <li>예약확정</li>
+                      <li>예약취소</li>
+                      <li>추가개설</li><!-- 취소, 완료된 일정 아닌 나머지 -->
+                      <li>내역삭제</li><!-- only 취소3, 완료된 일정4 -->
+                    </ul>
                   </div>
                 </div>
 
@@ -489,7 +521,7 @@ mapFetchedData(data.value);
 
             <!-- Pager 부분 --> <!--todo: pager-->
             <Pager2 :page-numbers="pages" :start-num="startNum" :total-pages="totalPages"
-                   @page-change="pageClickHandler" />
+                    @page-change="pageClickHandler"/>
 
           </section>
         </div>
@@ -499,7 +531,8 @@ mapFetchedData(data.value);
           <header class="n-title">
             <h1 class="">Filter</h1>
             <div>
-              <button class="n-btn n-btn:hover n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;"
+              <button class="n-btn n-btn:hover n-icon n-icon:reset"
+                      style="--icon-color: var(--color-sub-1); cursor: pointer;"
                       @click.prevent="resetFilterHandler">
                 초기화
               </button>
@@ -592,6 +625,7 @@ mapFetchedData(data.value);
           box-shadow: 5px 5px 10px 0.5px var(--color-base-3);
 
           .card-header {
+            position: relative;
             .left {
               .on-going {
                 --tag-border-color: var(--color-sub-1);
@@ -627,6 +661,45 @@ mapFetchedData(data.value);
               position: relative;
               /* a태그는 기본 position이 static. static이면 z-index가 안 먹힘*/
               z-index: 2;
+            }
+
+            .right {
+              position: relative;
+
+              .morePopup-btn {
+                position: relative;
+                z-index: 10;
+
+                --btn-border-radius: 8px;
+                --btn-bg-hover: var(--color-base-4);
+              }
+
+
+            }
+            .morePopup {
+              width: 120px;
+              position: absolute;
+              top: 100%; /* 버튼 바로 아래로 위치 */
+              right: 0; /* 버튼의 오른쪽 모서리와 평행하도록 맞춤 */
+              border-radius: 8px;
+              background-color: white;
+              padding: 10px 0;
+              border: 1px solid #ddd;
+              box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+              z-index: 10;
+
+              ul {
+                display: flex;
+                flex-direction: column;
+
+                li {
+                  padding: 6px 16px;
+                  cursor: pointer;
+                }
+                li:hover {
+                  background-color: var(--color-base-2);
+                }
+              }
             }
           }
 

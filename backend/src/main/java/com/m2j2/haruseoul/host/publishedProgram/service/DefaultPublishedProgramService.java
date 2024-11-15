@@ -296,6 +296,8 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
         // 개설할 프로그램 entity
         Program program = programRepository.findById(publishedProgramCreateDto.getProgramId())
                 .orElseThrow(() -> new EntityNotFoundException("Program not found with ID: " + publishedProgramCreateDto.getProgramId()));
+        // 프로그램의 상태를 PUblished로 변경
+        program.setStatus("Published");
 
         // 개설된 프로그램의 status 초기값
         final Long INITIAL_STATUS_ID = STATUS_ON_GOING;
@@ -312,6 +314,9 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
                         .status(initialStatus)
                         .build())
                 .toList();
+
+        // 개설한 프로그램의 상태를 Published로 변경
+        programRepository.save(program);
 
         List<PublishedProgram> savedPublishedPrograms = publishedProgramRepository.saveAll(publishedPrograms);
 
