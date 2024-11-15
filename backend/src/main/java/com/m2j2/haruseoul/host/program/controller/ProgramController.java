@@ -42,29 +42,29 @@ public class ProgramController {
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<Program> create(
             @RequestPart("programCreateDto") ProgramCreateDto programCreateDto,
-            @RequestPart("images") List<MultipartFile> images) {
+            @RequestPart(value = "images",required = false) List<MultipartFile> images) {
         return ResponseEntity.ok(service.create(programCreateDto, images));
     }
 
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable(name = "id") Long id) {
-        service.delete(id);
+    public void delete(@PathVariable(name = "id") Long pId) {
+        service.delete(pId);
     }
 
-    //  ====== 호스트 프로그램 수정 컨트롤러 =======================
-//    @PutMapping
-//    public ResponseEntity<Program> update(
-//            @RequestBody ProgramUpdateDto programUpdateDto
-//    ) {
-//        return ResponseEntity.ok(service.update(programUpdateDto));
-//    }
 
-    //  ====== 호스트 프로그램 1건 조회 컨트롤러 =======================
-//    @GetMapping("{id}")
-//    public ResponseEntity<ProgramListDto> getOneProgram(@PathVariable(name = "id") Long pId) {
-//        return ResponseEntity.ok(service.getOneProgram(pId));
-//    }
+
+    @PutMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<Program> update(@RequestPart("programUpdateDto") ProgramUpdateDto programUpdateDto,
+                                          @RequestPart(value = "images",required = false) List<MultipartFile> images) {
+        return ResponseEntity.ok(service.update(programUpdateDto, images));
+    }
+
+
+    @GetMapping("{id}")
+    public ResponseEntity<ProgramEditDto> getProgram(@PathVariable(name = "id") Long pId) {
+        return ResponseEntity.ok(service.getProgram(pId));
+    }
 
 
     @GetMapping("user/{id}")

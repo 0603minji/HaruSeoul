@@ -1,6 +1,7 @@
 package com.m2j2.haruseoul.host.publishedProgram.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.m2j2.haruseoul.entity.Image;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -24,4 +26,5 @@ public class PublishedProgramListDto {
     private Integer groupSizeCurrent;
     private LocalDate date;
     private String statusName;
+    private List<Image> images;
 }
