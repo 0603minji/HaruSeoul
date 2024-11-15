@@ -1,7 +1,8 @@
 <script setup>
 import {ref, watch, watchEffect} from 'vue';
+import axios from "axios";
 import ReservationDatePicker from "~/components/filter/ReservationDatePicker.vue";
-import MoveReservationModal from "~/components/Modal/MoveReservationModal.vue";
+import CreateReservationModal from "~/components/modal/CreateReservationModal.vue";
 
 // Props
 const props = defineProps({
@@ -20,7 +21,7 @@ const props = defineProps({
 });
 
 // emit
-const emit = defineEmits(['closeModal', 'openMoveReservationModal']);
+const emit = defineEmits(['closeModal']);
 
 const reRenderTrigger = ref(false);
 
@@ -30,7 +31,6 @@ let selectedPublishedProgram = ref(null);
 
 const numberOfGuest = ref(1);
 const userDetails = useUserDetails();
-const isModalVisible = ref("");
 
 // === function ========================================================================================================
 // Handle selection change
@@ -75,21 +75,17 @@ const submitHandler = async () => {
 const closeModal = () => {
   emit('closeModal');
 
+  // Delay the re-render trigger to allow closing animation to complete
   setTimeout(() => {
     reRenderTrigger.value = !reRenderTrigger.value;
+    // console.log('reRenderTrigger: ', reRenderTrigger);
   }, 300); // 0.3 seconds delay (300ms)
 }
-
-const OpenMoveReservationModalHandler = () => emit('openMoveReservationModal');  // 부모에게 이벤트 전달
 </script>
+
 
 <template>
   <aside class="popup modal">
-    <header class="popup-header">
-      <h1 class="font-size:9">예약하기</h1>
-      <button @click.prevent="closeModal()" class="n-btn n-btn-border:transparent n-icon n-icon:exit">닫기</button>
-    </header>
-
     <form @submit.prevent="submitHandler" class="popup-body" action="">
       <!-- 진행일 선택 -->
       <ReservationDatePicker
@@ -108,23 +104,76 @@ const OpenMoveReservationModalHandler = () => emit('openMoveReservationModal'); 
                   width: var(--width-9p);
                   height: 20px;"
                 :disabled="!selectedPublishedProgram"
-                @click="OpenMoveReservationModalHandler"
         >결제하기</button>
+
+        <!--        <NuxtLink to="../guest/reservations" class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1"-->
+        <!--                  style="margin-left: var(&#45;&#45;gap-2);-->
+        <!--                  background-color: var(&#45;&#45;color-sub-1);-->
+        <!--                  color: var(&#45;&#45;color-base-1);-->
+        <!--                  width: var(&#45;&#45;width-9p);-->
+        <!--                  height: 20px;"-->
+        <!--                  :disabled="!isReservable">결제하기-->
+        <!--        </NuxtLink>-->
       </div>
     </form>
   </aside>
 </template>
 
 <style scoped>
+.min-max-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%; /* 전체 너비를 조정하고 싶으면 값 변경 */
+
+  > .min-section, .max-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+  }
+
+  > .input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* 버튼과 입력창 사이의 간격 */
+  }
+
+  input[type="number"] {
+    width: 50px;
+    height: 30px;
+    text-align: center;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+}
+
+/* 크롬, 사파리, 엣지 */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.count-btn {
+  --btn-bg-color: #352F36;
+  border-radius: 6px;
+  --btn-bg-hover: var(--color-base-2);
+  color: white;
+  --btn-padding: 4px 8px;
+  font-size: 20px;
+}
+
 .modal {
   display: none; /* Hidden by default */
-  position: fixed;
-  z-index: 1000; /* Sit on top */
+  position: sticky;
+  //z-index: 1000; /* Sit on top */
   left: 50%;
   bottom: 0;
-  transform: translate(-50%, 100%); /* 초기에 바닥에 숨어있음 */
+  //transform: translate(-50%, 100%); /* 초기에 바닥에 숨어있음 */
   width: 100%;
-  min-width: 350px;
+  min-width: 340px;
   max-width: 500px;
   max-height: 100vh;
   //background-color: white;
@@ -133,15 +182,9 @@ const OpenMoveReservationModalHandler = () => emit('openMoveReservationModal'); 
   transition: transform 0.3s ease;
 }
 
-.modal.show {
-  display: flex;
-  transform: translate(-50%, 0); /* 아래에서 등장 */
-}
-
 .popup {
   border-radius: 16px 16px 0 0;
   background-color: var(--color-base-1);
-  //padding: 16px 24px;
   display: flex;
   flex-direction: column;
 
