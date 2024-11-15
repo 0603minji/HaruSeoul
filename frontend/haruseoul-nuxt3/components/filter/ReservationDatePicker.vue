@@ -7,17 +7,25 @@ const props = defineProps({
   hostId: {
     type: Number,
     default: null
+  },
+  groupSizeMax: {
+    type: Number,
+    default: null
   }
 });
 
 // emit
-const emit = defineEmits(['selectionChanged'])
+const emit = defineEmits(['updateNumberOfGuest', 'updateSelectedPublishedProgram'])
 
 
 /*=== variables =======================================================================================================*/
 const route = useRoute();
 const programId = route.params.id; // route에서 programId를 가져옴
+
+// 예약할 인원수
 const numberOfGuest = ref(1); // todo 임시값
+// 선택된 publishedProgram
+const selectedPublishedProgram = ref(null);
 
 const userDetails = useUserDetails();
 const today = new Date();
@@ -32,8 +40,6 @@ const initialMonth = new Date().getMonth();
 // 선택된 연도, 월
 const selectedYear = ref(initialYear);
 const selectedMonth = ref(initialMonth);
-// 선택된 날짜
-const selectedDate = ref(null);
 
 // 이전 달의 마지막 날
 const prevMonthLastDate = computed(() => new Date(selectedYear.value, selectedMonth.value, 0));
@@ -68,6 +74,8 @@ const updateDatesWithSchedules = (dates, publishedPrograms) => {
     // date와 schedules로 dateWithSchedules 생성 후 리턴
     return {date: date, schedules};
   });
+  // console.log("updateDatesWithSchedules called")
+  // console.log("       ->  datesWithSchedules: ", datesWithSchedules.value)
 }
 
 const toNextMonth = () => {
@@ -90,8 +98,10 @@ const toPrevMonth = () => {
   }
 }
 
-// todo 예약가능한 날짜인지?
+// 예약가능한 날짜인지?
 const isReservable = (dateSchedule) => {
+  console.log('       isReservable called')
+  console.log('               -> dateSchedule: ', dateSchedule);
   /*
     dateSchedule
     [
@@ -101,42 +111,27 @@ const isReservable = (dateSchedule) => {
       }
     ]
   */
+  if (!dateSchedule.schedules || dateSchedule.schedules.length === 0) return false;
+
+
   // publishedProgramListDto의 statusName이 Wait Confirm이거나 Confirmed면 예약불가능
-  dateSchedule.schedules
-      .forEach(publishedProgramListDto => {
-        // statusName이 Wait Confirm or Confirmed면? 예약 불가
-        if (publishedProgramListDto.statusName in ["Wait Confirm", "Confirmed"])
-          return false;
+  for (const pp of dateSchedule.schedules) {
+    // statusName이 Wait Confirm or Confirmed면? 예약 불가
+    if (pp.statusName in ["Wait Confirm", "Confirmed"]) return false;
 
-        // statusName이 1 or 2
-        // current GroupSize, groupSizeMax, numberOfGuest
-        return publishedProgramListDto.groupSizeMax >= publishedProgramListDto.groupSizeCurrent + numberOfGuest.value;
-      });
-
-
+    // statusName이 1 or 2
+    // current GroupSize, groupSizeMax, numberOfGuest
+    return pp.groupSizeMax >= pp.groupSizeCurrent + numberOfGuest.value;
+  }
 };
 
-// const resetSelectedDatesHandler = () => {
-//   // 캘린터 페이지도 오늘이 표시된 곳으로 설정
-//   selectedYear.value = initialYear;
-//   selectedMonth.value = initialMonth;
-//
-//   selectedDates.value = [];
-// };
-
-// todo  Emit selection changed
-const emitSelectionChanged = () => {
-  emit('selectionChanged', selectedDate.value);
-};
-
-// --- 개설가능일 계산용 rangeStart, rangeEnd------------------------------------------------------------------------------
+// --- 예약가능일 계산용 rangeStart, rangeEnd------------------------------------------------------------------------------
 // query ?mIds=4&s=1,2,5,6&d=개설가능첫날,끝날
 // today + startOffset부터 publishableRange만큼 개설가능
 const reservableRange = 21;
 
-rangeStart.setDate(today.getDate()); // today
-rangeEnd.setDate(today.getDate() + reservableRange); //  21 days
-
+rangeStart.setDate(today.getDate() + 1); // today + 1
+rangeEnd.setDate(today.getDate() + 2 + reservableRange); //  21 days
 /*=== 달력 dates 생성 ==================================================================================================*/
 // selectedYear or selectedMonth가 변하면 update
 const dates = computed(() => {
@@ -168,13 +163,12 @@ const dates = computed(() => {
   return datesInMonth;
 });
 
-
 // dates가 변하면 update
 const publishedProgramQuery = computed(() => (
     {
       mIds: props.hostId,
       s: [1, 2, 5, 6].join(","),
-      d: [dates.value.at(0), dates.value.at(-1)] // 달력에 표시된 첫날 ~ 끝날 dates.getFirst getLast 한국시간 자정
+      d: [rangeStart, rangeEnd] // 달력에 표시된 첫날 ~ 끝날 dates.getFirst getLast 한국시간 자정
           .map((date) =>
               new Intl.DateTimeFormat('ko-KR', {
                 year: 'numeric',
@@ -187,6 +181,15 @@ const publishedProgramQuery = computed(() => (
           ).join(",")
     })
 );
+
+function updateClassSelected(e) {
+  // 선택한것 초기화
+  document.querySelectorAll('li.selected').forEach(li => li.classList.remove('selected'));
+
+  if (e.target.checked) {
+    e.target.closest('li').classList.add('selected');
+  }
+}
 
 /*=== fetch ==========================================================================================================*/
 // 캘린더에 예약불가능한 날짜 표시를 위한 개설프로그램 목록 fetch
@@ -202,92 +205,141 @@ watch(dates, async () => {
   updateDatesWithSchedules(dates.value, publishedData.value.publishedPrograms);
 });
 
-// Watch the selected dates and emit changes
-watch(selectedDate, emitSelectionChanged);
+watch(numberOfGuest, () => {
+      if (selectedPublishedProgram.value && selectedPublishedProgram.value.groupSizeCurrent + numberOfGuest.value > props.groupSizeMax)
+        selectedPublishedProgram.value = null;
+      else {
+        emit('updateNumberOfGuest', numberOfGuest.value)
+      }
+    }
+);
+watch(selectedPublishedProgram, () => emit('updateSelectedPublishedProgram', selectedPublishedProgram.value));
 
-// watchEffect(() => console.log(selectedYear.value));
 // watchEffect(() => console.log('prev month last date', prevMonthLastDate.value));
 // watchEffect(() => console.log(selectedMonth.value + 1, thisMonthLastDate.value));
 // watchEffect(() => console.log('dates: ', dates.value));
 // watchEffect(() => console.log('selectedDates: ', selectedDates.value));
-// watchEffect(() => console.log('published program query: ', publishedProgramQuery.value));
+// watchEffect(() => console.log('selectedPublishedProgram: ', selectedPublishedProgram.value));
 
 </script>
 
 <template>
-  <section class="date-picker">
-    <header class="title">
-      <h1 class="font-size:8">진행일 선택</h1>
-    </header>
-    <section class="calendar-container">
-      <header class="calendar-header">
-        <h1 class="d:none">May 2024</h1>
-        <button @click.prevent="toPrevMonth"
-                :disabled="selectedMonth <= new Date().getMonth()"
-                class="to-prev-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_left n-icon-size:3"
-                type="button">이전
-        </button>
-        <div class="year-month-wrapper font-size:9">
-          <span class="year">
+  <section>
+    <h1 class="d:none">예약하기</h1>
+    <!-- 진행일 선택 -->
+    <section class="date-picker">
+      <header class="title">
+        <h1 class="font-size:8">진행일 선택</h1>
+      </header>
+      <section class="calendar-container">
+        <header class="calendar-header">
+          <h1 class="d:none">May 2024</h1>
+          <button @click.prevent="toPrevMonth"
+                  :disabled="selectedMonth <= new Date().getMonth()"
+                  class="to-prev-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_left n-icon-size:3"
+                  type="button">이전
+          </button>
+          <div class="year-month-wrapper font-size:9">
+            <span class="year">
             {{ selectedYear }}.
           </span>
-
-          <span class="month">
+            <span class="month">
             {{ selectedMonth + 1 }}.
           </span>
-        </div>
-        <button @click.prevent="toNextMonth"
-                :disabled="rangeEnd.getMonth() <= selectedMonth"
-                class="to-next-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_right n-icon-size:3"
-                type="button">다음
-        </button>
-      </header>
+          </div>
+          <button @click.prevent="toNextMonth"
+                  :disabled="rangeEnd.getMonth() <= selectedMonth"
+                  class="to-next-month n-btn n-btn:hover border-radius:full n-icon n-icon:arrow_right n-icon-size:3"
+                  type="button">다음
+          </button>
+        </header>
 
-      <ul class="weekdays">
-        <li>
-          <abbr title="Sunday">S</abbr>
-        </li>
-        <li>
-          <abbr title="Monday">M</abbr>
-        </li>
-        <li>
-          <abbr title="Tuesday">T</abbr>
-        </li>
-        <li>
-          <abbr title="Wednesday">W</abbr>
-        </li>
-        <li>
-          <abbr title="Thursday">T</abbr>
-        </li>
-        <li>
-          <abbr title="Friday">F</abbr>
-        </li>
-        <li>
-          <abbr title="Saturday">S</abbr>
-        </li>
-      </ul>
+        <ul class="weekdays">
+          <li>
+            <abbr title="Sunday">Sun</abbr>
+          </li>
+          <li>
+            <abbr title="Monday">Mon</abbr>
+          </li>
+          <li>
+            <abbr title="Tuesday">Tue</abbr>
+          </li>
+          <li>
+            <abbr title="Wednesday">Wed</abbr>
+          </li>
+          <li>
+            <abbr title="Thursday">Thu</abbr>
+          </li>
+          <li>
+            <abbr title="Friday">Fri</abbr>
+          </li>
+          <li>
+            <abbr title="Saturday">Sat</abbr>
+          </li>
+        </ul>
 
-      <ol class="day-grid">
-        <!--dateSchedule = {date: Date객체, [publishedProgramListDto]}-->
-        <li v-for="dateSchedule in datesWithSchedules"
-            :class="{
+        <ol class="day-grid">
+          <!--dateSchedule = {date: Date객체, [publishedProgramListDto]}-->
+          <li v-for="dateSchedule in datesWithSchedules"
+              :class="{
             'month-prev': dateSchedule.date.getMonth() === (selectedMonth-1<0 ? 11 : selectedMonth-1),
             'month-next': dateSchedule.date.getMonth() === (selectedMonth+1>11 ? 0 : selectedMonth+1),
             'today': dateSchedule.date.toDateString() === new Date().toDateString(),
-            'available': isReservable(dateSchedule),
-            'selected': selectedDate && selectedDate.getTime() === dateSchedule.date.getTime(),
+            'available': isReservable(dateSchedule)
           }"
-        >
-          <label>
-<!--            todo radio로 바꿔서 할수있나 확인해보기 -->
-            <input type="radio"
-                   :disabled="!isReservable(dateSchedule)"
-                   v-model="selectedDate"
-                   :value="dateSchedule.date">
-            <span>{{ dateSchedule.date.getDate() }}</span>
-          </label>
-        </li>
-      </ol>
+          >
+            <label>
+              <input type="radio"
+                     @change="updateClassSelected"
+                     :disabled="!isReservable(dateSchedule)"
+                     v-model="selectedPublishedProgram"
+                     :value="dateSchedule.schedules.at(0)">
+              <span>{{ dateSchedule.date.getDate() }}</span>
+              <span
+                  v-if="dateSchedule.schedules.at(0) && ['On Going', 'Urgent'].includes(dateSchedule.schedules.at(0).statusName)">
+                {{ dateSchedule.schedules.at(0).groupSizeCurrent }} / {{ props.groupSizeMax }}
+              </span>
+            </label>
+          </li>
+        </ol>
+      </section>
+    </section>
+    <!-- 인원 수 -->
+    <section class="min-max-container">
+      <div class="min-section" style="width: 100%; display:flex; align-items: normal">
+        <div style="display: flex; height: 32px; padding: 0 0 0 10px; align-items: center; margin-bottom: 8px;">
+          <span class="font-size:8">인원 수</span>
+        </div>
+        <div>
+          <div class="input-group" style="display:flex; justify-content: center; gap: 10px;">
+
+            <button
+                :class="{'disabled': numberOfGuest === 1}"
+                class="n-btn count-btn"
+                @click.prevent="numberOfGuest--"
+                :disabled="numberOfGuest === 1">
+              ➖
+            </button>
+
+            <input
+                type="number"
+                style="width: 70px; height: 40px;"
+                v-model="numberOfGuest"
+                min="1" :max="`${props.groupSizeMax}`"
+                readonly>
+
+            <button
+                :class="{'disabled': numberOfGuest === props.groupSizeMax}"
+                class="n-btn count-btn"
+                @click.prevent="numberOfGuest++"
+                :disabled="numberOfGuest === props.groupSizeMax">
+              ➕
+            </button>
+
+
+          </div>
+        </div>
+      </div>
     </section>
   </section>
 </template>
@@ -323,7 +375,7 @@ watch(selectedDate, emitSelectionChanged);
     padding: 20px;
     background-color: var(--calendar-bg-color);
     border-radius: 14px;
-    box-shadow: 0 1.88px 2px 0 rgba(0, 14, 51, 0.05);
+    //box-shadow: 0 1.88px 2px 0 rgba(0, 14, 51, 0.05);
 
 
     .calendar-header {
@@ -500,4 +552,56 @@ watch(selectedDate, emitSelectionChanged);
     }
   }
 }
+
+.min-max-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%; /* 전체 너비를 조정하고 싶으면 값 변경 */
+
+  > .min-section, .max-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 5px; /* 버튼과 입력창 사이의 간격 */
+
+      input[type="number"] {
+        width: 50px;
+        height: 30px;
+        text-align: center;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+      }
+
+      /* 크롬, 사파리, 엣지 */
+
+      input[type="number"]::-webkit-outer-spin-button,
+      input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      .count-btn {
+        --btn-bg-color: #352F36;
+        border-radius: 6px;
+        --btn-bg-hover: var(--color-base-2);
+        color: white;
+        --btn-padding: 4px 10px;
+        font-size: 20px;
+      }
+
+      .count-btn.disabled {
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+
 </style>

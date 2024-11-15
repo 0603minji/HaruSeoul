@@ -6,545 +6,551 @@
     </Script>
   </Head>
   <main>
-    <section class="main-wrapper">
-      <!--      <pre>{{ JSON.stringify(data, null, 2) }}</pre>-->
-      <section v-if="data" class="program-detail">
-        <h1 class="d:none">program-detail 페이지</h1>
-        <nav class="n-bar-underline">
-          <h1 class="d:none">네비탭</h1>
-          <ul class="item-wrapper padding-x:6">
-            <li :class="{ active: currentHash === '#intro' }"
-                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
-              <a href="#intro">개요</a>
-            </li>
-            <li :class="{ active: currentHash === '#program-overview' }"
-                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
-              <a href="#program-overview">프로그램 소개</a>
-            </li>
-            <li :class="{ active: currentHash === '#course-information' }"
-                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
-              <a href="#course-information">코스 안내</a>
-            </li>
-            <li :class="{ active: currentHash === '#meeting-location' }"
-                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
-              <a href="#meeting-location">만나는 장소</a>
-            </li>
-            <li :class="{ active: currentHash === '#inclusions' }"
-                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
-              <a href="#inclusions">포함사항</a>
-            </li>
-            <li :class="{ active: currentHash === '#things-to-know' }"
-                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
-              <a href="#things-to-know">꼭 알아두세요!</a>
-            </li>
-            <li :class="{ active: currentHash === '#review' }"
-                class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
-              <a href="#review">리뷰</a>
-            </li>
-          </ul>
-        </nav>
+    <section class="layout-body">
+      <h1 class="d:none">프로그램과 어사이드</h1>
+      <section class="layout-main">
+        <!--      <pre>{{ JSON.stringify(data, null, 2) }}</pre>-->
+        <section v-if="data" class="program-detail">
+          <h1 class="d:none">program-detail 페이지</h1>
+          <nav class="n-bar-underline">
+            <h1 class="d:none">네비탭</h1>
+            <ul class="item-wrapper padding-x:6">
+              <li :class="{ active: currentHash === '#intro' }"
+                  class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+                <a href="#intro">개요</a>
+              </li>
+              <li :class="{ active: currentHash === '#program-overview' }"
+                  class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+                <a href="#program-overview">프로그램 소개</a>
+              </li>
+              <li :class="{ active: currentHash === '#course-information' }"
+                  class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+                <a href="#course-information">코스 안내</a>
+              </li>
+              <li :class="{ active: currentHash === '#meeting-location' }"
+                  class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+                <a href="#meeting-location">만나는 장소</a>
+              </li>
+              <li :class="{ active: currentHash === '#inclusions' }"
+                  class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+                <a href="#inclusions">포함사항</a>
+              </li>
+              <li :class="{ active: currentHash === '#things-to-know' }"
+                  class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+                <a href="#things-to-know">꼭 알아두세요!</a>
+              </li>
+              <li :class="{ active: currentHash === '#review' }"
+                  class="n-btn n-btn:hover n-btn-border:none n-btn-radius:0">
+                <a href="#review">리뷰</a>
+              </li>
+            </ul>
+          </nav>
 
 
-        <!--  프로그램 소개  -->
-        <section class="reservation-card bg-color:base-1 width:10p">
-          <h1 class="d:none">예약 카드</h1>
+          <!--  프로그램 소개  -->
+          <section class="reservation-card bg-color:base-1 width:10p">
+            <h1 class="d:none">예약 카드</h1>
 
-          <div class="card-main">
-            <div class="thumbnail-wrapper">
-              <button class="n-btn thumbnail-btn thumbnail-btn:left"><span
-                  class="n-icon n-icon:arrow_left"></span>
-              </button>
-              <img src="/public/image/thumbnail.png" alt="대표사진" class="thumbnail-img">
-              <button class="n-btn thumbnail-btn thumbnail-btn:right"><span
-                  class="n-icon n-icon:arrow_right"></span>
-              </button>
-              <div class="thumbnail-btn thumbnail-btn:num n-deco">1/5</div>
-            </div>
+            <div class="card-main">
+              <div class="thumbnail-wrapper">
+                <button class="n-btn thumbnail-btn thumbnail-btn:left"><span
+                    class="n-icon n-icon:arrow_left"></span>
+                </button>
+                <img src="/public/image/thumbnail.png" alt="대표사진" class="thumbnail-img">
+                <button class="n-btn thumbnail-btn thumbnail-btn:right"><span
+                    class="n-icon n-icon:arrow_right"></span>
+                </button>
+                <div class="thumbnail-btn thumbnail-btn:num n-deco">1/5</div>
+              </div>
 
-            <div
-                style="display: flex; padding: var(--gap-7) var(--gap-5); padding-bottom: 0;"
-            >
-              <div v-for="(category, index) in data.programDetailCategoryDto.categoryNames"
-                   class="n-panel-tag"
-                   style="
+              <div
+                  style="display: flex; padding: var(--gap-7) var(--gap-5); padding-bottom: 0;"
+              >
+                <div v-for="(category, index) in data.programDetailCategoryDto.categoryNames"
+                     class="n-panel-tag"
+                     style="
                   margin-right: var(--gap-3);
                   border-radius: var(--border-radius-3);
                   --btn-border-color: var(--color-base-9);
                   --btn-padding: 5px 12px;
                 "
-              >
-                {{ category }}
+                >
+                  {{ category }}
+                </div>
               </div>
-            </div>
 
 
-            <div class="card-info-wrapper">
-              <p style="color: var(--color-base-9);
+              <div class="card-info-wrapper">
+                <p style="color: var(--color-base-9);
               font-size: var(--font-size-11);
               font-weight: bold;
               padding: var(--gap-3) var(--gap-5);">{{ data.programDetailProgramDto.title }}</p>
-              <div
-                  style="display:flex;  flex-grow: 1; padding: var(--gap-3) var(--gap-7) var(--gap-8) var(--gap-7); gap: var(--gap-2); align-items: center;">
+                <div
+                    style="display:flex;  flex-grow: 1; padding: var(--gap-3) var(--gap-7) var(--gap-8) var(--gap-7); gap: var(--gap-2); align-items: center;">
                 <span class="card-info n-icon n-icon:star n-deco"
                       style="gap: var(--gap-1);">{{ data.programDetailProgramDto.rating }}</span>
-                <span>/</span>
-                <span>5.0</span>
-                <span>리뷰 {{ data.programDetailReviewDto.ratingCount }}개</span>
-                <div
-                    style="display: flex; justify-content: center; align-items: center; height: 25px; margin-left: auto; ">
-                  <div class="n-icon n-icon:price n-deco"
-                       style="display: flex; justify-content: center; align-items: center; height: inherit; font-size: var(--font-size-10); gap: 0;">
-                    {{ data.programDetailProgramDto.price }}
-                  </div>
+                  <span>/</span>
+                  <span>5.0</span>
+                  <span>리뷰 {{ data.programDetailReviewDto.ratingCount }}개</span>
                   <div
-                      style="display: flex; justify-content: center; align-items: center; height: inherit; margin-left: var(--gap-1); font-size: var(--font-size-6);">
-                    1인
+                      style="display: flex; justify-content: center; align-items: center; height: 25px; margin-left: auto; ">
+                    <div class="n-icon n-icon:price n-deco"
+                         style="display: flex; justify-content: center; align-items: center; height: inherit; font-size: var(--font-size-10); gap: 0;">
+                      {{ data.programDetailProgramDto.price }}
+                    </div>
+                    <div
+                        style="display: flex; justify-content: center; align-items: center; height: inherit; margin-left: var(--gap-1); font-size: var(--font-size-6);">
+                      1인
+                    </div>
                   </div>
                 </div>
               </div>
+
+              <div class="cross-line"></div>
             </div>
-
-            <div class="cross-line"></div>
-          </div>
-        </section>
+          </section>
 
 
-        <section class="content">
-          <!-- 개요 -->
-          <section id="intro" class="intro" style="margin-bottom: 20px;">
-            <div class="background-color:base-1" style="padding: 0 var(--gap-6); border-bottom:0;">
-              <div class="id-container" style="margin-top: 0;">
-                <div class="details">
-                  <section>
-                    <h1>개요</h1>
-                    <div class="list-container">
-                      <ul>
-                        <li class="list-content"><span
-                            class="n-icon n-icon:globe n-deco">{{ data.programDetailProgramDto.language }}</span>
-                        </li>
-                        <li class="list-content">
+          <section class="content">
+            <!-- 개요 -->
+            <section id="intro" class="intro" style="margin-bottom: 20px;">
+              <div class="background-color:base-1" style="padding: 0 var(--gap-6); border-bottom:0;">
+                <div class="id-container" style="margin-top: 0;">
+                  <div class="details">
+                    <section>
+                      <h1>개요</h1>
+                      <div class="list-container">
+                        <ul>
+                          <li class="list-content"><span
+                              class="n-icon n-icon:globe n-deco">{{ data.programDetailProgramDto.language }}</span>
+                          </li>
+                          <li class="list-content">
                           <span
                               class="n-icon n-icon:people n-deco">{{
                               data.programDetailProgramDto.groupSizeMin
                             }}/{{ data.programDetailProgramDto.groupSizeMax }}</span>
-                          <span>(min/max)</span>
-                        </li>
-                        <li class="list-content">
-                          <span class="n-icon n-icon:clock n-deco">{{ data.programDetailProgramDto.duration }}</span>
-                          <span>hours</span>
-                        </li>
-                        <li class="list-content"><span
-                            class="n-icon n-icon:placeholder n-deco">{{ addressWithOrderOne }}</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </section>
-                </div>
-              </div>
-            </div>
-          </section>
-
-
-          <!--  호스트 프로필 카드  -->
-          <section style="margin-bottom: 20px;">
-            <h1>호스트정보</h1>
-            <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
-              <div class="id-container">
-                <!-- 프로필 카드 -->
-                <section class="profile-card">
-                  <h1>프로필 카드</h1>
-                  <div class="overview">
-                    <div class="img-wrapper"><img src="/public/image/profile.png" alt="호스트프사">
-                    </div>
-                    <div>
-                      <div>{{ data.programDetailMemberDto.hostName }}</div>
-                      <div class="n-icon n-icon:star n-deco">
-                        <span>{{ data.programDetailReviewDto.hostRating }} / 5.0</span>
-                        <span>({{ data.programDetailReviewDto.hostRatingCount }})</span>
+                            <span>(min/max)</span>
+                          </li>
+                          <li class="list-content">
+                            <span class="n-icon n-icon:clock n-deco">{{ data.programDetailProgramDto.duration }}</span>
+                            <span>hours</span>
+                          </li>
+                          <li class="list-content"><span
+                              class="n-icon n-icon:placeholder n-deco">{{ addressWithOrderOne }}</span>
+                          </li>
+                        </ul>
                       </div>
-                    </div>
+                    </section>
                   </div>
-                  <a href="" class="n-btn n-btn:hover">프로필보기</a>
-                </section>
-              </div>
-            </div>
-          </section>
-
-
-          <!--  프로그램 소개  -->
-          <section id="program-overview" style="margin-bottom: 20px;">
-            <h1>프로그램 소개</h1>
-            <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
-              <div class="program-container">
-                <div class="content-header">
-                  <span class="title">프로그램 소개</span>
-                </div>
-
-                <div class="text">
-                  <p class="p-summary">{{ data.programDetailProgramDto.detail }}</p>
-                  <!--                  <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">펼치기</button>-->
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
 
 
-          <!--  코스 안내  -->
-          <section id="course-information" class="program">
-            <h1>코스안내</h1>
-            <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
-              <div class="id-container">
-                <div class="content-header">
-                  <span class="title">코스 안내</span>
-                </div>
-                <div class="details">
-                  <div class="map-img-wrapper" id="map1"></div>
-
-                  <section class="n-course-flow">
-                    <!-- 출발지 -->
-                    <div v-if="departure" class="point">
-                      <div class="icon-wrapper">
-                        <span class="n-icon n-icon:rectangle">막대기</span>
-                        <span class="n-icon n-icon:placeholder">출발 아이콘</span>
+            <!--  호스트 프로필 카드  -->
+            <section style="margin-bottom: 20px;">
+              <h1>호스트정보</h1>
+              <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
+                <div class="id-container">
+                  <!-- 프로필 카드 -->
+                  <section class="profile-card">
+                    <h1>프로필 카드</h1>
+                    <div class="overview">
+                      <div class="img-wrapper"><img src="/public/image/profile.png" alt="호스트프사">
                       </div>
-                      <div class="point-detail">
-                        <div class="n-panel-tag n-panel-tag:time">
-                          <span class="n-icon n-icon:clock n-deco">{{ departure.startTime || '시간 없음' }}</span>
-                        </div>
-                        <div>
-                          <span class="point-name">{{ departure.title }}</span>
-                          <span>({{ formatDuration(departure.durationHour, departure.durationMinute) }})</span>
-                          <div class="point-info">{{ departure.description || '설명 없음' }}</div>
+                      <div>
+                        <div>{{ data.programDetailMemberDto.hostName }}</div>
+                        <div class="n-icon n-icon:star n-deco">
+                          <span>{{ data.programDetailReviewDto.hostRating }} / 5.0</span>
+                          <span>({{ data.programDetailReviewDto.hostRatingCount }})</span>
                         </div>
                       </div>
                     </div>
-
-                    <!-- 경유지 -->
-                    <div v-for="(stop, index) in stops" :key="index" class="point drop-by">
-                      <div class="icon-wrapper">
-                        <span class="n-icon n-icon:rectangle">막대기</span>
-                        <span :class="`n-icon n-icon:number${stop.order}`">경유 아이콘</span>
-                      </div>
-                      <div class="point-detail">
-                        <div class="n-panel-tag n-panel-tag:time">
-                          <span class="n-icon n-icon:clock n-deco">{{ stop.startTime || '시간 없음' }}</span>
-                        </div>
-                        <div>
-                          <span class="point-name">{{ stop.title }}</span>
-                          <span>({{ formatDuration(stop.durationHour, stop.durationMinute) }})</span>
-                          <div class="point-info">{{ stop.description || '설명 없음' }}</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- 도착지 -->
-                    <div v-if="destination" class="point">
-                      <div class="icon-wrapper">
-                        <span class="n-icon n-icon:rectangle">막대기</span>
-                        <span class="n-icon n-icon:placeholder">도착 아이콘</span>
-                      </div>
-                      <div class="point-detail">
-                        <div class="n-panel-tag n-panel-tag:time">
-                          <span class="n-icon n-icon:clock n-deco">{{ destination.startTime || '시간 없음' }}</span>
-                        </div>
-                        <div>
-                          <span class="point-name">{{ destination.title }}</span>
-                          <span>({{ formatDuration(destination.durationHour, destination.durationMinute) }})</span>
-                          <div class="point-info">{{ destination.description || '설명 없음' }}</div>
-                        </div>
-                      </div>
-                    </div>
+                    <a href="" class="n-btn n-btn:hover">프로필보기</a>
                   </section>
-
-
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-          <!--  만나는 장소  -->
-          <section id="meeting-location" class="program">
-            <h1>프로그램 정보 및 정책</h1>
-            <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
-              <div class="id-container" style="border-bottom:0;">
-                <div class="content-header">
-                  <span class="title">만나는 장소</span>
+
+            <!--  프로그램 소개  -->
+            <section id="program-overview" style="margin-bottom: 20px;">
+              <h1>프로그램 소개</h1>
+              <div class="background-color:base-1" style="padding:var(--gap-6);">
+                <div class="program-container">
+                  <div class="content-header">
+                    <span class="title">프로그램 소개</span>
+                  </div>
+
+                  <div class="text">
+                    <p class="p-summary">{{ data.programDetailProgramDto.detail }}</p>
+                    <!--                  <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">펼치기</button>-->
+                  </div>
                 </div>
-                <div class="details">
-                  <section style="padding-top: 0;">
-                    <h1>만나는장소</h1>
-                    <div class="info-container">
-                      <p>{{ meetingTimeWithOrderOne }} {{ titleWithOrderOne }}</p>
-                      <div
-                          style="display:flex; align-items: center; padding: var(--gap-3) 0; color: var(--color-base-7);">
+              </div>
+            </section>
+
+
+            <!--  코스 안내  -->
+            <section id="course-information" class="program">
+              <h1>코스안내</h1>
+              <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
+                <div class="id-container">
+                  <div class="content-header">
+                    <span class="title">코스 안내</span>
+                  </div>
+                  <div class="details">
+                    <div class="map-img-wrapper" id="map1"></div>
+
+                    <section class="n-course-flow">
+                      <!-- 출발지 -->
+                      <div v-if="departure" class="point">
+                        <div class="icon-wrapper">
+                          <span class="n-icon n-icon:rectangle">막대기</span>
+                          <span class="n-icon n-icon:placeholder">출발 아이콘</span>
+                        </div>
+                        <div class="point-detail">
+                          <div class="n-panel-tag n-panel-tag:time">
+                            <span class="n-icon n-icon:clock n-deco">{{ departure.startTime || '시간 없음' }}</span>
+                          </div>
+                          <div>
+                            <span class="point-name">{{ departure.title }}</span>
+                            <span>({{ formatDuration(departure.durationHour, departure.durationMinute) }})</span>
+                            <div class="point-info">{{ departure.description || '설명 없음' }}</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 경유지 -->
+                      <div v-for="(stop, index) in stops" :key="index" class="point drop-by">
+                        <div class="icon-wrapper">
+                          <span class="n-icon n-icon:rectangle">막대기</span>
+                          <span :class="`n-icon n-icon:number${stop.order}`">경유 아이콘</span>
+                        </div>
+                        <div class="point-detail">
+                          <div class="n-panel-tag n-panel-tag:time">
+                            <span class="n-icon n-icon:clock n-deco">{{ stop.startTime || '시간 없음' }}</span>
+                          </div>
+                          <div>
+                            <span class="point-name">{{ stop.title }}</span>
+                            <span>({{ formatDuration(stop.durationHour, stop.durationMinute) }})</span>
+                            <div class="point-info">{{ stop.description || '설명 없음' }}</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 도착지 -->
+                      <div v-if="destination" class="point">
+                        <div class="icon-wrapper">
+                          <span class="n-icon n-icon:rectangle">막대기</span>
+                          <span class="n-icon n-icon:placeholder">도착 아이콘</span>
+                        </div>
+                        <div class="point-detail">
+                          <div class="n-panel-tag n-panel-tag:time">
+                            <span class="n-icon n-icon:clock n-deco">{{ destination.startTime || '시간 없음' }}</span>
+                          </div>
+                          <div>
+                            <span class="point-name">{{ destination.title }}</span>
+                            <span>({{ formatDuration(destination.durationHour, destination.durationMinute) }})</span>
+                            <div class="point-info">{{ destination.description || '설명 없음' }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+
+
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!--  만나는 장소  -->
+            <section id="meeting-location" class="program">
+              <h1>프로그램 정보 및 정책</h1>
+              <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
+                <div class="id-container" style="border-bottom:0;">
+                  <div class="content-header">
+                    <span class="title">만나는 장소</span>
+                  </div>
+                  <div class="details">
+                    <section style="padding-top: 0;">
+                      <h1>만나는장소</h1>
+                      <div class="info-container">
+                        <p>{{ meetingTimeWithOrderOne }} {{ titleWithOrderOne }}</p>
+                        <div
+                            style="display:flex; align-items: center; padding: var(--gap-3) 0; color: var(--color-base-7);">
                                                 <span class="n-icon n-icon:placeholder"
                                                       style="margin-right: var(--gap-1);">위치아이콘</span>
-                        <span style="margin-right: var(--gap-1);">{{ addressWithOrderOne }}</span>
-                        <button @click.prevent="copyAddress" class="copy-btn">주소복사</button>
+                          <span style="margin-right: var(--gap-1);">{{ addressWithOrderOne }}</span>
+                          <button @click.prevent="copyAddress" class="copy-btn">주소복사</button>
+                        </div>
                       </div>
-                    </div>
-                    <div class="map-container" id="map2" style="width: 100%; height: 400px;"></div>
-                  </section>
+                      <div class="map-container" id="map2" style="width: 100%; height: 400px;"></div>
+                    </section>
+                  </div>
                 </div>
-              </div>
 
-              <div id="inclusions" class="id-container" style="border-bottom:0;">
+                <div id="inclusions" class="id-container" style="border-bottom:0;">
+                  <div class="content-header">
+                    <span class="title">포함사항</span>
+                  </div>
+                  <div class="details">
+                    <section>
+                      <h1>포함사항</h1>
+                      <div class="list-container">
+                        <ul v-if="data.programDetailProgramDto.inclusion">
+                          <li v-for="(item, index) in data.programDetailProgramDto.inclusion.split('\n')"
+                              :key="index"
+                              class="list-content">
+                            {{ item }}
+                          </li>
+                        </ul>
+
+                      </div>
+                      <div class="list-container">
+                        <ul v-if="data.programDetailProgramDto.exclusion">
+                          <li v-for="(item, index) in data.programDetailProgramDto.exclusion.split('\n')"
+                              :key="index"
+                              class="list-content">
+                            {{ item }}
+                          </li>
+                        </ul>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+
+                <div id="things-to-know" class="id-container" style="margin-top: 0; border-bottom:0;">
+                  <div class="content-header">
+                    <span class="title">꼭 알아두세요!</span>
+                  </div>
+                  <div class="details">
+
+                    <section>
+                      <h1>꼭 알아두세요!</h1>
+
+                      <div style="padding: 0 var(--gap-6);">
+                        <h2 class="info-form n-icon n-icon:success-decagon">준비물</h2>
+                        <ul v-if="data.programDetailProgramDto.packingList">
+                          <li v-for="(item, index) in data.programDetailProgramDto.packingList.split('\n')"
+                              :key="index"
+                              class="list-content">
+                            {{ item }}
+                          </li>
+                        </ul>
+
+                      </div>
+
+                      <div style="padding: var(--gap-6); padding-bottom: 0;">
+                        <h2 class="info-form n-icon n-icon:caution">주의사항</h2>
+                        <ul v-if="data.programDetailProgramDto.caution">
+                          <li v-for="(item, index) in data.programDetailProgramDto.caution.split('\n')"
+                              :key="index"
+                              class="list-content">
+                            {{ item }}
+                          </li>
+                        </ul>
+
+                      </div>
+
+                      <div style="padding: var(--gap-6)">
+                        <h2 class="info-form n-icon n-icon:reset">취소 및 환불정책</h2>
+                        <ul>
+                          <li class="list-content">여행일 기준 24시간 전까지 통보 시: 여행 요금 100% 전액 환불됩니다.</li>
+                          <li class="list-content">여행일 기준 24시간 이내 통보 시: 취소/환불 불가합니다.</li>
+                          <li class="list-content">취소 요청 날짜와 시간은 여행 상품이 진행되는 현지 시간을 따릅니다.</li>
+                          <li class="list-content">여행일은 여행 상품이 진행되는 현지 날짜의 오전 9시를 기준으로 합니다.</li>
+                        </ul>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+
+
+              </div>
+            </section>
+
+
+            <!--  리뷰  -->
+
+            <div id="review" class="id-container" style="border-bottom:0;">
+              <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
                 <div class="content-header">
-                  <span class="title">포함사항</span>
+                  <span class="title" style="padding: 0 var(--gap-6);">리뷰</span>
                 </div>
                 <div class="details">
                   <section>
-                    <h1>포함사항</h1>
-                    <div class="list-container">
-                      <ul v-if="data.programDetailProgramDto.inclusion">
-                        <li v-for="(item, index) in data.programDetailProgramDto.inclusion.split('\n')"
-                            :key="index"
-                            class="list-content">
-                          {{ item }}
-                        </li>
-                      </ul>
-
-                    </div>
-                    <div class="list-container">
-                      <ul v-if="data.programDetailProgramDto.exclusion">
-                        <li v-for="(item, index) in data.programDetailProgramDto.exclusion.split('\n')"
-                            :key="index"
-                            class="list-content">
-                          {{ item }}
-                        </li>
-                      </ul>
-                    </div>
-                  </section>
-                </div>
-              </div>
-
-              <div id="things-to-know" class="id-container" style="margin-top: 0; border-bottom:0;">
-                <div class="content-header">
-                  <span class="title">꼭 알아두세요!</span>
-                </div>
-                <div class="details">
-
-                  <section>
-                    <h1>꼭 알아두세요!</h1>
-
-                    <div style="padding: 0 var(--gap-6);">
-                      <h2 class="info-form n-icon n-icon:success-decagon">준비물</h2>
-                      <ul v-if="data.programDetailProgramDto.packingList">
-                        <li v-for="(item, index) in data.programDetailProgramDto.packingList.split('\n')"
-                            :key="index"
-                            class="list-content">
-                          {{ item }}
-                        </li>
-                      </ul>
-
-                    </div>
-
-                    <div style="padding: var(--gap-6); padding-bottom: 0;">
-                      <h2 class="info-form n-icon n-icon:caution">주의사항</h2>
-                      <ul v-if="data.programDetailProgramDto.caution">
-                        <li v-for="(item, index) in data.programDetailProgramDto.caution.split('\n')"
-                            :key="index"
-                            class="list-content">
-                          {{ item }}
-                        </li>
-                      </ul>
-
-                    </div>
-
-                    <div style="padding: var(--gap-6)">
-                      <h2 class="info-form n-icon n-icon:reset">취소 및 환불정책</h2>
-                      <ul>
-                        <li class="list-content">여행일 기준 24시간 전까지 통보 시: 여행 요금 100% 전액 환불됩니다.</li>
-                        <li class="list-content">여행일 기준 24시간 이내 통보 시: 취소/환불 불가합니다.</li>
-                        <li class="list-content">취소 요청 날짜와 시간은 여행 상품이 진행되는 현지 시간을 따릅니다.</li>
-                        <li class="list-content">여행일은 여행 상품이 진행되는 현지 날짜의 오전 9시를 기준으로 합니다.</li>
-                      </ul>
-                    </div>
-                  </section>
-                </div>
-              </div>
-
-
-            </div>
-          </section>
-
-
-          <!--  리뷰  -->
-
-          <div id="review" class="id-container" style="border-bottom:0;">
-            <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
-              <div class="content-header">
-                <span class="title" style="padding: 0 var(--gap-6);">리뷰</span>
-              </div>
-              <div class="details">
-                <section>
-                  <h1>리뷰</h1>
-                  <div
-                      style="display:flex; justify-content: space-between; align-items: center; padding: 0 var(--gap-6);">
+                    <h1>리뷰</h1>
+                    <div
+                        style="display:flex; justify-content: space-between; align-items: center; padding: 0 var(--gap-6);">
                                         <span
                                             style="display:flex; align-items: center; width: auto; height: 30px;">{{
                                             data.programDetailReviewDto.ratingCount
                                           }}개
                                             리뷰</span>
-                    <div style="display: flex;">
-                      <a href="" class="n-icon n-icon:arrow_swap">정렬 아이콘</a>
-                      <span>최신순</span>
-                    </div>
-                  </div>
-
-                  <!--   리뷰 게스트 댓글   -->
-                  <section class="review-container">
-                    <h1>리뷰 댓글과 답글</h1>
-                    <div v-for="(review, index) in data.programDetailReviewDto.reviewDetailDtos" :key="index"
-                         class="review">
-                      <div class="star-wrapper">
-                        <span v-for="star in review.rating" :key="star" class="n-icon n-icon:star">별</span>
+                      <div style="display: flex;">
+                        <a href="" class="n-icon n-icon:arrow_swap">정렬 아이콘</a>
+                        <span>최신순</span>
                       </div>
-                      <div class="guest-info">
-                        <img class="profile-img" src="/public/image/face.jpg" alt="프로필이미지">
-                        <div style="flex-grow: 1;">
-                          <div class="meatball-icon">
-                            <span class="name">{{ review.regMemberName }}</span>
-                            <label class="n-icon n-icon:meatball"><span>똥똥똥</span><input
-                                type="checkbox"></label>
-                          </div>
-                          <span class="date">{{ review.regDate }}</span>
+                    </div>
+
+                    <!--   리뷰 게스트 댓글   -->
+                    <section class="review-container">
+                      <h1>리뷰 댓글과 답글</h1>
+                      <div v-for="(review, index) in data.programDetailReviewDto.reviewDetailDtos" :key="index"
+                           class="review">
+                        <div class="star-wrapper">
+                          <span v-for="star in review.rating" :key="star" class="n-icon n-icon:star">별</span>
                         </div>
+                        <div class="guest-info">
+                          <img class="profile-img" src="/public/image/face.jpg" alt="프로필이미지">
+                          <div style="flex-grow: 1;">
+                            <div class="meatball-icon">
+                              <span class="name">{{ review.regMemberName }}</span>
+                              <label class="n-icon n-icon:meatball"><span>똥똥똥</span><input
+                                  type="checkbox"></label>
+                            </div>
+                            <span class="date">{{ review.regDate }}</span>
+                          </div>
+                        </div>
+                        <div class="text">
+                          <p class="p-summary">!</p>
+                          <button>더보기</button>
+                        </div>
+
+
+                        <!--                      <ul>-->
+                        <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
+                        <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
+                        <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
+                        <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
+                        <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
+                        <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
+                        <!--                      </ul>-->
+
                       </div>
-                      <div class="text">
-                        <p class="p-summary">!</p>
-                        <button>더보기</button>
-                      </div>
-
-
-                      <!--                      <ul>-->
-                      <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
-                      <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
-                      <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
-                      <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
-                      <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
-                      <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
-                      <!--                      </ul>-->
-
-                    </div>
-                    <!--  리뷰 호스트 답글   -->
-                    <!--                    <div style="display: flex; justify-content: center;">-->
-                    <!--                      <div class="reply">-->
-                    <!--                        <div class="host-info">-->
-                    <!--                          <img class="profile-img" src="/public/image/face.jpg" alt="프로필이미지">-->
-                    <!--                          <div style="flex-grow: 1;">-->
-                    <!--                            <div class="meatball-icon">-->
-                    <!--                              <span class="name">김민지</span>-->
-                    <!--                              <label class="n-icon n-icon:meatball"><span>똥똥똥</span><input-->
-                    <!--                                  type="checkbox"></label>-->
-                    <!--                            </div>-->
-                    <!--                            <span class="date">2024-09-30</span>-->
-                    <!--                          </div>-->
-                    <!--                        </div>-->
-                    <!--                        <div class="text">-->
-                    <!--                          <p class="p-summary">If you wanna take a break from Varanasi you-->
-                    <!--                            find a-->
-                    <!--                            great-->
-                    <!--                            location and hospitality-->
-                    <!--                            in this rooftop in the heart of the town. Food is really tasty-->
-                    <!--                            and-->
-                    <!--                            staff-->
-                    <!--                            really-->
-                    <!--                            great! If you wanna take a break from Varanasi you find a great-->
-                    <!--                            location-->
-                    <!--                            and-->
-                    <!--                            hospitality in this rooftop in the heart of the town. Food is-->
-                    <!--                            really-->
-                    <!--                            tasty-->
-                    <!--                            and-->
-                    <!--                            staff really great!</p>-->
-                    <!--                          <button>더보기</button>-->
-                    <!--                        </div>-->
-                    <!--                      </div>-->
-                    <!--                    </div>-->
+                      <!--  리뷰 호스트 답글   -->
+                      <!--                    <div style="display: flex; justify-content: center;">-->
+                      <!--                      <div class="reply">-->
+                      <!--                        <div class="host-info">-->
+                      <!--                          <img class="profile-img" src="/public/image/face.jpg" alt="프로필이미지">-->
+                      <!--                          <div style="flex-grow: 1;">-->
+                      <!--                            <div class="meatball-icon">-->
+                      <!--                              <span class="name">김민지</span>-->
+                      <!--                              <label class="n-icon n-icon:meatball"><span>똥똥똥</span><input-->
+                      <!--                                  type="checkbox"></label>-->
+                      <!--                            </div>-->
+                      <!--                            <span class="date">2024-09-30</span>-->
+                      <!--                          </div>-->
+                      <!--                        </div>-->
+                      <!--                        <div class="text">-->
+                      <!--                          <p class="p-summary">If you wanna take a break from Varanasi you-->
+                      <!--                            find a-->
+                      <!--                            great-->
+                      <!--                            location and hospitality-->
+                      <!--                            in this rooftop in the heart of the town. Food is really tasty-->
+                      <!--                            and-->
+                      <!--                            staff-->
+                      <!--                            really-->
+                      <!--                            great! If you wanna take a break from Varanasi you find a great-->
+                      <!--                            location-->
+                      <!--                            and-->
+                      <!--                            hospitality in this rooftop in the heart of the town. Food is-->
+                      <!--                            really-->
+                      <!--                            tasty-->
+                      <!--                            and-->
+                      <!--                            staff really great!</p>-->
+                      <!--                          <button>더보기</button>-->
+                      <!--                        </div>-->
+                      <!--                      </div>-->
+                      <!--                    </div>-->
+                    </section>
                   </section>
-                </section>
-                <div
-                    style="display: flex; justify-content: center; align-items: center; margin-bottom: var(--gap-6);">
-                  <a href="#" class="n-btn n-btn:hover"
-                     style="padding: var(--gap-3) var(--height-4p); border: 1px solid var(--color-base-8);">리뷰
-                    더
-                    보기</a>
+                  <div
+                      style="display: flex; justify-content: center; align-items: center; margin-bottom: var(--gap-6);">
+                    <a href="#" class="n-btn n-btn:hover"
+                       style="padding: var(--gap-3) var(--height-4p); border: 1px solid var(--color-base-8);">리뷰
+                      더
+                      보기</a>
+                  </div>
                 </div>
               </div>
             </div>
+
+
+            <!--        &lt;!&ndash; 리뷰사진 목록 어사이드 &ndash;&gt;-->
+            <!--        <aside id="reviewList">-->
+            <!--            <h1>리뷰 사진</h1>-->
+            <!--            <span>X</span>-->
+
+            <!--            <ul>-->
+            <!--                <li><a href="#reviewListDetail"><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
+            <!--            </ul>-->
+            <!--        </aside>-->
+
+
+            <!--        &lt;!&ndash;  리뷰사진 목록 디테일 어사이드   &ndash;&gt;-->
+            <!--        <aside id="reviewListDetail">-->
+            <!--            <h1>1/6</h1>-->
+            <!--            <span>X</span>-->
+
+            <!--            <div><img src="" alt="리뷰 사진 큰 화면"></div>-->
+            <!--            <ul>-->
+            <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
+            <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
+            <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
+            <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
+            <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
+            <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
+            <!--            </ul>-->
+
+          </section>
+
+          <!-- 찜 -->
+          <div class="floating-bar" style="z-index: 10;"><!--   지도에 잡아먹혀서 z-index     -->
+            <button class="n-btn picked"><span class="n-icon n-icon:bookmark_simple">찜</span></button>
+            <a class="n-btn book" @click.prevent="OpenCreateReservationModalHandler"><span>예약하기</span><input
+                type="checkbox" id="bookCheckbox"/></a>
+            <!--    로그인 안된 사람이 누르면, 로그인페이지로 이동시켜야함 / 로그인한 사람이 누르면 모달창 띄움   -->
           </div>
 
+          <!-- === 모달 =================================================================================================== -->
+          <CreateReservationModal class="CreateReservationModal"
+                                  :class="{'show': isModalVisible === 'CreateReservationModal'}"
+                                  :pId="programId"
+                                  :hostId="data.programDetailMemberDto.hostId"
+                                  :group-size-max="data.programDetailProgramDto.groupSizeMax"
+                                  @close-modal="() => { isModalVisible = ''; }"/>
 
-          <!--        &lt;!&ndash; 리뷰사진 목록 어사이드 &ndash;&gt;-->
-          <!--        <aside id="reviewList">-->
-          <!--            <h1>리뷰 사진</h1>-->
-          <!--            <span>X</span>-->
-
-          <!--            <ul>-->
-          <!--                <li><a href="#reviewListDetail"><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-          <!--            </ul>-->
-          <!--        </aside>-->
-
-
-          <!--        &lt;!&ndash;  리뷰사진 목록 디테일 어사이드   &ndash;&gt;-->
-          <!--        <aside id="reviewListDetail">-->
-          <!--            <h1>1/6</h1>-->
-          <!--            <span>X</span>-->
-
-          <!--            <div><img src="" alt="리뷰 사진 큰 화면"></div>-->
-          <!--            <ul>-->
-          <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
-          <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
-          <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
-          <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
-          <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
-          <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
-          <!--            </ul>-->
-
+          <!-- 모달창 떴을 때 배경처리   -->
+          <div :class="{'active': isModalVisible}" class="backdrop"></div>
+          <!-- ============================================================================================================= -->
         </section>
+        <!-- === 큰 화면 달력 =================================================================================================== -->
+<!--        <CreateReservationAside class="CreateReservationAside"-->
+<!--                                :class="{'show': isModalVisible === 'CreateReservationAside'}"-->
+<!--                                :pId="programId"-->
+<!--                                :hostId="data.programDetailMemberDto.hostId"-->
+<!--                                :group-size-max="data.programDetailProgramDto.groupSizeMax"-->
+<!--                                @close-modal="() => { isModalVisible = ''; }"/>-->
 
-        <!-- 찜 -->
-        <div class="floating-bar" style="z-index: 10;"><!--   지도에 잡아먹혀서 z-index     -->
-          <button class="n-btn picked"><span class="n-icon n-icon:bookmark_simple">찜</span></button>
-          <a class="n-btn book" @click.prevent="OpenCreateReservationModalHandler"><span>예약하기</span><input type="checkbox" id="bookCheckbox"/></a>
-          <!--    로그인 안된 사람이 누르면, 로그인페이지로 이동시켜야함 / 로그인한 사람이 누르면 모달창 띄움   -->
-        </div>
-
-        <!-- === 모달 =================================================================================================== -->
-        <CreateReservationModal class="CreateReservationModal" :class="{'show': isModalVisible === 'CreateReservationModal'}"
-                                :pId="programId"
-                                :hostId="data.programDetailMemberDto.hostId"
-                                @close-modal="() => { isModalVisible = ''; }"/>
-
-        <!-- 모달창 떴을 때 배경처리   -->
-        <div :class="{'active': isModalVisible}" class="backdrop"></div>
-        <!-- ============================================================================================================= -->
+        <MoveReservationModal @OpenMoveReservationModalHandler="handleOpenMoveReservationModal"/>
       </section>
-<!--      &lt;!&ndash; === 큰 화면 달력 =================================================================================================== &ndash;&gt;-->
-<!--      <CreateReservationModal class="CreateReservationModal" :class="{'show': isModalVisible === 'CreateReservationModal'}"-->
-<!--                              :pId="programId"-->
-<!--                              :hostId="data.programDetailMemberDto.hostId"-->
-<!--                              @close-modal="() => { isModalVisible = ''; }"/>-->
-
-<!--      &lt;!&ndash; 모달창 떴을 때 배경처리   &ndash;&gt;-->
-<!--      <div :class="{'active': isModalVisible}" class="backdrop"></div>-->
-<!--      &lt;!&ndash; ============================================================================================================= &ndash;&gt;-->
     </section>
   </main>
 </template>
@@ -556,6 +562,7 @@ import {useFetch} from '#app';
 import {useRoute} from 'vue-router';
 import router from "#app/plugins/router.js";
 import CreateReservationModal from "~/components/modal/CreateReservationModal.vue";
+import MoveReservationModal from "~/components/modal/MoveReservationModal.vue";
 
 const route = useRoute();
 const programId = ref(route.params.id); // route에서 programId를 가져옴
@@ -681,8 +688,6 @@ onMounted(() => {
   }
 });
 
-
-
 const {data, error} = await useFetch(`http://localhost:8080/api/v1/programs/${programId.value}`);
 
 const addressWithOrderOne = computed(() => {
@@ -748,15 +753,14 @@ const copyAddress = async () => {
   }
 };
 
+const handleOpenMoveReservationModal = () => {
+  showModal.value = true;  // 모달을 표시하기 위해 상태를 true로 변경
+};
 
 watchEffect(() => {
   console.log("Fetched data:", data.value);
   console.log("Error:", error.value);
 });
-
-
-// === 예약하기 모달창 부분 ================================================================================================
-
 </script>
 
 <style scoped>
@@ -772,7 +776,6 @@ watchEffect(() => {
       max-width: 550px;
     }
   }
-
 }
 
 /* n-icon */
@@ -1156,6 +1159,7 @@ watchEffect(() => {
     font-weight: bold;
     width: auto;
     height: 30px;
+    gap: 4px;
   }
 
   li {
@@ -1241,13 +1245,12 @@ watchEffect(() => {
 
 /* 반응형 */
 
-@media (min-width: 768px) {
-  main {
+@media (min-width: 1200px) {
+  .layout-body {
     display: flex;
     flex-direction: column;
-    align-items: center;
 
-    .main-wrapper {
+    .layout-main {
       display: flex;
       max-width: 1060px;
       position: relative;
@@ -1269,7 +1272,26 @@ watchEffect(() => {
       display: none;
     }
 
+    .pc-modal {
+      display: block;
+    }
 
+    .mobile-modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 1000; /* Sit on top */
+      left: 50%;
+      bottom: 0;
+      //transform: translate(-50%, 100%); /* 초기에 바닥에 숨어있음 */
+      width: 100%;
+      min-width: 350px;
+      max-width: 500px;
+      max-height: 100vh;
+      //background-color: white;
+      //border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
   }
 }
 
@@ -1281,7 +1303,7 @@ watchEffect(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Dark background */
+  background-color: rgba(0, 0, 0, 0.1); /* Dark background */
   backdrop-filter: blur(5px); /* Blur effect */
   z-index: 999; /* Behind modal but above other content */
 }

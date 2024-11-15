@@ -20,6 +20,7 @@ const host = computed(() => reservation.value.host);
 const program = computed(() => reservation.value.program);
 const requirement = computed(() => reservation.value.requirement);
 const reservationCard = computed(() => reservation.value.reservationCard);
+const config = useRuntimeConfig();
 
 const {shareToKakao} = useShare();  // useShare 모듈에서 shareToKakao 함수 가져오기
 
@@ -44,13 +45,7 @@ const fetchreservation = async (rId) => {
       }
   );
 
-
   reservation.value = response;
-  console.log(reservation.value);
-  console.log(guest.value);
-  console.log(host.value);
-  console.log(requirement.value);
-  console.log(reservationCard.value);
 
 
   // 날짜 차이를 계산하여 dDay 속성을 추가합니다.
@@ -102,13 +97,19 @@ const closeModal = () => {
 // 생명주기 함수
 
 onMounted(() => {
-
   const rId = route.params.id;
   if (rId) {
     fetchreservation(rId);  // rId가 있을 때만 데이터를 가져옵니다.
   }
 
-  // 지도 API
+  const initMaps = () => {
+    if (window.kakao && window.kakao.maps) {
+      kakao.maps.load(() => {
+        loadMap();
+      });
+    }
+  };
+
   const loadMap = () => {
     const container = document.getElementById('map');
     if (!container) {
@@ -117,15 +118,15 @@ onMounted(() => {
     }
 
     const options = {
-      center: new kakao.maps.LatLng(33.450701, 126.570667), // 기본 중심 좌표
+      center: new kakao.maps.LatLng(33.450701, 126.570667),
       level: 3
     };
     const map = new kakao.maps.Map(container, options);
 
-    if (program.meetingSpotAddress.value) {
+    if (program.value.meetingSpotAddress) {
       const geocoder = new kakao.maps.services.Geocoder();
 
-      geocoder.addressSearch(program.meetingSpotAddress.value, (result, status) => {
+      geocoder.addressSearch(program.value.meetingSpotAddress, (result, status) => {
         if (status === kakao.maps.services.Status.OK) {
           const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
           map.setCenter(coords);
@@ -143,18 +144,27 @@ onMounted(() => {
     }
   };
 
-  if (window.kakao && window.kakao.maps) {
-    loadMap();
+  if (!window.kakao) {
+    const script = document.createElement("script");
+    script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=16a77f29af1bb5775a70cd85a9cfb9cc&autoload=false&libraries=services";
+    script.onload = initMaps;
+    document.head.appendChild(script);
   } else {
-    const interval = setInterval(() => {
-      if (window.kakao && window.kakao.maps) {
-        loadMap();
-        clearInterval(interval);
-      }
-    }, 100)
+    initMaps();
   }
 
-})
+  // reservation의 program이 변경될 때 loadMap 실행
+  watch(() => program.value.meetingSpotAddress, (newAddress) => {
+    if (newAddress) {
+      loadMap();
+    }
+  });
+});
+
+
+
+
+
 </script>
 
 <template>
@@ -198,7 +208,12 @@ onMounted(() => {
 
           <div class="card-main">
             <div class="img-wrapper">
-              <img src="/public/image/program_01.png" alt="대표사진"/>
+              <div v-if="reservationCard.src && reservationCard.src.startsWith('uploads')" class="img-wrapper">
+                <img :src="`${config.public.apiBase}${reservationCard.src}`" alt="대표사진" />
+              </div>
+              <div v-else class="img-wrapper">
+                <img src="assets/image/default-program-image.png" alt="대표사진" />
+              </div>
             </div>
 
             <div class="card-info-wrapper">
@@ -419,7 +434,7 @@ onMounted(() => {
                     </div>
 
                     <div id="inclusions" class="id-container">
-                      <div class="content-header">
+                      <div class="content-header" style="padding-top: 10px;">
                         <span class="title">포함사항</span>
                       </div>
                       <div class="details">
@@ -926,7 +941,7 @@ onMounted(() => {
           width: 400px;
           display: flex;
           align-items: center;
-          justify-content: end;
+          justify-content: center;
           gap: 20px;
 
           .n-btn {

@@ -17,6 +17,7 @@ import java.util.*;
 @Service
 public class DefaultReservationService implements ReservationService {
     private final ProgramRepository programRepository;
+    private final ImageRepository imageRepository;
     private ReservationRepository reservationRepository;
     private MemberRepository memberRepository;
     private StatusRepository statusRepository;
@@ -31,7 +32,7 @@ public class DefaultReservationService implements ReservationService {
                                      ReviewRepository reviewRepository,
                                      RouteRepository routeRepository,
                                      PublishedProgramRepository publishedProgramRepository,
-                                     ModelMapper modelMapper, ProgramRepository programRepository) {
+                                     ModelMapper modelMapper, ProgramRepository programRepository, ImageRepository imageRepository) {
         this.reservationRepository = reservationRepository;
         this.memberRepository = memberRepository;
         this.statusRepository = statusRepository;
@@ -40,6 +41,7 @@ public class DefaultReservationService implements ReservationService {
         this.publishedProgramRepository = publishedProgramRepository;
         this.modelMapper = modelMapper;
         this.programRepository = programRepository;
+        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -67,8 +69,20 @@ public class DefaultReservationService implements ReservationService {
 
         List<ReservationListDto> reservationListDto = reservations.getContent()
                 .stream()
-                .map(reservation -> modelMapper.map(reservation, ReservationListDto.class))
+                .map(reservation -> {
+                    ReservationListDto dto = modelMapper.map(reservation, ReservationListDto.class);
+
+                    // publishedProgramId로 programId 조회
+                    Long programId = publishedProgramRepository.findProgramIdByPublishedProgramId(reservation.getPublishedProgram().getId());
+
+                    // programId로 이미지 src 조회
+                    String image = String.valueOf(imageRepository.findFirstSrcByProgramId(programId));
+                    dto.setSrc(image);
+
+                    return dto;
+                })
                 .toList();
+
 
         long totalRowCount = reservations.getTotalElements();
         long totalPageCount = reservations.getTotalPages();
@@ -88,7 +102,6 @@ public class DefaultReservationService implements ReservationService {
                 .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
 
         // ratingAverage 를 따로 담아오기
-
         modelMapper.typeMap(reservation.getClass(), ReservationListDto.class)
                 .addMappings(mapper -> {
                     mapper.map(Reservation::getId, ReservationListDto::setId);
@@ -99,8 +112,13 @@ public class DefaultReservationService implements ReservationService {
                     mapper.map(Reservation::getNumberOfGuest, ReservationListDto::setNumberOfGuest);
                 });
 
+
         // ReservationListDto reservationCard
         ReservationListDto reservationListDto = modelMapper.map(reservation, ReservationListDto.class);
+
+        Long programId = publishedProgramRepository.findProgramIdByPublishedProgramId(reservation.getPublishedProgram().getId());
+        String image = String.valueOf(imageRepository.findFirstSrcByProgramId(programId));
+        reservationListDto.setSrc(image);
 
         // ReservationDetailProgramDto program;
         // 예약한 공개 프로그램
@@ -168,8 +186,8 @@ public class DefaultReservationService implements ReservationService {
     public ReservationCreatedDto create(ReservationCreateDto reservationCreateDto) {
 
         // 예약할때 받은 공개 프로그램 ID로 공개 프로그램 가져오기
-        PublishedProgram publishedProgram = publishedProgramRepository.findById(reservationCreateDto.getPublishedProgramId()).orElseThrow(() ->
-                new IllegalArgumentException("PublishedProgram not found")
+        PublishedProgram publishedProgram = publishedProgramRepository.findById(reservationCreateDto.getPublishedProgramId())
+                .orElseThrow(() -> new IllegalArgumentException("PublishedProgram not found")
         );
 
         // 예약하는 멤버 ID로 멤버 가져오기
@@ -200,6 +218,10 @@ public class DefaultReservationService implements ReservationService {
             publishedProgramRepository.save(publishedProgram);  // 갱신된 값 저장
             int updatedGroupSize = groupSizeCurrent + reservationGroupSize;
             publishedProgram.setGroupSizeCurrent(updatedGroupSize);
+
+            Status WaitConfirm = statusRepository.findById(5L).orElseThrow(() ->
+                    new IllegalArgumentException("Status not found"));
+            if (updatedGroupSize == programGroupMaxSize) publishedProgram.setStatus(WaitConfirm);
         }
         else {
             throw new IllegalStateException("예약 불가: 총 그룹 인원이 " + programGroupMaxSize + " 명을 초과할 수 없습니다.");

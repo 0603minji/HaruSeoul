@@ -79,8 +79,8 @@ const fetchReservations = async () => {
         r.dDay = null; // 날짜가 없을 경우 null 처리
       }
       return r; // 수정된 예약 객체 반환
-    });
-
+      }
+    );
   } catch (error) {
     if (error.response) {
       console.error("예약 목록을 가져오는 중 오류 발생:", error.response.data);
@@ -185,8 +185,11 @@ onMounted(() => {
           </div>
 
           <div class="card-main">
-            <div class="img-wrapper">
-              <img src="/public/image/program_01.png" alt="대표사진" />
+            <div v-if="r.src && r.src.startsWith('uploads')" class="img-wrapper">
+              <img :src="`http://localhost:8080/api/v1/${r.src}`" alt="대표사진" />
+            </div>
+            <div v-else class="img-wrapper">
+              <img src="assets/image/default-program-image.png" alt="대표사진" />
             </div>
 
             <div class="card-info-wrapper">

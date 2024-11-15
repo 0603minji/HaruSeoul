@@ -13,6 +13,9 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     @Query("SELECT i.src FROM Image i WHERE i.program.id = :programId")
     List<String> findSrcByProgramId(@Param("programId") Long programId);
 
-
-
+    @Query("SELECT i.src " +
+            "FROM Image i " +
+            "WHERE i.program.id = :programId " +
+            "AND i.order = 1")
+    String findFirstSrcByProgramId(@Param("programId") Long programId);
 }

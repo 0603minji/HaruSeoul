@@ -88,7 +88,7 @@ const goToImage = () => {
 
 <template>
     <main>
-        <section class="main-wrapper">
+        <section class="layout-main">
             <section class="program-detail">
                 <h1 class="d:none">program-detail 페이지</h1>
 
@@ -1156,7 +1156,7 @@ const goToImage = () => {
         flex-direction: column;
         align-items: center;
 
-        .main-wrapper {
+        .layout-main {
             display: flex;
             max-width: 1060px;
             position: relative;
