@@ -1,10 +1,4 @@
 <template>
-  <Head>
-    <Script
-        type="text/javascript"
-        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=16a77f29af1bb5775a70cd85a9cfb9cc&libraries=services">
-    </Script>
-  </Head>
   <main>
     <section class="layout-body">
       <h1 class="d:none">프로그램과 어사이드</h1>
@@ -572,6 +566,15 @@ const isModalVisible = ref("");
 const OpenCreateReservationModalHandler = () => isModalVisible.value = "CreateReservationModal";
 
 onMounted(() => {
+  const initMaps = () => {
+    if (window.kakao && window.kakao.maps) {
+      kakao.maps.load(() => {
+        loadMap1();
+        loadMap2();
+      });
+    }
+  };
+
   const loadMap1 = () => {
     const container = document.getElementById('map1');
     if (!container) {
@@ -612,7 +615,6 @@ onMounted(() => {
     Promise.all(coordsPromises).then(coords => {
       const filteredCoords = coords.filter(coord => coord !== null);
 
-      // 경로를 나타내는 선을 생성합니다.
       const polyline = new kakao.maps.Polyline({
         map: map,
         path: filteredCoords,
@@ -622,11 +624,10 @@ onMounted(() => {
         strokeStyle: 'solid'
       });
 
-      // 각 지점에 순서에 따른 숫자 마커를 추가합니다.
       filteredCoords.forEach((coord, index) => {
         const markerContent = `<div style="width: 24px; height: 24px; background-color: #FF6347; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">${index + 1}</div>`;
 
-        const marker = new kakao.maps.CustomOverlay({
+        new kakao.maps.CustomOverlay({
           map: map,
           position: coord,
           content: markerContent,
@@ -634,7 +635,6 @@ onMounted(() => {
         });
       });
 
-      // 경로를 따라 지도의 중심과 확대 수준을 조정합니다.
       const bounds = new kakao.maps.LatLngBounds();
       filteredCoords.forEach(coord => bounds.extend(coord));
       map.setBounds(bounds);
@@ -649,7 +649,7 @@ onMounted(() => {
     }
 
     const options = {
-      center: new kakao.maps.LatLng(33.450701, 126.570667), // 기본 중심 좌표
+      center: new kakao.maps.LatLng(33.450701, 126.570667),
       level: 3
     };
     const map = new kakao.maps.Map(container, options);
@@ -675,16 +675,13 @@ onMounted(() => {
     }
   };
 
-  if (window.kakao && window.kakao.maps) {
-    loadMap1();
-    loadMap2();
+  if (!window.kakao) {
+    const script = document.createElement("script");
+    script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=16a77f29af1bb5775a70cd85a9cfb9cc&autoload=false&libraries=services";
+    script.onload = initMaps;
+    document.head.appendChild(script);
   } else {
-    const interval = setInterval(() => {
-      if (window.kakao && window.kakao.maps) {
-        loadMap2();
-        clearInterval(interval);
-      }
-    }, 100);
+    initMaps();
   }
 });
 

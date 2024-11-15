@@ -23,13 +23,15 @@ const props = defineProps({
 const emit = defineEmits(['closeModal', 'openMoveReservationModal']);
 
 const reRenderTrigger = ref(false);
+const userDetails = useUserDetails();
+const route = useRoute();
 
 /*=== variables ======================================================================================================*/
 // Selected dates 프로그램 진행일
 let selectedPublishedProgram = ref(null);
 
 const numberOfGuest = ref(1);
-const userDetails = useUserDetails();
+
 const isModalVisible = ref("");
 
 // === function ========================================================================================================
@@ -48,7 +50,10 @@ const updateSelectedPublishedProgram = (selectedOptions) => {
 
 const submitHandler = async () => {
   console.log('******* CreateReservationModal: submitHandler called');
-
+  if (userDetails.isAnonymous()) {
+    // 로그인되지 않은 경우 로그인 페이지로 이동하고, 현재 경로를 returnURL로 설정
+    return navigateTo(`/signin?returnURL=${route.fullPath}`);
+  }
   const reservationCreateDto = {
     publishedProgramId: selectedPublishedProgram.value.id,
     guestId: userDetails.id.value,
