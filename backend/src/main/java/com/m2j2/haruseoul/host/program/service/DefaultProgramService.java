@@ -4,29 +4,26 @@ import com.m2j2.haruseoul.entity.*;
 import com.m2j2.haruseoul.host.program.dto.*;
 import com.m2j2.haruseoul.host.program.mapper.ProgramMapper;
 import com.m2j2.haruseoul.repository.*;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
-@Slf4j
+
 @Service
 public class DefaultProgramService implements ProgramService {
 
@@ -38,6 +35,7 @@ public class DefaultProgramService implements ProgramService {
     private final CategoryRepository categoryRepository;
     private final TransportationRepository transportationRepository;
     private final ImageRepository imageRepository;
+    private final PublishedProgramRepository publishedProgramRepository;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -48,7 +46,7 @@ public class DefaultProgramService implements ProgramService {
                                  RouteRepository routeRepository, ModelMapper mapper, MemberRepository memberRepository,
                                  CategoryRepository categoryRepository,
                                  TransportationRepository transportationRepository,
-                                 ImageRepository imageRepository) {
+                                 ImageRepository imageRepository, PublishedProgramRepository publishedProgramRepository) {
         this.programRepository = programRepository;
         this.categoryProgramRepository = categoryProgramRepository;
         this.routeRepository = routeRepository;
@@ -57,6 +55,7 @@ public class DefaultProgramService implements ProgramService {
         this.categoryRepository = categoryRepository;
         this.transportationRepository = transportationRepository;
         this.imageRepository = imageRepository;
+        this.publishedProgramRepository = publishedProgramRepository;
     }
 
     @Override
@@ -120,7 +119,7 @@ public class DefaultProgramService implements ProgramService {
 
     @Override
     @Transactional
-    public Program create(ProgramCreateDto programCreateDto,List<MultipartFile> images) {
+    public Program create(ProgramCreateDto programCreateDto, List<MultipartFile> images) {
 
         Long regMemberId = programCreateDto.getRegMemberId();
         Member regMember = memberRepository.findById(regMemberId).orElse(null);
@@ -166,9 +165,13 @@ public class DefaultProgramService implements ProgramService {
         //  routeCreateDtos(List)에 담긴 routeCreateDto 하나하나를 Route객체로 변환하고
         //  그 객체들을 리스트 routes에 add하여 누적
         for (RouteCreateDto routeCreateDto : routeCreateDtos) {
-            //  이동수단
-            Transportation newTransportation = transportationRepository.findById(routeCreateDto.getTransportationId()).orElse(null);
-            //  이동수단 제외 나머지 속성들
+            // 이동수단 설정: transportationId가 null이 아닌 경우에만 조회
+            Transportation newTransportation = null;
+            if (routeCreateDto.getTransportationId() != null) {
+                newTransportation = transportationRepository.findById(routeCreateDto.getTransportationId()).orElse(null);
+            }
+
+            // Route 엔티티 생성
             Route route = Route.builder()
                     .program(savedProgram)
                     .title(routeCreateDto.getTitle())
@@ -178,41 +181,246 @@ public class DefaultProgramService implements ProgramService {
                     .order(routeCreateDto.getOrder())
                     .startTime(getLocalTimeByHourAndMinute(routeCreateDto.getStartTimeHour(), routeCreateDto.getStartTimeMinute()))
                     .transportation(newTransportation)
-                    .transportationDuration(getLocalTimeByHourAndMinute("00", routeCreateDto.getTransportationDuration()))
+                    .transportationDuration(getLocalTimeByDuration(routeCreateDto.getDuration()))
                     .build();
+
             routes.add(route);
         }
+
         routeRepository.saveAll(routes);
 
         // 이미지 저장 로직 추가
         List<Image> imageEntities = new ArrayList<>();
         Integer order = 1;
-        for (MultipartFile file : images) {
-            if (file != null && !file.isEmpty()) {
-                String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-                Path filePath = Paths.get(uploadDir, fileName);
-                try {
-                    // 경로가 존재하지 않으면 경로 생성
-                    Files.createDirectories(filePath.getParent());
-                    // 파일 저장
-                    Files.write(filePath, file.getBytes());
-                    // 이미지 객체 생성 및 순서 설정
-                    Image image = Image.builder()
-                            .program(savedProgram)
-                            .src("uploads/"+fileName)      // 파일 이름을 src에 저장
-                            .order(order++)     // 순서 증가
-                            .build();
-                    imageEntities.add(image);
+        if(images != null) {
+            for (MultipartFile file : images) {
+                if (file != null && !file.isEmpty()) {
+                    String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+                    Path filePath = Paths.get(uploadDir, fileName);
+                    try {
+                        // 경로가 존재하지 않으면 경로 생성
+                        Files.createDirectories(filePath.getParent());
+                        // 파일 저장
+                        Files.write(filePath, file.getBytes());
+                        // 이미지 객체 생성 및 순서 설정
+                        Image image = Image.builder()
+                                .program(savedProgram)
+                                .src("uploads/" + fileName)      // 파일 이름을 src에 저장
+                                .order(order++)     // 순서 증가
+                                .build();
+                        imageEntities.add(image);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException("이미지 저장 중 오류 발생: " + fileName);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException("이미지 저장 중 오류 발생: " + fileName);
+                    }
+                }
+            }
+            imageRepository.saveAll(imageEntities);
+        }
+        return savedProgram;
+    }
+
+
+    @Override
+    @Transactional
+    public Program update(ProgramUpdateDto programUpdateDto, List<MultipartFile> images) {
+
+        //  주어진 프로그램 id로 기존 프로그램 조회
+        //  null 결과반환 대비해서 Optional 타입
+        Program program = programRepository.findByProgramId(programUpdateDto.getProgramId());
+
+        program.setTitle(programUpdateDto.getTitle());
+        program.setDetail(programUpdateDto.getDetail());
+        program.setLanguage(programUpdateDto.getLanguage());
+        program.setStartTime(getLocalTimeByHourAndMinute(programUpdateDto.getStartTimeHour(), programUpdateDto.getStartTimeMinute()));
+        program.setEndTime(getLocalTimeByHourAndMinute(programUpdateDto.getEndTimeHour(), programUpdateDto.getEndTimeMinute()));
+        program.setGroupSizeMin(programUpdateDto.getGroupSizeMin());
+        program.setGroupSizeMax(programUpdateDto.getGroupSizeMax());
+        program.setPrice(programUpdateDto.getPrice());
+        program.setInclusion(programUpdateDto.getInclusion());
+        program.setExclusion(programUpdateDto.getExclusion());
+        program.setPackingList(programUpdateDto.getPackingList());
+        program.setRequirement(programUpdateDto.getRequirement());
+        program.setCaution(programUpdateDto.getCaution());
+        program.setStatus(programUpdateDto.getStatus());
+
+        Program updatedProgram = programRepository.save(program);
+
+
+        Long programId = updatedProgram.getId();
+        categoryProgramRepository.deleteByProgramId(programId);
+        imageRepository.deleteByProgramId(programId);
+        routeRepository.deleteByProgramId(programId);
+
+        //  programUpdateDto에 있는 새로운 카테고리 id 리스트를 categoryIds에 저장
+        List<Long> categoryIds = programUpdateDto.getCategoryIds();
+        //  CategoryProgram 객체들을 담는 리스트  newCategoryPrograms
+        List<CategoryProgram> newCategoryPrograms = new ArrayList<>();
+
+        //  categoryIds(List)에서 category(Long) 하나씩 반복
+        for (Long categoryId : categoryIds) {
+            //  category 테이블에서 해당 카테고리 id를 조회
+            //  null 결과 반환 대비해서  Optional 타입
+            Category category = categoryRepository.findByCategoryId(categoryId);
+
+            //  category_program 테이블에 저장하기 위한
+            //  CategoryProgram 객체로 빌드 (새로운 카테고리를 함께 빌드)
+            CategoryProgram categoryProgram = CategoryProgram.builder()
+                    .program(updatedProgram)
+                    .category(category)
+                    .build();
+            //  CategoryProgram 객체들을 담는 리스트  newCategoryPrograms
+            //  newCategoryPrograms 리스트에 카테고리 최대 2개에 대한
+            //  각각의 CategoryProgram 객체들을 누적받는 리스트
+            newCategoryPrograms.add(categoryProgram);
+        }
+        //  CategoryProgram 객체들을 누적받은 리스트를
+        //  category_program 테이블에 저장
+        categoryProgramRepository.saveAll(newCategoryPrograms);
+
+        List<RouteCreateDto> routeCreateDtos = programUpdateDto.getRoutes();
+        //  routeCreateDtos를 변환해서 담을 Route 엔티티가 여러개인 List routes 생성
+        ArrayList<Route> routes = new ArrayList<>();
+
+        //  routeCreateDtos(List)에 담긴 routeCreateDto 하나하나를 Route객체로 변환하고
+        //  그 객체들을 리스트 routes에 add하여 누적
+        for (RouteCreateDto routeCreateDto : routeCreateDtos) {
+            //  이동수단
+            Transportation newTransportation = null;
+            if (routeCreateDto.getTransportationId() != null) {
+                newTransportation = transportationRepository.findById(routeCreateDto.getTransportationId()).orElse(null);
+            }
+            //  이동수단 제외 나머지 속성들
+            Route route = Route.builder()
+                    .program(updatedProgram)
+                    .title(routeCreateDto.getTitle())
+                    .address(routeCreateDto.getAddress())
+                    .description(routeCreateDto.getDescription())
+                    .duration(getLocalTimeByDuration(routeCreateDto.getDuration()))
+                    .order(routeCreateDto.getOrder())
+                    .startTime(getLocalTimeByHourAndMinute(routeCreateDto.getStartTimeHour(), routeCreateDto.getStartTimeMinute()))
+                    .transportation(newTransportation)
+                    .transportationDuration(getLocalTimeByDuration(routeCreateDto.getDuration()))
+                    .build();
+            routes.add(route);
+        }
+        routeRepository.saveAll(routes);
+
+        List<Image> imageEntities = new ArrayList<>();
+        Integer order = 1;
+
+        if (images != null) { // images가 null이 아닐 때만 처리
+            for (MultipartFile file : images) {
+                if (file != null && !file.isEmpty()) {
+                    String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+                    Path filePath = Paths.get(uploadDir, fileName);
+                    try {
+                        Files.createDirectories(filePath.getParent());
+                        Files.write(filePath, file.getBytes());
+
+                        Image image = Image.builder()
+                                .program(updatedProgram)
+                                .src("uploads/" + fileName)
+                                .order(order++)
+                                .build();
+                        imageEntities.add(image);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException("이미지 저장 중 오류 발생: " + fileName);
+                    }
                 }
             }
         }
-        imageRepository.saveAll(imageEntities);
 
-        return savedProgram;
+        if (!imageEntities.isEmpty()) {
+            imageRepository.saveAll(imageEntities);
+        }
+
+
+        return updatedProgram;
+    }
+
+
+    @Override
+    @Transactional
+    public ProgramEditDto getProgram(Long id) {
+        Program program = programRepository.findById(id).orElse(null);
+
+        List<Route> routes = Optional.ofNullable(routeRepository.findByProgramId(id)).orElse(Collections.emptyList());
+        List<String> imageSrcs = Optional.ofNullable(imageRepository.findSrcByProgramId(id)).orElse(Collections.emptyList());
+        List<Long> categoryIds = Optional.ofNullable(categoryProgramRepository.findCategoryIdsByProgramId(id)).orElse(Collections.emptyList());
+
+        List<RouteCreateDto> routeDtos = routes.stream()
+                .map(route -> {
+                    Long transportationId = route.getTransportation() != null ? route.getTransportation().getId() : null;
+                    String transportationName = route.getTransportation() != null ? route.getTransportation().getName() : null;
+
+
+                    return RouteCreateDto.builder()
+                            .transportationId(transportationId)
+                            .order(route.getOrder())
+                            .title(route.getTitle())
+                            .address(route.getAddress())
+                            .duration(LocalTimeToIntegerConverter(route.getDuration()))
+                            .description(route.getDescription())
+                            .transportationDuration(String.valueOf(route.getTransportationDuration().getMinute()))
+                            .transportationName(transportationName)
+                            .startTimeHour(String.format("%02d", route.getStartTime().getHour()))
+                            .startTimeMinute(String.format("%02d", route.getStartTime().getMinute()))
+                            .build();
+                })
+                .toList();
+
+
+        LocalTime startTime = program.getStartTime();
+        LocalTime endTime = program.getEndTime();
+        String startTimeHour = String.format("%02d", startTime.getHour());
+        String startTimeMinute = String.format("%02d", startTime.getMinute());
+        String endTimeHour = String.format("%02d", endTime.getHour());
+        String endTimeMinute = String.format("%02d", endTime.getMinute());
+
+        ProgramEditDto programEditDto = ProgramEditDto
+                .builder()
+                .title(program.getTitle())
+                .detail(program.getDetail())
+                .language(program.getLanguage())
+                .categoryIds(categoryIds)
+                .startTimeHour(startTimeHour)
+                .startTimeMinute(startTimeMinute)
+                .endTimeHour(endTimeHour)
+                .endTimeMinute(endTimeMinute)
+                .groupSizeMin(program.getGroupSizeMin())
+                .groupSizeMax(program.getGroupSizeMax())
+                .price(program.getPrice())
+                .inclusion(program.getInclusion())
+                .exclusion(program.getExclusion())
+                .packingList(program.getPackingList())
+                .requirement(program.getRequirement())
+                .caution(program.getCaution())
+                .routes(routeDtos)
+                .src(imageSrcs)
+                .build();
+
+
+
+        return programEditDto;
+
+    }
+
+
+    public void delete(Long programId) {
+        List<Long> allowedStatusId = List.of(3L, 4L);
+
+        if(!publishedProgramRepository.existsByProgramId(programId) ||
+        publishedProgramRepository.existsByProgramIdAndStatusIdIn(programId, allowedStatusId)) {
+
+            programRepository.deleteById(programId);
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "공개중인 프로그램이라 삭제할 수 없습니다");
+        }
     }
 
     private LocalTime getLocalTimeByHourAndMinute(String hour, String minute) {
@@ -230,114 +438,13 @@ public class DefaultProgramService implements ProgramService {
         return LocalTime.of(hour, minute);
     }
 
-    //  ====== 호스트 프로그램 수정 메서드 ==============================
-    @Override
-    @Transactional
-//    public Program update(ProgramUpdateDto programUpdateDto) {
-//
-//        //  주어진 프로그램 id로 기존 프로그램 조회
-//        //  null 결과반환 대비해서 Optional 타입
-//        Optional<Program> programOptional = programRepository.findById(programUpdateDto.getProgramId());
-//
-//        //  조회 결과 null인 경우 예외 처리
-//        if (!programOptional.isPresent()) {
-//            log.error("{} is not found", programUpdateDto.getProgramId());
-//            return null;
-//        }
-//
-//        //  조회 결과 null이 아닌 경우 조회결과를  Program 객체에 저장
-//        Program oldProgram = programOptional.get();
-//
-//        //  Program 객체의 각 필드를 ProgramUpdateDto의 값으로 업데이트
-//        oldProgram.setTitle(programUpdateDto.getTitle());
-//        oldProgram.setDetail(programUpdateDto.getDetail());
-//        oldProgram.setLanguage(programUpdateDto.getLanguage());
-//        oldProgram.setStartTime(getLocalTimeByHourAndMinute(programUpdateDto.getStartTimeHour(), programUpdateDto.getStartTimeMinute()));
-//        oldProgram.setEndTime(getLocalTimeByHourAndMinute(programUpdateDto.getEndTimeHour(), programUpdateDto.getEndTimeMinute()));
-//        oldProgram.setGroupSizeMin(programUpdateDto.getGroupSizeMin());
-//        oldProgram.setGroupSizeMax(programUpdateDto.getGroupSizeMax());
-//        oldProgram.setPrice(programUpdateDto.getPrice());
-//        oldProgram.setInclusion(programUpdateDto.getInclusion());
-//        oldProgram.setExclusion(programUpdateDto.getExclusion());
-//        oldProgram.setPackingList(programUpdateDto.getPackingList());
-//        oldProgram.setRequirement(programUpdateDto.getRequirement());
-//        oldProgram.setCaution(programUpdateDto.getCaution());
-//        oldProgram.setStatus(programUpdateDto.getStatus());
-//
-//        //  Program 객체를 db에 저장하는 save 메서드 호출
-//        Program newProgram = programRepository.save(oldProgram);
-//
-//        //  카테고리(category) 업데이트
-//        //  카테고리 db가 따로 존재하므로 따로 업데이트 필요
-//        Long programId = newProgram.getId();
-//
-//        //  category_program  테이블에 기존 데이터를 삭제
-//        categoryProgramRepository.deleteByProgramId(programId);
-//
-//        //  programUpdateDto에 있는 새로운 카테고리 id 리스트를 categoryIds에 저장
-//        List<Long> categoryIds = programUpdateDto.getCategoryIds();
-//
-//        //  CategoryProgram 객체들을 담는 리스트  newCategoryPrograms
-//        List<CategoryProgram> newCategoryPrograms = new ArrayList<>();
-//
-//        //  categoryIds(List)에서 category(Long) 하나씩 반복
-//        for (Long categoryId : categoryIds) {
-//            //  category 테이블에서 해당 카테고리 id를 조회
-//            //  null 결과 반환 대비해서  Optional 타입
-//            Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
-//            //  category 테이블에 존재하지 않는 카테고리  id인 경우
-//            if (!categoryOptional.isPresent()) {
-//                log.error("{} is not found", categoryId);
-//                continue;
-//            }
-//            //  category 테이블에 존재하는 카테고리 id인 경우
-//            //  카테고리 id에 해당하는 category 객체를 저장
-//            Category category = categoryOptional.get();
-//
-//            //  category_program 테이블에 저장하기 위한
-//            //  CategoryProgram 객체로 빌드 (새로운 카테고리를 함께 빌드)
-//            CategoryProgram categoryProgram = CategoryProgram.builder()
-//                    .program(newProgram)
-//                    .category(category)
-//                    .build();
-//
-//            //  CategoryProgram 객체들을 담는 리스트  newCategoryPrograms
-//            //  newCategoryPrograms 리스트에 카테고리 최대 2개에 대한
-//            //  각각의 CategoryProgram 객체들을 누적받는 리스트
-//            newCategoryPrograms.add(categoryProgram);
-//        }
-//
-//        //  CategoryProgram 객체들을 누적받은 리스트를
-//        //  category_program 테이블에 저장
-//        categoryProgramRepository.saveAll(newCategoryPrograms);
-//
-//        //  todo: 코스(route) 업데이트
-//        //  todo: 이미지(image) 업데이트
-//        return newProgram;
-//    }
+    public Integer LocalTimeToIntegerConverter(LocalTime localTime) {
+            int hour = localTime.getHour();
+            int minute = localTime.getMinute();
 
+            return hour * 60 + minute;
 
-    public void delete(Long programId) {
-        programRepository.deleteById(programId);
     }
 
-//    public ProgramListDto getOneProgram(Long pId) {
-//        //  프로그램 id로 Program 엔티티를 조회
-//        //  없는 경우(null)를 위해 Optional 객체에 저장
-//
-//        Optional<Program> programOptional = programRepository.findById(pId);
-//        //  programOptional이 isEmpty인 경우
-//        //  null을 반환하여 메서드 종료
-//        if (!programOptional.isPresent()) return null;
-//        //  programOptional이 isEmpty가 아닌 경우
-//        //  get 메서드로 Program 객체를 추출
-//        Program program = programOptional.get();
-//
-//        //  routeRepository를 통해 Program(프로그램 id)에 속한 Route 객체 리스트를 조회
-//        List<Route> routes = routeRepository.findByProgramId(pId);
-//        //  조회한 Program 객체와 Route 리스트를 ProgramListDto로 변환
-//        ProgramListDto programListDto = ProgramMapper.mapToDto(program, routes);
-//
-//        return programListDto;
-//    }
+
 }

@@ -14,7 +14,9 @@ public interface ProgramService {
     List<ProgramTitle> getProgramTitles();
     Program create(ProgramCreateDto programCreateDto, List<MultipartFile> images);
 
-//    Program update(ProgramUpdateDto programUpdateDto);
+    ProgramEditDto getProgram(Long id);
+
+    Program update(ProgramUpdateDto programUpdateDto,List<MultipartFile> images);
 
     void delete(Long programId);
 }

@@ -72,11 +72,11 @@ public class Program {
     @JsonBackReference
     private Member member;
 
-    @OneToMany(mappedBy = "program")
+    @OneToMany(mappedBy = "program",cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<Image> images;
 
-    @OneToMany(mappedBy = "program")
+    @OneToMany(mappedBy = "program",cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<Review> reviews;
 
@@ -88,7 +88,7 @@ public class Program {
     @JsonManagedReference
     private List<PublishedProgram> publishedPrograms;
 
-    @OneToMany(mappedBy = "program")
+    @OneToMany(mappedBy = "program",cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<Route> routes;
 

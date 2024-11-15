@@ -73,7 +73,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         auth
                                 .requestMatchers("/host/**").authenticated()
                                 .requestMatchers("/guest/**").authenticated()
-                                .requestMatchers("/upload/**").permitAll()
+                                .requestMatchers("/uploads/**").permitAll()
                                 .anyRequest().permitAll()
 
 
