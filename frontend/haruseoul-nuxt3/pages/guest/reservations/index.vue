@@ -241,7 +241,7 @@ onMounted(() => {
                   </div>
                   <div class="card-info">
                     <span class="n-icon n-icon:group n-deco">예약인원</span>
-                    <span>{{ r.groupSize }}</span>
+                    <span>{{ r.numberOfGuest }}</span>
                   </div>
                 </div>
 
