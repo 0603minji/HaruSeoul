@@ -85,7 +85,6 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
             @Param("statuses") List<String> statuses,
             Pageable pageable
     );
-
 }
 
 
