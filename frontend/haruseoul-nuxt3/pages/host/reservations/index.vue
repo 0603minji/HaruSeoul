@@ -232,7 +232,10 @@ const isModalVisible = ref("");
 const OpenDateRangeFilterModalHandler = () => isModalVisible.value = "DateRangeFilterModal";
 const OpenPublishedStatusFilterModalHandler = () => isModalVisible.value = "PublishedStatusFilterModal";
 const OpenProgramFilterModalHandler = () => isModalVisible.value = "ProgramFilterModal";
-const OpenPublishProgramModalHandler = () => isModalVisible.value = "PublishProgramModal";
+const OpenPublishProgramModalHandler = (programId) => {
+  pIdToPublish.value = programId;
+  isModalVisible.value = "PublishProgramModal";
+}
 
 
 // === 팝업 ============================================================================================================
@@ -269,6 +272,7 @@ const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지 로�
 
 const hostId = userDetails.id.value; // 프론트에서 저장하고 있는 인증정보에 접근해서 얻어와야함
 console.log('hostId: ', hostId)
+const pIdToPublish = ref(null); // 일정추가, 추가개설할 pubishedprogramId
 
 
 // PublishedProgramResponseDto
@@ -351,6 +355,7 @@ mapFetchedData(data.value);
                         @close-modal="isModalVisible = ''"
                         @updateSelectedPrograms="updateProgramFilterQuery"/>
     <PublishProgramModal :class="{'show': isModalVisible === 'PublishProgramModal'}"
+                         :default-program-id="pIdToPublish"
                          @close-modal="() => { fetchData(); isModalVisible = ''; }"/>
 
     <!-- 모달창 떴을 때 배경처리   -->
@@ -364,8 +369,8 @@ mapFetchedData(data.value);
       <header class="n-title">
         <h1 class="">예약관리</h1>
         <div>
-          <a @click.prevent="OpenPublishProgramModalHandler" href=""
-             class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">일정 추가</a>
+          <button @click.prevent="OpenPublishProgramModalHandler(null)"
+             class="active n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:plus n-deco">일정추가</button>
         </div>
       </header>
 
@@ -481,10 +486,10 @@ mapFetchedData(data.value);
                     <!--         더보기 팝업           -->
                     <div class="morePopup" v-if="morePopupStatus[pp.id]">
                       <ul>
-                        <li>예약확정</li>
-                        <li @click.prevent=CancelHandler(pp)>예약취소</li>
-                        <li>추가개설</li><!-- 취소, 완료된 일정 아닌 나머지 -->
-                        <li>내역삭제</li><!-- only 취소3, 완료된 일정4 -->
+                        <li @click.prevent="closeMorePopup(pp.id);">예약확정</li><!-- groupSizeMin < groupSizeCurrent이면 가능 -->
+                        <li @click.prevent="closeMorePopup(pp.id); CancelHandler(pp)">예약취소</li>
+                        <li @click.prevent="closeMorePopup(pp.id); OpenPublishProgramModalHandler(pp.programId)">추가개설</li><!-- 취소, 완료된 일정 아닌 나머지 -->
+                        <li @click.prevent="closeMorePopup(pp.id)">내역삭제</li><!-- only 취소3, 완료된 일정4 -->
                       </ul>
                     </div>
                   </div>
