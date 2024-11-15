@@ -240,13 +240,6 @@ public class DefaultReservationService implements ReservationService {
         // 삭제 날짜를 현재 시간으로 설정합니다.
         reservation.setDeleteDate(Instant.now());  // 삭제 일자를 현재 시간으로 설정 (LocalDateTime으로 변경 가능)
 
-//        // 상태를 '취소됨'으로 변경 (id=4)
-//        Status cancelledStatus = statusRepository.findById(4L)
-//                .orElseThrow(() -> new IllegalArgumentException("상태 ID 4를 찾을 수 없습니다."));
-//
-//        // PublishedProgram의 상태를 취소됨(4)으로 업데이트
-//        reservation.getPublishedProgram().setStatus(cancelledStatus);
-
         // 예약을 업데이트합니다.
         reservationRepository.save(reservation);
 

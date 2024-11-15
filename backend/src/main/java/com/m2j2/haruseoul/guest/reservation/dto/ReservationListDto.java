@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Data
@@ -23,6 +24,8 @@ public class ReservationListDto {
     private String programTitle;
 
     private LocalDate date;
+
+    private Instant deleteDate;
 
     private Integer numberOfGuest;
 

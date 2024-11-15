@@ -199,15 +199,15 @@ onMounted(() => {
                     결제완료
                   </span>
 
-                  <span v-else-if="r.statusName === 'Finished'" class="n-panel-tag not-submitted">
+                  <span v-else-if="r.statusName === 'Finished' && !r.deleteDate" class="n-panel-tag not-submitted">
                     이용완료
                   </span>
 
-                  <span v-else-if="r.statusName === 'Confirmed'" class="n-panel-tag not-submitted">
+                  <span v-else-if="r.statusName === 'Confirmed' && !r.deleteDate" class="n-panel-tag not-submitted">
                     예약확정
                   </span>
 
-                  <span v-else-if="r.statusName === 'Canceled'" class="n-panel-tag not-submitted" 
+                  <span v-else-if="r.statusName === 'Canceled' || r.deleteDate != null" class="n-panel-tag not-submitted"
                   style="border-color: #DB4455; color: #DB4455;">
                     취소됨
                   </span>
@@ -264,7 +264,7 @@ onMounted(() => {
                      @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
                 </div>
 
-                <div v-else-if="r.statusName === 'Canceled'" class="card-footer-responsive">
+                <div v-else-if="r.statusName === 'Canceled' || r.deleteDate" class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
                   <a href="#"
                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
