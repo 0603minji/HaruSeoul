@@ -168,7 +168,7 @@ const route = reactive({
   transportationDuration: 0
 });
 
-console.log("컴포넌트루트:", route);
+
 
 
 //===================== Fetch Functions ====================

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ProgramDetailProgramDto {
-
+    private Long id;
     private String title;
     private Float rating;
     private Integer price;

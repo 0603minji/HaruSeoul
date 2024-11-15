@@ -1,6 +1,7 @@
 package com.m2j2.haruseoul.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,6 +41,7 @@ public class Route {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transportation_id")
+    @JsonIgnore
     private Transportation transportation;
 
     @Column(name = "duration")
