@@ -195,6 +195,36 @@ const pageClickHandler = (newPage) => {
   fetchData();
 }
 
+// 예약취소
+const CancelHandler = async (pp) => {
+  /*// 취소할 publishedProgram의 groupSizeCurrent가 0이면? 그냥 취소
+  if (pp.groupSizeCurrent !== 0) {
+
+  }*/
+
+  console.log('   CancelHandler called')
+  console.log('          ->  Put host/published-programs');
+
+  // publishedProgramUpdateDto
+  const publishedProgramUpdateDto = {
+    "id": pp.id,
+    "groupSizeCurrent": pp.groupSizeCurrent,
+    "statusId": 4
+  }
+
+  let response = await useDataFetch("host/published-programs", {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: publishedProgramUpdateDto
+  });
+  console.log('          PublishedProgram Update result: ', response);
+
+  // 취소된 pp반영한 목록으로 갱신
+  await fetchData();
+}
+
 
 // === 모달창 ===========================================================================================================
 const isModalVisible = ref("");
@@ -429,7 +459,6 @@ mapFetchedData(data.value);
             <ul v-if="publishedPrograms.length" class="n-card-container bg-color:base-1">
 
               <li v-for="pp in publishedPrograms" :key="pp.id" class="n-card n-card:hover padding:6">
-                <NuxtLink class="n-link-box" :to="`reservations/${pp.id}`"></NuxtLink>
                 <h2 class="d:none">예약 카드</h2>
 
                 <div class="card-header">
@@ -444,30 +473,30 @@ mapFetchedData(data.value);
                     </span>
                   </div>
                   <div class="right">
-                    <button
+                    <button ref="morePopupBtn"
                         class="morePopup-btn n-btn n-btn:hover n-btn-bd:none n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9"
                         @click.prevent="toggleMorePopup(pp.id)">더보기
-                    </button>
 
-                  </div> <!--         더보기 팝업           -->
-                  <div class="morePopup" v-if="morePopupStatus[pp.id]"
-                  v-click-outside="closeMorePopup(id)">
-                    <ul>
-                      <li>예약확정</li>
-                      <li>예약취소</li>
-                      <li>추가개설</li><!-- 취소, 완료된 일정 아닌 나머지 -->
-                      <li>내역삭제</li><!-- only 취소3, 완료된 일정4 -->
-                    </ul>
+                    </button>
+                    <!--         더보기 팝업           -->
+                    <div class="morePopup" v-if="morePopupStatus[pp.id]">
+                      <ul>
+                        <li>예약확정</li>
+                        <li @click.prevent=CancelHandler(pp)>예약취소</li>
+                        <li>추가개설</li><!-- 취소, 완료된 일정 아닌 나머지 -->
+                        <li>내역삭제</li><!-- only 취소3, 완료된 일정4 -->
+                      </ul>
+                    </div>
                   </div>
                 </div>
 
                 <div class="card-main">
-                  <div class="img-wrapper">
+                  <NuxtLink class="img-wrapper" :to="`reservations/${pp.id}`">
                     <img v-if="pp.images.length>0" :src="`${config.public.apiBase}${pp.images.at(0).src}`" alt="대표사진">
                     <img v-else src="/assets/image/default-program-image.png" alt="대표사진">
-                  </div>
+                  </NuxtLink>
 
-                  <div class="card-info-wrapper">
+                  <NuxtLink class="card-info-wrapper" :to="`reservations/${pp.id}`">
                     <p class="title">{{ pp.programTitle }}</p>
                     <div class="card-info">
                       <span class="n-icon n-icon:calendar n-deco">{{ formatDate(pp.date) }}</span>
@@ -477,7 +506,7 @@ mapFetchedData(data.value);
                       <span v-if="3 < calculateKoreanDDay(pp.date)"
                             class="n-panel-tag">D-{{ calculateKoreanDDay(pp.date) }}</span>
                     </div>
-                  </div>
+                  </NuxtLink>
 
                   <!-- md:footer: card-footer영역에 존재하다가 992px이상에서 card-main의 우측으로 이동 -->
                   <div class="applicant-status lg:show">
@@ -626,6 +655,7 @@ mapFetchedData(data.value);
 
           .card-header {
             position: relative;
+
             .left {
               .on-going {
                 --tag-border-color: var(--color-sub-1);
@@ -657,12 +687,6 @@ mapFetchedData(data.value);
               }
             }
 
-            .right > a {
-              position: relative;
-              /* a태그는 기본 position이 static. static이면 z-index가 안 먹힘*/
-              z-index: 2;
-            }
-
             .right {
               position: relative;
 
@@ -674,30 +698,30 @@ mapFetchedData(data.value);
                 --btn-bg-hover: var(--color-base-4);
               }
 
+              .morePopup {
+                width: 120px;
+                position: absolute;
+                top: 100%; /* 버튼 바로 아래로 위치 */
+                right: 0; /* 버튼의 오른쪽 모서리와 평행하도록 맞춤 */
+                border-radius: 8px;
+                background-color: white;
+                padding: 10px 0;
+                border: 1px solid #ddd;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+                z-index: 10;
 
-            }
-            .morePopup {
-              width: 120px;
-              position: absolute;
-              top: 100%; /* 버튼 바로 아래로 위치 */
-              right: 0; /* 버튼의 오른쪽 모서리와 평행하도록 맞춤 */
-              border-radius: 8px;
-              background-color: white;
-              padding: 10px 0;
-              border: 1px solid #ddd;
-              box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-              z-index: 10;
+                ul {
+                  display: flex;
+                  flex-direction: column;
 
-              ul {
-                display: flex;
-                flex-direction: column;
+                  li {
+                    padding: 6px 16px;
+                    cursor: pointer;
+                  }
 
-                li {
-                  padding: 6px 16px;
-                  cursor: pointer;
-                }
-                li:hover {
-                  background-color: var(--color-base-2);
+                  li:hover {
+                    background-color: var(--color-base-2);
+                  }
                 }
               }
             }
@@ -711,16 +735,6 @@ mapFetchedData(data.value);
                 color: var(--color-base-1);
               }
             }
-          }
-
-          .n-link-box {
-            display: block;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
           }
         }
       }
