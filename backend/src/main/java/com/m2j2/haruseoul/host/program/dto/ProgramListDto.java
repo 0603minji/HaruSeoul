@@ -42,6 +42,5 @@ public class ProgramListDto {
     private String caution;
     private String requirement;
     private List<Image> images;
-//    private List<Review> reviews;
 
 }

@@ -12,6 +12,7 @@ public interface RouteRepository extends JpaRepository<Route, Long> {
             "where rt.program.id = :pId and rt.order = 1")
     Route meetingSpotTitleByProgramId(@Param("pId") Long pId);
 
+    void deleteByProgramId(Long programId);
 
     List<Route> findByProgramId(Long programId);
 }

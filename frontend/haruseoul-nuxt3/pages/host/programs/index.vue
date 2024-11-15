@@ -60,34 +60,41 @@
 
             <!--프로그램 카드 목록 (작성 중) (작성 완료) (모집 중)-->
             <ul class="n-card-container bg-color:base-1 padding:7">
-              <li v-for="p in programs" :key="p.id" class="n-card bg-color:base-1 padding:6">
+              <li v-for="(p,index) in programs" :key="p.id" class="n-card bg-color:base-1 padding:6">
                 <h2 class="d:none">프로그램 카드</h2>
 
                 <div class="card-header">
                   <div class="left">
-                                        <span v-if="p.status === 'In Progress'"
-                                              class="n-panel-tag not-submitted">작성중</span>
+                    <span v-if="p.status === 'In Progress'"
+                          class="n-panel-tag not-submitted">작성중</span>
                     <span v-else-if="p.status === 'Published'"
                           class="n-panel-tag not-submitted">모집중</span>
                     <span v-else-if="p.status === 'Unpublished'"
                           class="n-panel-tag not-submitted">작성완료</span>
                   </div>
                   <div class="right">
-                    <a @click.prevent="openMore(p.id)" href=""
-                       class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9">더보기</a>
+                    <div class="n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9" style="cursor: pointer"
+                         @click.prevent="toggleMenu(index)"
+                    >더보기</div>
+                  </div>
+                  <div v-if="activeMenuIndex[index]" class="menu-dropdown">
+                    <ul>
+                      <NuxtLink class="edit" :href="`/host/programs/${p.id}/edit`">수정</NuxtLink>
+                      <li @click="deleteProgram(p.id)">삭제</li>
+                    </ul>
                   </div>
                 </div>
                 <div class="card-main">
-                  <div v-if="p.images && p.images.length > 0" class="img-wrapper">
+                  <NuxtLink v-if="p.images && p.images.length > 0" :href="`/host/programs/${p.id}`" class="img-wrapper">
                     <img :src="getImageSrc(p)" alt="대표사진" />
-                  </div>
-                  <div v-else class="img-wrapper">
+                  </NuxtLink>
+                  <NuxtLink v-else :href="`/host/programs/${p.id}`" class="img-wrapper">
                     <img src="/assets/image/default-program-image.png" alt="대표사진" />
-                  </div>
+                  </NuxtLink>
                   <div class="card-info-wrapper">
-                    <p class="title">
+                    <NuxtLink :href="`/host/programs/${p.id}`" style="cursor: pointer" class="title">
                       {{ p.title }}
-                    </p>
+                    </NuxtLink>
                     <div class="card-info-responsive">
                       <div>
                         <div class="card-info">
@@ -101,19 +108,40 @@
                       </div>
 
                       <div class="card-footer-responsive">
-                        <a v-if="p.status === 'In Progress'" href=""
-                           class="n-btn create">작성하기</a>
-                        <a v-else-if="p.status === 'Published'" href="" class="n-btn manage">예약
-                          관리</a>
-                        <a v-else-if="p.status === 'Unpublished'" href=""
-                           class="n-btn open">개설하기</a>
+                        <NuxtLink
+                            v-if="p.status === 'In Progress'"
+                            :href="`/host/programs/${p.id}/edit`"
+                            class="n-btn create"
+                        >작성하기</NuxtLink>
+                        <button
+                            v-else-if="p.status === 'Published'"
+                            class="n-btn open"
+                        >추가 개설</button>
+                        <button
+                            v-else-if="p.status === 'Unpublished'"
+                            class="n-btn open"
+                        >개설하기</button>
                       </div>
+
                     </div>
                   </div>
                 </div>
 
                 <div class="card-footer">
-                  <a href="#" class="n-btn create">작성하기</a>
+                  <NuxtLink
+                      v-if="p.status === 'In Progress'"
+                      :href="`/host/programs/${p.id}/edit`"
+                      class="n-btn create"
+                  >작성하기</NuxtLink>
+                  <NuxtLink
+                      v-if="p.status === 'Published'"
+                      :href="`/host/programs/reservations`"
+                      class="n-btn manage"
+                  >예약 관리</NuxtLink>
+                  <button
+                      v-else-if="p.status === 'Unpublished'"
+                      class="n-btn open"
+                  >개설하기</button>
                 </div>
               </li>
             </ul>
@@ -136,18 +164,6 @@
           </section>
         </section>
 
-        <!-- 모달 창 -->
-        <div v-if="moreIsOpen" class="more-overlay" @click="closeMore">
-          <div class="more">
-            <div class="more-close">
-              <button @click="closeMore" style="cursor: pointer;">Ⅹ</button>
-            </div>
-            <div class="more-content" @click.stop>
-              <a href="#" class="n-btn" @click.prevent="goToEditPage(selectedProgramId)">수정하기</a>
-              <a href="#" class="n-btn">삭제하기</a>
-            </div>
-          </div>
-        </div>
 
         <!--=== 필터 반응형 ==========================================-->
         <aside class="n-filter-aside">
@@ -245,6 +261,9 @@ const cardsPerPage = 6; //  한페이지당 표시할 프로그램 카드 수
 const moreIsOpen = ref(false);
 const router = useRouter();
 const selectedProgramId = ref(null);
+const activeMenuIndex = ref({});
+
+
 
 //============= Lifecycle Functions ================
 onMounted(() => {
@@ -330,6 +349,35 @@ const fetchPrograms = async (
   console.log(programs.value);
   totalRowCount.value = response.data.totalRowCount; //  response에서 총 프로그램수 추출해서 저장
   totalPageCount.value = Math.ceil(totalRowCount.value / cardsPerPage); //response.data.totalPageCount; //  response에서 총 페이지 갯수 추출해서 저장
+};
+
+const deleteProgram = async (programId) => {
+  const token = localStorage.getItem("token");
+  try {
+    await axios.delete(`http://localhost:8080/api/v1/host/programs/${programId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    alert("프로그램이 성공적으로 삭제되었습니다.");
+    await fetchPrograms();
+
+
+  } catch (error) {
+    // 예외가 발생했을 때 처리
+    if (error.response && error.response.status === 409) {
+      // IllegalStateException으로 인해 400 상태 코드가 반환되었다고 가정
+      alert("공개된 프로그램이라 삭제할 수 없습니다.");
+    } else {
+      console.error("프로그램 삭제 중 오류 발생:", error);
+      alert("프로그램 삭제 중 오류가 발생했습니다.");
+    }
+  }
+}
+
+const toggleMenu = (index) => {
+  // 다른 카드의 메뉴는 닫고, 해당 카드만 토글
+  activeMenuIndex.value = { [index]: !activeMenuIndex.value[index] };
 };
 
 const selectCategoryAll = async () => {
@@ -544,14 +592,42 @@ const filterInit = () => {
 }
 
 
-const goToEditPage = (id) => {
-  if (id) {
-    router.push(`/host/programs/${id}`);
-  }
-}
 </script>
 
 <style scoped>
+
+.menu-dropdown {
+  position: absolute;
+  right: 10px;
+  top: 40px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.menu-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-dropdown li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.menu-dropdown .edit{
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.menu-dropdown li:hover {
+  background-color: #f5f5f5;
+}
+
+
 .n-card {
   /* 해당영역 클릭 시 링크로 이동 */
   position: relative;
