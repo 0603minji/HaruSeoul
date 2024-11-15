@@ -100,8 +100,6 @@ const toPrevMonth = () => {
 
 // 예약가능한 날짜인지?
 const isReservable = (dateSchedule) => {
-  console.log('       isReservable called')
-  console.log('               -> dateSchedule: ', dateSchedule);
   /*
     dateSchedule
     [
