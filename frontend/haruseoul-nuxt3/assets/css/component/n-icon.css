@@ -348,6 +348,11 @@
   --icon: url(/assets/image/icon/rectangle.svg);
 }
 
+.n-icon\:request:after,
+.n-icon\:request:before {
+  --icon: url(/assets/image/icon/request.svg);
+}
+
 .n-icon\:reset:after,
 .n-icon\:reset:before {
   --icon: url(/assets/image/icon/reset.svg);
