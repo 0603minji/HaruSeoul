@@ -12,7 +12,7 @@ public interface CategoryProgramRepository extends JpaRepository<CategoryProgram
 
     List<CategoryProgram> findByCategoryIdIn(List<Long> categoryIds);
 
-    List<CategoryProgram> deleteByProgramId(Long programId);
+    void deleteByProgramId(Long programId);
 
     @Query("SELECT cp.category.id FROM CategoryProgram cp WHERE cp.program.id = :programId")
     List<Long> findCategoryIdsByProgramId(@Param("programId") Long programId);

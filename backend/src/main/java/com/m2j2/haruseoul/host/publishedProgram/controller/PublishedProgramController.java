@@ -30,7 +30,10 @@ public class PublishedProgramController {
                                                               @RequestParam(name = "pageSize", defaultValue = "42") Integer pageSize,
                                                               @RequestParam(name = "sortBy", defaultValue = "regDate") String sortBy,
                                                               @RequestParam(name = "order", defaultValue = "desc") String order,
-                                                              @RequestParam(name = "tab", required = false) String tab) {
+                                                              @RequestParam(name = "tab", required = false) String tab,
+                                                              @RequestParam(defaultValue = "false") Boolean unpaged) {
+        if (unpaged)
+            return ResponseEntity.ok(service.getList(memberIds, dates, statusIds, programIds, sortBy, order));
         return ResponseEntity.ok(service.getList(memberIds, dates, statusIds, programIds, page, pageSize, sortBy, order, tab));
     }
 

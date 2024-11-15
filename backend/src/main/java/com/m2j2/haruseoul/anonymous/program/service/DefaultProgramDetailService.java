@@ -33,6 +33,7 @@ public class DefaultProgramDetailService implements ProgramDetailService {
         ProgramDetailProgramDto programDetailProgramDto
                 = ProgramDetailProgramDto
                 .builder()
+                .id(programId)
                 .title(program.getTitle())
                 .rating(program.getRating())
                 .price(program.getPrice())
