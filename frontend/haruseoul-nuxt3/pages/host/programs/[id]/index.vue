@@ -117,6 +117,7 @@
                       <ul>
                         <li class="list-content"><span
                             class="n-icon n-icon:globe n-deco">{{ data.programDetailProgramDto.language }}</span>
+
                         </li>
                         <li class="list-content">
                           <span
@@ -1054,6 +1055,7 @@ watchEffect(() => {
 /* 반응형 */
 
 @media (min-width: 768px) {
+
   main {
     display: flex;
     flex-direction: column;

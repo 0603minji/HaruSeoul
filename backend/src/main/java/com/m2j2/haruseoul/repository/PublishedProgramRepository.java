@@ -47,9 +47,12 @@ public interface PublishedProgramRepository extends JpaRepository<PublishedProgr
             "WHERE pp.program.member.id = :hostId")
     List<Long> findDistinctProgramIdsByHostId(@Param("hostId") Long hostId);
 
+
+    @Query("SELECT p.program.id FROM PublishedProgram p WHERE p.id = :publishedProgramId")
+    Long findProgramIdByPublishedProgramId(@Param("publishedProgramId") Long publishedProgramId);
+
     Boolean existsByProgramId(Long programId);
     Boolean existsByProgramIdAndStatusIdIn(Long programId, List<Long> statusIds);
-
 
 }
 
