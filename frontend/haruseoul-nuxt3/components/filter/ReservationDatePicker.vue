@@ -111,6 +111,12 @@ const isReservable = (dateSchedule) => {
   */
   if (!dateSchedule.schedules || dateSchedule.schedules.length === 0) return false;
 
+  // todo 불러올 공개프로그램 id중에 내 예약한 목록의 공개프로그램 id랑 일치하면 false 반환하게
+  // for (const pp of dateSchedule.schedules) {
+  //   if(pp.id === reservation.publishedId)
+  //     return false;
+  // }
+
 
   // publishedProgramListDto의 statusName이 Wait Confirm이거나 Confirmed면 예약불가능
   for (const pp of dateSchedule.schedules) {

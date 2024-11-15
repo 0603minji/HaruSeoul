@@ -63,7 +63,7 @@ const cancelReservation = async () => {
 </script>
 
 <template>
-  <div v-if="showModal" class="modal">
+  <div v-show="showModal" class="modal">
     <div class="modal-content">
       <p style="font-size: 15px; font-weight: bold">정말 예약을 취소하시겠습니까?</p>
       <div style="width: 180px; padding-left: 20px; padding-top: 15px; display: flex; justify-content: space-between">
