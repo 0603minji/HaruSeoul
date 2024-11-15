@@ -1,8 +1,6 @@
 <script setup>
-import {defineEmits, defineProps} from 'vue';
-const props = defineProps({
-  showModal: Boolean
-});
+import {defineEmits} from 'vue';
+
 const emit = defineEmits(['close']);
 // 모달 닫기
 const closeModal = () => {
@@ -11,12 +9,13 @@ const closeModal = () => {
 </script>
 
 <template>
-  <div v-show="showModal" class="modal">
+  <div class="modal">
     <div class="modal-content">
       <p style="font-size: 15px; font-weight: bold">예약 목록을 확인하시겠습니까?</p>
       <div style="width: 180px; padding-left: 20px; padding-top: 15px; display: flex; justify-content: space-between">
-        <NuxtLink to="../guest/reservations" class="n-btn n-btn:hover" style="color:#DB4455">확인</NuxtLink>
-        <button class="n-btn n-btn:hover" @click="closeModal">닫기</button>
+        <NuxtLink to="../guest/reservations"
+            class="n-btn n-btn:hover">확인</NuxtLink>
+        <button class="n-btn n-btn:hover" style="color:#DB4455" @click="closeModal">닫기</button>
       </div>
     </div>
   </div>

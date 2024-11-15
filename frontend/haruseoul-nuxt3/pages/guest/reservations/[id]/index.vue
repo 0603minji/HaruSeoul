@@ -162,9 +162,6 @@ onMounted(() => {
 });
 
 
-
-
-
 </script>
 
 <template>
@@ -209,10 +206,10 @@ onMounted(() => {
           <div class="card-main">
             <div class="img-wrapper">
               <div v-if="reservationCard.src && reservationCard.src.startsWith('uploads')" class="img-wrapper">
-                <img :src="`${config.public.apiBase}${reservationCard.src}`" alt="대표사진" />
+                <img :src="`${config.public.apiBase}${reservationCard.src}`" alt="대표사진"/>
               </div>
               <div v-else class="img-wrapper">
-                <img src="assets/image/default-program-image.png" alt="대표사진" />
+                <img src="assets/image/default-program-image.png" alt="대표사진"/>
               </div>
             </div>
 
@@ -268,7 +265,7 @@ onMounted(() => {
                   </div>
                   <div class="card-info">
                     <span class="n-icon n-icon:group n-deco">예약인원</span>
-                    <span>{{ r.groupSize }}</span>
+                    <span>{{ r.numberOfGuest }}</span>
                   </div>
                 </div>
 
@@ -562,17 +559,40 @@ onMounted(() => {
                 <span class="title">요청 정보</span>
                 <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
               </summary>
-              <div class="details">
-                <div class="info" style="flex-direction: column; align-items: center;">
-                  <span class="info-form"
-                        style="width: max-content; color: var(--color-main-3);">[ Host → Guest ]</span>
-                  <span class="info-input" style="max-width: 700px; color: var(--color-main-3)">{{
+              <div class="details" style="margin-top: 0">
+                <div class="info" style="flex-direction: column; padding: 0 14px;">
+                  <span>
+                    <span class="info-form n-icon n-icon:request"
+                          style="width: max-content;
+                          font-size: 15px;
+                          transform: scaleX(-1);
+                          --icon-size: var(--icon-size-5);
+                    "></span>
+                    <span>Host</span>
+                  </span>
+                  <span class="info-input"
+                        style="
+                        max-width: 700px;
+                        border: 1px solid black;
+                        padding: 10px;
+                        border-radius: 4px;">{{
                       requirement.hostRequirement
                     }}</span>
                 </div>
-                <div class="info" style="flex-direction: column; align-items: center;">
-                  <span class="info-form">[ Guest → Host ]</span>
-                  <span class="info-input" style="max-width: 700px;">{{
+                <div class="info" style="flex-direction: column; padding: 0 14px;">
+                  <span class="info-form n-icon n-icon:request n-deco-pos:right"
+                        style="
+                        width: 100%;
+                        font-size: 15px;
+                        --icon-size: var(--icon-size-5);
+                        justify-content: end;"
+                  >Guest</span>
+                  <span class="info-input"
+                        style="
+                        max-width: 700px;
+                        border: 1px solid black;
+                        padding: 10px;
+                        border-radius: 4px;">{{
                       requirement.guestRequirement
                     }}</span>
                 </div>

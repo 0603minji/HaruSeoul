@@ -20,7 +20,7 @@ const props = defineProps({
 });
 
 // emit
-const emit = defineEmits(['closeModal', 'openMoveReservationModal']);
+const emit = defineEmits(['closeModal', 'open-move-modal']);
 
 const reRenderTrigger = ref(false);
 
@@ -80,7 +80,10 @@ const closeModal = () => {
   }, 300); // 0.3 seconds delay (300ms)
 }
 
-const OpenMoveReservationModalHandler = () => emit('openMoveReservationModal');  // 부모에게 이벤트 전달
+// 버튼 클릭 시 부모 컴포넌트로 이벤트 전달
+const openMoveReservationModal = () => {
+  emit('open-move-modal');
+};
 </script>
 
 <template>
@@ -108,7 +111,7 @@ const OpenMoveReservationModalHandler = () => emit('openMoveReservationModal'); 
                   width: var(--width-9p);
                   height: 20px;"
                 :disabled="!selectedPublishedProgram"
-                @click="OpenMoveReservationModalHandler"
+                @click="openMoveReservationModal"
         >결제하기</button>
       </div>
     </form>

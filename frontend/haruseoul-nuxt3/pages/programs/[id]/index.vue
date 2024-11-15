@@ -1,10 +1,4 @@
 <template>
-  <Head>
-    <Script
-        type="text/javascript"
-        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=16a77f29af1bb5775a70cd85a9cfb9cc&libraries=services">
-    </Script>
-  </Head>
   <main>
     <section class="layout-body">
       <h1 class="d:none">프로그램과 어사이드</h1>
@@ -535,7 +529,8 @@
                                   :pId="programId"
                                   :hostId="data.programDetailMemberDto.hostId"
                                   :group-size-max="data.programDetailProgramDto.groupSizeMax"
-                                  @close-modal="() => { isModalVisible = ''; }"/>
+                                  @close-modal="() => { isModalVisible = ''; }"
+                                  @open-move-modal="handleShowMoveReservationModal"/>
 
           <!-- 모달창 떴을 때 배경처리   -->
           <div :class="{'active': isModalVisible}" class="backdrop"></div>
@@ -549,7 +544,7 @@
 <!--                                :group-size-max="data.programDetailProgramDto.groupSizeMax"-->
 <!--                                @close-modal="() => { isModalVisible = ''; }"/>-->
 
-        <MoveReservationModal @OpenMoveReservationModalHandler="handleOpenMoveReservationModal"/>
+        <MoveReservationModal  v-if="showMoveReservationModal" @close="showMoveReservationModal = false"/>
       </section>
     </section>
   </main>
@@ -753,9 +748,14 @@ const copyAddress = async () => {
   }
 };
 
-const handleOpenMoveReservationModal = () => {
-  showModal.value = true;  // 모달을 표시하기 위해 상태를 true로 변경
+// 모달창
+const showMoveReservationModal = ref(false); // MoveReservationModal 표시 상태
+
+// CreateReservationModal에서 발생하는 이벤트를 처리
+const handleShowMoveReservationModal = () => {
+  showMoveReservationModal.value = true; // MoveReservationModal 표시 상태 true로 설정
 };
+// -----------------------
 
 watchEffect(() => {
   console.log("Fetched data:", data.value);

@@ -33597,6 +33597,10 @@ label:has(.n-toggle.n-toggle-label\:bottom) {
     --icon: url(image/icon/repeat_one_on.svg)
 }
 
+.n-icon\:request:before {
+    --icon: url(image/icon/request.svg)
+}
+
 .n-icon\:reset:before {
     --icon: url(image/icon/reset.svg)
 }
