@@ -538,11 +538,11 @@
         </section>
         <!-- === 큰 화면 달력 =================================================================================================== -->
 <!--        <CreateReservationAside class="CreateReservationAside"-->
-<!--                                :class="{'show': isModalVisible === 'CreateReservationAside'}"-->
+<!--                                :class="{'show': modalVisible === 'CreateReservationAside'}"-->
 <!--                                :pId="programId"-->
 <!--                                :hostId="data.programDetailMemberDto.hostId"-->
 <!--                                :group-size-max="data.programDetailProgramDto.groupSizeMax"-->
-<!--                                @close-modal="() => { isModalVisible = ''; }"/>-->
+<!--                                @close-modal="() => { modalVisible = ''; }"/>-->
 
         <MoveReservationModal  v-if="showMoveReservationModal" @close="showMoveReservationModal = false"/>
       </section>
