@@ -1,8 +1,8 @@
 <script setup>
-import {ref, watch, watchEffect} from 'vue';
+import {ref, watch} from 'vue';
 import SearchableSelect from "~/components/filter/SearchableSelect.vue";
 import PublishDatePicker from "~/components/filter/PublishDatePicker.vue";
-import axios from "axios";
+import {useModal} from "~/composables/useModal.js";
 // 부모로부터 props로 전달받을 것
 // 1. 디폴트 개설할 프로그램 -> SearchableSelect
 // 2. hostId
@@ -13,14 +13,19 @@ POST host/published-programs
 * */
 
 // emit
-const emit = defineEmits(['closeModal']);
+const emit = defineEmits(['closeModal', 'submit']);
 
 // Props
 const props = defineProps({
   defaultProgramId: {
     type: Number,
     default: null
+  },
+  confirmPpPost: {
+    type: Boolean,
+    default: false
   }
+
 });
 
 watch(() => props.defaultProgramId,
@@ -50,6 +55,7 @@ const userDetails = useUserDetails();
 
 
 
+
 // === function ========================================================================================================
 // Handle selection change
 const updateSelectedProgram = (selectedOption) => {
@@ -64,8 +70,8 @@ const updateSelectedDates = (selectedOptions) => {
   console.log('          ->  selectedDates: ', selectedDates.value);
 };
 
-const submitHandler = async () => {
-  console.log('******* PublishedProgramModal: submitHandler called');
+const postPpHandler = async () => {
+  console.log('******* PublishedProgramModal: postPpHandler called');
   if (!isPublishable)
     return;
 
@@ -100,13 +106,14 @@ const submitHandler = async () => {
     console.error('         Error creating publishedProgram: ', error);
   }
 
-  // 모달창 닫기
-  closeModal();
+  openModal('completeModal');
 };
+watch(()=>props.confirmPpPost, postPpHandler); // 부모인 index의 확인창에 개설확인이 전달되면 post
 
 const closeModal = () => {
   console.log("closeModal")
   emit('closeModal');
+
 
   // Delay the re-render trigger to allow closing animation to complete
   setTimeout(() => {
@@ -114,6 +121,8 @@ const closeModal = () => {
     console.log('reRenderTrigger: ', reRenderTrigger);
   }, 300); // 0.3 seconds delay (300ms)
 }
+
+const { isModalVisible, openModal, closeModal:  closeCompleteModal } = useModal();
 </script>
 
 <template>
@@ -123,7 +132,7 @@ const closeModal = () => {
       <button @click.prevent="closeModal()" class="n-btn n-btn-border:transparent n-icon n-icon:exit">닫기</button>
     </header>
 
-    <form @submit.prevent="submitHandler" class="popup-body" action="">
+    <form @submit.prevent="emit('submit')" class="popup-body" action="">
       <!--프로그램 선택-->
       <SearchableSelect :key="reRenderTrigger" :default-program-id="props.defaultProgramId"
                         @selection-changed="updateSelectedProgram"/>
@@ -136,6 +145,11 @@ const closeModal = () => {
         </button>
       </div>
     </form>
+
+    <button @click.prevent="openModal('completeModal')">테스트</button>
+    <Modal class="onlyConfirm" :isVisible="isModalVisible('completeModal')" @confirm="()=> {closeCompleteModal('completeModal'); closeModal();}">
+      <p style="text-align: center">개설되었습니다.</p>
+    </Modal>
   </aside>
 </template>
 

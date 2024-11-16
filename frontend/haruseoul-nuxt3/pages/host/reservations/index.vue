@@ -2,7 +2,6 @@
 
 import {ref} from "vue";
 import {useRoute} from 'vue-router';
-import vClickOutside from "v-click-outside";
 import DateRangeFilterModal from "~/components/modal/DateRangeFilterModal.vue";
 import PublishProgramModal from "~/components/modal/PublishProgramModal.vue";
 import PublishedStatusFilterModal from "~/components/modal/PublishedStatusFilterModal.vue";
@@ -78,6 +77,7 @@ const createQuery = () => {
 
 // $fetch
 const fetchData = async () => {
+  console.log('fetchData called.')
   const query = createQuery();
   const data = await useDataFetch(`host/published-programs`, {query: query});
 
@@ -97,7 +97,7 @@ const fetchData = async () => {
   console.log('           >> userQuery :', userQuery)
 
   // url에 쿼리스트링 push
-  await router.push({path: route.path, query: userQuery});
+  await navigateTo({path: route.path, query: userQuery});
 
   mapFetchedData(data);
 }
@@ -106,6 +106,7 @@ const fetchData = async () => {
 const mapFetchedData = (fetchedData) => {
   publishedPrograms.value = fetchedData.publishedPrograms;
   pages.value = fetchedData.pages;
+  startNum.value = fetchedData.startNum;
   totalCount.value = fetchedData.totalCount;
   totalPages.value = fetchedData.totalPages;
   currentPageRowCount = fetchedData.currentPageRowCount;
@@ -223,18 +224,20 @@ const CancelHandler = async (pp) => {
 
   // 취소된 pp반영한 목록으로 갱신
   await fetchData();
+  // publishProgramModal reRender
+  PublishProgramModalKey.value = !PublishProgramModalKey.value;
 }
 
 
 // === 모달창 ===========================================================================================================
-const isModalVisible = ref("");
+const modalVisible = ref("");
 
-const OpenDateRangeFilterModalHandler = () => isModalVisible.value = "DateRangeFilterModal";
-const OpenPublishedStatusFilterModalHandler = () => isModalVisible.value = "PublishedStatusFilterModal";
-const OpenProgramFilterModalHandler = () => isModalVisible.value = "ProgramFilterModal";
+const OpenDateRangeFilterModalHandler = () => modalVisible.value = "DateRangeFilterModal";
+const OpenPublishedStatusFilterModalHandler = () => modalVisible.value = "PublishedStatusFilterModal";
+const OpenProgramFilterModalHandler = () => modalVisible.value = "ProgramFilterModal";
 const OpenPublishProgramModalHandler = (programId) => {
   pIdToPublish.value = programId;
-  isModalVisible.value = "PublishProgramModal";
+  modalVisible.value = "PublishProgramModal";
 }
 
 
@@ -268,6 +271,10 @@ const route = useRoute();
 const router = useRouter();
 const userDetails = useUserDetails();
 const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지 로드용
+// 모달창
+const { isModalVisible, openModal, closeModal } = useModal();
+const confirmPpPost = ref(false);
+const PublishProgramModalKey = ref(false); // 예약취소 시 리렌더링 유발용
 
 
 const hostId = userDetails.id.value; // 프론트에서 저장하고 있는 인증정보에 접근해서 얻어와야함
@@ -283,7 +290,7 @@ const totalPages = ref(0);
 let currentPageRowCount;
 let hasNextPage;
 let hasPreviousPage;
-const publishedPrograms = ref([]);
+const publishedPrograms = ref(false);
 
 
 // query에 들어가는 변수들
@@ -341,25 +348,38 @@ mapFetchedData(data.value);
 <template>
   <main>
     <!-- === 모달 =================================================================================================== -->
-    <DateRangeFilterModal :key="reRenderTrigger" :class="{'show': isModalVisible === 'DateRangeFilterModal'}"
+    <DateRangeFilterModal :key="reRenderTrigger" :class="{'show': modalVisible === 'DateRangeFilterModal'}"
                           :selectedDates="selectedDates"
-                          @close-modal="(selected) => { updateDateFilterQuery(selected); isModalVisible = '';}"/>
+                          @close-modal="(selected) => { updateDateFilterQuery(selected); modalVisible = '';}"/>
     <PublishedStatusFilterModal :key="reRenderTrigger"
-                                :class="{'show': isModalVisible === 'PublishedStatusFilterModal'}"
+                                :class="{'show': modalVisible === 'PublishedStatusFilterModal'}"
                                 :tab="tab"
                                 :selectedStatuses="selectedStatuses"
-                                @close-modal="(selected) => { updateStatusFilterQuery(selected); isModalVisible = '';}"/>
+                                @close-modal="(selected) => { updateStatusFilterQuery(selected); modalVisible = '';}"/>
     <ProgramFilterModal :key="reRenderTrigger"
-                        :class="{'show': isModalVisible === 'ProgramFilterModal'}"
+                        :class="{'show': modalVisible === 'ProgramFilterModal'}"
                         :selectedProgramIds="selectedProgramIds"
-                        @close-modal="isModalVisible = ''"
+                        @close-modal="modalVisible = ''"
                         @updateSelectedPrograms="updateProgramFilterQuery"/>
-    <PublishProgramModal :class="{'show': isModalVisible === 'PublishProgramModal'}"
+    <PublishProgramModal :key="PublishProgramModalKey"
+                         :class="{'show': modalVisible === 'PublishProgramModal'}"
                          :default-program-id="pIdToPublish"
-                         @close-modal="() => { fetchData(); isModalVisible = ''; }"/>
+                         :confirm-pp-post="confirmPpPost"
+                         @close-modal="() => { fetchData(); modalVisible = ''; }"
+                         @submit="openModal('confirmPpModal')"/>
 
     <!-- 모달창 떴을 때 배경처리   -->
-    <div :class="{'active': isModalVisible}" class="backdrop"></div>
+    <div :class="{'active': modalVisible}" class="backdrop"></div>
+
+
+    <!--  확인 모달창  -->
+    <!--  개설확인  -->
+    <Modal :isVisible="isModalVisible('confirmPpModal')" @close="closeModal('confirmPpModal')"
+           @confirm="() => {confirmPpPost=!confirmPpPost;
+             console.log('index. Modal emit confirm and callback func called. confirmPpPost: ', confirmPpPost);
+             closeModal('confirmPpModal');}">
+      <p>개설하시겠습니까?</p>
+    </Modal>
     <!-- ============================================================================================================= -->
 
 
@@ -576,7 +596,7 @@ mapFetchedData(data.value);
             <!-- 기간 필터 -->
             <DateRangeAsideFilter :key="reRenderTrigger"
                                   :selectedDates="selectedDates"
-                                  @emit-selected-dates="(selected) => { updateDateFilterQuery(selected); isModalVisible = '';}"/>
+                                  @emit-selected-dates="(selected) => { updateDateFilterQuery(selected); modalVisible = '';}"/>
             <span class="separator"></span>
             <!-- 프로그램 상태 필터 -->
             <PublishedStatusAsideFilter :key="reRenderTrigger"
