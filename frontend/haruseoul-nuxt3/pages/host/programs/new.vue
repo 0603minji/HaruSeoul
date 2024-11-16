@@ -576,7 +576,7 @@ const sendCreateRequest = async () => {
     const response = await axios.post("http://localhost:8080/api/v1/host/programs", formData, {
       headers: {
         Authorization: `Bearer ${token}`,
-        // "Content-Type": "application/json"
+        // "Content-Type": "multipart/form-data"
       },
     });
 

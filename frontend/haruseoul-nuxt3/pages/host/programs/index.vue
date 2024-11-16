@@ -17,28 +17,217 @@
           <section class="n-filter bg-color:base-1 padding-x:6">
             <h1 class="d:none">필터</h1>
 
-            <div class="overflow-x:auto">
+            <div class="overflow-x:visible">
               <ul class="item-wrapper padding-y:5">
-                <li>
-                  <a href=""
-                     class="n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:search n-icon-size:1 n-deco n-deco-gap:1">프로그램</a>
+                <!-- 프로그램 필터 버튼 -->
+                <li class="filter-item">
+                  <div
+                      :class="['n-btn', 'n-btn-pg-filter', 'n-btn:hover', 'n-icon', 'n-icon:pending', 'n-icon-size:1', 'n-deco', 'n-deco-gap:1', { active: isProgramFilterActive }]"
+                      @click="toggleDropdown('program')"
+                  >
+                    프로그램
+                  </div>
+                  <div v-if="activeDropdown === 'program'" class="dropdown-menu">
+                    <div class="d:flex jc:space-between">
+                      <h3>프로그램 필터</h3>
+                      <span @click.prevent="toggleDropdown" class="n-icon n-icon:exit cursor:pointer"></span>
+                    </div>
+                    <div class="custom-dropdown">
+                      <input
+                          type="text"
+                          id="program-select"
+                          class="dropdown-search"
+                          placeholder="프로그램 검색"
+                          v-model="searchQuery"
+                          @focus="openDropdown"
+                          @input="filterProgramsBySearch"
+                      />
+
+                      <div v-if="isDropdownOpen" class="dropdown-list">
+                        <div class="dropdown-header">
+                          <span>프로그램 선택</span>
+                          <button @click="closeDropdown" class="n-icon n-icon:arrow_up"></button>
+                        </div>
+                        <label v-for="pt in filteredPrograms" :key="pt.id" class="dropdown-item">
+                          <input
+                              type="checkbox"
+                              :value="pt.id"
+                              v-model="selectedProgramIds"
+                              @change="applyProgramFilter"
+                          />
+                          {{ pt.title }}
+                        </label>
+                      </div>
+
+                    </div>
+                  </div>
                 </li>
-                <li>
-                  <a href=""
-                     class=" n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:pending n-icon-size:1 n-deco n-deco-gap:1">프로그램
-                    상태</a>
+
+                <!-- 프로그램 상태 필터 버튼 -->
+                <li class="filter-item">
+                  <div
+                      :class="['n-btn', 'n-btn-pg-filter', 'n-btn:hover', 'n-icon', 'n-icon:pending', 'n-icon-size:1', 'n-deco', 'n-deco-gap:1', { active: isStatusFilterActive }]"
+                      @click="toggleDropdown('status')"
+                  >
+                    프로그램 상태
+                  </div>
+                  <div v-if="activeDropdown === 'status'" class="dropdown-menu">
+                    <div class="d:flex jc:space-between">
+                      <h3>프로그램 필터</h3>
+                      <span @click.prevent="toggleDropdown" class="n-icon n-icon:exit cursor:pointer"></span>
+                    </div>
+                    <label><input class="statusCheckboxAll" type="checkbox"
+                                  @change="selectStatusAll"/>전체</label>
+                    <label>
+                      <input
+                          type="checkbox"
+                          :value="'In Progress'"
+                          v-model="selectedStatus"
+                          @change="selectStatus"
+                      />
+                      작성중
+                    </label>
+                    <label>
+                      <input
+                          type="checkbox"
+                          :value="'Unpublished'"
+                          v-model="selectedStatus"
+                          @change="selectStatus"
+                      />
+                      작성완료
+                    </label>
+                    <label>
+                      <input
+                          type="checkbox"
+                          :value="'Published'"
+                          v-model="selectedStatus"
+                          @change="selectStatus"
+                      />
+                      모집중
+                    </label>
+                  </div>
                 </li>
-                <li>
-                  <a href=""
-                     class=" n-btn n-btn-pg-filter n-btn:hover n-icon n-icon:category n-icon-size:1 n-deco n-deco-gap:1">카테고리</a>
+
+                <!-- 카테고리 필터 버튼 -->
+                <li class="filter-item">
+                  <div
+                      :class="['n-btn', 'n-btn-pg-filter', 'n-btn:hover', 'n-icon', 'n-icon:pending', 'n-icon-size:1', 'n-deco', 'n-deco-gap:1', { active: isCategoryFilterActive }]"
+                      @click="toggleDropdown('category')"
+                  >
+                    카테고리
+                  </div>
+                  <div v-if="activeDropdown === 'category'" class="dropdown-menu">
+                    <div class="d:flex jc:space-between">
+                      <h3>프로그램 필터</h3>
+                      <span @click.prevent="toggleDropdown" class="n-icon n-icon:exit cursor:pointer"></span>
+                    </div>
+                    <label>
+                      <input
+                          class="categoryAll"
+                          type="checkbox"
+                          @change="selectCategoryAll"
+                      />
+                      All
+                    </label>
+                    <label v-for="c in categories" :key="c.id">
+                      <input
+                          type="checkbox"
+                          :value="c.id"
+                          v-model="selectedCategories"
+                          @change="selectCategory"
+                      />
+                      {{ c.name }}
+                    </label>
+                  </div>
                 </li>
               </ul>
             </div>
 
+            <!-- 모달 창 -->
+            <div v-if="isModalOpen" class="filter-modal">
+              <div class="modal-content">
+                <button class="close-btn" @click="closeModal">✖</button>
+
+                <!-- 프로그램 필터 모달 -->
+                <div v-if="activeFilter === 'program'">
+                  <h3>프로그램 필터</h3>
+                  <div>
+                    <label v-for="pt in filteredPrograms" :key="pt.id">
+                      <input
+                          type="checkbox"
+                          :value="pt.id"
+                          v-model="selectedProgramIds"
+                          @change="applyProgramFilter"
+                      />
+                      {{ pt.title }}
+                    </label>
+                  </div>
+                </div>
+
+                <!-- 프로그램 상태 필터 모달 -->
+                <div v-if="activeFilter === 'status'">
+                  <h3>프로그램 상태 필터</h3>
+                  <div>
+                    <label>
+                      <input
+                          type="checkbox"
+                          :value="'In Progress'"
+                          v-model="selectedStatus"
+                          @change="selectStatus"
+                      />
+                      작성중
+                    </label>
+                    <label>
+                      <input
+                          type="checkbox"
+                          :value="'Unpublished'"
+                          v-model="selectedStatus"
+                          @change="selectStatus"
+                      />
+                      작성완료
+                    </label>
+                    <label>
+                      <input
+                          type="checkbox"
+                          :value="'Published'"
+                          v-model="selectedStatus"
+                          @change="selectStatus"
+                      />
+                      모집중
+                    </label>
+                  </div>
+                </div>
+
+                <!-- 카테고리 필터 모달 -->
+                <div v-if="activeFilter === 'category'">
+                  <h3>카테고리 필터</h3>
+                  <div>
+                    <label>
+                      <input
+                          class="categoryAll"
+                          type="checkbox"
+                          @change="selectCategoryAll"
+                      />
+                      All
+                    </label>
+                    <label v-for="c in categories" :key="c.id">
+                      <input
+                          type="checkbox"
+                          :value="c.id"
+                          v-model="selectedCategories"
+                          @change="selectCategory"
+                      />
+                      {{ c.name }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="reset-box">
               <div class="gradation"></div>
               <div class="btn-box">
-              <span style="cursor: pointer" class="reset-btn icon-box n-deco1 n-icon n-icon:reset">
+              <span @click.prevent="resetFilters" style="cursor: pointer"
+                    class="reset-btn icon-box n-deco1 n-icon n-icon:reset">
                 reset
               </span>
               </div>
@@ -153,21 +342,27 @@
               </li>
             </ul>
 
-            <!-- 페이지네이션 버튼 -->
-            <!--            <div class="pagination">-->
-            <!--              <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">-->
-            <!--                〈-->
-            <!--              </button>-->
+            <div class="pagination">
+              <!-- 이전 버튼 -->
+              <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
+                〈
+              </button>
 
-            <!--              <button v-for="page in visiblePages" :key="page" @click="goToPage(page)"-->
-            <!--                      :class="{ active: page === currentPage }">-->
-            <!--                {{ page }}-->
-            <!--              </button>-->
+              <!-- 페이지 번호 버튼 -->
+              <button
+                  v-for="page in visiblePages"
+                  :key="page"
+                  @click="goToPage(page)"
+                  :class="{ active: page === currentPage }">
+                {{ page }}
+              </button>
 
-            <!--              <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPageCount">-->
-            <!--                〉-->
-            <!--              </button>-->
-            <!--            </div>-->
+              <!-- 다음 버튼 -->
+              <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPageCount">
+                〉
+              </button>
+            </div>
+
           </section>
         </section>
 
@@ -177,7 +372,8 @@
           <header class="n-title">
             <h1 class="">Filter</h1>
             <div>
-              <button class="n-icon n-icon:reset" style="--icon-color: var(--color-sub-1); cursor: pointer;">초기화
+              <button class="n-icon n-icon:reset" @click.prevent="resetFilters"
+                      style="--icon-color: var(--color-sub-1); cursor: pointer;">초기화
               </button>
             </div>
           </header>
@@ -191,11 +387,24 @@
 
               <form action="" class="form">
                 <div class="modal-checkbox">
-                  <label><input class="categoryAll" type="checkbox"
-                                @change="selectCategoryAll"/>All</label>
+                  <label>
+                    <input
+                        class="categoryAll"
+                        type="checkbox"
+                        @change="selectCategoryAll"
+                    />
+                    All
+                  </label>
+
                   <label v-for="c in categories" :key="c.id">
-                    <input class="categoryIds" type="checkbox" @change="selectCategory"
-                           :value="c.id" v-model="selectedCategories"/>{{ c.name }}
+                    <input
+                        class="categoryIds"
+                        type="checkbox"
+                        @change="selectCategory"
+                        :value="c.id"
+                        v-model="selectedCategories"
+                    />
+                    {{ c.name }}
                   </label>
                 </div>
               </form>
@@ -206,19 +415,37 @@
                 <span class="title">프로그램</span>
                 <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
               </summary>
+              <div class="custom-dropdown">
+                <input
+                    type="text"
+                    id="program-select"
+                    class="dropdown-search"
+                    placeholder="프로그램 검색"
+                    v-model="searchQuery"
+                    @focus="openDropdown"
+                    @input="filterProgramsBySearch"
+                />
 
-              <form action="" class="form">
-                <div class="modal-checkbox">
-
-                  <div>
-                    <label v-for="pt in programTitles" :key="pt.id">
-                      <input type="checkbox"/>{{ pt.title }}
-                    </label>
+                <div v-if="isDropdownOpen" class="dropdown-list">
+                  <div class="dropdown-header">
+                    <span>프로그램 선택</span>
+                    <button @click="closeDropdown" class="n-icon n-icon:arrow_up"></button>
                   </div>
-
+                  <label v-for="pt in filteredPrograms" :key="pt.id" class="dropdown-item">
+                    <input
+                        type="checkbox"
+                        :value="pt.id"
+                        v-model="selectedProgramIds"
+                        @change="applyProgramFilter"
+                    />
+                    {{ pt.title }}
+                  </label>
                 </div>
-              </form>
+
+              </div>
             </details>
+
+
             <!-- 프로그램 상태 필터 -->
             <details open class="filter">
               <summary class="collapse">
@@ -264,7 +491,18 @@ const cardsPerPage = 6; //  한페이지당 표시할 프로그램 카드 수
 const router = useRouter();
 const activeMenuIndex = ref({});
 const programTitles = ref({});
+const searchQuery = ref(""); // 검색어 상태
+const filteredPrograms = ref([]); // 검색 결과 상태
+const isDropdownOpen = ref(false);
+const isModalOpen = ref(false); // 모달 열림 상태
+const activeFilter = ref("");
 
+const activeDropdown = ref(""); // 현재 활성화된 드롭다운 ('program', 'status', 'category')
+
+// 드롭다운 열기/닫기
+const toggleDropdown = (filter) => {
+  activeDropdown.value = activeDropdown.value === filter ? "" : filter;
+};
 
 //============= Lifecycle Functions ================
 onMounted(() => {
@@ -273,6 +511,13 @@ onMounted(() => {
   fetchCategories();
   fetchProgramsTitle();
 
+  const allCheckbox = document.querySelector(".categoryAll");
+  if (allCheckbox) {
+    allCheckbox.checked = true; // All 기본 선택
+  }
+
+
+  filteredPrograms.value = programTitles.value;
 });
 
 //============= Data Functions =======================
@@ -373,24 +618,6 @@ const toggleMenu = (index) => {
   activeMenuIndex.value = {[index]: !activeMenuIndex.value[index]};
 };
 
-const selectCategoryAll = async () => {
-  selectedCategories.value = [];
-  const checkboxes = document.querySelectorAll(".categoryIds");
-  checkboxes.forEach((checkbox) => {
-    checkbox.checked = false;
-  });
-
-  try {
-    await fetchPrograms(
-        null,
-        selectedProgramIds.value.join(","),
-        selectedStatus.value.join(","),
-        page
-    );
-  } catch (error) {
-    console.error("Error fetching all categories:", error);
-  }
-};
 
 const getImageSrc = (program) => {
   const BASE_URL = 'http://localhost:8080/api/v1/'
@@ -403,23 +630,92 @@ const getImageSrc = (program) => {
 const selectCategory = async () => {
   const allCheckbox = document.querySelector(".categoryAll");
   if (allCheckbox) {
-    allCheckbox.checked = false;
+    allCheckbox.checked = false; // All 체크박스를 해제
   }
 
-  if (selectedCategories.value.length > 0) {
-    try {
-      await fetchPrograms(
-          selectedCategories.value.join(","),
-          selectedProgramIds.value.join(","),
-          selectedStatus.value.join(","),
-          null
-      );
-    } catch (error) {
-      console.error("Error fetching selected categories:", error);
-    }
-  } else {
-    console.log("No categories selected.");
+  try {
+    await fetchPrograms(
+        selectedCategories.value.join(","), // 선택된 카테고리
+        selectedProgramIds.value.join(","),
+        selectedStatus.value.join(",")
+    );
+  } catch (error) {
+    console.error("Error filtering programs by category:", error);
   }
+};
+
+
+const selectCategoryAll = async () => {
+  selectedCategories.value = []; // 다른 선택된 카테고리 해제
+
+  const checkboxes = document.querySelectorAll(".categoryIds");
+  checkboxes.forEach((checkbox) => {
+    checkbox.checked = false; // 모든 체크박스를 해제
+  });
+
+  try {
+    await fetchPrograms(
+        null, // 선택된 카테고리 없음
+        selectedProgramIds.value.join(","),
+        selectedStatus.value.join(",")
+    );
+  } catch (error) {
+    console.error("Error resetting to all categories:", error);
+  }
+};
+
+const filterProgramsBySearch = () => {
+  // 검색어를 포함하는 프로그램만 필터링
+  const searchFiltered = programTitles.value.filter((program) =>
+      program.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+
+  // 선택된 항목을 맨 위로 정렬
+  filteredPrograms.value = searchFiltered.sort((a, b) => {
+    const isSelectedA = selectedProgramIds.value.includes(a.id);
+    const isSelectedB = selectedProgramIds.value.includes(b.id);
+
+    // 선택된 항목은 맨 위로, 나머지는 그대로
+    if (isSelectedA && !isSelectedB) return -1;
+    if (!isSelectedA && isSelectedB) return 1;
+    return 0;
+  });
+};
+
+const applyProgramFilter = async () => {
+  try {
+    // 선택된 항목을 포함하여 필터링된 프로그램 목록 재정렬
+    filterProgramsBySearch();
+
+    // 서버 호출
+    await fetchPrograms(
+        selectedCategories.value.join(","),
+        selectedProgramIds.value.join(","),
+        selectedStatus.value.join(",")
+    );
+  } catch (error) {
+    console.error("Error applying program filter:", error);
+  }
+};
+
+const openDropdown = () => {
+  isDropdownOpen.value = true;
+};
+
+// 드롭다운 닫기
+const closeDropdown = () => {
+  isDropdownOpen.value = false;
+};
+
+const openModal = (filter) => {
+  activeFilter.value = filter; // 현재 활성화된 필터 설정
+  isModalOpen.value = true; // 모달 열기
+};
+
+// 모달 닫기
+const closeModal = () => {
+  isModalOpen.value = false; // 모달 닫기
+  activeFilter.value = ""; // 활성화된 필터 초기화
 };
 
 
@@ -465,6 +761,41 @@ const selectStatus = async () => {
   }
 };
 
+const resetFilters = async () => {
+  // 모든 필터 초기화
+  searchQuery.value = ""; // 검색어 초기화
+  selectedProgramIds.value = []; // 선택된 프로그램 ID 초기화
+  selectedCategories.value = []; // 선택된 카테고리 초기화
+  selectedStatus.value = []; // 선택된 상태 초기화
+
+  // 모든 체크박스 해제
+  const categoryCheckboxes = document.querySelectorAll(".categoryIds, .categoryAll");
+  categoryCheckboxes.forEach((checkbox) => (checkbox.checked = false));
+
+  const statusCheckboxes = document.querySelectorAll(".statusCheckbox, .statusCheckboxAll");
+  statusCheckboxes.forEach((checkbox) => (checkbox.checked = false));
+
+  // 프로그램 목록 초기화
+  filteredPrograms.value = programTitles.value;
+
+  try {
+    // 전체 필터를 비운 상태로 서버에서 프로그램 다시 로드
+    await fetchPrograms(null, null, null);
+  } catch (error) {
+    console.error("Error resetting filters:", error);
+  }
+};
+
+// 프로그램 필터 활성화 여부
+const isProgramFilterActive = computed(() => selectedProgramIds.value.length > 0);
+
+// 프로그램 상태 필터 활성화 여부
+const isStatusFilterActive = computed(() => selectedStatus.value.length > 0);
+
+// 카테고리 필터 활성화 여부
+const isCategoryFilterActive = computed(() => selectedCategories.value.length > 0);
+
+
 watchEffect(() => {
   if (programs.value && programs.value.images && programs.value.images.length > 0) {
     const mainImage = programs.value.images.find(image => image.order === 1);
@@ -473,48 +804,130 @@ watchEffect(() => {
 });
 
 
-// const goToPage = async (page) => {
-//   if (page >= 1 && page <= totalPageCount.value) {
-//     currentPage.value = page;
-//     await fetchPrograms(
-//         selectedCategories.value.join(","),
-//         selectedStatus.value.join(","),
-//         // selectedProgramIds.value.join(","),
-//         page
-//     );
-//   }
-// };
-//
-//
-// const visiblePages = computed(() => {
-//   const pages = [];
-//   let startPage;
-//   let endPage;
-//
-//   if (currentPage.value <= 3) {
-//     // 1, 2, 또는 3 페이지일 경우 항상 1부터 5까지 표시
-//     startPage = 1;
-//     endPage = Math.min(totalPageCount.value, 5);
-//   } else if (currentPage.value > totalPageCount.value - 3) {
-//     // 마지막 3개 페이지에 가까울 때는 끝에서 5개 페이지 표시
-//     startPage = Math.max(1, totalPageCount.value - 4);
-//     endPage = totalPageCount.value;
-//   } else {
-//     // 그 외의 경우 현재 페이지를 중심으로 앞뒤로 2페이지씩 표시
-//     startPage = currentPage.value - 2;
-//     endPage = currentPage.value + 2;
-//   }
-//
-//   for (let page = startPage; page <= endPage; page++) {
-//     pages.push(page);
-//   }
-//   return pages;
-// });
+const goToPage = async (page) => {
+  // 페이지 번호가 유효한 경우에만 이동
+  if (page >= 1 && page <= totalPageCount.value) {
+    currentPage.value = page; // 현재 페이지 업데이트
+    try {
+      await fetchPrograms(
+          selectedCategories.value.join(","),
+          selectedProgramIds.value.join(","),
+          selectedStatus.value.join(","),
+          page // 요청할 페이지 번호
+      );
+    } catch (error) {
+      console.error("Error while fetching programs for page:", error);
+    }
+  }
+};
+
+
+const visiblePages = computed(() => {
+  const pages = [];
+  const total = totalPageCount.value; // 총 페이지 수
+  const current = currentPage.value; // 현재 페이지 번호
+  let startPage;
+  let endPage;
+
+  // 시작 페이지와 끝 페이지 계산
+  if (total <= 5) {
+    // 페이지가 5개 이하인 경우 모두 표시
+    startPage = 1;
+    endPage = total;
+  } else if (current <= 3) {
+    // 현재 페이지가 1~3인 경우 첫 5개 페이지 표시
+    startPage = 1;
+    endPage = 5;
+  } else if (current > total - 3) {
+    // 현재 페이지가 마지막 3개 중 하나인 경우 마지막 5개 페이지 표시
+    startPage = total - 4;
+    endPage = total;
+  } else {
+    // 그 외의 경우 현재 페이지를 기준으로 앞뒤 2개씩 표시
+    startPage = current - 2;
+    endPage = current + 2;
+  }
+
+  // 페이지 번호 배열 생성
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(i);
+  }
+  return pages;
+});
+
 
 
 </script>
 
 <style scoped>
+
+.filter-item {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  width: 200px;
+}
+
+.dropdown-menu h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.dropdown-menu label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.dropdown-menu input {
+  margin-right: 5px;
+}
+
+.n-btn:hover + .dropdown-menu {
+  display: block;
+}
+
+
+.filter-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
 
 .menu-dropdown {
   position: absolute;
@@ -533,6 +946,55 @@ watchEffect(() => {
   padding: 0;
   margin: 0;
 }
+
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+.dropdown-search {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #ccc;
+}
+
+.dropdown-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 0 0 4px 4px;
+  background-color: #fff;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.dropdown-item input {
+  margin-right: 10px;
+}
+
 
 .menu-dropdown li {
   padding: 8px 12px;

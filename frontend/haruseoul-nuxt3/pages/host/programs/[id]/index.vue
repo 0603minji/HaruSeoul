@@ -293,20 +293,20 @@
                   <section>
                     <h1>포함사항</h1>
                     <div class="list-container">
-                      <ul v-if="data.programDetailProgramDto.inclusion">
+                      <ul v-if="data.programDetailProgramDto.inclusion" class="d:flex fl-dir:column">
                         <li v-for="(item, index) in data.programDetailProgramDto.inclusion.split('\n')"
                             :key="index"
-                            class="list-content">
+                            class="list-content n-icon n-icon:success-circle-green">
                           {{ item }}
                         </li>
                       </ul>
 
                     </div>
                     <div class="list-container">
-                      <ul v-if="data.programDetailProgramDto.exclusion">
+                      <ul v-if="data.programDetailProgramDto.exclusion" class="d:flex fl-dir:column">
                         <li v-for="(item, index) in data.programDetailProgramDto.exclusion.split('\n')"
                             :key="index"
-                            class="list-content">
+                            class="list-content n-icon n-icon:error">
                           {{ item }}
                         </li>
                       </ul>
@@ -958,8 +958,6 @@ watchEffect(() => {
       width: 1em;
       /* 점과 텍스트 사이의 간격 */
       padding-left: var(--gap-3);
-      margin-left: -1.5em;
-      /* 점을 왼쪽으로 이동 */
     }
   }
 
