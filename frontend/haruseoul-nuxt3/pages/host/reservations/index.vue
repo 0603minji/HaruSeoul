@@ -28,6 +28,21 @@ const formatDate = (dateString) => {
   return `${year}.${month}.${day} ${weekday}`;
 };
 
+const translateStatusNameToKorean = (statusName) => {
+  if (statusName === 'On Going')
+    return '모집 중'
+  else if (statusName === 'Urgent')
+    return '폐지임박'
+  else if (statusName === 'Finished')
+    return '종료됨'
+  else if (statusName === 'Canceled')
+    return '취소됨'
+  else if (statusName === 'Wait Confirm')
+    return '예약확정 대기'
+  else if (statusName === 'Confirmed')
+    return '예약확정'
+}
+
 // 한국날짜 D-day("2024-11-26") 입력하면 현재 한국시간 기준으로 d-day계산
 const calculateKoreanDDay = (enteredDate) => {
   const koreaTimeOffset = 9 * 60 * 60 * 1000; // UTC+9 in minutes
@@ -601,7 +616,7 @@ watchEffect(() => {
                       'wait-confirm': pp.statusName === 'Wait Confirm',
                       'finished': pp.statusName === 'Finished'}
                     ">
-                      {{ pp.statusName }}
+                      {{ translateStatusNameToKorean(pp.statusName) }}
                     </span>
                   </div>
                   <div class="right">
