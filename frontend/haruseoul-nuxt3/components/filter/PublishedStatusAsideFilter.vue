@@ -25,6 +25,21 @@ watchEffect(() => {
   selectedStatuses.value = props.selectedStatuses;
 })
 
+const translateStatusNameToKorean = (statusName) => {
+  if (statusName === 'On Going')
+    return '모집 중'
+  else if (statusName === 'Urgent')
+    return '폐지임박'
+  else if (statusName === 'Finished')
+    return '종료됨'
+  else if (statusName === 'Canceled')
+    return '취소됨'
+  else if (statusName === 'Wait Confirm')
+    return '예약확정 대기'
+  else if (statusName === 'Confirmed')
+    return '예약확정'
+}
+
 // Computed property to check if a status should be disabled based on the tab
 const isStatusDisabled = (StatusName) => {
   // console.log('isStatusDisabled called. tab: ', props.tab);
@@ -91,7 +106,7 @@ const {data} = await useAuthFetch(`host/published-programs/status`);
                  :disabled="isStatusDisabled(status.name)"
                  @change="onOptionChange"
                  :value="status.id">
-          <span>{{ status.name }}</span>
+          <span>{{ translateStatusNameToKorean(status.name) }}</span>
         </label>
       </li>
     </ul>
