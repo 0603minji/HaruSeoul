@@ -89,7 +89,7 @@
 
         <div class="button-group">
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <a class="n-btn n-btn-bg-color:main" href="#detail">다음</a>
+          <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#detail')">다음</div>
         </div>
       </section>
 
@@ -216,9 +216,9 @@
         </div>
 
         <div class="button-group">
-          <div><a class="n-btn n-btn-bg-color:main" href="#intro">이전</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#intro')">이전</div></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#course">다음</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#course')">다음</div></div>
         </div>
 
       </section>
@@ -235,14 +235,8 @@
               @updateRoute="updateRoute"
               @validationPassed="handleValidation"
           />
-          <!--
-          자식 컴포넌트인 RouteTemplete에 order라는 props를 전달
-          @updateRoute : 이벤트 리스너
-          자식 컴포넌트에서 updateRoute라는 커스텀 이벤트가 발생하면 부모 컴포넌트가 이를 감지하여 updateRoute라는 메서드를 실행
-          $event: 자식 컴포넌트에서 전달된 데이터. 이벤트가 발생할 때 자동으로 $event라는 객체에 해당 데이터를 담아서 전달
-          -->
         </div>
-        <div class="map">지도</div>
+<!--        <div class="map">지도</div>-->
         <div class="d:flex jc:end m-top:5">
           <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center"
                   @click.prevent="addRouteFunction">+
@@ -250,9 +244,9 @@
           </button>
         </div>
         <div class="button-group">
-          <div><a class="n-btn n-btn-bg-color:main" href="#detail">이전</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#detail')">이전</div></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">다음</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#inclusion')">다음</div></div>
         </div>
         <!-- =================== route 종료 ======================== -->
       </section>
@@ -286,9 +280,9 @@
         </div>
 
         <div class="button-group">
-          <div><a class="n-btn n-btn-bg-color:main" href="#course">이전</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#course')">이전</div></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#caution">다음</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#caution')">다음</div></div>
         </div>
       </section>
 
@@ -326,9 +320,9 @@
           <p class="text-align:end p-bottom:4">{{ programCreateDto.requirement.length }}/ 1000</p>
         </div>
         <div class="button-group">
-          <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">이전</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#inclusion')">이전</div></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#image">다음</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#image')">다음</div></div>
         </div>
       </section>
 
@@ -431,6 +425,7 @@ onMounted(() => {
   if (!window.location.hash) {
     window.location.hash = '#intro';
   }
+  activeSection.value = window.location.hash;
   loadProgramData();
   fetchCategories();
 })
@@ -447,6 +442,16 @@ const updateRoute = (index, updatedRoute) => {
 //  호출될 때마다 routeComponentCount 값을 증가
 const addRouteFunction = () => {
   routeComponentCount.value++;
+    programCreateDto.routes.push({
+      title: '',
+      address: '',
+      description: '',
+      startTimeHour: '00',
+      startTimeMinute: '00',
+      duration: 0,
+      transportationId: null,
+      transportationDuration: 0
+    });
 }
 
 // const handleValidation = (index, isValid) => {
@@ -629,7 +634,8 @@ const loadProgramData = async () => {
         duration: 0,
         transportationId: 0,
         transportationDuration: 0
-      });
+      }
+      );
     };
 
     previewImages.value = (data.src || []).map(src => `http://localhost:8080/api/v1/${src}`);

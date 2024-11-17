@@ -46,7 +46,7 @@
                       <div v-if="isDropdownOpen" class="dropdown-list">
                         <div class="dropdown-header">
                           <span>프로그램 선택</span>
-                          <button @click="closeDropdown" class="n-icon n-icon:arrow_up"></button>
+                          <button @click="closeDropdown" class="n-icon n-icon:arrow_up cursor:pointer"></button>
                         </div>
                         <label v-for="pt in filteredPrograms" :key="pt.id" class="dropdown-item">
                           <input
@@ -429,7 +429,7 @@
                 <div v-if="isDropdownOpen" class="dropdown-list">
                   <div class="dropdown-header">
                     <span>프로그램 선택</span>
-                    <button @click="closeDropdown" class="n-icon n-icon:arrow_up"></button>
+                    <button @click="closeDropdown" class="n-icon n-icon:arrow_up cursor:pointer"></button>
                   </div>
                   <label v-for="pt in filteredPrograms" :key="pt.id" class="dropdown-item">
                     <input
