@@ -43,6 +43,8 @@ const confirmModal = () => {
 }
 
 .modal-content {
+  position: relative;
+  z-index: 100;
   min-width: 300px;
   background: white;
   padding: 30px;
