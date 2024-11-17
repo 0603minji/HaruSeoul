@@ -152,7 +152,7 @@ const updateDateFilterQuery = (SelectedDates) => {
       )
       .join(",");
   console.log('   ->  dates쿼리: ', dates.value);
-
+  page.value = "1";
   fetchData();
 }
 
@@ -161,6 +161,7 @@ const updateStatusFilterQuery = (SelectedStatuses) => {
   selectedStatuses.value = SelectedStatuses;
   console.log('   -> selectedStatuses: ', selectedStatuses.value)
   statuses.value = SelectedStatuses.join(",");
+  page.value = "1";
   fetchData();
 }
 
@@ -169,6 +170,7 @@ const updateProgramFilterQuery = (selected) => {
   console.log('selected: ', selected) // [{id: , title: }]
   selectedProgramIds.value = selected.map(program => String(program.id)); // ["1", "2"...]
   pIds.value = selectedProgramIds.value.join(","); // '1,2,3...'
+  page.value = "1";
   fetchData();
 }
 
@@ -231,6 +233,49 @@ const CancelHandler = async (pp) => {
   PublishProgramModalKey.value = !PublishProgramModalKey.value;
 }
 
+// 예약확정
+const confirmHandler = async (pp) => {
+  console.log('   confirmHandler called')
+
+  // 최대인원 > 현재인원 : 게스트들에게 예약확정 동의요청 보내기
+  if (pp.groupSizeMax > pp.groupSizeCurrent) {
+    requestGuestApproval();
+    openModal('completeRequestGuestApproval');
+    return;
+  }
+
+  console.log('          ->  Put host/published-programs');
+
+  // publishedProgramUpdateDto
+  const publishedProgramUpdateDto = {
+    "id": pp.id,
+    "groupSizeCurrent": pp.groupSizeCurrent,
+    "statusId": 6
+  }
+
+  let response = await useDataFetch("host/published-programs", {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: publishedProgramUpdateDto
+  });
+  console.log('          PublishedProgram Update result: ', response);
+
+  // 예약확정 확인 모달창
+  openModal('completeConfirmModal');
+
+  // 취소된 pp반영한 목록으로 갱신
+  await fetchData();
+  // publishProgramModal reRender
+  PublishProgramModalKey.value = !PublishProgramModalKey.value;
+}
+
+// todo 게스트들에게 예약확정 동의요청보내기
+const requestGuestApproval = () => {
+  console.log('   requestGuestApproval called')
+}
+
 
 // === 모달창 ===========================================================================================================
 const modalVisible = ref("");
@@ -284,6 +329,7 @@ const hostId = userDetails.id.value; // 프론트에서 저장하고 있는 인�
 console.log('hostId: ', hostId)
 const pIdToPublish = ref(null); // 일정추가, 추가개설할 pubishedprogramId
 const ppToCancel = ref(null); // 예약취소할 프로그램 정보를 모달창으로 전달
+const ppToConfirm = ref(null); // 예약확정할 프로그램 정보를 모달창으로 전달
 
 // PublishedProgramResponseDto
 const pages = ref([1, 2, 3, 4, 5]); // 페이지네이션
@@ -346,6 +392,14 @@ const {data} = await useAuthFetch(`host/published-programs`, {query: createQuery
 
 // data.value에 PublishedProgramResponseDto가 담겨있음
 mapFetchedData(data.value);
+
+watchEffect(() => {
+  console.log('selected 확인용===========================================================================')
+  console.log('dates', selectedDates.value)
+  console.log('programIds', selectedProgramIds.value)
+  console.log('statuses', selectedStatuses.value)
+  console.log('selected =================================================================================')
+})
 </script>
 
 <template>
@@ -375,7 +429,7 @@ mapFetchedData(data.value);
     <div :class="{'active': modalVisible}" class="backdrop"></div>
 
 
-    <!--  확인 모달창  -->
+    <!--  확인 모달창 ================================================================================================ -->
     <!--  개설확인  -->
     <Modal :isVisible="isModalVisible('confirmPpModal')" @close="closeModal('confirmPpModal')"
            @confirm="() => {confirmPpPost=!confirmPpPost;
@@ -388,12 +442,32 @@ mapFetchedData(data.value);
     <Modal :isVisible="isModalVisible('confirmCancelModal')" @close="closeModal('confirmCancelModal')"
            @confirm="() => {CancelHandler(ppToCancel); closeModal('confirmCancelModal');}">
       <p v-if="ppToCancel.groupSizeCurrent > 0" style="color: var(--color-red-1)">프로그램을 예약한 게스트가 존재합니다. ({{ ppToCancel.groupSizeCurrent }} 명)</p>
+      <p v-if="ppToCancel.statusName==='Confirmed'" style="color: var(--color-red-1)">예약확정된 프로그램을 취소할 경우 페널티가 있을 수 있습니다.</p>
       <p>예약을 취소하시겠습니까?</p>
     </Modal>
     <Modal class="onlyConfirm" :isVisible="isModalVisible('completeCancelModal')" @confirm="closeModal('completeCancelModal')">
       <p>예약이 취소되었습니다.</p>
     </Modal>
 
+    <!--  예약확정확인  -->
+    <Modal :isVisible="isModalVisible('confirmConfirmModal')" @close="closeModal('confirmConfirmModal')"
+           @confirm="() => {confirmHandler(ppToConfirm); closeModal('confirmConfirmModal');}">
+      <div v-if="ppToConfirm.groupSizeCurrent < ppToConfirm.groupSizeMax">
+        <p style="color: var(--color-red-1)">현재 예약인원 ({{ ppToConfirm.groupSizeCurrent }}/{{ ppToConfirm.groupSizeMax }})</p>
+        <p>현재 예약인원이 최대 예약인원보다 부족할 경우, 모든 게스트 동의 후 예약확정이 가능합니다.</p>
+        <p>게스트에게 예약확정 동의요청을 보내시겠습니까?</p>
+      </div>
+      <div v-if="ppToConfirm.groupSizeCurrent === ppToConfirm.groupSizeMax">
+        <p style="color: var(--color-green-1)">현재 예약인원 ({{ ppToConfirm.groupSizeCurrent }}/{{ ppToConfirm.groupSizeMax }})</p>
+        <p>예약을 확정하시겠습니까?</p>
+      </div>
+    </Modal>
+    <Modal class="onlyConfirm" :isVisible="isModalVisible('completeCancelConfirmModal')" @confirm="closeModal('completeCancelConfirmModal')">
+      <p>예약이 확정되었습니다.</p>
+    </Modal>
+    <Modal class="onlyConfirm" :isVisible="isModalVisible('completeRequestGuestApproval')" @confirm="closeModal('completeRequestGuestApproval')">
+      <p>게스트들에게 예약확정 동의요청이 전송되었습니다.</p>
+    </Modal>
 
     <!-- ============================================================================================================= -->
 
@@ -496,7 +570,25 @@ mapFetchedData(data.value);
             </header>
 
             <!--예약 카드 목록. (모집 중) (예약 확정) (폐지 임박)-->
-            <ul v-if="publishedPrograms.length" class="n-card-container bg-color:base-1">
+            <ul class="n-card-container bg-color:base-1">
+              <li v-if="publishedPrograms.length === 0
+                  && !(tab==='canceled' || tab==='finished')
+                  && !(selectedDates.length>0 || selectedStatuses.length>0 || selectedProgramIds.length>0)" class="padding:8">
+                개설된 프로그램이 존재하지 않습니다.
+              </li>
+              <li v-if="publishedPrograms.length === 0
+                  && tab==='finished'
+                  && !(selectedDates.length>0 || selectedStatuses.length>0 || selectedProgramIds.length>0)" class="padding:8">
+                종료된 프로그램이 존재하지 않습니다.
+              </li>
+              <li v-if="publishedPrograms.length === 0
+                  && tab==='canceled'
+                  && !(selectedDates.length>0 || selectedStatuses.length>0 || selectedProgramIds.length>0)" class="padding:8">
+                취소된 프로그램이 존재하지 않습니다.
+              </li>
+              <li v-if="publishedPrograms.length === 0 && (selectedDates.length>0 || selectedStatuses.length>0 || selectedProgramIds.length>0)" class="padding:8">
+                일치하는 프로그램이 존재하지 않습니다.
+              </li>
 
               <li v-for="pp in publishedPrograms" :key="pp.id" class="n-card n-card:hover padding:6">
                 <h2 class="d:none">예약 카드</h2>
@@ -521,10 +613,15 @@ mapFetchedData(data.value);
                     <!--         더보기 팝업           -->
                     <div class="morePopup" v-if="morePopupStatus[pp.id]">
                       <ul>
-                        <li @click.prevent="closeMorePopup(pp.id);">예약확정</li><!-- groupSizeMin < groupSizeCurrent이면 가능 -->
-                        <li @click.prevent="closeMorePopup(pp.id); ppToCancel=pp; openModal('confirmCancelModal')">예약취소</li>
-                        <li @click.prevent="closeMorePopup(pp.id); OpenPublishProgramModalHandler(pp.programId)">추가개설</li><!-- 취소, 완료된 일정 아닌 나머지 -->
-                        <li @click.prevent="closeMorePopup(pp.id)">내역삭제</li><!-- only 취소3, 완료된 일정4 -->
+                        <li v-if="pp.statusName !== 'Canceled' && pp.statusName !== 'Finished'"
+                            :class="{'no-click': pp.groupSizeCurrent === 0 || pp.statusName==='Confirmed', 'disabled': pp.groupSizeCurrent === 0 || pp.statusName==='Confirmed'}"
+                            @click.prevent="closeMorePopup(pp.id); ppToConfirm=pp; openModal('confirmConfirmModal')">예약확정</li><!-- groupSizeMin < groupSizeCurrent이면 가능 -->
+                        <li v-if="pp.statusName !== 'Canceled' && pp.statusName !== 'Finished'"
+                            @click.prevent="closeMorePopup(pp.id); ppToCancel=pp; openModal('confirmCancelModal')">예약취소</li><!-- 취소, 완료된 일정 아닌 나머지 -->
+                        <li v-if="pp.statusName !== 'Canceled' && pp.statusName !== 'Finished'"
+                            @click.prevent="closeMorePopup(pp.id); OpenPublishProgramModalHandler(pp.programId)">추가개설</li><!-- 취소, 완료된 일정 아닌 나머지 -->
+                        <li v-if="pp.statusName==='Canceled' || pp.statusName==='Finished'"
+                            @click.prevent="closeMorePopup(pp.id)">내역삭제</li><!-- only 취소3, 완료된 일정4 -->
                       </ul>
                     </div>
                   </div>
@@ -631,6 +728,19 @@ mapFetchedData(data.value);
 </template>
 
 <style scoped>
+.no-click {
+  pointer-events: none;
+}
+
+/* Modal컴포넌트 스타일 */
+.modal-content p {
+  margin-bottom: 8px;
+}
+
+.modal-content p:last-child {
+  margin-bottom: 0;
+}
+
 .layout-body {
   .n-bar-underline {
     .item-wrapper {
@@ -761,6 +871,10 @@ mapFetchedData(data.value);
 
                   li:hover {
                     background-color: var(--color-base-2);
+                  }
+
+                  .disabled {
+                    color: var(--color-base-6);
                   }
                 }
               }

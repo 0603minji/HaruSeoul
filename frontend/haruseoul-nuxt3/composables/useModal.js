@@ -6,7 +6,7 @@ export function useModal() {
 
     const openModal = (id) => {
         modalStates[id] = true;
-        console.log('       컴포저블 useModal, openModal called. modalStates: ', modalStates )
+        // console.log('       컴포저블 useModal, openModal called. modalStates: ', modalStates )
     };
 
     const closeModal = (id) => {

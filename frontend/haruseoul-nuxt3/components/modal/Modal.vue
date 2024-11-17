@@ -59,9 +59,11 @@ const confirmModal = () => {
   margin-top: 24px;
 
   .close-button {
+    flex-grow: 1;
     padding: 16px 30px;
   }
   .confirm-button {
+    flex-grow: 1;
     padding: 16px 30px;
   }
 }
