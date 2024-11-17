@@ -222,6 +222,9 @@ const CancelHandler = async (pp) => {
   });
   console.log('          PublishedProgram Update result: ', response);
 
+  // 예약취소 확인 모달창
+  openModal('completeCancelModal');
+
   // 취소된 pp반영한 목록으로 갱신
   await fetchData();
   // publishProgramModal reRender
@@ -280,7 +283,7 @@ const PublishProgramModalKey = ref(false); // 예약취소 시 리렌더링 유�
 const hostId = userDetails.id.value; // 프론트에서 저장하고 있는 인증정보에 접근해서 얻어와야함
 console.log('hostId: ', hostId)
 const pIdToPublish = ref(null); // 일정추가, 추가개설할 pubishedprogramId
-
+const ppToCancel = ref(null); // 예약취소할 프로그램 정보를 모달창으로 전달
 
 // PublishedProgramResponseDto
 const pages = ref([1, 2, 3, 4, 5]); // 페이지네이션
@@ -380,6 +383,18 @@ mapFetchedData(data.value);
              closeModal('confirmPpModal');}">
       <p>개설하시겠습니까?</p>
     </Modal>
+
+    <!--  예약취소확인  -->
+    <Modal :isVisible="isModalVisible('confirmCancelModal')" @close="closeModal('confirmCancelModal')"
+           @confirm="() => {CancelHandler(ppToCancel); closeModal('confirmCancelModal');}">
+      <p v-if="ppToCancel.groupSizeCurrent > 0" style="color: var(--color-red-1)">프로그램을 예약한 게스트가 존재합니다. ({{ ppToCancel.groupSizeCurrent }} 명)</p>
+      <p>예약을 취소하시겠습니까?</p>
+    </Modal>
+    <Modal class="onlyConfirm" :isVisible="isModalVisible('completeCancelModal')" @confirm="closeModal('completeCancelModal')">
+      <p>예약이 취소되었습니다.</p>
+    </Modal>
+
+
     <!-- ============================================================================================================= -->
 
 
@@ -507,7 +522,7 @@ mapFetchedData(data.value);
                     <div class="morePopup" v-if="morePopupStatus[pp.id]">
                       <ul>
                         <li @click.prevent="closeMorePopup(pp.id);">예약확정</li><!-- groupSizeMin < groupSizeCurrent이면 가능 -->
-                        <li @click.prevent="closeMorePopup(pp.id); CancelHandler(pp)">예약취소</li>
+                        <li @click.prevent="closeMorePopup(pp.id); ppToCancel=pp; openModal('confirmCancelModal')">예약취소</li>
                         <li @click.prevent="closeMorePopup(pp.id); OpenPublishProgramModalHandler(pp.programId)">추가개설</li><!-- 취소, 완료된 일정 아닌 나머지 -->
                         <li @click.prevent="closeMorePopup(pp.id)">내역삭제</li><!-- only 취소3, 완료된 일정4 -->
                       </ul>
