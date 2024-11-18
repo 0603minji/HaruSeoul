@@ -106,7 +106,7 @@
       ></label>
       <input id="menu-toggle" class="n-aside-hider" type="checkbox" />
 
-      <div class="bg-darkened"></div>
+      <div @click="closeAsideHandler" class="bg-darkened"></div>
 
       <!--어사이드-->
       <aside class="n-aside" style="height: 100vh; overflow-y: auto;">
@@ -210,9 +210,7 @@
             </li>
           </ul>
         </nav>
-        <div
-            class="aside-footer n-icon n-deco n-icon:globe_2 n-icon-color:main-3"
-        >
+        <div class="aside-footer n-icon n-deco n-icon:globe_2 n-icon-color:main-3">
           <select name="language" id="language">
             <option value="Korean">Korean</option>
             <option value="English">English</option>
@@ -255,6 +253,14 @@ const handleClickOutside = (event) => {
       !event.target.closest('.profile-img-wrapper')
   ) {
     showModal.value = false;
+  }
+};
+
+const closeAsideHandler = () => {
+  console.log('closeAsideHandler called');
+  const checkbox = document.getElementById('menu-toggle'); // 체크박스 선택
+  if (checkbox.checked) {
+    checkbox.checked = false; // 체크 해제
   }
 };
 
