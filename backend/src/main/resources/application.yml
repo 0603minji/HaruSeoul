@@ -15,7 +15,7 @@ server:
 
 haruSeoul:
   jwt:
-    secret: {SPRING_JWT_SECRET_KEY}
+    secret: ${SPRING_JWT_SECRET_KEY}
 
 file:
   upload-dir: ./uploads
