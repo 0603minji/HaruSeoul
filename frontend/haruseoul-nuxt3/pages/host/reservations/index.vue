@@ -1010,7 +1010,7 @@ watchEffect(() => {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* Dark background */
   backdrop-filter: blur(5px); /* Blur effect */
-  z-index: 999; /* Behind modal but above other content */
+  z-index: 990; /* Behind modal but above other content */
 }
 
 .backdrop.active {
