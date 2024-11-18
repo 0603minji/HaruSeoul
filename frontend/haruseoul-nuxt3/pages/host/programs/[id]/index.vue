@@ -45,14 +45,42 @@
 
           <div class="card-main">
             <div class="thumbnail-wrapper">
-              <button class="n-btn thumbnail-btn thumbnail-btn:left"><span
-                  class="n-icon n-icon:arrow_left"></span>
+              <button
+                  class="n-btn thumbnail-btn thumbnail-btn:left"
+                  @click="prevImage"
+                  :disabled="totalImages === 0"
+              >
+                <span class="n-icon n-icon:arrow_left"></span>
               </button>
-              <img src="/public/image/thumbnail.png" alt="대표사진" class="thumbnail-img">
-              <button class="n-btn thumbnail-btn thumbnail-btn:right"><span
-                  class="n-icon n-icon:arrow_right"></span>
+
+              <!-- 현재 이미지 -->
+              <img
+                  :src="currentImage"
+                  alt="대표사진"
+                  class="thumbnail-img"
+                  v-if="totalImages > 0"
+              />
+              <img
+                  src="/assets/image/default-program-image.png"
+                  alt="기본 대표사진"
+                  class="thumbnail-img"
+                  v-else
+              />
+
+              <!-- 다음 이미지 버튼 -->
+              <button
+                  class="n-btn thumbnail-btn thumbnail-btn:right"
+                  @click="nextImage"
+                  :disabled="totalImages === 0"
+              >
+                <span class="n-icon n-icon:arrow_right"></span>
               </button>
-              <div class="thumbnail-btn thumbnail-btn:num n-deco">1/5</div>
+
+              <!-- 이미지 순서 표시 -->
+              <div class="thumbnail-btn thumbnail-btn:num n-deco">
+                {{ currentImageIndex + 1 }}/{{ totalImages }}
+              </div>
+              <span @click.prevent="goToImage" class="n-icon n-icon:edit"></span>
             </div>
 
             <div
@@ -71,14 +99,16 @@
               </div>
             </div>
             <div>
-              <NuxtLink class="n-btn n-btn-background-color:main" :href="`/host/programs/${data.programDetailProgramDto.id}/edit`">수정하러가기</NuxtLink>
             </div>
 
             <div class="card-info-wrapper">
+              <div class="d:flex">
               <p style="color: var(--color-base-9);
               font-size: var(--font-size-11);
               font-weight: bold;
               padding: var(--gap-3) var(--gap-5);">{{ data.programDetailProgramDto.title }}</p>
+                <span @click.prevent="goToIntro" class="n-icon n-icon:edit"></span>
+              </div>
               <div
                   style="display:flex;  flex-grow: 1; padding: var(--gap-3) var(--gap-7) var(--gap-8) var(--gap-7); gap: var(--gap-2); align-items: center;">
                 <span class="card-info n-icon n-icon:star n-deco"
@@ -92,6 +122,7 @@
                        style="display: flex; justify-content: center; align-items: center; height: inherit; font-size: var(--font-size-10); gap: 0;">
                     {{ data.programDetailProgramDto.price }}
                   </div>
+                  <span @click.prevent="goToDetail" class="n-icon n-icon:edit"></span>
                   <div
                       style="display: flex; justify-content: center; align-items: center; height: inherit; margin-left: var(--gap-1); font-size: var(--font-size-6);">
                     1인
@@ -117,7 +148,7 @@
                       <ul>
                         <li class="list-content"><span
                             class="n-icon n-icon:globe n-deco">{{ data.programDetailProgramDto.language }}</span>
-
+                          <span @click.prevent="goToDetail" class="n-icon n-icon:edit"></span>
                         </li>
                         <li class="list-content">
                           <span
@@ -125,13 +156,16 @@
                               data.programDetailProgramDto.groupSizeMin
                             }}/{{ data.programDetailProgramDto.groupSizeMax }}</span>
                           <span>(min/max)</span>
+                          <span @click.prevent="goToDetail" class="n-icon n-icon:edit"></span>
                         </li>
                         <li class="list-content">
                           <span class="n-icon n-icon:clock n-deco">{{ data.programDetailProgramDto.duration }}</span>
                           <span>hours</span>
+                          <span @click.prevent="goToDetail" class="n-icon n-icon:edit"></span>
                         </li>
                         <li class="list-content"><span
                             class="n-icon n-icon:placeholder n-deco">{{ addressWithOrderOne }}</span>
+                          <span @click.prevent="goToCourse" class="n-icon n-icon:edit"></span>
                         </li>
                       </ul>
                     </div>
@@ -175,11 +209,11 @@
               <div class="program-container">
                 <div class="content-header">
                   <span class="title">프로그램 소개</span>
+                  <span @click.prevent="goToIntro" class="n-icon n-icon:edit"></span>
                 </div>
 
                 <div class="text">
                   <p class="p-summary">{{ data.programDetailProgramDto.detail }}</p>
-                  <!--                  <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">펼치기</button>-->
                 </div>
               </div>
             </div>
@@ -193,6 +227,7 @@
               <div class="id-container">
                 <div class="content-header">
                   <span class="title">코스 안내</span>
+                  <span @click.prevent="goToCourse" class="n-icon n-icon:edit"></span>
                 </div>
                 <div class="details">
                   <div class="map-img-wrapper" id="map1"></div>
@@ -266,6 +301,7 @@
               <div class="id-container" style="border-bottom:0;">
                 <div class="content-header">
                   <span class="title">만나는 장소</span>
+                  <span @click.prevent="goToCourse" class="n-icon n-icon:edit"></span>
                 </div>
                 <div class="details">
                   <section style="padding-top: 0;">
@@ -288,25 +324,26 @@
               <div id="inclusions" class="id-container" style="border-bottom:0;">
                 <div class="content-header">
                   <span class="title">포함사항</span>
+                  <span @click.prevent="goToInclusion" class="n-icon n-icon:edit"></span>
                 </div>
                 <div class="details">
                   <section>
                     <h1>포함사항</h1>
                     <div class="list-container">
-                      <ul v-if="data.programDetailProgramDto.inclusion">
+                      <ul v-if="data.programDetailProgramDto.inclusion" class="d:flex fl-dir:column">
                         <li v-for="(item, index) in data.programDetailProgramDto.inclusion.split('\n')"
                             :key="index"
-                            class="list-content">
+                            class="list-content n-icon n-icon:success-circle-green">
                           {{ item }}
                         </li>
                       </ul>
 
                     </div>
                     <div class="list-container">
-                      <ul v-if="data.programDetailProgramDto.exclusion">
+                      <ul v-if="data.programDetailProgramDto.exclusion" class="d:flex fl-dir:column">
                         <li v-for="(item, index) in data.programDetailProgramDto.exclusion.split('\n')"
                             :key="index"
-                            class="list-content">
+                            class="list-content n-icon n-icon:error">
                           {{ item }}
                         </li>
                       </ul>
@@ -318,6 +355,7 @@
               <div id="things-to-know" class="id-container" style="margin-top: 0; border-bottom:0;">
                 <div class="content-header">
                   <span class="title">꼭 알아두세요!</span>
+                  <span @click.prevent="goToCaution" class="n-icon n-icon:edit"></span>
                 </div>
                 <div class="details">
 
@@ -326,6 +364,7 @@
 
                     <div style="padding: 0 var(--gap-6);">
                       <h2 class="info-form n-icon n-icon:success-decagon">준비물</h2>
+                      <span @click.prevent="goToCaution" class="n-icon n-icon:edit"></span>
                       <ul v-if="data.programDetailProgramDto.packingList">
                         <li v-for="(item, index) in data.programDetailProgramDto.packingList.split('\n')"
                             :key="index"
@@ -338,6 +377,7 @@
 
                     <div style="padding: var(--gap-6); padding-bottom: 0;">
                       <h2 class="info-form n-icon n-icon:caution">주의사항</h2>
+                      <span @click.prevent="goToCaution" class="n-icon n-icon:edit"></span>
                       <ul v-if="data.programDetailProgramDto.caution">
                         <li v-for="(item, index) in data.programDetailProgramDto.caution.split('\n')"
                             :key="index"
@@ -374,11 +414,34 @@
 
 import {ref, onMounted} from 'vue';
 import {useFetch} from '#app';
-import {useRoute} from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
 const programId = ref(route.params.id); // route에서 programId를 가져옴
 const currentHash = computed(() => route.hash || '');
+
+const currentImageIndex = ref(0); // 현재 표시 중인 이미지 인덱스
+const totalImages = computed(() => data.value?.programDetailImageDto?.imgSrc?.length || 0); // 총 이미지 개수
+
+const currentImage = computed(() => {
+  return totalImages.value > 0
+      ? `http://localhost:8080/api/v1/${data.value.programDetailImageDto.imgSrc[currentImageIndex.value]}`
+      : '/public/image/default-thumbnail.png'; // 기본 썸네일 설정
+});
+
+// 이전 이미지로 이동
+const prevImage = () => {
+  currentImageIndex.value =
+      currentImageIndex.value === 0 ? totalImages.value - 1 : currentImageIndex.value - 1;
+};
+
+// 다음 이미지로 이동
+const nextImage = () => {
+  currentImageIndex.value =
+      currentImageIndex.value === totalImages.value - 1 ? 0 : currentImageIndex.value + 1;
+};
+
 
 onMounted(() => {
   const initMaps = () => {
@@ -501,6 +564,7 @@ onMounted(() => {
 });
 
 const {data, error} = await useFetch(`http://localhost:8080/api/v1/programs/${programId.value}`);
+
 const addressWithOrderOne = computed(() => {
   const item = data.value.programDetailRouteDto.find(route => route.order === 1);
   return item ? item.address : "주소 없음"; // 조건에 맞는 객체가 없을 경우 "주소 없음" 반환
@@ -570,6 +634,57 @@ watchEffect(() => {
   console.log("Error:", error.value);
 });
 
+const goToIntro = () => {
+  // 먼저 /edit 경로로 이동
+  router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
+    // 이동 후 해시값 변경
+    window.location.hash = '#intro';
+  });
+};
+
+const goToDetail = () => {
+  // 먼저 /edit 경로로 이동
+  router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
+    // 이동 후 해시값 변경
+    window.location.hash = '#detail';
+  });
+};
+
+
+const goToCourse = () => {
+  // 먼저 /edit 경로로 이동
+  router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
+    // 이동 후 해시값 변경
+    window.location.hash = '#course';
+  });
+};
+
+
+const goToInclusion = () => {
+  // 먼저 /edit 경로로 이동
+  router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
+    // 이동 후 해시값 변경
+    window.location.hash = '#inclusion';
+  });
+};
+
+const goToCaution = () => {
+  // 먼저 /edit 경로로 이동
+  router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
+    // 이동 후 해시값 변경
+    window.location.hash = '#caution';
+  });
+};
+
+
+const goToImage = () => {
+  // 먼저 /edit 경로로 이동
+  router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
+    // 이동 후 해시값 변경
+    window.location.hash = '#image';
+  });
+};
+
 </script>
 
 <style scoped>
@@ -577,14 +692,6 @@ watchEffect(() => {
   font-size: var(--font-size-7);
   max-width: 700px;
 
-  .thumbnail-wrapper,
-  .map-img-wrapper {
-    background-color: var(--color-base-3);
-
-    .thumbnail-img {
-      max-width: 550px;
-    }
-  }
 
 }
 
@@ -603,6 +710,11 @@ watchEffect(() => {
 
 .n-icon\:star:before {
   background-color: var(--color-yellow-1);
+}
+
+.n-icon\:edit{
+  mask-image: url("assets/image/icon/edit.svg");
+  mask-repeat: no-repeat;
 }
 
 .n-icon\:credit_card:before {
@@ -700,18 +812,20 @@ watchEffect(() => {
 .thumbnail-wrapper {
   display: flex;
   position: relative;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  flex-shrink: 0;
   overflow: hidden;
-  min-width: 85px;
+  width: 100%;
+  max-width: 700px; /* 최대 크기 제한 */
+  aspect-ratio: 16 / 9; /* 비율 고정 */
+  background-color: #f0f0f0; /* 기본 배경색 */
+  border-radius: 8px;
 
   .thumbnail-img {
-    max-width: 700px;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: contain; /* 비율 유지하며 영역에 맞춤 */
+    transition: opacity 0.5s ease-in-out;
   }
 
   .thumbnail-btn {
@@ -958,8 +1072,6 @@ watchEffect(() => {
       width: 1em;
       /* 점과 텍스트 사이의 간격 */
       padding-left: var(--gap-3);
-      margin-left: -1.5em;
-      /* 점을 왼쪽으로 이동 */
     }
   }
 

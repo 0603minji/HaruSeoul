@@ -59,7 +59,7 @@
             <p v-show="titleValidation()" class="warning">** 3자 이상 60자 이하이어야 합니다 **</p>
           </div>
           <input class="input-text" id="title" type="text" name="title" placeholder="Enter title"
-            v-model="programCreateDto.title">
+                 v-model="programCreateDto.title">
           <div class="char-counter">
             <span>{{ programCreateDto.title.length }}/60</span>
           </div>
@@ -71,7 +71,7 @@
             <p v-show="detailValidation()" class="warning">** 10자 이상 1000자 이하이어야 합니다 **</p>
           </div>
           <textarea class="input-textarea" id="description" name="description" rows="8" cols="50" placeholder=""
-            v-model="programCreateDto.detail"></textarea>
+                    v-model="programCreateDto.detail"></textarea>
           <p class="char-counter">{{ programCreateDto.detail.length }}/1000</p>
         </div>
         <div class="form-group">
@@ -81,19 +81,9 @@
           <p class="warning-category">(최대 2개까지 선택 가능합니다)</p>
           <div class="d:flex flex-wrap:wrap gap:2 bg-color:base-2 bd-radius:4 p:2 jc:space-between">
             <label v-for="c in categories" :key="c.id" class="d:flex al-items:center w:1/3">
-              <!-- 
-              v-model : 양방향 바인딩
-              programCreateDto.categoryIds 배열과 이 체크박스가 연결
-              체크박스가 선택되면 해당 카테고리 ID가 programCreateDto.categoryIds 배열에 추가
-              해제되면 배열에서 제거
-              -->
-              <!-- 
-              :value
-              체크박스가 선택될 때 v-model로 연결된 데이터(programCreateDto.categoryIds)에 저장되는 값을 지정
-              -->
-              <input type="checkbox" class="mr:2" :value="c.id" v-model="programCreateDto.categoryIds" :disabled="programCreateDto.categoryIds.length >= 2 &&
-                //  2개 카테고리 선택한 경우, 더 이상 추가할 수 없도록 체크박스를 비활성화
-                // 이미 선택한 카테고리(현재 체크된 카테고리)는 비활성화되지 않음 (체크 해제 가능)
+              <input type="checkbox" class="mr:2"
+                     :value="c.id" v-model="programCreateDto.categoryIds"
+                     :disabled="programCreateDto.categoryIds.length >= 2 &&
                 !programCreateDto.categoryIds.includes(c.id)">
               {{ c.name }}
             </label>
@@ -102,7 +92,7 @@
 
         <div class="button-group">
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <a class="n-btn n-btn-bg-color:main" href="#detail">다음</a>
+          <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#detail')">다음</div>
         </div>
       </section>
 
@@ -202,7 +192,7 @@
             <div class="counter-wrapper">
               <button class="n-btn n-btn-color:main-2" @click.prevent="minusGroupSizeMax">-</button>
               <input type="number" name="max-count" class="counter-input no-spinner" min="2" max="5"
-                v-model="programCreateDto.groupSizeMax">
+                     v-model="programCreateDto.groupSizeMax">
               <button class="n-btn n-btn-color:main-2" @click.prevent="plusGroupSizeMax">+</button>
               <p class="people-unit">명</p>
             </div>
@@ -213,7 +203,7 @@
             <div class="counter-wrapper">
               <button class="n-btn n-btn-color:main-2" @click.prevent="minusGroupSizeMin">-</button>
               <input type="number" name="min-count" class="counter-input no-spinner" min="2" max="5"
-                v-model="programCreateDto.groupSizeMin">
+                     v-model="programCreateDto.groupSizeMin">
               <button class="n-btn n-btn-color:main-2" @click.prevent="plusGroupSizeMin">+</button>
               <p class="people-unit">명</p>
             </div>
@@ -224,14 +214,18 @@
         <div class="form-group d:flex">
           <div class="form-label">총 비용</div>
           <input type="number" name="cost" class="input-text no-spinner" min="0" max="1000000"
-            v-model="programCreateDto.price" @change="priceValidation">
+                 v-model="programCreateDto.price" @change="priceValidation">
           <p class="currency-unit">원</p>
         </div>
 
         <div class="button-group">
-          <div><a class="n-btn n-btn-bg-color:main" href="#intro">이전</a></div>
+          <div>
+            <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#intro')">이전</div>
+          </div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#course">다음</a></div>
+          <div>
+            <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#course')">다음</div>
+          </div>
         </div>
 
       </section>
@@ -240,26 +234,34 @@
         <!-- ======================= route 시작 ========================== -->
         <div>
           <h1>코스</h1>
-          <RouteTemplete v-for="index in routeComponentCount" :order="index"
-            @updateRoute="updateRoute"
-            @validationPassed="handleValidation"
+          <RouteTemplete
+              v-for="index in routeComponentCount"
+              :key="index"
+              :order="index"
+              :start-time-hour="index === 1 ? programCreateDto.startTimeHour : ''"
+              :start-time-minute="index === 1 ? programCreateDto.startTimeMinute : ''"
+              :is-start-point="index === 1"
+              :expanded="index > 1"
+              @updateRoute="updateRoute"
+              @validationPassed="handleValidation"
+              @removeRoute="removeRoute"
           />
-          <!--
-          자식 컴포넌트인 RouteTemplete에 order라는 props를 전달
-          @updateRoute : 이벤트 리스너
-          자식 컴포넌트에서 updateRoute라는 커스텀 이벤트가 발생하면 부모 컴포넌트가 이를 감지하여 updateRoute라는 메서드를 실행
-          $event: 자식 컴포넌트에서 전달된 데이터. 이벤트가 발생할 때 자동으로 $event라는 객체에 해당 데이터를 담아서 전달
-          -->
         </div>
-        <div class="map">지도</div>
+        <!--        <div class="map">지도</div>-->
         <div class="d:flex jc:end m-top:5">
-            <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center" @click.prevent="addRouteFunction">+
-              경유지</button>
+          <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center"
+                  @click.prevent="addRouteFunction">
+            + 경유지
+          </button>
         </div>
         <div class="button-group">
-          <div><a class="n-btn n-btn-bg-color:main" href="#detail">이전</a></div>
+          <div>
+            <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#detail')">이전</div>
+          </div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">다음</a></div>
+          <div>
+            <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#inclusion')">다음</div>
+          </div>
         </div>
         <!-- =================== route 종료 ======================== -->
       </section>
@@ -274,7 +276,7 @@
           <p v-show="inclusionValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
           <label for="included" class="d:none">포함 항목을 작성하세요</label>
           <textarea id="included" name="included" rows="4" cols="50" class="input-textarea"
-            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.inclusion"></textarea>
+                    placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.inclusion"></textarea>
           <p class="text-align:end p-bottom:4">{{ programCreateDto.inclusion.length }}/ 1000</p>
 
         </div>
@@ -288,14 +290,18 @@
           <p v-show="exclusionValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
           <label for="not-included" class="d:none">미포함 항목을 작성하세요</label>
           <textarea id="not-included" name="not-included" rows="4" cols="50" class="input-textarea"
-            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.exclusion"></textarea>
+                    placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.exclusion"></textarea>
           <p class="text-align:end p-bottom:4">{{ programCreateDto.exclusion.length }}/ 1000</p>
         </div>
 
         <div class="button-group">
-          <div><a class="n-btn n-btn-bg-color:main" href="#course">이전</a></div>
+          <div>
+            <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#course')">이전</div>
+          </div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#caution">다음</a></div>
+          <div>
+            <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#caution')">다음</div>
+          </div>
         </div>
       </section>
 
@@ -308,7 +314,7 @@
           <p v-show="packingListValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
           <label for="preparation" class="d:none">준비 항목을 작성하세요</label>
           <textarea id="preparation" name="preparation" rows="4" cols="50" class="input-textarea"
-            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.packingList"></textarea>
+                    placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.packingList"></textarea>
           <p class="text-align:end p-bottom:4">{{ programCreateDto.packingList.length }}/ 1000</p>
         </div>
         <div class="form-group">
@@ -319,7 +325,7 @@
           <p v-show="cautionValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
           <label for="notice" class="d:none">주의사항을 작성하세요</label>
           <textarea id="notice" name="notice" rows="4" class="input-textarea" cols="50"
-            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.caution"></textarea>
+                    placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.caution"></textarea>
           <p class="text-align:end p-bottom:4">{{ programCreateDto.caution.length }} / 1000</p>
         </div>
         <div class="form-group">
@@ -329,13 +335,17 @@
           <p v-show="requirementValidation()" class="warning">** 1000자 이하이어야 합니다 **</p>
           <label for="request" class="d:none">요청 사항을 작성하세요</label>
           <textarea id="request" name="request" class="input-textarea" rows="4" cols="50"
-            placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.requirement"></textarea>
+                    placeholder="각 사항들은 enter로 구분해주세요" v-model="programCreateDto.requirement"></textarea>
           <p class="text-align:end p-bottom:4">{{ programCreateDto.requirement.length }}/ 1000</p>
         </div>
         <div class="button-group">
-          <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">이전</a></div>
+          <div>
+            <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#inclusion')">이전</div>
+          </div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#image">다음</a></div>
+          <div>
+            <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#image')">다음</div>
+          </div>
         </div>
       </section>
 
@@ -387,7 +397,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive } from "vue";
+import {onMounted, ref, reactive} from "vue";
 import axios from "axios";
 import RouteTemplete from "./routeTemplete.vue";
 
@@ -436,6 +446,7 @@ onMounted(() => {
   if (!window.location.hash) {
     window.location.hash = '#intro';
   }
+  activeSection.value = window.location.hash;
   fetchCategories();
 })
 
@@ -449,11 +460,6 @@ const updateRoute = (index, data) => {
 };
 
 
-
-//  호출될 때마다 routeComponentCount 값을 증가
-const addRouteFunction = () => {
-  routeComponentCount.value++;
-}
 const handleValidation = (index, isValid) => {
   console.log(`Updating validation for index ${index}:`, isValid);
   validationResults.value[index] = isValid;
@@ -464,7 +470,6 @@ const allRoutesValid = () => {
   console.log("Checking if all routes are valid:", validationResults.value);
   return validationResults.value.every(valid => valid === true);
 };
-
 
 const createProgram = async () => {
   // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
@@ -481,7 +486,7 @@ const createProgram = async () => {
       !programCreateDto.language ||
       !programCreateDto.price ||
       !programCreateDto.inclusion ||
-      !programCreateDto.images||
+      !programCreateDto.images ||
       programCreateDto.routes.length === 0 ||       // 적어도 하나의 route가 있는지 확인
       programCreateDto.routes.some(route => !route.title || !route.address) // 각 route가 필수 정보(title, address)를 포함하는지 확인
   ) {
@@ -530,7 +535,7 @@ const tempSave = async () => {
   //      : case 작성할 수 없음
 
   //  4. 1번 2번 케이스를 지나면 무조건, 입력 모두 받았고 유효성 통과 O
-  programCreateDto.status='In Progress'
+  programCreateDto.status = 'In Progress'
   alert("작성중 상태로 저장됩니다.");
   await sendCreateRequest();
   return navigateTo("/host/programs");
@@ -564,7 +569,7 @@ const sendCreateRequest = async () => {
     requirement: programCreateDto.requirement,
   };
 
-  formData.append("programCreateDto", new Blob([JSON.stringify(programData)], { type: "application/json" }));
+  formData.append("programCreateDto", new Blob([JSON.stringify(programData)], {type: "application/json"}));
 
   // 선택된 이미지 파일들을 FormData에 추가
   imageFiles.value.forEach((file) => {
@@ -576,7 +581,7 @@ const sendCreateRequest = async () => {
     const response = await axios.post("http://localhost:8080/api/v1/host/programs", formData, {
       headers: {
         Authorization: `Bearer ${token}`,
-        // "Content-Type": "application/json"
+        // "Content-Type": "multipart/form-data"
       },
     });
 
@@ -630,8 +635,11 @@ const removeImage = (index) => {
   imageFiles.value.splice(index, 1);
 };
 
-
-
+const removeRoute = (index) => {
+  if (index === 0) return; // 출발지는 삭제하지 않음
+  programCreateDto.routes.splice(index, 1);
+  routeComponentCount.value -= 1;
+};
 
 //======== Validation Checking Functions =============
 const checkIntroValidation = () => {
@@ -671,28 +679,7 @@ const priceValidation = () => {
     programCreateDto.price = 0;
   }
 }
-//
-// const checkCourseValidation = () => {
-//   for (let index = 0; index < routeComponentCount.value; index++) {
-//     // title
-//     let routeTitle = programCreateDto.routes[index].title;
-//     if ((routeTitle.length > 60) || (routeTitle.length > 0 && routeTitle.length < 3)) {
-//       return true;
-//     }
-//
-//     // address
-//     let routeAddress = programCreateDto.routes[index].address;
-//     if ((routeAddress.length > 60) || (routeAddress.length > 0 && routeAddress.length < 3)) {
-//       return true;
-//     }
-//
-//     // description
-//     let routeDescription = programCreateDto.routes[index].description;
-//     if ((routeDescription.length > 60) || (routeDescription.length > 0 && routeDescription.length < 3)) {
-//       return true;
-//     }
-//   }
-// };
+
 
 const checkInclusionValidation = () => {
   return (inclusionValidation() || exclusionValidation());
@@ -723,10 +710,18 @@ const requirementValidation = () => {
   return (programCreateDto.requirement.length > 1000);
 }
 
-
-// const setActiveSection = (section) => {
-//   activeSection.value = section;
-// }
+const addRouteFunction = () => {
+  programCreateDto.routes.push({
+    title: '',
+    order: routeComponentCount.value,
+    address: '',
+    description: '',
+    duration: 0,
+    transportationId: null,
+    transportationDuration: 0 // 명시적으로 0 설정
+  });
+  routeComponentCount.value++;
+};
 
 const scrollToSection = (sectionId) => {
   // 해시값을 변경하여 해당 섹션만 보이도록 설정
@@ -735,16 +730,9 @@ const scrollToSection = (sectionId) => {
 };
 
 
-
 </script>
 
 <style scoped>
-.full-link {
-  position: absolute;
-  display: block;
-  width: 100%;
-  height: 100%;
-}
 /* 경고 문구 스타일 */
 .warning {
   color: red;
@@ -802,13 +790,13 @@ const scrollToSection = (sectionId) => {
     display: inline-flex;
     gap: var(--bar-gap);
 
-    >* {
+    > * {
       position: relative;
     }
 
     /*=============== hover, active상태 ================================*/
 
-    >*::after {
+    > *::after {
       content: "";
       width: 100%;
       height: 3px;
@@ -821,17 +809,17 @@ const scrollToSection = (sectionId) => {
       visibility: hidden;
     }
 
-    >*:hover::after {
+    > *:hover::after {
       background-color: var(--color-main-4);
       visibility: visible;
     }
 
-    >.active::after {
+    > .active::after {
       background-color: var(--color-main-1);
       visibility: visible;
     }
 
-    >.active:hover::after {
+    > .active:hover::after {
       background-color: var(--color-main-1);
       visibility: visible;
     }
@@ -1334,7 +1322,7 @@ const scrollToSection = (sectionId) => {
   margin-top: 10px;
   width: 25%;
 
-  >span {
+  > span {
     display: block;
     width: 100%;
     text-align: center;
@@ -1469,13 +1457,13 @@ textarea {
     border-radius: 10px;
   }
 
-  .item-wrapper>* {
+  .item-wrapper > * {
     position: relative;
     align-items: center;
     display: flex;
   }
 
-  .item-wrapper>*::before {
+  .item-wrapper > *::before {
     content: "";
     width: 5px;
     /* 줄의 너비를 3px로 설정 */
@@ -1490,20 +1478,20 @@ textarea {
     visibility: hidden;
   }
 
-  .item-wrapper>*:hover::before {
+  .item-wrapper > *:hover::before {
     /*display: none;*/
     visibility: visible;
   }
 
   /* 활성화된 상태에서 줄 색상 변경 */
-  .item-wrapper>.active::before {
+  .item-wrapper > .active::before {
     background-color: var(--color-main-1);
     /* 활성화된 항목의 줄 색상 (원하는 색상으로 변경 가능) */
     visibility: visible;
   }
 
 
-  .item-wrapper>*::after {
+  .item-wrapper > *::after {
     display: none;
     /*content: "";*/
     /*width: 3px; !* 줄의 너비를 3px로 설정 *!*/
@@ -1516,11 +1504,12 @@ textarea {
   }
 
   /* hover 시 왼쪽에 줄이 나타나도록 설정 */
-  .item-wrapper>*:hover::after {
+  .item-wrapper > *:hover::after {
     display: none;
     /*visibility: visible;*/
   }
-  .full-link{
+
+  .full-link {
     position: relative;
     display: block;
     width: 100%;
@@ -1528,7 +1517,7 @@ textarea {
   }
 
   /* active 상태에서 줄 색상을 변경 */
-  .item-wrapper>.active::after {
+  .item-wrapper > .active::after {
     display: none;
     /*background-color: var(--color-main-1); !* 활성화된 항목의 줄 색상 *!*/
     /*visibility: visible;*/

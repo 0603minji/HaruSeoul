@@ -89,7 +89,7 @@
 
         <div class="button-group">
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <a class="n-btn n-btn-bg-color:main" href="#detail">다음</a>
+          <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#detail')">다음</div>
         </div>
       </section>
 
@@ -216,9 +216,9 @@
         </div>
 
         <div class="button-group">
-          <div><a class="n-btn n-btn-bg-color:main" href="#intro">이전</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#intro')">이전</div></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#course">다음</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#course')">다음</div></div>
         </div>
 
       </section>
@@ -232,17 +232,14 @@
               :key="index"
               :order="index + 1"
               :routeData="route"
+              :startTimeHour="index === 0 ? programCreateDto.startTimeHour : ''"
+              :startTimeMinute="index === 0 ? programCreateDto.startTimeMinute : ''"
               @updateRoute="updateRoute"
+              @removeRoute="removeRoute"
               @validationPassed="handleValidation"
           />
-          <!--
-          자식 컴포넌트인 RouteTemplete에 order라는 props를 전달
-          @updateRoute : 이벤트 리스너
-          자식 컴포넌트에서 updateRoute라는 커스텀 이벤트가 발생하면 부모 컴포넌트가 이를 감지하여 updateRoute라는 메서드를 실행
-          $event: 자식 컴포넌트에서 전달된 데이터. 이벤트가 발생할 때 자동으로 $event라는 객체에 해당 데이터를 담아서 전달
-          -->
         </div>
-        <div class="map">지도</div>
+<!--        <div class="map">지도</div>-->
         <div class="d:flex jc:end m-top:5">
           <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center"
                   @click.prevent="addRouteFunction">+
@@ -250,9 +247,9 @@
           </button>
         </div>
         <div class="button-group">
-          <div><a class="n-btn n-btn-bg-color:main" href="#detail">이전</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#detail')">이전</div></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">다음</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#inclusion')">다음</div></div>
         </div>
         <!-- =================== route 종료 ======================== -->
       </section>
@@ -286,9 +283,9 @@
         </div>
 
         <div class="button-group">
-          <div><a class="n-btn n-btn-bg-color:main" href="#course">이전</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#course')">이전</div></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#caution">다음</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#caution')">다음</div></div>
         </div>
       </section>
 
@@ -326,9 +323,9 @@
           <p class="text-align:end p-bottom:4">{{ programCreateDto.requirement.length }}/ 1000</p>
         </div>
         <div class="button-group">
-          <div><a class="n-btn n-btn-bg-color:main" href="#inclusion">이전</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#inclusion')">이전</div></div>
           <button type="button" class="n-btn n-btn-bg-color:main" @click.prevent="tempSave">임시저장 후 나가기</button>
-          <div><a class="n-btn n-btn-bg-color:main" href="#image">다음</a></div>
+          <div><div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#image')">다음</div></div>
         </div>
       </section>
 
@@ -390,6 +387,7 @@ const routeComponentCount = ref(1);
 const regMemberId = localStorage.getItem("id");
 const token = localStorage.getItem("token");
 const route = useRoute();
+const router = useRouter();
 const programId = route.params.id;
 const programCreateDto = reactive({
   regMemberId: regMemberId,
@@ -417,7 +415,7 @@ const programCreateDto = reactive({
 
 const previewImages = ref([]); // 이미지 미리보기 URL 배열
 const imageFiles = ref([]); // 실제 파일 객체 배열
-const activeSection = ref();
+const activeSection = ref(window.location.hash || "#intro");
 
 
 //================Fetch Functions==============
@@ -431,6 +429,7 @@ onMounted(() => {
   if (!window.location.hash) {
     window.location.hash = '#intro';
   }
+  activeSection.value = window.location.hash;
   loadProgramData();
   fetchCategories();
 })
@@ -446,8 +445,32 @@ const updateRoute = (index, updatedRoute) => {
 
 //  호출될 때마다 routeComponentCount 값을 증가
 const addRouteFunction = () => {
-  routeComponentCount.value++;
-}
+  if (programCreateDto.routes.length === 0) {
+    // 출발지 추가
+    programCreateDto.routes.push({
+      title: '',
+      address: '',
+      description: '',
+      startTimeHour: '00',
+      startTimeMinute: '00',
+      duration: 0,
+      transportationId: null,
+      transportationDuration: null,
+    });
+  } else {
+    // 경유지 추가
+    programCreateDto.routes.push({
+      title: '',
+      address: '',
+      description: '',
+      startTimeHour: '00',
+      startTimeMinute: '00',
+      duration: 0,
+      transportationId: 0,
+      transportationDuration: null,
+    });
+  }
+};
 
 // const handleValidation = (index, isValid) => {
 //   console.log(`Updating validation for index ${index}:`, isValid);
@@ -531,8 +554,6 @@ const tempSave = async () => {
   return navigateTo("/host/programs");
 }
 
-console.log("Complete DTO:", JSON.parse(JSON.stringify(programCreateDto)));
-
 const sendCreateRequest = async () => {
 
   const formData = new FormData();
@@ -615,22 +636,9 @@ const loadProgramData = async () => {
       packingList: data.packingList,
       caution: data.caution,
       requirement: data.requirement,
-      routes: data.routes,
-      images: data.src
+      routes: data.routes || [],
+      images: data.src || []
     });
-
-    const addRouteFunction = () => {
-      programCreateDto.routes.push({
-        title: '',
-        address: '',
-        description: '',
-        startTimeHour: "00",
-        startTimeMinute: "00",
-        duration: 0,
-        transportationId: 0,
-        transportationDuration: 0
-      });
-    };
 
     previewImages.value = (data.src || []).map(src => `http://localhost:8080/api/v1/${src}`);
     // 기존 이미지를 Blob 형태로 imageFiles에 추가
@@ -645,6 +653,13 @@ const loadProgramData = async () => {
   } catch (error) {
     console.error("Failed to load program data:", error);
   }
+};
+
+
+const removeRoute = (index) => {
+  if (index === 0) return; // 출발지는 삭제하지 않음
+  programCreateDto.routes.splice(index, 1);
+  routeComponentCount.value -= 1;
 };
 
 const minusGroupSizeMax = () => {
@@ -765,6 +780,7 @@ const scrollToSection = (sectionId) => {
   window.location.hash = sectionId;
   activeSection.value = sectionId; // 활성화된 섹션 업데이트
 };
+
 
 //=================== 업데이트전 미리 목록 불러오기 부분===================
 

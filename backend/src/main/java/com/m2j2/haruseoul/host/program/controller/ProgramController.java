@@ -18,7 +18,7 @@ public class ProgramController {
 
     DefaultProgramService service;
 
-    public ProgramController(DefaultProgramService service, DefaultCategoryService categoryService) {
+    public ProgramController(DefaultProgramService service) {
         this.service = service;
     }
 
