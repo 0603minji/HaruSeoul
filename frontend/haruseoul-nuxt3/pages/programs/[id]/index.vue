@@ -47,15 +47,38 @@
 
             <div class="card-main">
               <div class="thumbnail-wrapper">
-                <button class="n-btn thumbnail-btn thumbnail-btn:left"><span
-                    class="n-icon n-icon:arrow_left"></span>
+                <!-- 이전 이미지 버튼 -->
+                <button
+                    class="n-btn thumbnail-btn thumbnail-btn:left"
+                    @click="prevImage"
+                    :disabled="totalImages === 0"
+                >
+                  <span class="n-icon n-icon:arrow_left"></span>
                 </button>
-                <img src="/public/image/thumbnail.png" alt="대표사진" class="thumbnail-img">
-                <button class="n-btn thumbnail-btn thumbnail-btn:right"><span
-                    class="n-icon n-icon:arrow_right"></span>
+
+                <!-- 현재 이미지 -->
+                <img
+                    :src="currentImage"
+                    alt="대표사진"
+                    class="thumbnail-img"
+                    v-if="totalImages > 0"
+                />
+
+                <!-- 다음 이미지 버튼 -->
+                <button
+                    class="n-btn thumbnail-btn thumbnail-btn:right"
+                    @click="nextImage"
+                    :disabled="totalImages === 0"
+                >
+                  <span class="n-icon n-icon:arrow_right"></span>
                 </button>
-                <div class="thumbnail-btn thumbnail-btn:num n-deco">1/5</div>
+
+                <!-- 이미지 순서 표시 -->
+                <div class="thumbnail-btn thumbnail-btn:num n-deco">
+                  {{ currentImageIndex + 1 }}/{{ totalImages }}
+                </div>
               </div>
+
 
               <div
                   style="display: flex; padding: var(--gap-7) var(--gap-5); padding-bottom: 0;"
@@ -566,6 +589,27 @@ const isModalVisible = ref("");
 
 const OpenCreateReservationModalHandler = () => isModalVisible.value = "CreateReservationModal";
 
+const currentImageIndex = ref(0);
+const totalImages = computed(() => data.value?.programDetailImageDto?.imgSrc?.length || 0);
+
+const currentImage = computed(() => {
+  return totalImages.value > 0
+      ? `http://localhost:8080/api/v1/${data.value.programDetailImageDto.imgSrc[currentImageIndex.value]}`
+      : '';
+});
+
+// 슬라이더 제어 함수
+const prevImage = () => {
+  currentImageIndex.value =
+      currentImageIndex.value === 0 ? totalImages.value - 1 : currentImageIndex.value - 1;
+};
+
+const nextImage = () => {
+  currentImageIndex.value =
+      currentImageIndex.value === totalImages.value - 1 ? 0 : currentImageIndex.value + 1;
+};
+
+
 onMounted(() => {
   const initMaps = () => {
     if (window.kakao && window.kakao.maps) {
@@ -705,6 +749,10 @@ const meetingTimeWithOrderOne = computed(() => {
   }
 });
 
+console.log("이미지소스입니당",data.value.programDetailImageDto);
+
+
+
 const departure = computed(() =>
     data.value && data.value.programDetailRouteDto
         ? data.value.programDetailRouteDto.find(route => route.order === 1)
@@ -770,15 +818,6 @@ watchEffect(() => {
 .program-detail {
   font-size: var(--font-size-7);
   max-width: 700px;
-
-  .thumbnail-wrapper,
-  .map-img-wrapper {
-    background-color: var(--color-base-3);
-
-    .thumbnail-img {
-      max-width: 550px;
-    }
-  }
 }
 
 /* n-icon */
@@ -893,18 +932,20 @@ watchEffect(() => {
 .thumbnail-wrapper {
   display: flex;
   position: relative;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 16px;
-  flex-shrink: 0;
   overflow: hidden;
-  min-width: 85px;
-
+  width: 100%;
+  max-width: 700px; /* 최대 크기 제한 */
+  aspect-ratio: 16 / 9; /* 가로 세로 비율 고정 */
+  background-color: #f0f0f0; /* 기본 배경색 */
+  border-radius: 8px;
   .thumbnail-img {
-    max-width: 700px;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 0.5s ease-in-out;
   }
 
   .thumbnail-btn {
