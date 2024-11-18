@@ -161,6 +161,8 @@ public class DefaultProgramService implements ProgramService {
         List<RouteCreateDto> routeCreateDtos = programCreateDto.getRoutes();
         //  routeCreateDtos를 변환해서 담을 Route 엔티티가 여러개인 List routes 생성
         ArrayList<Route> routes = new ArrayList<>();
+        System.out.println("==============================");
+        System.out.println(routeCreateDtos);
 
         //  routeCreateDtos(List)에 담긴 routeCreateDto 하나하나를 Route객체로 변환하고
         //  그 객체들을 리스트 routes에 add하여 누적
@@ -181,7 +183,11 @@ public class DefaultProgramService implements ProgramService {
                     .order(routeCreateDto.getOrder())
                     .startTime(getLocalTimeByHourAndMinute(routeCreateDto.getStartTimeHour(), routeCreateDto.getStartTimeMinute()))
                     .transportation(newTransportation)
-                    .transportationDuration(getLocalTimeByDuration(routeCreateDto.getDuration()))
+                    .transportationDuration(
+                            routeCreateDto.getTransportationDuration() != null
+                                    ? convertMinutesToLocalTime(routeCreateDto.getTransportationDuration())
+                                    : null
+                    )
                     .build();
 
             routes.add(route);
@@ -365,7 +371,11 @@ public class DefaultProgramService implements ProgramService {
                             .address(route.getAddress())
                             .duration(LocalTimeToIntegerConverter(route.getDuration()))
                             .description(route.getDescription())
-                            .transportationDuration(String.valueOf(route.getTransportationDuration().getMinute()))
+                            .transportationDuration(
+                                    route.getTransportationDuration() != null
+                                            ? String.valueOf(route.getTransportationDuration().getMinute())
+                                            : "0"
+                            )
                             .transportationName(transportationName)
                             .startTimeHour(String.format("%02d", route.getStartTime().getHour()))
                             .startTimeMinute(String.format("%02d", route.getStartTime().getMinute()))
@@ -445,6 +455,19 @@ public class DefaultProgramService implements ProgramService {
             return hour * 60 + minute;
 
     }
+    private LocalTime convertMinutesToLocalTime(String duration) {
+        if (duration == null || duration.isEmpty()) {
+            return null; // Null 또는 빈 문자열 처리
+        }
+
+        try {
+            int minutes = Integer.parseInt(duration); // String을 Integer로 변환
+            return LocalTime.of(minutes / 60, minutes % 60); // 시간과 분으로 LocalTime 생성
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid duration format: " + duration, e);
+        }
+    }
+
 
 
 }

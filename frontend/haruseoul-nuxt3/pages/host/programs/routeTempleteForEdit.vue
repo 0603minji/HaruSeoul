@@ -1,8 +1,43 @@
 <template>
   <section>
+
+
+    <div v-if="route.transportationId !== null" class="divider"></div>
+    <div v-if="route.transportationId !== null" class="course-moving-wrapper">
+      <div class="d:flex al-items:center">
+        <p class="p:1">이동수단</p>
+        <label>
+          <select class="input-select" v-model="route.transportationId">
+            <option :value="null">선택 안 함</option>
+            <option v-for="t in transportationIds" :key="t.id" :value="t.id">
+              {{ t.name }}
+            </option>
+          </select>
+        </label>
+      </div>
+      <div class="d:flex al-items:center">
+        <p class="p:1">이동시간</p>
+        <label>
+          <select class="input-select" v-model="route.transportationDuration">
+            <option :value="null">선택 안 함</option>
+            <option value="5">5분</option>
+            <option value="10">10분</option>
+            <option value="15">15분</option>
+            <option value="20">20분</option>
+            <option value="25">25분</option>
+            <option value="30">30분</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    <div v-if="route.transportationId !== null" class="divider"></div>
+
     <div class="course-card">
       <div class="card-header">
-        {{ props.order > 1 ? '경유지' : '출발지' }}
+        <div class="title">{{ props.order > 1 ? `${props.order}` : '출발지' }}</div>
+        <div v-if="props.order > 1" @click.prevent="removeRoute"
+             class="n-icon n-icon:exit">
+        </div>
       </div>
 
 
@@ -37,50 +72,63 @@
             <img src="/public/image/pin.svg" alt="아이콘">
             <span>시작시각</span>
           </div>
-          <div class="time-select-wrapper">
-            <label><select id="start-hour" class="input-select" name="start-hour"
-                           v-model="route.startTimeHour">
-              <option value="00">00</option>
-              <option value="01">01</option>
-              <option value="02">02</option>
-              <option value="03">03</option>
-              <option value="04">04</option>
-              <option value="05">05</option>
-              <option value="06">06</option>
-              <option value="07">07</option>
-              <option value="08">08</option>
-              <option value="09">09</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-              <option value="14">14</option>
-              <option value="15">15</option>
-              <option value="16">16</option>
-              <option value="17">17</option>
-              <option value="18">18</option>
-              <option value="19">19</option>
-              <option value="20">20</option>
-              <option value="21">21</option>
-              <option value="22">22</option>
-              <option value="23">23</option>
-            </select>
-            </label>
-            <p>시</p>
+          <div v-if="props.order === 1" class="d:flex">
+            <!-- 출발지: 부모에서 전달된 값 사용 -->
+            <div class="time-select-wrapper">
+              <input type="text" class="input-select readonly" :value="startTimeHour" readonly/>
+              <p>시</p>
+            </div>
+            <div class="time-select-wrapper">
+              <input type="text" class="input-select readonly" :value="startTimeMinute" readonly/>
+              <p>분</p>
+            </div>
           </div>
-          <div class="time-select-wrapper">
-            <label>
-              <select id="start-minute" class="input-select" name="start-minute"
-                      v-model="route.startTimeMinute">
-                <option value="00">00</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="40">40</option>
-                <option value="50">50</option>
-              </select>
-            </label>
-            <p>분</p>
+          <div v-else class="d:flex">
+            <!-- 경유지: 선택 가능 -->
+            <div class="time-select-wrapper">
+              <label>
+                <select id="start-hour" class="input-select" name="start-hour" v-model="route.startTimeHour">
+                  <option value="00">00</option>
+                  <option value="01">01</option>
+                  <option value="02">02</option>
+                  <option value="03">03</option>
+                  <option value="04">04</option>
+                  <option value="05">05</option>
+                  <option value="06">06</option>
+                  <option value="07">07</option>
+                  <option value="08">08</option>
+                  <option value="09">09</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                  <option value="21">21</option>
+                  <option value="22">22</option>
+                  <option value="23">23</option>
+                </select>
+              </label>
+              <p>시</p>
+            </div>
+            <div class="time-select-wrapper">
+              <label>
+                <select id="start-minute" class="input-select" name="start-minute" v-model="route.startTimeMinute">
+                  <option value="00">00</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="30">30</option>
+                  <option value="40">40</option>
+                  <option value="50">50</option>
+                </select>
+              </label>
+              <p>분</p>
+            </div>
           </div>
         </div>
 
@@ -101,33 +149,7 @@
 
       </div>
     </div>
-    <div class="divider"></div>
 
-    <div class="course-moving-wrapper">
-      <div class="d:flex al-items:center">
-        <p class="p:1">이동수단</p>
-        <label>
-          <select class="input-select" v-model="route.transportationId">
-            <option v-for="t in transportationIds" :key="t.id" :value="t.id">
-              {{ t.name }}
-            </option>
-          </select>
-        </label>
-      </div>
-      <div class="d:flex al-items:center">
-        <p class="p:1">이동시간</p>
-        <label>
-          <select class="input-select" v-model="route.transportationDuration">
-            <option value="5">5분</option>
-            <option value="10">10분</option>
-            <option value="15">15분</option>
-            <option value="20">20분</option>
-            <option value="25">25분</option>
-            <option value="30">30분</option>
-          </select>
-        </label>
-      </div>
-    </div>
   </section>
 </template>
 
@@ -145,7 +167,9 @@ const transportationIds = ref([]);
 
 const props = defineProps({
   order: Number,
-  routeData: Object
+  routeData: Object,
+  startTimeHour: String,
+  startTimeMinute: String,
 });
 
 
@@ -154,15 +178,23 @@ const props = defineProps({
 //  emit('updateRoute', data) 형태로 이벤트 발생
 //  첫 번째 인자 : updateRoute라는 이벤트
 //  두 번째 인자 : 부모에게 전달할 데이터
-const emit = defineEmits(['updateRoute', 'validationPassed']);
+const emit = defineEmits(['updateRoute', 'validationPassed','removeRoute']);
 
 
 //  reactive : 반응형 객체로 만드는 함수
 //             객체 값이 변화하면 관련된 UI를 업데이트.
 //  route라는 반응형 객체 안에 여러 데이터를 저장
+
+const startTimeHour = computed(() => props.startTimeHour || '00');
+const startTimeMinute = computed(() => props.startTimeMinute || '00');
+
 const route = reactive({
-  ...props.routeData // 부모로부터 받은 데이터를 초기화하여 사용
+  ...props.routeData,
+  startTimeHour: props.startTimeHour || '00',
+  startTimeMinute: props.startTimeMinute || '00',
 });
+
+
 
 
 console.log("컴포넌트루트:", route);
@@ -178,16 +210,18 @@ const fetchTransportationIds = async () => {
 //  emit으로 updateRoute 이벤트를 발생시킴
 //  그 안에 현재 route 객체를 전달
 //  { ...route } : route 객체의 복사본을 만들어 데이터를 전달하는 역할
-const updateParent = () => {
-  if (route.title || route.address || route.description || route.duration > 0 || route.transportationId || route.transportationDuration > 0) {
-    emit('updateRoute',route.order, { ...route });
-  }
+// const updateParent = () => {
+//   if (route.title || route.address || route.description || route.duration > 0 || route.transportationId || route.transportationDuration > 0) {
+//     emit('updateRoute',route.order, { ...route });
+//   }
+// };
+const removeRoute = () => {
+  emit("removeRoute", props.order - 1); // 부모에게 삭제 요청 (index 전달)
 };
 
 watch(route, () => {
   emit('updateRoute', props.order - 1, {...route});
 }, {deep: true});
-
 
 
 const minusDuration = () => {
@@ -524,7 +558,19 @@ const checkValidation = () => {
   -webkit-border-top-left-radius: 10px;
   -webkit-border-top-right-radius: 10px;
   padding: 8px 0;
+  //font-size: 20px;
   font-weight: bold;
+  display: flex; /* flexbox 활성화 */
+  align-items: center; /* 세로 가운데 정렬 */
+  justify-content: space-between;
+  .title{
+    margin: 0 auto;
+  }
+  .n-icon\:exit {
+    background-color: var(--color-main-3);
+    transform: translateX(-10px); /* 왼쪽으로 10px 이동 */
+    cursor: pointer;
+  }
 }
 
 .input-with-icon {
