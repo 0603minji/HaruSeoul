@@ -184,19 +184,19 @@ onMounted(() => {
         <div class="n-card bg-color:base-1 padding:6" v-if="r.id">
           <div class="card-header">
             <div class="left">
-              <span v-if="['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
-                결제완료
-              </span>
+                  <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
+                    결제완료
+                  </span>
 
               <span v-else-if="r.statusName === 'Finished'" class="n-panel-tag not-submitted">
-                이용완료
-              </span>
+                    이용완료
+                  </span>
 
               <span v-else-if="r.statusName === 'Confirmed'" class="n-panel-tag not-submitted">
-                예약확정
-              </span>
+                    예약확정
+                  </span>
 
-              <span v-else-if="r.statusName === 'Canceled'" class="n-panel-tag not-submitted"
+              <span v-else-if="r.deleteDate !== null || r.statusName === 'Canceled'" class="n-panel-tag not-submitted"
                     style="border-color: #DB4455; color: #DB4455;">
                 취소됨
               </span>
@@ -204,19 +204,17 @@ onMounted(() => {
           </div>
 
           <div class="card-main">
-            <div class="img-wrapper">
-              <div v-if="reservationCard.src && reservationCard.src.startsWith('uploads')" class="img-wrapper">
-                <img :src="`${config.public.apiBase}${reservationCard.src}`" alt="대표사진"/>
-              </div>
-              <div v-else class="img-wrapper">
-                <img src="assets/image/default-program-image.png" alt="대표사진"/>
-              </div>
+            <div v-if="r.src && r.src.startsWith('uploads')" class="img-wrapper">
+              <img :src="`http://localhost:8080/api/v1/${r.src}`" alt="대표사진" />
+            </div>
+            <div v-else class="img-wrapper">
+              <img src="assets/image/default-program-image.png" alt="대표사진" />
             </div>
 
             <div class="card-info-wrapper">
               <div class="card-header-responsive">
                 <div class="left">
-                  <span v-if="['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
+                  <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
                     결제완료
                   </span>
 
@@ -228,10 +226,11 @@ onMounted(() => {
                     예약확정
                   </span>
 
-                  <span v-else-if="r.statusName === 'Canceled'" class="n-panel-tag not-submitted"
+                  <span v-else-if="r.deleteDate !== null || r.statusName === 'Canceled'" class="n-panel-tag not-submitted"
                         style="border-color: #DB4455; color: #DB4455;">
                     취소됨
                   </span>
+                  <span style="font-weight: bold; padding: 5px;">[{{ r.id }}]</span>
                 </div>
               </div>
               <p class="title">
@@ -244,24 +243,20 @@ onMounted(() => {
                     <span v-if="r.dDay >= 0">
 
                       {{ r.date }}
-                      <span
-                          v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3) && (r.dDay > 0)"
-                          style="color: #DB4455;">
+                      <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3) && (r.dDay > 0)" style="color: #DB4455;">
                         (D-{{ r.dDay }})
                       </span>
 
-                      <span
-                          v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
+                      <span v-else-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
                         (D-{{ r.dDay }})
                       </span>
 
-                      <span
-                          v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay === 0)"
-                          style="color: #DB4455;">
+                      <span v-else-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay === 0)" style="color: #DB4455;">
                         (D-day)
                       </span>
 
                     </span>
+
                   </div>
                   <div class="card-info">
                     <span class="n-icon n-icon:group n-deco">예약인원</span>
@@ -269,11 +264,10 @@ onMounted(() => {
                   </div>
                 </div>
 
-                <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
+                <div v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
                      class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal"
-                     style="color: #DB4455; --btn-border-color:#DB4455;">
+                  <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal" style="color: #DB4455; --btn-border-color:#DB4455;">
                     예약 취소
                   </a>
                   <a href="#"
@@ -289,7 +283,7 @@ onMounted(() => {
                      @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
                 </div>
 
-                <div v-else-if="r.statusName === 'Canceled'" class="card-footer-responsive">
+                <div v-else-if="r.statusName === 'Canceled' || r.deleteDate !== null" class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
                   <a href="#"
                      class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
@@ -300,11 +294,10 @@ onMounted(() => {
             </div>
           </div>
 
-          <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
+          <div v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
                class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-            <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal"
-               style="color: #DB4455; --btn-border-color:#DB4455;">
+            <a href="#" class="n-btn" @click="handleCancelClick(r.id)" style="color: #DB4455; --btn-border-color:#DB4455;">
               예약 취소
             </a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
@@ -318,12 +311,12 @@ onMounted(() => {
                @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
           </div>
 
-          <div v-else-if="r.statusName === 'Canceled'" class="card-footer margin-top:2"
-               style="padding-left: 10px; justify-content: space-between;">
+          <div v-else-if="r.statusName === 'Canceled' || r.deleteDate !== null" class="card-footer margin-top:2" style="padding-left: 10px; justify-content: space-between;">
             <a href="#" class="n-btn bg-color:main-1 color:base-1" style="max-width: 478px;">호스트 문의</a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
                @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
           </div>
+
         </div>
       </div>
 
@@ -572,7 +565,6 @@ onMounted(() => {
                   </span>
                   <span class="info-input"
                         style="
-                        max-width: 700px;
                         border: 1px solid black;
                         padding: 10px;
                         border-radius: 4px;">{{
@@ -589,7 +581,6 @@ onMounted(() => {
                   >Guest</span>
                   <span class="info-input"
                         style="
-                        max-width: 700px;
                         border: 1px solid black;
                         padding: 10px;
                         border-radius: 4px;">{{
