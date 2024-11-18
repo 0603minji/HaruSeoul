@@ -12,6 +12,7 @@
     background-color: var(--color-base-1);
     /* 다른 요소 위에 표시되도록 */
     z-index: 52;
+    transition: 0.2s ease-in-out;
 
     .aside-header {
         /*가로 배치*/
@@ -20,9 +21,15 @@
         justify-content: space-between;
         padding: var(--gap-3);
 
-    h1 {
-        display: none;
-    }
+        h1 {
+            display: none;
+        }
+
+        /* 알림 채팅아이콘 */
+        div {
+            display: flex;
+            gap: 8px;
+        }
 
     }
 
@@ -78,33 +85,72 @@
         }
     }
 
-    .aside-menu {
-        /*세로 배치*/
-        display: flex;
-        flex-direction: column;
-        padding: 0 10px;
-        border-bottom: 1px solid var(--color-base-3);
-        width: var(--width-10p);
-        gap: var(--gap-4);
-        padding-bottom: var(--gap-4);
-        padding-top: var(--gap-4);
+    nav {
+        .filter{
+            .collapse {
+                display: flex;
+                justify-content: center;
+                width: auto;
+                padding: 16px 18px 10px 18px;
+                list-style-type: none;
+                pointer-events: none;
+            }
 
-        .menu {
-            padding: 14px 20px;
-            font-weight: var(--font-weight-2);
+            .aside-menu {
+                /*세로 배치*/
+                display: flex;
+                flex-direction: column;
+                border-bottom: 1px solid var(--color-base-3);
+                width: var(--width-10p);
+                gap: 6px;
+                padding-bottom: 10px;
+
+                .menu {
+                    padding: 20px 32px;
+                    font-weight: var(--font-weight-2);
+                    display: flex;
+                    align-items: center;
+                }
+
+                /*메뉴 항목 호버 효과*/
+
+                .menu:hover {
+                    /*--icon-color: var(--color-sub-1);
+                    --btn-box-shadow: 0 -4px 8px var(--color-base-3), 0 4px 8px var(--color-base-3);
+                    color: var(--color-sub-1);*/
+                    background-color: var(--color-base-3);
+                    /*box-shadow: var(--btn-box-shadow);*/
+                }
+            }
+        }
+        /* 로그아웃 */
+        .aside-menu {
+            /*세로 배치*/
             display: flex;
-            align-items: center;
-        }
+            flex-direction: column;
+            border-bottom: 1px solid var(--color-base-3);
+            width: var(--width-10p);
+            gap: 6px;
+            padding-bottom: 10px;
 
-        /*메뉴 항목 호버 효과*/
-        .menu:hover {
-            --icon-color: var(--color-sub-1);
-            --btn-box-shadow: 0 -4px 8px var(--color-base-3), 0 4px 8px var(--color-base-3);
-            color: var(--color-sub-1);
-            background-color: var(--color-base-3);
-            box-shadow: var(--btn-box-shadow);
-        }
+            .menu {
+                padding: 20px 32px;
+                font-weight: var(--font-weight-2);
+                display: flex;
+                align-items: center;
+                --deco-gap: 8px;
+            }
 
+            /*메뉴 항목 호버 효과*/
+
+            .menu:hover {
+                /*--icon-color: var(--color-sub-1);
+                --btn-box-shadow: 0 -4px 8px var(--color-base-3), 0 4px 8px var(--color-base-3);
+                color: var(--color-sub-1);*/
+                background-color: var(--color-base-3);
+                /*box-shadow: var(--btn-box-shadow);*/
+            }
+        }
     }
 
     .aside-footer {
@@ -152,6 +198,7 @@
     /*요소를 투명하게 보이지않게*/
     opacity: 0;
     z-index: 51;
+    transition: 0.1s ease-in-out;
 }
 
 /* 어사이드가 체크되면 오버레이가 활성화*/

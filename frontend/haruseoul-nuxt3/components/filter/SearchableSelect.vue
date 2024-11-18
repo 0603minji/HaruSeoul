@@ -20,7 +20,12 @@ const props = defineProps({
 // === variables =======================================================================================================
 const isDropdownVisible = ref(false);
 const searchTerm = ref(''); // 옵션리스트에서 필터링할 검색어
-const selectedOption = ref(null); // 옵션리스트에서 선택된 옵션
+const selectedOption = ref(props.defaultProgramId); // 옵션리스트에서 선택된 옵션
+watch(()=>props.defaultProgramId, (newOne) => {
+  // selectedOption 초기화
+  selectedOption.value = newOne === null? null : programOptions.value.find(program => program.id === newOne);
+  emit('selectionChanged', selectedOption.value); // Emit the default selected option
+});
 const programOptions = ref([]); // 선택가능한 모든 프로그램 옵션리스트
 const filteredOptions = ref([]); // 옵션리스트에서 검색어로 필터링된 리스트
 const userDetails = useUserDetails();
