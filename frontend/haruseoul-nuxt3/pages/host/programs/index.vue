@@ -270,7 +270,7 @@
                   <div v-if="activeMenuIndex[index]" class="menu-dropdown">
                     <ul>
                       <NuxtLink class="edit" :href="`/host/programs/${p.id}/edit`">수정</NuxtLink>
-                      <li @click="deleteProgram(p.id)">삭제</li>
+                      <li @click.prevent="deleteProgram(p.id)">삭제</li>
                     </ul>
                   </div>
                 </div>
@@ -307,11 +307,13 @@
                         <button
                             v-else-if="p.status === 'Published'"
                             class="n-btn open"
+                            @click.prevent="OpenPublishProgramModalHandler(p.id)"
                         >추가 개설
                         </button>
                         <button
                             v-else-if="p.status === 'Unpublished'"
                             class="n-btn open"
+                            @click.prevent="OpenPublishProgramModalHandler(p.id)"
                         >개설하기
                         </button>
                       </div>
@@ -327,15 +329,16 @@
                       class="n-btn create"
                   >작성하기
                   </NuxtLink>
-                  <NuxtLink
+                  <button
                       v-if="p.status === 'Published'"
-                      :href="`/host/programs/reservations`"
                       class="n-btn manage"
-                  >예약 관리
-                  </NuxtLink>
+                      @click.prevent="OpenPublishProgramModalHandler(p.id)"
+                  >추가 개설
+                  </button>
                   <button
                       v-else-if="p.status === 'Unpublished'"
                       class="n-btn open"
+                      @click.prevent="OpenPublishProgramModalHandler(p.id)"
                   >개설하기
                   </button>
                 </div>
@@ -468,8 +471,26 @@
             </details>
           </div>
         </aside>
+
       </section>
     </section>
+    <div :class="{'active': modalVisible}" class="backdrop"></div>
+
+    <!--  확인 모달창 ================================================================================================ -->
+    <!--  개설확인  -->
+    <Modal :isVisible="isModalVisible('confirmPpModal')" @close="closePublishModal('confirmPpModal')"
+           @confirm="() => {confirmPpPost=!confirmPpPost;
+             console.log('index. Modal emit confirm and callback func called. confirmPpPost: ', confirmPpPost);
+             closePublishModal('confirmPpModal');}">
+      <p>개설하시겠습니까?</p>
+    </Modal>
+    <PublishProgramModal :key="PublishProgramModalKey"
+                         :class="{'show': modalVisible === 'PublishProgramModal'}"
+                         :default-program-id="pIdToPublish"
+                         :confirm-pp-post="confirmPpPost"
+                         @close-modal="() => { fetchPrograms(); modalVisible = ''; }"
+                         @submit="openPublishModal('confirmPpModal')"/>
+
   </main>
 </template>
 
@@ -477,6 +498,7 @@
 import {onMounted, ref, computed} from "vue";
 import axios from "axios";
 import {useRouter} from 'vue-router';
+import PublishProgramModal from "~/components/modal/PublishProgramModal.vue";
 
 //============= 변수 영역 ====================
 const programs = ref([]); //  서버에서 가져온 프로그램 목록 저장 배열
@@ -598,20 +620,19 @@ const deleteProgram = async (programId) => {
       }
     });
     alert("프로그램이 성공적으로 삭제되었습니다.");
-    await fetchPrograms();
+
+    // 프로그램 목록에서 삭제된 항목 제거
+    programs.value = programs.value.filter(program => program.id !== programId);
+    activeMenuIndex.value = {[index]: false};
 
 
   } catch (error) {
-    // 예외가 발생했을 때 처리
-    if (error.response && error.response.status === 409) {
-      // IllegalStateException으로 인해 400 상태 코드가 반환되었다고 가정
+    if (error.response && error.response.status === 409)
       alert("공개된 프로그램이라 삭제할 수 없습니다.");
-    } else {
-      console.error("프로그램 삭제 중 오류 발생:", error);
-      alert("프로그램 삭제 중 오류가 발생했습니다.");
-    }
+
   }
-}
+};
+
 
 const toggleMenu = (index) => {
   // 다른 카드의 메뉴는 닫고, 해당 카드만 토글
@@ -855,6 +876,18 @@ const visiblePages = computed(() => {
   return pages;
 });
 
+
+//==============개설 모달창 영역==========================
+const modalVisible = ref("");
+const pIdToPublish = ref(null); // 일정추가, 추가개설할 pubishedprogramId
+const confirmPpPost = ref(false);
+const PublishProgramModalKey = ref(false); // 예약취소 시 리렌더링 유발용
+const { isModalVisible, openModal:openPublishModal, closeModal:closePublishModal } = useModal();
+
+const OpenPublishProgramModalHandler = (programId) => {
+  pIdToPublish.value = programId;
+  modalVisible.value = "PublishProgramModal";
+}
 
 
 </script>
@@ -1385,6 +1418,23 @@ const visiblePages = computed(() => {
   .n-filter {
     display: none;
   }
+}
+
+
+.backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dark background */
+  backdrop-filter: blur(5px); /* Blur effect */
+  z-index: 999; /* Behind modal but above other content */
+}
+
+.backdrop.active {
+  display: block;
 }
 
 @media (min-width: 1092px) {

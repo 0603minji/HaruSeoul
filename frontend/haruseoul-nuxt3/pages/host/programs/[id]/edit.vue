@@ -230,7 +230,7 @@
           <RouteTempleteForEdit
               v-for="(route, index) in programCreateDto.routes"
               :key="index"
-              :order="index + 1"
+              :order="index+1"
               :routeData="route"
               :startTimeHour="index === 0 ? programCreateDto.startTimeHour : ''"
               :startTimeMinute="index === 0 ? programCreateDto.startTimeMinute : ''"
@@ -451,6 +451,7 @@ const addRouteFunction = () => {
       title: '',
       address: '',
       description: '',
+      order: routeComponentCount.value,
       startTimeHour: '00',
       startTimeMinute: '00',
       duration: 0,
@@ -463,6 +464,7 @@ const addRouteFunction = () => {
       title: '',
       address: '',
       description: '',
+      order: routeComponentCount.value+1,
       startTimeHour: '00',
       startTimeMinute: '00',
       duration: 0,

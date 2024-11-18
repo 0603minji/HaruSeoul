@@ -45,6 +45,7 @@ public class DefaultProgramDetailService implements ProgramDetailService {
                 .exclusion(program.getExclusion())
                 .packingList(program.getPackingList())
                 .duration(hours)
+                .startTime(startTime)
                 .caution(program.getCaution())
                 .build();
         return programDetailProgramDto;

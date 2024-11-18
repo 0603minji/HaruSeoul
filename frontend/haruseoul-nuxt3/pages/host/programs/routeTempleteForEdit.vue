@@ -1,9 +1,8 @@
 <template>
   <section>
 
-
-    <div v-if="route.transportationId !== null" class="divider"></div>
-    <div v-if="route.transportationId !== null" class="course-moving-wrapper">
+    <div v-if="route !== null && route.order !== 1" class="divider"></div>
+    <div v-if="route !== null && route.order !== 1" class="course-moving-wrapper">
       <div class="d:flex al-items:center">
         <p class="p:1">이동수단</p>
         <label>
@@ -30,7 +29,7 @@
         </label>
       </div>
     </div>
-    <div v-if="route.transportationId !== null" class="divider"></div>
+    <div v-if="route !== null && route.order !== 1" class="divider"></div>
 
     <div class="course-card">
       <div class="card-header">
@@ -197,7 +196,7 @@ const route = reactive({
 
 
 
-console.log("컴포넌트루트:", route);
+console.log("컴포넌트수정페이지루트:", route);
 
 
 //===================== Fetch Functions ====================
@@ -206,15 +205,6 @@ const fetchTransportationIds = async () => {
   transportationIds.value = response.data;
 }
 
-//  부모 컴포넌트로 데이터를 보내는 함수
-//  emit으로 updateRoute 이벤트를 발생시킴
-//  그 안에 현재 route 객체를 전달
-//  { ...route } : route 객체의 복사본을 만들어 데이터를 전달하는 역할
-// const updateParent = () => {
-//   if (route.title || route.address || route.description || route.duration > 0 || route.transportationId || route.transportationDuration > 0) {
-//     emit('updateRoute',route.order, { ...route });
-//   }
-// };
 const removeRoute = () => {
   emit("removeRoute", props.order - 1); // 부모에게 삭제 요청 (index 전달)
 };

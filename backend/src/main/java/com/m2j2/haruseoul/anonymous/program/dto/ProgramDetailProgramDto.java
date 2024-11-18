@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,5 +26,6 @@ public class ProgramDetailProgramDto {
     private String packingList;
     private String caution;
     private Float duration;
+    private LocalTime startTime;
 
 }
