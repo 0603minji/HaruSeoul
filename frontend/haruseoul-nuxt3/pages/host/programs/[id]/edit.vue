@@ -232,7 +232,10 @@
               :key="index"
               :order="index + 1"
               :routeData="route"
+              :startTimeHour="index === 0 ? programCreateDto.startTimeHour : ''"
+              :startTimeMinute="index === 0 ? programCreateDto.startTimeMinute : ''"
               @updateRoute="updateRoute"
+              @removeRoute="removeRoute"
               @validationPassed="handleValidation"
           />
         </div>
@@ -377,6 +380,7 @@
 import {onMounted, ref, reactive} from "vue";
 import axios from "axios";
 import RouteTempleteForEdit from "~/pages/host/programs/routeTempleteForEdit.vue";
+import RouteTemplete from "~/pages/host/programs/routeTemplete.vue";
 
 const categories = ref([]);
 const routeComponentCount = ref(1);
@@ -441,7 +445,8 @@ const updateRoute = (index, updatedRoute) => {
 
 //  호출될 때마다 routeComponentCount 값을 증가
 const addRouteFunction = () => {
-  routeComponentCount.value++;
+  if (programCreateDto.routes.length === 0) {
+    // 출발지 추가
     programCreateDto.routes.push({
       title: '',
       address: '',
@@ -450,9 +455,22 @@ const addRouteFunction = () => {
       startTimeMinute: '00',
       duration: 0,
       transportationId: null,
-      transportationDuration: 0
+      transportationDuration: null,
     });
-}
+  } else {
+    // 경유지 추가
+    programCreateDto.routes.push({
+      title: '',
+      address: '',
+      description: '',
+      startTimeHour: '00',
+      startTimeMinute: '00',
+      duration: 0,
+      transportationId: 0,
+      transportationDuration: null,
+    });
+  }
+};
 
 // const handleValidation = (index, isValid) => {
 //   console.log(`Updating validation for index ${index}:`, isValid);
@@ -536,8 +554,6 @@ const tempSave = async () => {
   return navigateTo("/host/programs");
 }
 
-console.log("Complete DTO:", JSON.parse(JSON.stringify(programCreateDto)));
-
 const sendCreateRequest = async () => {
 
   const formData = new FormData();
@@ -620,23 +636,9 @@ const loadProgramData = async () => {
       packingList: data.packingList,
       caution: data.caution,
       requirement: data.requirement,
-      routes: data.routes,
-      images: data.src
+      routes: data.routes || [],
+      images: data.src || []
     });
-
-    const addRouteFunction = () => {
-      programCreateDto.routes.push({
-        title: '',
-        address: '',
-        description: '',
-        startTimeHour: "00",
-        startTimeMinute: "00",
-        duration: 0,
-        transportationId: 0,
-        transportationDuration: 0
-      }
-      );
-    };
 
     previewImages.value = (data.src || []).map(src => `http://localhost:8080/api/v1/${src}`);
     // 기존 이미지를 Blob 형태로 imageFiles에 추가
@@ -651,6 +653,13 @@ const loadProgramData = async () => {
   } catch (error) {
     console.error("Failed to load program data:", error);
   }
+};
+
+
+const removeRoute = (index) => {
+  if (index === 0) return; // 출발지는 삭제하지 않음
+  programCreateDto.routes.splice(index, 1);
+  routeComponentCount.value -= 1;
 };
 
 const minusGroupSizeMax = () => {

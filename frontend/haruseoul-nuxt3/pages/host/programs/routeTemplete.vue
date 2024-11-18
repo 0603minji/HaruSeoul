@@ -33,7 +33,7 @@
 
     <div class="course-card">
       <div class="card-header">
-        <div class="title">{{ props.order > 1 ? '경유지' : '출발지' }}</div>
+        <div class="title">{{ props.order > 1 ? `${props.order}` : '출발지' }}</div>
         <div v-if="props.order > 1" @click.prevent="removeRoute"
               class="n-icon n-icon:exit">
         </div>
@@ -188,9 +188,9 @@ const route = reactive({
   order: props.order, // 현재 길이를 기준으로 순서를 설정
   address: '',
   description: '',
-  duration: 0,
-  transportationId: 0,
-  transportationDuration: 0
+  duration: '',
+  transportationId: '',
+  transportationDuration: null
 });
 
 

@@ -471,7 +471,6 @@ const allRoutesValid = () => {
   return validationResults.value.every(valid => valid === true);
 };
 
-
 const createProgram = async () => {
   // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
   if (
@@ -642,7 +641,6 @@ const removeRoute = (index) => {
   routeComponentCount.value -= 1;
 };
 
-
 //======== Validation Checking Functions =============
 const checkIntroValidation = () => {
   return (titleValidation() || detailValidation());
@@ -713,8 +711,16 @@ const requirementValidation = () => {
 }
 
 const addRouteFunction = () => {
+  programCreateDto.routes.push({
+    title: '',
+    order: routeComponentCount.value,
+    address: '',
+    description: '',
+    duration: 0,
+    transportationId: null,
+    transportationDuration: 0 // 명시적으로 0 설정
+  });
   routeComponentCount.value++;
-  programCreateDto.routes.push({});
 };
 
 const scrollToSection = (sectionId) => {
