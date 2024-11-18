@@ -1,6 +1,8 @@
 <script setup>
 import {onMounted, ref, defineEmits} from "vue";
 import axios from "axios";
+import {useDataFetch} from "~/composables/useDataFetch.js";
+import {useReservationFetch} from "~/composables/useReservationFetch.js";
 
 //=======================변수영역==========
 const statuses = ref([]);
@@ -25,7 +27,6 @@ const fetchStatuses = async () => {
   } catch (error) {
     console.error("Error fetching statuses:", error);
   }
-
 };
 
 //=======================LifeCycle Functions==========
@@ -37,22 +38,19 @@ onMounted(() => {
 // 예약 목록을 가져오는 비동기 함수
 const fetchReservations = async (StatusIds) => {
   try {
-    const isDeleted = (StatusIds === 4);
-    const statusIds = isDeleted ? [4] : StatusIds;
+    // 삭제일이 있는 경우를 추가해줘야하는데 그게 안됨..
+    const isDeleted = StatusIds.includes(4);
+    const params = {
+      mIds: userDetail.id.value,
+      isDeleted: isDeleted
+    }
+    if (!StatusIds.includes(4)) params.sIds = StatusIds;
+    console.log('params called')
+    console.log(params)
+    const response = await useReservationFetch(`http://localhost:8080/api/v1/guest/reservations`, {query: params});
 
-    const response = await axios.get(`http://localhost:8080/api/v1/guest/reservations`, {
-      headers: {
-        Authorization: `Bearer ${token}` // JWT 토큰 추가
-      },
-      params: {
-        sIds: statusIds,
-        mIds: userDetail.id.value,
-        isDeleted: isDeleted
-      }
-    });
-
-    console.log("Fetched reservations:", response.data);  // 데이터 확인 로그
-    selectedReservations.value = response.data; // 예약 목록 저장
+    console.log("Fetched reservations:", response);  // 데이터 확인 로그
+    selectedReservations.value = response; // 예약 목록 저장
 
   } catch (error) {
     console.error("Error fetching reservations:", error);
@@ -73,18 +71,27 @@ const selectStatusAll = async () => {
 
 //  예약 상태 선택시 서버에서 목록을 업데이트
 const selectReservations = async (statusIds) => {
-  selectedStatus.value = statusIds.length === 1 ? statusIds[0] : '결제완료';
-
-  if (statusIds.length > 0) {
-    try {
-      await fetchReservations(statusIds.join(','));  // ID를 통해 예약 목록을 가져옵니다.
-      emit('selectStatusIds', statusIds);
-    } catch (error) {
-      console.error("Error fetching selected status:", error);
-    }
+  // 만약 isDeleted가 존재한다면 '취소됨'으로 처리해놓고 아래 진행식이 진행되어야 한다.
+  if (statusIds.includes(6)) {
+    return '예약확정'
+  } else if (statusIds.includes(3)) {
+    return '이용완료'
+  } else if (statusIds.includes(1, 2, 5)) {
+    return '결제완료'
   } else {
-    console.log("No status selected.");
+    return '취소됨'
   }
+
+  // if (statusIds.length > 0) {
+  //   try {
+  //     await fetchReservations(statusIds);  // ID를 통해 예약 목록을 가져옵니다.
+  //     emit('selectStatusIds', statusIds);
+  //   } catch (error) {
+  //     console.error("Error fetching selected status:", error);
+  //   }
+  // } else {
+  //   console.log("No status selected.");
+  // }
 };
 
 // Function to get the display value based on s.id
@@ -127,7 +134,7 @@ const getDisplayValue = (statusId) => {
                     :class="{ active: selectedStatus === '결제완료' }">결제완료
           </NuxtLink>
         </li>
-<!--         나머지 상태 버튼들 -->
+        <!--         나머지 상태 버튼들 -->
         <li v-for="s in statuses.sort((a, b) => b.id - a.id)" :key="s.id">
           <NuxtLink @click.prevent="(e) => { e.preventDefault(); selectReservations([s.id])}" href=""
                     class="n-btn n-btn n-btn-rv-filter n-btn:hover"

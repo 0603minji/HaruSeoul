@@ -1286,55 +1286,17 @@ watchEffect(() => {
   }
 }
 
+
 /* 반응형 */
 
-@media (min-width: 1200px) {
+@media (min-width: 768px) {
   .layout-body {
     display: flex;
     flex-direction: column;
-
-    .layout-main {
-      display: flex;
-      max-width: 1060px;
-      position: relative;
-      height: 100%
-    }
-
-    .program-detail {
-      max-width: 700px;
-      width: 100%;
-      padding: 0 16px;
-    }
-
-
-    .thumbnail-img {
-      background-size: contain;
-    }
-
-    .floating-bar {
-      display: none;
-    }
-
-    .pc-modal {
-      display: block;
-    }
-
-    .mobile-modal {
-      display: none; /* Hidden by default */
-      position: fixed;
-      z-index: 1000; /* Sit on top */
-      left: 50%;
-      bottom: 0;
-      //transform: translate(-50%, 100%); /* 초기에 바닥에 숨어있음 */
-      width: 100%;
-      min-width: 350px;
-      max-width: 500px;
-      max-height: 100vh;
-      //background-color: white;
-      //border-radius: 8px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease;
-    }
+    align-items: center;
+  }
+  .book {
+    max-width: 580px;
   }
 }
 
