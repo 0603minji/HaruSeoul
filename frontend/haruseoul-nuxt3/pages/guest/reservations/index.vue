@@ -39,7 +39,7 @@ const fetchReservations = async () => {
       m: guestId
     };
 
-    console.log("params:", params);  // params 확인용 로그
+    // console.log("params:", params);  // params 확인용 로그
 
     const token = localStorage.getItem("token");
 
@@ -53,8 +53,6 @@ const fetchReservations = async () => {
           //  response 변수에 받기
         }
     );
-
-    console.log("API 응답:", response);
 
     reservations.value = response.reservations;
     totalRowCount.value = response.totalRowCount;
@@ -148,6 +146,7 @@ onMounted(() => {
   }
   fetchReservations(); // 데이터를 패치
 });
+
 </script>
 
 <template>
@@ -164,19 +163,19 @@ onMounted(() => {
           <RouterLink :to="`/guest/reservations/${r.id}`" class="n-link-box" href="detail?id=1"></RouterLink>
           <div class="card-header">
             <div class="left">
-              <span v-if="['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
+              <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
                 결제완료
               </span>
 
-              <span v-else-if="r.statusName === 'Finished' && !r.deleteDate" class="n-panel-tag not-submitted">
+              <span v-else-if="r.statusName === 'Finished'" class="n-panel-tag not-submitted">
                 이용완료
               </span>
 
-              <span v-else-if="r.statusName === 'Confirmed' && !r.deleteDate" class="n-panel-tag not-submitted">
+              <span v-else-if="r.statusName === 'Confirmed'" class="n-panel-tag not-submitted">
                 예약확정
               </span>
 
-              <span v-else-if="r.statusName === 'Canceled' || r.deleteDate != null" class="n-panel-tag not-submitted"
+              <span v-else-if="r.statusName === 'Canceled' || r.deleteDate !== null" class="n-panel-tag not-submitted"
               style="border-color: #DB4455; color: #DB4455;">
                 취소됨
               </span>
@@ -195,19 +194,19 @@ onMounted(() => {
             <div class="card-info-wrapper">
               <div class="card-header-responsive">
                 <div class="left">
-                  <span v-if="['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
+                  <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
                     결제완료
                   </span>
 
-                  <span v-else-if="r.statusName === 'Finished' && !r.deleteDate" class="n-panel-tag not-submitted">
+                  <span v-else-if="r.statusName === 'Finished'" class="n-panel-tag not-submitted">
                     이용완료
                   </span>
 
-                  <span v-else-if="r.statusName === 'Confirmed' && !r.deleteDate" class="n-panel-tag not-submitted">
+                  <span v-else-if="r.statusName === 'Confirmed'" class="n-panel-tag not-submitted">
                     예약확정
                   </span>
 
-                  <span v-else-if="r.statusName === 'Canceled' || r.deleteDate != null" class="n-panel-tag not-submitted"
+                  <span v-else-if="r.deleteDate !== null || r.statusName === 'Canceled'" class="n-panel-tag not-submitted"
                   style="border-color: #DB4455; color: #DB4455;">
                     취소됨
                   </span>
@@ -224,15 +223,15 @@ onMounted(() => {
                     <span v-if="r.dDay >= 0">
 
                       {{ r.date }}
-                      <span v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3) && (r.dDay > 0)" style="color: #DB4455;">
+                      <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3) && (r.dDay > 0)" style="color: #DB4455;">
                         (D-{{ r.dDay }})
                       </span>
 
-                      <span v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
+                      <span v-else-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
                         (D-{{ r.dDay }})
                       </span>
 
-                      <span v-else-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay === 0)" style="color: #DB4455;">
+                      <span v-else-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay === 0)" style="color: #DB4455;">
                         (D-day)
                       </span>
                       
@@ -245,7 +244,7 @@ onMounted(() => {
                   </div>
                 </div>
 
-                <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
+                <div v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
                   class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
                   <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal" style="color: #DB4455; --btn-border-color:#DB4455;">
@@ -264,7 +263,7 @@ onMounted(() => {
                      @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
                 </div>
 
-                <div v-else-if="r.statusName === 'Canceled' || r.deleteDate" class="card-footer-responsive">
+                <div v-else-if="r.statusName === 'Canceled' || r.deleteDate !== null" class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
                   <a href="#"
                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
@@ -275,7 +274,7 @@ onMounted(() => {
             </div>
           </div>
 
-          <div v-if="['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
+          <div v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
             class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
             <a href="#" class="n-btn" @click="handleCancelClick(r.id)" style="color: #DB4455; --btn-border-color:#DB4455;">
@@ -292,7 +291,7 @@ onMounted(() => {
                @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
           </div>
 
-          <div v-else-if="r.statusName === 'Canceled'" class="card-footer margin-top:2" style="padding-left: 10px; justify-content: space-between;">
+          <div v-else-if="r.statusName === 'Canceled' || r.deleteDate !== null" class="card-footer margin-top:2" style="padding-left: 10px; justify-content: space-between;">
             <a href="#" class="n-btn bg-color:main-1 color:base-1" style="max-width: 478px;">호스트 문의</a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
                @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>

@@ -45,7 +45,7 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
-    public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, int pageNum) {
+    public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, Boolean isDeleted, int pageNum) {
 
         Sort sort = Sort.by("publishedProgram.date").ascending();
         Pageable pageable = PageRequest.of(pageNum-1, 6, sort);
@@ -54,7 +54,7 @@ public class DefaultReservationService implements ReservationService {
         System.out.println("Requesting page number: " + (pageNum - 1));
 
         // Status ID가 없는 경우 해당 회원의 전체 예약 조회, Status ID가 있으면
-        Page<Reservation> reservations = reservationRepository.findAll(sIds, mIds, pageable);
+        Page<Reservation> reservations = reservationRepository.findAll(sIds, mIds, isDeleted, pageable);
 
         modelMapper.typeMap(Reservation.class, ReservationListDto.class)
                 .addMappings(mapper -> {
