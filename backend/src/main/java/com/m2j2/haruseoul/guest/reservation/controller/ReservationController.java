@@ -26,8 +26,9 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> getList(
             @RequestParam(name = "s", required = false)List<Long> statusIds,
             @RequestParam(name = "m", required = false)List<Long> memberIds,
-            @RequestParam(name = "pageNum", defaultValue = "1") int pageNum){
-        ReservationResponseDto reservationResponseDto = reservationService.getList(statusIds, memberIds, pageNum);
+            @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "false") Boolean isDeleted){
+        ReservationResponseDto reservationResponseDto = reservationService.getList(statusIds, memberIds, isDeleted, pageNum);
 
         return ResponseEntity.ok(reservationResponseDto);
     }

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, defineEmits } from "vue";
+import {onMounted, ref, defineEmits} from "vue";
 import axios from "axios";
 
 //=======================변수영역==========
@@ -8,6 +8,7 @@ const selectedStatus = ref(0);
 const selectedReservations = ref([]);  // 선택된 예약 목록
 const emit = defineEmits(['selectStatusIds']);
 const token = localStorage.getItem("token");
+const userDetail = useUserDetails();
 
 //================Fetch Function==========
 // 상태를 가져오는 비동기 함수
@@ -24,6 +25,7 @@ const fetchStatuses = async () => {
   } catch (error) {
     console.error("Error fetching statuses:", error);
   }
+
 };
 
 //=======================LifeCycle Functions==========
@@ -33,15 +35,25 @@ onMounted(() => {
 });
 
 // 예약 목록을 가져오는 비동기 함수
-const fetchReservations = async (statusIds) => {
+const fetchReservations = async (StatusIds) => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/v1/guest/reservations?s=${statusIds}`, {
+    const isDeleted = (StatusIds === 4);
+    const statusIds = isDeleted ? [4] : StatusIds;
+
+    const response = await axios.get(`http://localhost:8080/api/v1/guest/reservations`, {
       headers: {
         Authorization: `Bearer ${token}` // JWT 토큰 추가
+      },
+      params: {
+        sIds: statusIds,
+        mIds: userDetail.id.value,
+        isDeleted: isDeleted
       }
     });
+
     console.log("Fetched reservations:", response.data);  // 데이터 확인 로그
     selectedReservations.value = response.data; // 예약 목록 저장
+
   } catch (error) {
     console.error("Error fetching reservations:", error);
   }
@@ -52,8 +64,8 @@ const selectStatusAll = async () => {
   selectedReservations.value = [];
   selectedStatus.value = null; // status 필터링이 안된 상태
   try {
-    await fetchReservations([1,2,3,4,5,6], null);
-    emit('selectStatusIds', [1,2,3,4,5,6]);
+    await fetchReservations([1, 2, 3, 4, 5, 6], null);
+    emit('selectStatusIds', [1, 2, 3, 4, 5, 6]);
   } catch (error) {
     console.error("Error fetching all reservations:", error);
   }
@@ -61,10 +73,11 @@ const selectStatusAll = async () => {
 
 //  예약 상태 선택시 서버에서 목록을 업데이트
 const selectReservations = async (statusIds) => {
-  selectedStatus.value = statusIds.length === 1 ? statusIds[0]: '결제완료';
+  selectedStatus.value = statusIds.length === 1 ? statusIds[0] : '결제완료';
+
   if (statusIds.length > 0) {
     try {
-      await fetchReservations(statusIds.join(','), null);  // ID를 통해 예약 목록을 가져옵니다.
+      await fetchReservations(statusIds.join(','));  // ID를 통해 예약 목록을 가져옵니다.
       emit('selectStatusIds', statusIds);
     } catch (error) {
       console.error("Error fetching selected status:", error);
@@ -75,18 +88,24 @@ const selectReservations = async (statusIds) => {
 };
 
 // Function to get the display value based on s.id
-const getDisplayValue = (statusId, deleteDate) => {
-  if (statusId === 6 && deleteDate == null) {
-    return "예약확정"; // s.id가 6일 때 표시할 값
+const getDisplayValue = (statusId) => {
+  // 상태 ID에 따른 반환값
+  switch (statusId) {
+    case 1:
+    case 2:
+    case 5:
+      return "결제완료";
+    case 6:
+      return "예약확정";
+    case 4:
+      return "취소됨";
+    case 3:
+      return "이용완료";
+    default:
+      return ""; // 매핑되지 않은 상태의 기본값
   }
-  if (statusId === 3 && deleteDate == null) {
-    return "이용완료"; // s.id가 3일 때 표시할 값
-  }
-  if (statusId === 4 || !deleteDate)  {
-    return "취소됨"; // s.id가 4일 때 표시할 값
-  }
-  return ""; // 매핑이 없을 경우 기본값 반환
 };
+
 </script>
 
 <template>
@@ -96,21 +115,24 @@ const getDisplayValue = (statusId, deleteDate) => {
       <ul class="item-wrapper padding-y:6">
         <li>
           <NuxtLink href="" class="n-btn n-btn-rv-filter n-btn:hover"
-          :class="{ active: selectedStatus === null || selectedStatus === 0 }"
-             @click.prevent="(e) => { e.preventDefault(); selectStatusAll(); }"
-             >전체</NuxtLink>
+                    :class="{ active: selectedStatus === null || selectedStatus === 0 }"
+                    @click.prevent="(e) => { e.preventDefault(); selectStatusAll(); }"
+          >전체
+          </NuxtLink>
         </li>
         <!-- 결제완료 버튼을 1개로 고정 -->
         <li>
           <NuxtLink @click.prevent="(e) => { e.preventDefault(); selectReservations([1, 2, 5]); }" href=""
-             class="n-btn n-btn n-btn-rv-filter n-btn:hover"
-             :class="{ active: selectedStatus === '결제완료' }">결제완료</NuxtLink>
+                    class="n-btn n-btn n-btn-rv-filter n-btn:hover"
+                    :class="{ active: selectedStatus === '결제완료' }">결제완료
+          </NuxtLink>
         </li>
-        <!-- 나머지 상태 버튼들 -->
+<!--         나머지 상태 버튼들 -->
         <li v-for="s in statuses.sort((a, b) => b.id - a.id)" :key="s.id">
-          <NuxtLink @click.prevent="(e) => { e.preventDefault(); selectReservations([s.id]); }" href=""
-             class="n-btn n-btn n-btn-rv-filter n-btn:hover"
-             :class="{ active: selectedStatus === s.id }">{{ getDisplayValue(s.id) }}</NuxtLink>
+          <NuxtLink @click.prevent="(e) => { e.preventDefault(); selectReservations([s.id])}" href=""
+                    class="n-btn n-btn n-btn-rv-filter n-btn:hover"
+                    :class="{ active: selectedStatus === s.id }">{{ getDisplayValue(s.id) }}
+          </NuxtLink>
         </li>
       </ul>
     </div>
