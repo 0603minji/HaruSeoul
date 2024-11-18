@@ -458,7 +458,7 @@
 
                 <div class="card-main">
                   <div class="img-wrapper">
-                    <img src="/public/image/program_01.png" alt="대표사진">
+                    <img :src="`http://localhost:8080/api/v1/${p.img}`" alt="대표사진">
                   </div>
 
                   <div class="card-info-wrapper">

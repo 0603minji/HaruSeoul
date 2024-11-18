@@ -380,7 +380,6 @@
 import {onMounted, ref, reactive} from "vue";
 import axios from "axios";
 import RouteTempleteForEdit from "~/pages/host/programs/routeTempleteForEdit.vue";
-import RouteTemplete from "~/pages/host/programs/routeTemplete.vue";
 
 const categories = ref([]);
 const routeComponentCount = ref(1);
@@ -388,6 +387,7 @@ const routeComponentCount = ref(1);
 const regMemberId = localStorage.getItem("id");
 const token = localStorage.getItem("token");
 const route = useRoute();
+const router = useRouter();
 const programId = route.params.id;
 const programCreateDto = reactive({
   regMemberId: regMemberId,
@@ -415,7 +415,7 @@ const programCreateDto = reactive({
 
 const previewImages = ref([]); // 이미지 미리보기 URL 배열
 const imageFiles = ref([]); // 실제 파일 객체 배열
-const activeSection = ref();
+const activeSection = ref(window.location.hash || "#intro");
 
 
 //================Fetch Functions==============
@@ -780,6 +780,7 @@ const scrollToSection = (sectionId) => {
   window.location.hash = sectionId;
   activeSection.value = sectionId; // 활성화된 섹션 업데이트
 };
+
 
 //=================== 업데이트전 미리 목록 불러오기 부분===================
 
