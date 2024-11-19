@@ -36,7 +36,7 @@
     <transition name="modal">
       <div v-if="showModal" class="modal-background">
         <div class="modal-content">
-          <h2>정말 비밀번호를 교체하시겠습니까?</h2>
+          <h2>정말 비밀번호를 변경하시겠습니까?</h2>
           <div class="modal-buttons">
             <button @click="confirmPasswordChange" class="confirm-button">확인</button>
             <button @click="closeModal" class="cancel-button">취소</button>
@@ -46,9 +46,10 @@
     </transition>
   </main>
 </template>
+
 <script setup>
 
-import {useDataFetch} from "~/composables/useDataFetch.js";
+import axios from "axios";
 
 const newPassword = ref('');
 const confirmPassword = ref('');
@@ -57,21 +58,33 @@ const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]
 const showModal = ref(false);
 const memberId = localStorage.getItem("id");
 const userDetails = useUserDetails();
-
+const token = localStorage.getItem("token");
 
 const confirmPasswordChange = async () => {
   if (isPasswordMatch.value && isPasswordValid.value) {
+    const formData = new FormData();
+
+    const updateMemberData = {
+      id: memberId,
+      newPwd: newPassword.value,
+    };
+
+    formData.append(
+        "memberUpdateDto",
+        new Blob([JSON.stringify(updateMemberData)], { type: "application/json" })
+    );
+
     try {
-      await useDataFetch(`members/${memberId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: {
-          id: memberId,
-          newPwd: newPassword.value
-        }
-      });
+      const response = await axios.put(
+          `http://localhost:8080/api/v1/members/${memberId}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+      );
+
       alert("비밀번호가 성공적으로 변경되었습니다.");
       closeModal();
       userDetails.logout();
@@ -80,8 +93,11 @@ const confirmPasswordChange = async () => {
       console.error("비밀번호 변경 중 오류 발생:", error);
       errorMessage.value = "비밀번호 변경에 실패했습니다. 다시 시도해주세요.";
     }
+  } else {
+    alert("비밀번호가 유효하지 않습니다. 다시 확인해주세요.");
   }
 };
+
 
 const isPasswordMatch = computed(() => {
   if (!newPassword.value || !confirmPassword.value) {

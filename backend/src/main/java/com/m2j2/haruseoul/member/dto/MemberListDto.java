@@ -16,5 +16,6 @@ public class MemberListDto {
     private String nickname;
     private String name;
     private String email;
+    private String profileImgSrc;
 
 }

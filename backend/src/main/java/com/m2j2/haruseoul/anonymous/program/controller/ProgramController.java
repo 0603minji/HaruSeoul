@@ -22,6 +22,7 @@ public class ProgramController {
                                                       @RequestParam(defaultValue = "10") Integer pageSize) {
         return ResponseEntity.ok(programService.getList(programFilterDto.getProgramIds(),
                 programFilterDto.getCategoryIds(),
+                programFilterDto.getTitle(),
                 programFilterDto.getStartDate(),
                 programFilterDto.getEndDate(),
                 programFilterDto.getMinPrice(),

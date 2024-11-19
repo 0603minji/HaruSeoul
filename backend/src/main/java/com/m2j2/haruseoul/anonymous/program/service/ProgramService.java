@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ProgramService {
     ProgramResponseDto getList(List<Long> programIds, List<Long> categoryIds,
-                               LocalDate startDate, LocalDate endDate,
+                               String title, LocalDate startDate, LocalDate endDate,
                                Integer minPrice, Integer maxPrice,
                                Integer groupSizeMax, Integer groupSizeMin,
                                Integer duration, Integer startTime, String language, Integer page, Integer pageSize);
