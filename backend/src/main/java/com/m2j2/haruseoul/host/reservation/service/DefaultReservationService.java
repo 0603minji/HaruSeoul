@@ -16,7 +16,7 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
-    public void cancel(Long id) {
+    public Long cancel(Long id) {
         // 예약 ID로 해당 예약을 찾아옵니다.
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
@@ -25,9 +25,11 @@ public class DefaultReservationService implements ReservationService {
         reservation.setDeleteDate(Instant.now());  // 삭제 일자를 현재 시간으로 설정 (LocalDateTime으로 변경 가능)
 
         // 예약을 업데이트합니다.
-        reservationRepository.save(reservation);
+        Reservation saved = reservationRepository.save(reservation);
 
         // 로그를 남겨서 예약 삭제에 대한 기록을 남길 수 있습니다.
         // System.out.println("Reservation with ID " + reservationId + " has been soft deleted at " + Instant.now());
+
+        return saved.getId();
     }
 }

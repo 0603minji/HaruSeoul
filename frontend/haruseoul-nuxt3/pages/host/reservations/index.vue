@@ -240,7 +240,16 @@ const CancelHandler = async (pp) => {
   console.log('          PublishedProgram Update result: ', response);
 
   // 예약한 게스트들의 reservation도 cancel처리
-
+  console.log('          pp.reservationIds: ', pp.reservationIds)
+  for (const rId of pp.reservationIds) {
+    let rvCancelResponse = await useDataFetch(`host/reservations/${rId}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json"
+      }
+    });
+    console.log('          Reservation Cancel result: ', rvCancelResponse);
+  }
 
   // 예약취소 확인 모달창
   openModal('completeCancelModal');

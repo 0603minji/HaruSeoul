@@ -29,5 +29,5 @@ public class PublishedProgramListDto {
     private String statusName;
     private List<Image> images;
     private List<Long> reservationIds;
-    private List<String> guestProfileImgs;
+    private List<String> guestProfileImgSrcs;
 }

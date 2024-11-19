@@ -63,6 +63,11 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
                 .map(Reservation::getId)
                 .toList();
 
+        Converter<List<Reservation>, List<String>> reservationsToProfileImgSrcsConverter = ctx -> ctx.getSource().stream()
+                .map(Reservation::getMember)
+                .map(Member::getProfileImgSrc)
+                .toList();
+
         modelMapper.typeMap(PublishedProgram.class, PublishedProgramListDto.class)
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getProgram().getGroupSizeMax(), PublishedProgramListDto::setGroupSizeMax);
@@ -70,6 +75,8 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
                     mapper
                             .using(reservationsToReservationIdsConverter)
                             .map(PublishedProgram::getReservations, PublishedProgramListDto::setReservationIds);
+                    mapper.using(reservationsToProfileImgSrcsConverter)
+                                    .map(PublishedProgram::getReservations, PublishedProgramListDto::setGuestProfileImgSrcs);
                     mapper.map(
                             src -> Optional.ofNullable(src.getProgram().getImages())
                                     .map(images -> images.stream()

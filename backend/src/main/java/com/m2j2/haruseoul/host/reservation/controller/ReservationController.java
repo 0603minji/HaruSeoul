@@ -21,8 +21,8 @@ public class ReservationController {
     @PutMapping("{rid}")
     public ResponseEntity<String> cancel(@PathVariable(name = "rid") Long reservationId) {
         try {
-            reservationService.cancel(reservationId);
-            return ResponseEntity.ok("Reservation cancelled successfully.");
+            Long rId = reservationService.cancel(reservationId);
+            return ResponseEntity.ok("Reservation(id: " + rId + ") cancelled successfully.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 예약이 없을 경우 404 Not Found 반환
         }
