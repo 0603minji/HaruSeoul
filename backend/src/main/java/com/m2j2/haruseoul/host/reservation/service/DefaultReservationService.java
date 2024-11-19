@@ -1,18 +1,28 @@
 package com.m2j2.haruseoul.host.reservation.service;
 
+import com.m2j2.haruseoul.entity.Image;
 import com.m2j2.haruseoul.entity.Reservation;
+import com.m2j2.haruseoul.host.publishedProgram.dto.PublishedProgramListDto;
+import com.m2j2.haruseoul.host.reservation.dto.ReservationListDto;
 import com.m2j2.haruseoul.repository.ReservationRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Service("DefaultHostReservationService")
 public class DefaultReservationService implements ReservationService {
 
     ReservationRepository reservationRepository;
+    ModelMapper modelMapper;
 
-    public DefaultReservationService(ReservationRepository reservationRepository) {
+    public DefaultReservationService(ReservationRepository reservationRepository, ModelMapper modelMapper) {
         this.reservationRepository = reservationRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -31,5 +41,24 @@ public class DefaultReservationService implements ReservationService {
         // System.out.println("Reservation with ID " + reservationId + " has been soft deleted at " + Instant.now());
 
         return saved.getId();
+    }
+
+    @Override
+    public List<ReservationListDto> getApplicants(Long ppId) {
+        modelMapper.typeMap(Reservation.class, ReservationListDto.class)
+                .addMappings(mapper -> {
+                            mapper.map(src -> src.getMember().getNickname(), ReservationListDto::setMemberNickname); // 예약한 계정
+                            mapper.map(src -> src.getMember().getName(), ReservationListDto::setApplicantName); // 실제 참가자 이름
+                            mapper.map(src -> src.getMember().getEmail(), ReservationListDto::setEmail);
+//                    mapper.map(src -> src.getMember().getPhone(), ReservationListDto::setPhone);
+                        }
+                );
+
+        List<ReservationListDto> reservationListDtos = reservationRepository.findByPublishedProgramId(ppId)
+                .stream()
+                .map(reservation -> modelMapper.map(reservation, ReservationListDto.class))
+                .toList();
+
+        return reservationListDtos;
     }
 }
