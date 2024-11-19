@@ -43,12 +43,12 @@ public class MemberController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody MemberUpdateDto memberUpdateDto) {
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestPart("memberUpdateDto") MemberUpdateDto memberUpdateDto) {
 
         memberUpdateDto.setId(id);
         memberService.update(memberUpdateDto);
 
-        return ResponseEntity.ok("비밀번호 변경 완료");
+        return ResponseEntity.ok("개인정보 변경 완료");
     }
 
     @PostMapping("checkPwd")

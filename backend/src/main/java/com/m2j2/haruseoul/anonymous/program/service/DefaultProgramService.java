@@ -42,7 +42,7 @@ public class DefaultProgramService implements ProgramService {
 
     @Override
     @Transactional
-    public ProgramResponseDto getList(List<Long> programIds, List<Long> categoryIds, LocalDate startDate,
+    public ProgramResponseDto getList(List<Long> programIds, List<Long> categoryIds,String title, LocalDate startDate,
                                       LocalDate endDate, Integer minPrice,
                                       Integer maxPrice, Integer groupSizeMax, Integer groupSizeMin,
                                       Integer duration, Integer startTime, String language,
@@ -60,7 +60,7 @@ public class DefaultProgramService implements ProgramService {
         LocalTime afternoonTime = LocalTime.of(18, 0);  // 오후 6시
 
         Page<Program> programs = programRepository.findProgramsByFilters(
-                filterdProgramIds, categoryIds, minPrice, maxPrice, groupSizeMin, groupSizeMax, startTime, morningTime, afternoonTime, language, duration, pageable);
+                filterdProgramIds, categoryIds,title, minPrice, maxPrice, groupSizeMin, groupSizeMax, startTime, morningTime, afternoonTime, language, duration, pageable);
 
         List<Program> filteredPrograms = programs.getContent();
 

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -14,5 +15,7 @@ public class MemberUpdateDto {
     private Long id;
     private String currentPwd;
     private String newPwd;
+    private String nickname;
+    private MultipartFile profileImgSrc;
 
 }

@@ -228,7 +228,9 @@
                         </div>
                         <div class="point-detail">
                           <div class="n-panel-tag n-panel-tag:time">
-                            <span class="n-icon n-icon:clock n-deco">{{ departure.startTime || '시간 없음' }}</span>
+                            <span class="n-icon n-icon:clock n-deco"> {{
+                                data.programDetailProgramDto.startTime ? data.programDetailProgramDto.startTime.split(':').slice(0, 2).join(':') : '시간 없음'
+                              }}</span>
                           </div>
                           <div>
                             <span class="point-name">{{ departure.title }}</span>
@@ -1348,7 +1350,7 @@ watchEffect(() => {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.1); /* Dark background */
   backdrop-filter: blur(5px); /* Blur effect */
-  z-index: 999; /* Behind modal but above other content */
+  z-index: 990; /* Behind modal but above other content */
 }
 
 .backdrop.active {

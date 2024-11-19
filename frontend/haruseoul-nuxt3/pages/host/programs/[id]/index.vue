@@ -103,7 +103,7 @@
 
             <div class="card-info-wrapper">
               <div class="d:flex">
-              <p style="color: var(--color-base-9);
+                <p style="color: var(--color-base-9);
               font-size: var(--font-size-11);
               font-weight: bold;
               padding: var(--gap-3) var(--gap-5);">{{ data.programDetailProgramDto.title }}</p>
@@ -241,7 +241,11 @@
                       </div>
                       <div class="point-detail">
                         <div class="n-panel-tag n-panel-tag:time">
-                          <span class="n-icon n-icon:clock n-deco">{{ departure.startTime || '시간 없음' }}</span>
+                          <span class="n-icon n-icon:clock n-deco">
+                            {{
+                              data.programDetailProgramDto.startTime ? data.programDetailProgramDto.startTime.split(':').slice(0, 2).join(':') : '시간 없음'
+                            }}
+                          </span>
                         </div>
                         <div>
                           <span class="point-name">{{ departure.title }}</span>
@@ -712,7 +716,7 @@ const goToImage = () => {
   background-color: var(--color-yellow-1);
 }
 
-.n-icon\:edit{
+.n-icon\:edit {
   mask-image: url("assets/image/icon/edit.svg");
   mask-repeat: no-repeat;
 }

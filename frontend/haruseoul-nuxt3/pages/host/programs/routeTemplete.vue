@@ -194,8 +194,9 @@ const route = reactive({
 });
 
 
+
 const removeRoute = () => {
-  emit("removeRoute", props.order - 1); // 부모에게 삭제 요청 (index 전달)
+  emit("removeRoute", props.order - 1); // 부모에게 index 전달
 };
 
 //===================== Fetch Functions ====================

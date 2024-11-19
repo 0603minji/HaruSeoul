@@ -56,6 +56,9 @@ public class Member {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "profile_img_src")
+    private String profileImgSrc;
+
     @OneToMany(mappedBy = "member")
     @JsonManagedReference
     private List<Program> programs;

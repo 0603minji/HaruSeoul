@@ -24,11 +24,11 @@
               <form action="" class="form">
                 <div class="modal-duration">
                   <label>
-                    <input type="date" v-model="startDate" @change="fetchPrograms" placeholder="Start Date">
+                    <input type="date" v-model="startDate" @change="fetchFilteredPrograms" placeholder="Start Date">
                   </label>
                   <span>~</span>
                   <label>
-                    <input type="date" v-model="endDate" @change="fetchPrograms" placeholder="End Date">
+                    <input type="date" v-model="endDate" @change="fetchFilteredPrograms" placeholder="End Date">
                   </label>
                 </div>
               </form>
@@ -71,9 +71,9 @@
                   <!--                    <input type="range" class="slider">-->
                   <!--                  </div>-->
                   <div class="price-inputs">
-                    <input v-model="minPrice" @input="fetchPrograms" type="number" placeholder="₩0">
+                    <input v-model="minPrice" @input="fetchFilteredPrograms" type="number" placeholder="₩0">
                     <span class="tilde">~</span>
-                    <input v-model="maxPrice" @input="fetchPrograms" type="number" placeholder="₩1000000">
+                    <input v-model="maxPrice" @input="fetchFilteredPrograms" type="number" placeholder="₩1000000">
                   </div>
                 </div>
               </form>
@@ -91,27 +91,27 @@
                   <label class="d:none">Language</label>
                   <div>
                     <input id="language-all" type="radio" class="radio" name="language" :value="null" v-model="language"
-                           @change="fetchPrograms">
+                           @change="fetchFilteredPrograms">
                     <label for="language-all">All</label>
                   </div>
                   <div>
                     <input id="language-english" type="radio" class="radio" name="language" value="Korean"
-                           v-model="language" @change="fetchPrograms">
+                           v-model="language" @change="fetchFilteredPrograms">
                     <label for="language-english">Korean</label>
                   </div>
                   <div>
                     <input id="language-english" type="radio" class="radio" name="language" value="English"
-                           v-model="language" @change="fetchPrograms">
+                           v-model="language" @change="fetchFilteredPrograms">
                     <label for="language-english">English</label>
                   </div>
                   <div>
                     <input id="language-japanese" type="radio" class="radio" name="language" value="Japanese"
-                           v-model="language" @change="fetchPrograms">
+                           v-model="language" @change="fetchFilteredPrograms">
                     <label for="language-japanese">Japanese</label>
                   </div>
                   <div>
                     <input id="language-chinese" type="radio" class="radio" name="language" value="Chinese"
-                           v-model="language" @change="fetchPrograms">
+                           v-model="language" @change="fetchFilteredPrograms">
                     <label for="language-chinese">Chinese</label>
                   </div>
                 </div>
@@ -132,7 +132,7 @@
                     <span>Min</span>
                     <div class="input-group">
                       <button class="n-btn">-</button>
-                      <input v-model="groupSizeMin" @change="fetchPrograms" type="number" min="2" max="5">
+                      <input v-model="groupSizeMin" @change="fetchFilteredPrograms" type="number" min="2" max="5">
                       <button class="n-btn">＋</button>
                     </div>
                   </div>
@@ -143,7 +143,7 @@
                     <span>Max</span>
                     <div class="input-group">
                       <button class="n-btn">-</button>
-                      <input v-model="groupSizeMax" @change="fetchPrograms" type="number" min="2" max="5">
+                      <input v-model="groupSizeMax" @change="fetchFilteredPrograms" type="number" min="2" max="5">
                       <button class="n-btn">＋</button>
                     </div>
                   </div>
@@ -163,32 +163,32 @@
                 <div class="modal-radio">
                   <div>
                     <input type="radio" class="radio" name="duration" :value="null" v-model="duration"
-                           @change="fetchPrograms">
+                           @change="fetchFilteredPrograms">
                     <label>All</label>
                   </div>
                   <div>
                     <input type="radio" class="radio" name="duration" value="1" v-model="duration"
-                           @change="fetchPrograms">
+                           @change="fetchFilteredPrograms">
                     <label>Under 2 hours</label>
                   </div>
                   <div>
                     <input type="radio" class="radio" name="duration" value="2" v-model="duration"
-                           @change="fetchPrograms">
+                           @change="fetchFilteredPrograms">
                     <label>2 ~ 4 hours</label>
                   </div>
                   <div>
                     <input type="radio" class="radio" name="duration" value="3" v-model="duration"
-                           @change="fetchPrograms">
+                           @change="fetchFilteredPrograms">
                     <label>4 ~ 6 hours</label>
                   </div>
                   <div>
                     <input type="radio" class="radio" name="duration" value="4" v-model="duration"
-                           @change="fetchPrograms">
+                           @change="fetchFilteredPrograms">
                     <label>6 ~ 8 hours</label>
                   </div>
                   <div>
                     <input type="radio" class="radio" name="duration" value="5" v-model="duration"
-                           @change="fetchPrograms">
+                           @change="fetchFilteredPrograms">
                     <label>Over 8 hours</label>
                   </div>
                 </div>
@@ -206,22 +206,22 @@
                 <div class="modal-radio">
                   <div>
                     <input type="radio" class="radio" name="startTime" value="1" v-model="startTime"
-                           @change="fetchPrograms">
+                           @change="fetchFilteredPrograms">
                     <label>All</label>
                   </div>
                   <div>
                     <input type="radio" class="radio" name="startTime" value="2" v-model="startTime"
-                           @change="fetchPrograms">
+                           @change="fetchFilteredPrograms">
                     <label>Before 12 PM</label>
                   </div>
                   <div>
                     <input type="radio" class="radio" name="startTime" value="3" v-model="startTime"
-                           @change="fetchPrograms">
+                           @change="fetchFilteredPrograms">
                     <label>12 PM to 6 PM</label>
                   </div>
                   <div>
                     <input type="radio" class="radio" name="startTime" value="4" v-model="startTime"
-                           @change="fetchPrograms">
+                           @change="fetchFilteredPrograms">
                     <label>After 6 PM</label>
                   </div>
                 </div>
@@ -303,16 +303,16 @@
                   </header>
                   <div v-if="selectedModal === 'period'">
                     <label>Start Date:</label>
-                    <input type="date" v-model="startDate" @change="fetchPrograms">
+                    <input type="date" v-model="startDate" @change="fetchFilteredPrograms">
                     <label>End Date:</label>
-                    <input type="date" v-model="endDate" @change="fetchPrograms">
+                    <input type="date" v-model="endDate" @change="fetchFilteredPrograms">
                   </div>
 
                   <div v-if="selectedModal === 'price'">
                     <label>min price</label>
-                    <input v-model="minPrice" @input="fetchPrograms" type="number" placeholder="₩0">
+                    <input v-model="minPrice" @input="fetchFilteredPrograms" type="number" placeholder="₩0">
                     <label>End Date:</label>
-                    <input v-model="maxPrice" @input="fetchPrograms" type="number" placeholder="₩1000000">
+                    <input v-model="maxPrice" @input="fetchFilteredPrograms" type="number" placeholder="₩1000000">
                   </div>
 
                   <div v-if="selectedModal === 'category'">
@@ -332,27 +332,27 @@
                   <div v-if="selectedModal === 'language'">
                     <div>
                       <input id="language-all" type="radio" class="radio" name="language" :value="null"
-                             v-model="language" @change="fetchPrograms">
+                             v-model="language" @change="fetchFilteredPrograms">
                       <label for="language-all">All</label>
                     </div>
                     <div>
                       <input id="language-english" type="radio" class="radio" name="language" value="Korean"
-                             v-model="language" @change="fetchPrograms">
+                             v-model="language" @change="fetchFilteredPrograms">
                       <label for="language-english">Korean</label>
                     </div>
                     <div>
                       <input id="language-english" type="radio" class="radio" name="language" value="English"
-                             v-model="language" @change="fetchPrograms">
+                             v-model="language" @change="fetchFilteredPrograms">
                       <label for="language-english">English</label>
                     </div>
                     <div>
                       <input id="language-japanese" type="radio" class="radio" name="language" value="Japanese"
-                             v-model="language" @change="fetchPrograms">
+                             v-model="language" @change="fetchFilteredPrograms">
                       <label for="language-japanese">Japanese</label>
                     </div>
                     <div>
                       <input id="language-chinese" type="radio" class="radio" name="language" value="Chinese"
-                             v-model="language" @change="fetchPrograms">
+                             v-model="language" @change="fetchFilteredPrograms">
                       <label for="language-chinese">Chinese</label>
                     </div>
                   </div>
@@ -360,22 +360,22 @@
                   <div v-if="selectedModal === 'startTime'">
                     <div>
                       <input type="radio" class="radio" name="startTime" value="1" v-model="startTime"
-                             @change="fetchPrograms">
+                             @change="fetchFilteredPrograms">
                       <label>All</label>
                     </div>
                     <div>
                       <input type="radio" class="radio" name="startTime" value="2" v-model="startTime"
-                             @change="fetchPrograms">
+                             @change="fetchFilteredPrograms">
                       <label>Before 12 PM</label>
                     </div>
                     <div>
                       <input type="radio" class="radio" name="startTime" value="3" v-model="startTime"
-                             @change="fetchPrograms">
+                             @change="fetchFilteredPrograms">
                       <label>12 PM to 6 PM</label>
                     </div>
                     <div>
                       <input type="radio" class="radio" name="startTime" value="4" v-model="startTime"
-                             @change="fetchPrograms">
+                             @change="fetchFilteredPrograms">
                       <label>After 6 PM</label>
                     </div>
                   </div>
@@ -384,44 +384,44 @@
                     <div class="min-section">
                       <span>Min</span>
                       <div class="input-group">
-                        <input v-model="groupSizeMin" @change="fetchPrograms" type="number" min="2" max="5">
+                        <input v-model="groupSizeMin" @change="fetchFilteredPrograms" type="number" min="2" max="5">
                       </div>
                     </div>
                     <div class="max-section">
                       <span>Max</span>
                       <div class="input-group">
-                        <input v-model="groupSizeMax" @change="fetchPrograms" type="number" min="2" max="5">
+                        <input v-model="groupSizeMax" @change="fetchFilteredPrograms" type="number" min="2" max="5">
                       </div>
                     </div>
                   </div>
 
                   <div v-if="selectedModal === 'duration'">
                     <input type="radio" class="radio" name="duration" :value="null" v-model="duration"
-                           @change="fetchPrograms">
+                           @change="fetchFilteredPrograms">
                     <label>All</label>
                     <div>
                       <input type="radio" class="radio" name="duration" value="1" v-model="duration"
-                             @change="fetchPrograms">
+                             @change="fetchFilteredPrograms">
                       <label>Under 2 hours</label>
                     </div>
                     <div>
                       <input type="radio" class="radio" name="duration" value="2" v-model="duration"
-                             @change="fetchPrograms">
+                             @change="fetchFilteredPrograms">
                       <label>2 ~ 4 hours</label>
                     </div>
                     <div>
                       <input type="radio" class="radio" name="duration" value="3" v-model="duration"
-                             @change="fetchPrograms">
+                             @change="fetchFilteredPrograms">
                       <label>4 ~ 6 hours</label>
                     </div>
                     <div>
                       <input type="radio" class="radio" name="duration" value="4" v-model="duration"
-                             @change="fetchPrograms">
+                             @change="fetchFilteredPrograms">
                       <label>6 ~ 8 hours</label>
                     </div>
                     <div>
                       <input type="radio" class="radio" name="duration" value="5" v-model="duration"
-                             @change="fetchPrograms">
+                             @change="fetchFilteredPrograms">
                       <label>Over 8 hours</label>
                     </div>
                   </div>
@@ -448,7 +448,18 @@
                 </a>
               </div>
             </header>
-
+            <div class="search-box d:flex">
+              <label class="search-box-title" for="searchInput">검색창</label>
+              <input
+                  id="searchInput"
+                  class="search-box-input"
+                  type="text"
+                  v-model="title"
+                  @keyup.enter="fetchFilteredPrograms"
+              placeholder="프로그램 이름을 입력하세요"
+              >
+              <button class="search-box-button n-icon n-icon:search" @click.prevent="fetchFilteredPrograms"></button>
+            </div>
             <!--=== 프로그램 카드 목록 ===================================================-->
             <ul v-if="programs.length > 0" class="n-card-container-column bg-color:base-1">
               <!-- =================================== 예약 카드 1개 =================================== -->
@@ -515,6 +526,7 @@ const allCategoriesSelected = ref(true);
 const selectedCategoryIds = ref([]);
 const startDate = ref(null);
 const endDate = ref(null);
+const title = ref('');
 const minPrice = ref(null);
 const maxPrice = ref(null);
 const groupSizeMin = ref(null);
@@ -533,6 +545,7 @@ const isStartTimeActive = ref(false);
 const isGroupSizeActive = ref(false);
 const isDurationActive = ref(false);
 
+let observer;
 
 const fetchCategories = async () => {
   const response = await axios.get("http://localhost:8080/api/v1/categories");
@@ -541,17 +554,20 @@ const fetchCategories = async () => {
 };
 
 
-const fetchPrograms = async () => {
-  if (fetching.value) return; // 중복 호출 방지
+const fetchFilteredPrograms = async () => {
+  if (fetching.value) return;
   fetching.value = true;
 
   try {
-    console.log("Fetching page:", page.value); // 디버깅 로그: 현재 페이지 번호
+    page.value = 1; // 검색 시 페이지 초기화
+    programs.value = []; // 기존 데이터 초기화
+
     const response = await axios.get('http://localhost:8080/api/v1/programs', {
       params: {
         categoryIds: selectedCategoryIds.value.length === 0 ? null : selectedCategoryIds.value.join(','),
         startDate: startDate.value,
         endDate: endDate.value,
+        title: title.value,
         minPrice: minPrice.value,
         maxPrice: maxPrice.value,
         groupSizeMin: groupSizeMin.value,
@@ -564,32 +580,64 @@ const fetchPrograms = async () => {
       },
     });
 
-    // 데이터 추가 및 페이지 값 증가
-    if (page.value === 1) {
-      programs.value = response.data.programs; // 필터 적용 시 데이터를 새로 설정
-    } else {
-      programs.value.push(...response.data.programs); // 무한 스크롤로 데이터를 추가
-    }
+    programs.value = response.data.programs;
     totalRowCount.value = response.data.totalRowCount;
-    console.log(programs.value);
-    // page.value += 1; // 다음 페이지로 증가
-    // console.log("Next page to fetch:", page.value); // 디버깅 로그: 증가된 페이지 값
-
   } catch (error) {
-    console.error("프로그램 목록을 가져오는 데 실패했습니다:", error);
+    console.error('프로그램 목록을 가져오는 데 실패했습니다:', error);
   } finally {
-    fetching.value = false; // 데이터 로드가 완료되면 fetching 상태 해제
-    console.log("Fetching completed, fetching set to:", fetching.value); // 디버깅 로그: fetching 상태
+    fetching.value = false;
   }
 };
+
+const fetchNextPage = async () => {
+  if (fetching.value) return;
+  fetching.value = true;
+
+  try {
+    page.value += 1; // 다음 페이지 로드
+    const response = await axios.get('http://localhost:8080/api/v1/programs', {
+      params: {
+        categoryIds: selectedCategoryIds.value.length === 0 ? null : selectedCategoryIds.value.join(','),
+        startDate: startDate.value,
+        endDate: endDate.value,
+        title: title.value,
+        minPrice: minPrice.value,
+        maxPrice: maxPrice.value,
+        groupSizeMin: groupSizeMin.value,
+        groupSizeMax: groupSizeMax.value,
+        duration: duration.value,
+        startTime: startTime.value,
+        language: language.value,
+        page: page.value,
+        pageSize: pageSize.value,
+      },
+    });
+
+    programs.value.push(...response.data.programs);
+  } catch (error) {
+    console.error('추가 페이지 로드 중 오류 발생:', error);
+  } finally {
+    fetching.value = false;
+  }
+};
+
+
 
 const resetProgramsAndFetch = () => {
   programs.value = [];
   page.value = 1;
-  fetchPrograms();
+  fetchFilteredPrograms();
 };
 
-watch([selectedCategoryIds, startDate, endDate, minPrice, maxPrice, groupSizeMin, groupSizeMax, duration, startTime, language], resetProgramsAndFetch);
+watch(
+    [selectedCategoryIds, startDate, endDate, minPrice, maxPrice, groupSizeMin, groupSizeMax, duration, startTime, language],
+    () => {
+      disconnectInfiniteScroll(); // 기존 관찰자 해제
+      fetchFilteredPrograms(); // 필터 변경된 데이터 로드
+      observeInfiniteScroll(); // 새로운 관찰자 등록
+    }
+);
+
 
 watch([startDate, endDate], ([newStartDate, newEndDate]) => {
   isPeriodActive.value = !!newStartDate || !!newEndDate;
@@ -613,33 +661,49 @@ watch(duration, (newDuration) => {
   isDurationActive.value = !!newDuration;
 });
 
+watch(title, (newValue) => {
+  if (!newValue || newValue.trim() === '') {
+    resetFilters(); // 검색어가 비었을 경우 필터 초기화
+  } else {
+    fetchFilteredPrograms(); // 검색어가 있을 경우 필터된 데이터를 로드
+  }
+});
+
+
 
 const observeInfiniteScroll = () => {
-  const observer = new IntersectionObserver(
+  const trigger = document.querySelector('.infinite-scroll-trigger');
+  if (!trigger) return;
+
+  observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !fetching.value) {
-          page.value++;
-          fetchPrograms();
+          fetchNextPage();
         }
       },
-      {rootMargin: '0px', threshold: 1.0}
+      { rootMargin: '0px', threshold: 1.0 }
   );
 
-  observer.observe(document.querySelector('.infinite-scroll-trigger'));
+  observer.observe(trigger);
 };
 
-// All 체크박스를 클릭했을 때 모든 카테고리를 선택/해제하고 fetchPrograms 호출
+const disconnectInfiniteScroll = () => {
+  if (observer) observer.disconnect();
+};
+
+
+// All 체크박스를 클릭했을 때 모든 카테고리를 선택/해제하고 fetchFilteredPrograms 호출
 const toggleAllCategories = () => {
   if (allCategoriesSelected.value) {
     selectedCategoryIds.value = [];
   } else {
     selectedCategoryIds.value = categories.value.map(category => category.id); // 개별 카테고리 선택
   }
-  fetchPrograms(); // 변경 사항 적용
+  fetchFilteredPrograms();
 };
 
 
-// 개별 카테고리 선택 상태가 변경될 때 All 체크박스 상태를 업데이트하고 fetchPrograms 호출
+// 개별 카테고리 선택 상태가 변경될 때 All 체크박스 상태를 업데이트하고 fetchFilteredPrograms 호출
 const updateAllCheckbox = () => {
   if (selectedCategoryIds.value.length === categories.value.length) {
     // 모든 개별 체크박스가 선택된 경우 All 체크박스만 선택
@@ -649,7 +713,7 @@ const updateAllCheckbox = () => {
     // 선택된 개별 카테고리 수가 전체와 다를 경우 All 체크박스 해제
     allCategoriesSelected.value = false;
   }
-  fetchPrograms(); // 변경 사항 적용
+  fetchFilteredPrograms();
 };
 
 //=========필터 리셋============
@@ -658,6 +722,7 @@ const resetFilters = () => {
   selectedCategoryIds.value = [];
   startDate.value = null;
   endDate.value = null;
+  title.value = '';
   minPrice.value = null;
   maxPrice.value = null;
   groupSizeMin.value = null;
@@ -665,9 +730,13 @@ const resetFilters = () => {
   duration.value = null;
   startTime.value = 1;
   language.value = null;
-  page.value = 1; // 첫 페이지로 초기화
-  fetchPrograms(); // 초기화 후 프로그램 목록 다시 가져오기
+
+  page.value = 1;
+  disconnectInfiniteScroll(); // 기존 관찰자 해제
+  fetchFilteredPrograms(); // 초기화 후 새 데이터 로드
+  observeInfiniteScroll(); // 무한 스크롤 다시 등록
 };
+
 
 const openModal = async (filterType, event) => {
   if (process.client) {
@@ -694,19 +763,16 @@ const closeModal = () => {
   selectedModal.value = null;
 };
 
-// const applyPeriodFilter = () => isPeriodActive.value = true;
-// const applyPriceFilter = () => isPriceActive.value = true;
-// const applyCategoryFilter = () => isCategoryActive.value = true;
-// const applyLanguageFilter = () => isLanguageActive.value = true;
-// const applyStartTimeFilter = () => isStartTimeActive.value = true;
-// const applyGroupSizeFilter = () => isGroupSizeActive.value = true;
-// const applyDurationFilter = () => isDurationActive.value = true;
 
 
 onMounted(() => {
-  fetchPrograms(); // 첫 번째 페이지 데이터 로드
+  fetchFilteredPrograms();
   fetchCategories();
   observeInfiniteScroll();
+});
+
+onUnmounted(() => {
+  disconnectInfiniteScroll(); // 컴포넌트가 제거될 때 관찰자 해제
 });
 
 
@@ -784,6 +850,33 @@ onMounted(() => {
       }
     }
   }
+}
+
+.search-box{
+  width: 100%;
+  height: 100%;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+
+  .search-box-title{
+    display: none;
+  }
+  .search-box-input {
+    position: relative;
+    border: 2px solid var(--color-base-3);
+    border-radius: 15px;
+    width: 70%;
+    height: 40px;
+    padding-left: 20px;
+  }
+  .search-box-button {
+    position: relative;
+    right: 50px;
+    cursor: pointer;
+  }
+
 }
 
 .no-results-message {

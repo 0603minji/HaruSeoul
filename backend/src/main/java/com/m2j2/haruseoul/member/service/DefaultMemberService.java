@@ -7,16 +7,27 @@ import com.m2j2.haruseoul.member.dto.MemberUpdateDto;
 import com.m2j2.haruseoul.auth.dto.SigninDto;
 import com.m2j2.haruseoul.repository.MemberRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 public class DefaultMemberService implements MemberService {
 
     final MemberRepository memberRepository;
     final ModelMapper modelMapper;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
 
     public DefaultMemberService(MemberRepository memberRepository, ModelMapper modelMapper) {
@@ -61,7 +72,30 @@ public class DefaultMemberService implements MemberService {
         Member member = memberRepository.findById(memberUpdateDto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
+
+        if(memberUpdateDto.getProfileImgSrc() != null) {
+            MultipartFile profileImg = memberUpdateDto.getProfileImgSrc();
+            String fileName = UUID.randomUUID() + "_" + profileImg.getOriginalFilename();
+            Path filePath = Paths.get(uploadDir, fileName);
+            try {
+                Files.createDirectories(filePath.getParent());
+                Files.write(filePath, profileImg.getBytes());
+
+                member.setProfileImgSrc("upload/" + fileName);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+        }
+        if(memberUpdateDto.getNickname() != null) {
+        member.setNickname(memberUpdateDto.getNickname());
+
+        }
+        if(memberUpdateDto.getNewPwd() != null) {
+
         member.setUserPwd(memberUpdateDto.getNewPwd());
+        }
         memberRepository.save(member);
     }
 

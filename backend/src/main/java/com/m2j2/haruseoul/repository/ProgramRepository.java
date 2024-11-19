@@ -54,9 +54,11 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
             "WHEN :durationOption = 3 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) BETWEEN 4 AND 6 " +
             "WHEN :durationOption = 4 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) BETWEEN 6 AND 8 " +
             "WHEN :durationOption = 5 THEN TIMESTAMPDIFF(HOUR, p.startTime, p.endTime) > 8 " +
-            "END))")
+            "END))"+
+            "AND (:title IS NULL OR LOWER(p.title) LIKE LOWER(CONCAT('%', :title, '%')))")
     Page<Program> findProgramsByFilters(@Param("programIds") List<Long> programIds,
                                         @Param("categoryIds") List<Long> categoryIds,
+                                        @Param("title") String title,
                                         @Param("minPrice") Integer minPrice,
                                         @Param("maxPrice") Integer maxPrice,
                                         @Param("groupSizeMin") Integer groupSizeMin,

@@ -157,7 +157,7 @@ const { isModalVisible, openModal, closeModal:  closeCompleteModal } = useModal(
 .modal {
   display: none; /* Hidden by default */
   position: fixed;
-  z-index: 1000; /* Sit on top */
+  z-index: 999; /* Sit on top */
   left: 50%;
   bottom: 0;
   transform: translate(-50%, 100%); /* 초기에 바닥에 숨어있음 */

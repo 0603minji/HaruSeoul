@@ -15,6 +15,7 @@ public class ProgramFilterDto {
 
     private List<Long> programIds;
     private List<Long> categoryIds;
+    private String title;
     private LocalDate startDate;
     private LocalDate endDate;
     private Integer minPrice;

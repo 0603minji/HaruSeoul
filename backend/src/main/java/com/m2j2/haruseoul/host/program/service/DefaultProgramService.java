@@ -286,6 +286,8 @@ public class DefaultProgramService implements ProgramService {
         categoryProgramRepository.saveAll(newCategoryPrograms);
 
         List<RouteCreateDto> routeCreateDtos = programUpdateDto.getRoutes();
+        System.out.println("=====================================");
+        System.out.println(routeCreateDtos);
         //  routeCreateDtos를 변환해서 담을 Route 엔티티가 여러개인 List routes 생성
         ArrayList<Route> routes = new ArrayList<>();
 
