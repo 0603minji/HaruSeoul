@@ -43,6 +43,11 @@ public class PublishedProgramController {
         return ResponseEntity.ok(service.getProgramFilterList(mId));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PublishedProgramListDto> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
+    }
+
     @PostMapping
     public ResponseEntity<PublishedProgramCreatedDto> create(@RequestBody PublishedProgramCreateDto publishedProgramCreateDto) {
         return ResponseEntity.ok(service.create(publishedProgramCreateDto));

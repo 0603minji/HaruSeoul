@@ -1,3 +1,556 @@
+<script setup>
+import {useAuthFetch} from "~/composables/useAuthFetch.js";
+import {ref} from "vue";
+import PublishProgramModal from "~/components/modal/PublishProgramModal.vue";
+
+const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지 로드용
+const route = useRoute();
+const publishedProgramId = route.params.id;
+
+
+const {data} = await useAuthFetch(`host/published-programs/${publishedProgramId}`);
+const pp = ref(data.value);
+
+// 모달창
+const { isModalVisible, openModal, closeModal } = useModal();
+const confirmPpPost = ref(false);
+const PublishProgramModalKey = ref(false); // 예약취소 시 리렌더링 유발용
+
+const pIdToPublish = ref(null); // 일정추가, 추가개설할 pubishedprogramId
+const ppToCancel = ref(null); // 예약취소할 프로그램 정보를 모달창으로 전달
+const ppToConfirm = ref(null); // 예약확정할 프로그램 정보를 모달창으로 전달
+
+const modalVisible = ref("");
+const OpenPublishProgramModalHandler = (programId) => {
+  pIdToPublish.value = programId;
+  modalVisible.value = "PublishProgramModal";
+}
+
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+
+  // Extract date components
+  const year = date.getFullYear().toString().slice(2); // Get last two digits of year
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(date.getDate()).padStart(2, '0');
+
+  // Get weekday in short form (e.g., "Tue")
+  const weekday = date.toLocaleString('en-US', {weekday: 'short'});
+
+  return `${year}.${month}.${day} ${weekday}`;
+};
+const translateStatusNameToKorean = (statusName) => {
+  if (statusName === 'On Going')
+    return '모집 중'
+  else if (statusName === 'Urgent')
+    return '폐지임박'
+  else if (statusName === 'Finished')
+    return '종료됨'
+  else if (statusName === 'Canceled')
+    return '취소됨'
+  else if (statusName === 'Wait Confirm')
+    return '예약확정 대기'
+  else if (statusName === 'Confirmed')
+    return '예약확정'
+}
+// 한국날짜 D-day("2024-11-26") 입력하면 현재 한국시간 기준으로 d-day계산
+const calculateKoreanDDay = (enteredDate) => {
+  const koreaTimeOffset = 9 * 60 * 60 * 1000; // UTC+9 in minutes
+  const targetDate = new Date(enteredDate + 'T00:00:00+09:00');
+  const today = new Date();
+
+  const timediff = targetDate.getTime() - today.getTime();
+
+  return Math.ceil(timediff / (24 * 3600 * 1000));
+}
+
+// === 팝업 ============================================================================================================
+const morePopupStatus = ref({}); // publishedProgram 카드 header영역 right의 더보기 openMorePopup
+
+const toggleMorePopup = (id) => {
+  console.log(' toggleMorePopup called')
+  // 해당 id가 이미 존재하면 속성을 제거, 없으면 true로 추가
+  if (morePopupStatus.value[id]) {
+    // id에 해당하는 속성이 있다면 제거
+    delete morePopupStatus.value[id];
+  } else {
+    // id에 해당하는 속성이 없다면 true로 추가
+    morePopupStatus.value[id] = true;
+  }
+  console.log('   -> morePopupStatus: ', morePopupStatus.value);
+}
+
+const closeMorePopup = (id) => {
+  console.log(' closeMorePopup called')
+  // 해당 id에 대한 속성을 삭제
+  if (morePopupStatus.value[id])
+    delete morePopupStatus.value[id];
+
+  console.log('   -> morePopupStatus: ', morePopupStatus.value);
+}
+
+// $fetch
+const fetchData = async () => {
+  console.log('fetchData called.')
+  const data = await useDataFetch(`host/published-programs${publishedProgramId}`);
+
+  console.log('           >> fetched data :', data);
+  pp.value = data;
+}
+
+
+// === 더보기 예약취소 확정 ===============================================================================================
+// 예약취소
+const CancelHandler = async (pp) => {
+  /*// 취소할 publishedProgram의 groupSizeCurrent가 0이면? 그냥 취소
+  if (pp.groupSizeCurrent !== 0) {
+
+  }*/
+
+  console.log('   CancelHandler called')
+  console.log('          ->  Put host/published-programs');
+
+  // publishedProgramUpdateDto
+  const publishedProgramUpdateDto = {
+    "id": pp.id,
+    "groupSizeCurrent": pp.groupSizeCurrent,
+    "statusId": 4
+  }
+
+  let response = await useDataFetch("host/published-programs", {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: publishedProgramUpdateDto
+  });
+  console.log('          PublishedProgram Update result: ', response);
+
+  // 예약한 게스트들의 reservation도 cancel처리
+  console.log('          pp.reservationIds: ', pp.reservationIds)
+  for (const rId of pp.reservationIds) {
+    let rvCancelResponse = await useDataFetch(`host/reservations/${rId}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json"
+      }
+    });
+    console.log('          Reservation Cancel result: ', rvCancelResponse);
+  }
+
+  // 예약취소 확인 모달창
+  openModal('completeCancelModal');
+
+  // 취소된 pp반영한 목록으로 갱신
+  await fetchData();
+  // publishProgramModal reRender
+  PublishProgramModalKey.value = !PublishProgramModalKey.value;
+}
+
+// 예약확정
+const confirmHandler = async (pp) => {
+  console.log('   confirmHandler called')
+
+  // 최대인원 > 현재인원 : 게스트들에게 예약확정 동의요청 보내기
+  if (pp.groupSizeMax > pp.groupSizeCurrent) {
+    requestGuestApproval();
+    openModal('completeRequestGuestApproval');
+    return;
+  }
+
+  console.log('          ->  Put host/published-programs');
+
+  // publishedProgramUpdateDto
+  const publishedProgramUpdateDto = {
+    "id": pp.id,
+    "groupSizeCurrent": pp.groupSizeCurrent,
+    "statusId": 6
+  }
+
+  let response = await useDataFetch("host/published-programs", {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: publishedProgramUpdateDto
+  });
+  console.log('          PublishedProgram Update result: ', response);
+
+  // 예약확정 확인 모달창
+  openModal('completeConfirmModal');
+
+  // 취소된 pp반영한 목록으로 갱신
+  await fetchData();
+  // publishProgramModal reRender
+  PublishProgramModalKey.value = !PublishProgramModalKey.value;
+}
+
+// todo 게스트들에게 예약확정 동의요청보내기
+const requestGuestApproval = () => {
+  console.log('   requestGuestApproval called')
+}
+
+</script>
 <template>
-    host reservations detail
+  <main>
+    <PublishProgramModal :key="PublishProgramModalKey"
+                         :class="{'show': modalVisible === 'PublishProgramModal'}"
+                         :default-program-id="pIdToPublish"
+                         :confirm-pp-post="confirmPpPost"
+                         @close-modal="() => { fetchData(); modalVisible = ''; }"
+                         @submit="openModal('confirmPpModal')"/>
+
+    <!-- 모달창 떴을 때 배경처리   -->
+    <div :class="{'active': modalVisible}" class="backdrop"></div>
+
+
+    <!--  확인 모달창 ================================================================================================ -->
+    <!--  개설확인  -->
+    <Modal :isVisible="isModalVisible('confirmPpModal')" @close="closeModal('confirmPpModal')"
+           @confirm="() => {confirmPpPost=!confirmPpPost;
+             console.log('index. Modal emit confirm and callback func called. confirmPpPost: ', confirmPpPost);
+             closeModal('confirmPpModal');}">
+      <p>개설하시겠습니까?</p>
+    </Modal>
+
+    <!--  예약취소확인  -->
+    <Modal :isVisible="isModalVisible('confirmCancelModal')" @close="closeModal('confirmCancelModal')"
+           @confirm="() => {CancelHandler(ppToCancel); closeModal('confirmCancelModal');}">
+      <p v-if="ppToCancel.groupSizeCurrent > 0" style="color: var(--color-red-1)">프로그램을 예약한 게스트가 존재합니다. ({{ ppToCancel.groupSizeCurrent }} 명)</p>
+      <p v-if="ppToCancel.statusName==='Confirmed'" style="color: var(--color-red-1)">예약확정된 프로그램을 취소할 경우 페널티가 있을 수 있습니다.</p>
+      <p>예약을 취소하시겠습니까?</p>
+    </Modal>
+    <Modal class="onlyConfirm" :isVisible="isModalVisible('completeCancelModal')" @confirm="closeModal('completeCancelModal')">
+      <p>예약이 취소되었습니다.</p>
+    </Modal>
+
+    <!--  예약확정확인  -->
+    <Modal :isVisible="isModalVisible('confirmConfirmModal')" @close="closeModal('confirmConfirmModal')"
+           @confirm="() => {confirmHandler(ppToConfirm); closeModal('confirmConfirmModal');}">
+      <div v-if="ppToConfirm.groupSizeCurrent < ppToConfirm.groupSizeMax">
+        <p style="color: var(--color-red-1)">현재 예약인원 ({{ ppToConfirm.groupSizeCurrent }}/{{ ppToConfirm.groupSizeMax }})</p>
+        <p>현재 예약인원이 최대 예약인원보다 부족할 경우, 모든 게스트 동의 후 예약확정이 가능합니다.</p>
+        <p>게스트에게 예약확정 동의요청을 보내시겠습니까?</p>
+      </div>
+      <div v-if="ppToConfirm.groupSizeCurrent === ppToConfirm.groupSizeMax">
+        <p style="color: var(--color-green-1)">현재 예약인원 ({{ ppToConfirm.groupSizeCurrent }}/{{ ppToConfirm.groupSizeMax }})</p>
+        <p>예약을 확정하시겠습니까?</p>
+      </div>
+    </Modal>
+    <Modal class="onlyConfirm" :isVisible="isModalVisible('completeCancelConfirmModal')" @confirm="closeModal('completeCancelConfirmModal')">
+      <p>예약이 확정되었습니다.</p>
+    </Modal>
+    <Modal class="onlyConfirm" :isVisible="isModalVisible('completeRequestGuestApproval')" @confirm="closeModal('completeRequestGuestApproval')">
+      <p>게스트들에게 예약확정 동의요청이 전송되었습니다.</p>
+    </Modal>
+
+    <!-- ============================================================================================================= -->
+
+
+    <section class="layout-body"> <!-- main 내 모든 -->
+      <header class="n-title">
+        <h1 class="">예약 상세보기</h1>
+      </header>
+
+      <div class="layout-main">
+        <div class="layout-main-list">
+
+            <div class="n-card-container">
+              <div class="n-card padding:6">
+                <h2 class="d:none">예약 카드</h2>
+
+                <div class="card-header">
+                  <div class="left">
+                    <span class="n-panel-tag" :class="{'on-going': pp.statusName === 'On Going',
+                      'urgent': pp.statusName === 'Urgent',
+                      'confirmed': pp.statusName === 'Confirmed',
+                      'wait-confirm': pp.statusName === 'Wait Confirm',
+                      'finished': pp.statusName === 'Finished'}
+                    ">
+                      {{ translateStatusNameToKorean(pp.statusName) }}
+                    </span>
+                  </div>
+                  <div class="right">
+                    <button ref="morePopupBtn"
+                            class="morePopup-btn n-btn n-btn:hover n-btn-bd:none n-icon n-icon:more_vertical n-icon-size:4 n-icon-color:base-9"
+                            @click.prevent="toggleMorePopup(pp.id)">더보기
+                    </button>
+                    <!--         더보기 팝업           -->
+                    <div class="morePopup" v-if="morePopupStatus[pp.id]">
+                      <ul>
+                        <li v-if="pp.statusName !== 'Canceled' && pp.statusName !== 'Finished'"
+                            :class="{'no-click': pp.groupSizeCurrent === 0 || pp.statusName==='Confirmed', 'disabled': pp.groupSizeCurrent === 0 || pp.statusName==='Confirmed'}"
+                            @click.prevent="closeMorePopup(pp.id); ppToConfirm=pp; openModal('confirmConfirmModal')">예약확정</li><!-- groupSizeMin < groupSizeCurrent이면 가능 -->
+                        <li v-if="pp.statusName !== 'Canceled' && pp.statusName !== 'Finished'"
+                            @click.prevent="closeMorePopup(pp.id); ppToCancel=pp; openModal('confirmCancelModal')">예약취소</li><!-- 취소, 완료된 일정 아닌 나머지 -->
+                        <li v-if="pp.statusName !== 'Canceled' && pp.statusName !== 'Finished'"
+                            @click.prevent="closeMorePopup(pp.id); OpenPublishProgramModalHandler(pp.programId)">추가개설</li><!-- 취소, 완료된 일정 아닌 나머지 -->
+                        <li v-if="pp.statusName==='Canceled' || pp.statusName==='Finished'"
+                            @click.prevent="closeMorePopup(pp.id)">내역삭제</li><!-- only 취소3, 완료된 일정4 -->
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-main">
+                  <div class="img-wrapper">
+                    <img v-if="pp.images.length>0" :src="`${config.public.apiBase}${pp.images.at(0).src}`" alt="대표사진">
+                    <img v-else src="/assets/image/default-program-image.png" alt="대표사진">
+                  </div>
+
+                  <div class="card-info-wrapper">
+                    <p class="title">{{ pp.programTitle }}</p>
+                    <div class="card-info">
+                      <span class="n-icon n-icon:calendar n-deco">{{ formatDate(pp.date) }}</span>
+                      <span v-if="calculateKoreanDDay(pp.date) === 0" class="n-panel-tag d-day">D-day</span>
+                      <span v-if="0 < calculateKoreanDDay(pp.date) && calculateKoreanDDay(pp.date) <= 3"
+                            class="n-panel-tag urgent">D-{{ calculateKoreanDDay(pp.date) }}</span>
+                      <span v-if="3 < calculateKoreanDDay(pp.date)"
+                            class="n-panel-tag">D-{{ calculateKoreanDDay(pp.date) }}</span>
+                    </div>
+                  </div>
+
+                  <!-- md:footer: card-footer영역에 존재하다가 992px이상에서 card-main의 우측으로 이동 -->
+                  <div class="applicant-status lg:show">
+                    <div class="guest-profile-container">
+                      <div v-if="pp.guestProfileImgSrcs.length > 0" v-for="img in pp.guestProfileImgSrcs" class="guest-profile-wrapper">
+                        <img :src="`${config.public.apiBase}${img}`" alt="게스트 프로필">
+                      </div>
+                    </div>
+                    <span class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">
+                      {{ pp.groupSizeCurrent }} / {{ pp.groupSizeMax }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="card-footer">
+                  <div class="applicant-status margin-left:auto">
+                    <div class="guest-profile-container">
+                      <div v-if="pp.guestProfileImgSrcs.length > 0" v-for="img in pp.guestProfileImgSrcs" class="guest-profile-wrapper">
+                        <img v-if="img!==null" :src="`${config.public.apiBase}${img}`" alt="게스트 프로필">
+                        <img v-else src="/assets/image/default-profile.png" alt="게스트 프로필">
+                      </div>
+                    </div>
+                    <span class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">
+                      {{ pp.groupSizeCurrent }} / {{ pp.groupSizeMax }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+      </div>
+
+    </section>
+  </main>
 </template>
+<style scoped>
+.layout-body {
+  .layout-main {
+    display: flex;
+    margin-bottom: 30px;
+    position: relative;
+
+    .layout-main-list {
+      flex-grow: 1;
+      width: 100%;
+
+      /*===============================================================================================*/
+
+      .n-card-container {
+        padding: 8px 16px;
+
+        .n-card {
+          position: relative;
+          box-shadow: 5px 5px 10px 0.5px var(--color-base-3);
+
+          .card-header {
+            position: relative;
+
+            .left {
+              .on-going {
+                --tag-border-color: var(--color-sub-1);
+                --tag-bg-color: var(--color-sub-1);
+                color: var(--color-base-1);
+              }
+
+              .urgent {
+                --tag-border-color: var(--color-red-1);
+                --tag-bg-color: var(--color-red-1);
+                color: var(--color-base-1);
+              }
+
+              .finished {
+                --tag-border-color: var(--color-base-8);
+                --tag-bg-color: var(--color-base-8);
+                color: var(--color-base-1);
+              }
+
+              .wait-confirm {
+                --tag-border-color: var(--color-green-1);
+                color: var(--color-green-1);
+              }
+
+              .confirmed {
+                --tag-border-color: var(--color-green-1);
+                --tag-bg-color: var(--color-green-1);
+                color: var(--color-base-1);
+              }
+            }
+
+            .right {
+              position: relative;
+
+              .morePopup-btn {
+                position: relative;
+                z-index: 10;
+
+                --btn-border-radius: 8px;
+                --btn-bg-hover: var(--color-base-4);
+              }
+
+              .morePopup {
+                width: 120px;
+                position: absolute;
+                top: 100%; /* 버튼 바로 아래로 위치 */
+                right: 0; /* 버튼의 오른쪽 모서리와 평행하도록 맞춤 */
+                border-radius: 8px;
+                background-color: white;
+                padding: 10px 0;
+                border: 1px solid #ddd;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+                z-index: 10;
+
+                ul {
+                  display: flex;
+                  flex-direction: column;
+
+                  li {
+                    padding: 6px 16px;
+                    cursor: pointer;
+                  }
+
+                  li:hover {
+                    background-color: var(--color-base-2);
+                  }
+
+                  .disabled {
+                    color: var(--color-base-6);
+                  }
+                }
+              }
+            }
+          }
+
+          .card-main {
+            .card-info {
+              .d-day {
+                --tag-border-color: var(--color-red-1);
+                --tag-bg-color: var(--color-red-1);
+                color: var(--color-base-1);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .layout-main-aside {
+      display: none;
+      flex-direction: column;
+      flex-shrink: 0;
+      width: 250px;
+      margin: 0 16px;
+      /*position: sticky; layout-main-list의 카드와 z-index로 오버랩핑이 되지 않는 문제가 발생해 일단 주석처리
+    top: 0;*/
+      height: 100vh;
+
+      .n-title {
+        --title-font-size: var(--font-size-9);
+        /* 18 */
+        --title-font-weight: 600;
+        /* semi bold */
+        --title-padding: 6px 4px 14px 4px;
+
+        .n-icon {
+          --icon-size: var(--icon-size-4);
+          padding: 8px;
+        }
+      }
+
+      .filters {
+        .separator {
+          display: flex;
+          width: 216px;
+          height: 1px;
+          background-color: var(--color-base-3);
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .layout-body {
+    margin-left: auto;
+    margin-right: auto;
+    /*min-width: 992px;*/
+    width: 100%;
+    max-width: 1092px;
+
+    .n-title {
+      > div {
+        /* 일정추가 버튼 위치 조정용 */
+        /*margin-right: calc(16px + 250px + 16px - 20px);*/
+      }
+    }
+
+    .layout-main {
+      .layout-main-list {
+      }
+
+      .layout-main-aside {
+        display: flex;
+
+        /* mj host/programs */
+
+        .filters {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          padding: 16px 16px 32px 16px;
+          border: 1px solid var(--color-base-3);
+          border-radius: 12px;
+        }
+      }
+    }
+  }
+
+  .md\:d\:inline {
+    display: inline;
+  }
+
+  .md\:d\:none {
+    display: none;
+  }
+}
+
+/* 모달창 떴을 때 배경처리용 */
+.backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dark background */
+  backdrop-filter: blur(5px); /* Blur effect */
+  z-index: 990; /* Behind modal but above other content */
+}
+
+.backdrop.active {
+  display: block;
+}
+</style>

@@ -345,7 +345,7 @@ const closeMorePopup = (id) => {
 const route = useRoute();
 const router = useRouter();
 const userDetails = useUserDetails();
-const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지 로드용
+const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지, 게스트이미지 로드용
 // 모달창
 const { isModalVisible, openModal, closeModal } = useModal();
 const confirmPpPost = ref(false);

@@ -242,6 +242,43 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
     }
 
     @Override
+    public PublishedProgramListDto getById(Long id) {
+        PublishedProgram pp = publishedProgramRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("PublishedProgram not found with ID: " + id));
+
+        // List<ppListDto>----------------------------------------------------------------------------------------------
+        Converter<List<Reservation>, List<Long>> reservationsToReservationIdsConverter = ctx -> ctx.getSource().stream()
+                .map(Reservation::getId)
+                .toList();
+
+        Converter<List<Reservation>, List<String>> reservationsToProfileImgSrcsConverter = ctx -> ctx.getSource().stream()
+                .map(Reservation::getMember)
+                .map(Member::getProfileImgSrc)
+                .toList();
+
+        modelMapper.typeMap(PublishedProgram.class, PublishedProgramListDto.class)
+                .addMappings(mapper -> {
+                    mapper.map(src -> src.getProgram().getGroupSizeMax(), PublishedProgramListDto::setGroupSizeMax);
+                    mapper.map(src -> src.getProgram().getGroupSizeMin(), PublishedProgramListDto::setGroupSizeMin);
+                    mapper
+                            .using(reservationsToReservationIdsConverter)
+                            .map(PublishedProgram::getReservations, PublishedProgramListDto::setReservationIds);
+                    mapper.using(reservationsToProfileImgSrcsConverter)
+                            .map(PublishedProgram::getReservations, PublishedProgramListDto::setGuestProfileImgSrcs);
+                    mapper.map(
+                            src -> Optional.ofNullable(src.getProgram().getImages())
+                                    .map(images -> images.stream()
+                                            .sorted(Comparator.comparing(Image::getOrder))
+                                            .toList())
+                                    .orElse(Collections.emptyList())
+                            , PublishedProgramListDto::setImages
+                    );
+                });
+
+        return modelMapper.map(pp, PublishedProgramListDto.class);
+    }
+
+    @Override
     public PublishedProgramProgramFilterResponseDto getProgramFilterList(Long hostId) {
         List<Long> pIds = publishedProgramRepository.findDistinctProgramIdsByHostId(hostId);
         List<Program> programs = programRepository.findAllList(hostId, pIds, null);
