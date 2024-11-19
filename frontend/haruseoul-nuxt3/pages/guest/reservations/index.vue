@@ -117,6 +117,10 @@ const handleCancelClick = (reservationId) => {
   showModal.value = true;  // 누르면 모달을 표시하게끔
 };
 
+const SelectedReservationsHandler = (selectedReservations) => {
+  reservations.value = selectedReservations;
+}
+
 // 모달을 닫을 때
 const closeModal = () => {
   showModal.value = false;
@@ -156,7 +160,8 @@ onMounted(() => {
         <h1>예약 내역 ({{ totalRowCount }})</h1>
       </header>
 
-      <Status @selectStatusIds="StatusChangeHandler" />
+      <Status @selectStatusIds="StatusChangeHandler"
+      @selected-reservations="SelectedReservationsHandler"/>
 
       <div class="n-card-container bg-color:base-1">
         <div class="n-card bg-color:base-1 padding:6" v-for="r in reservations" :key="r.id">
