@@ -1,10 +1,13 @@
 package com.m2j2.haruseoul.host.reservation.service;
 
 import com.m2j2.haruseoul.entity.Image;
+import com.m2j2.haruseoul.entity.Member;
+import com.m2j2.haruseoul.entity.PublishedProgram;
 import com.m2j2.haruseoul.entity.Reservation;
 import com.m2j2.haruseoul.host.publishedProgram.dto.PublishedProgramListDto;
 import com.m2j2.haruseoul.host.reservation.dto.ReservationListDto;
 import com.m2j2.haruseoul.repository.ReservationRepository;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +53,9 @@ public class DefaultReservationService implements ReservationService {
                             mapper.map(src -> src.getMember().getNickname(), ReservationListDto::setMemberNickname); // 예약한 계정
                             mapper.map(src -> src.getMember().getName(), ReservationListDto::setApplicantName); // 실제 참가자 이름
                             mapper.map(src -> src.getMember().getEmail(), ReservationListDto::setEmail);
+                            mapper.map(src -> src.getMember().getProfileImgSrc(), ReservationListDto::setGuestProfileImgSrc);
+                            mapper.map(src -> src.getPublishedProgram().getProgram().getRequirement(), ReservationListDto::setHostRequirement);
+
 //                    mapper.map(src -> src.getMember().getPhone(), ReservationListDto::setPhone);
                         }
                 );

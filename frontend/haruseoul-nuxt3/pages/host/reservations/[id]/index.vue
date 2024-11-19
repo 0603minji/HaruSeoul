@@ -6,14 +6,16 @@ import PublishProgramModal from "~/components/modal/PublishProgramModal.vue";
 const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지 로드용
 const route = useRoute();
 const publishedProgramId = route.params.id;
+const {data:publishedProgramData} = await useAuthFetch(`host/published-programs/${publishedProgramId}`);
+const pp = ref(publishedProgramData.value);
+const {data:rvListDtosData} = await useAuthFetch(`host/reservations`, {query: {ppId: publishedProgramId}});
+const applicants = ref(rvListDtosData);
 
-
-const {data} = await useAuthFetch(`host/published-programs/${publishedProgramId}`);
-const pp = ref(data.value);
+console.log('applicants: ', applicants.value)
 
 // 모달창
 const { isModalVisible, openModal, closeModal } = useModal();
-const confirmPpPost = ref(false);
+const confirmPpPost = ref(false); // 개설확인모달창에서 확인 눌렀을 때 PublishProgramModal에 전달하여 post요청
 const PublishProgramModalKey = ref(false); // 예약취소 시 리렌더링 유발용
 
 const pIdToPublish = ref(null); // 일정추가, 추가개설할 pubishedprogramId
@@ -26,7 +28,7 @@ const OpenPublishProgramModalHandler = (programId) => {
   modalVisible.value = "PublishProgramModal";
 }
 
-
+// === 유틸 =============================================================================================================
 const formatDate = (dateString) => {
   const date = new Date(dateString);
 
@@ -65,7 +67,8 @@ const calculateKoreanDDay = (enteredDate) => {
   return Math.ceil(timediff / (24 * 3600 * 1000));
 }
 
-// === 팝업 ============================================================================================================
+
+// === 팝업 =============================================================================================================
 const morePopupStatus = ref({}); // publishedProgram 카드 header영역 right의 더보기 openMorePopup
 
 const toggleMorePopup = (id) => {
@@ -88,15 +91,6 @@ const closeMorePopup = (id) => {
     delete morePopupStatus.value[id];
 
   console.log('   -> morePopupStatus: ', morePopupStatus.value);
-}
-
-// $fetch
-const fetchData = async () => {
-  console.log('fetchData called.')
-  const data = await useDataFetch(`host/published-programs${publishedProgramId}`);
-
-  console.log('           >> fetched data :', data);
-  pp.value = data;
 }
 
 
@@ -191,6 +185,18 @@ const requestGuestApproval = () => {
   console.log('   requestGuestApproval called')
 }
 
+
+// === $fetch ==========================================================================================================
+const fetchData = async () => {
+  console.log('fetchData called.')
+  const dataPp = await useDataFetch(`host/published-programs/${publishedProgramId}`);
+  const dataApplicants = await useDataFetch(`host/reservations`, {query: {ppId: publishedProgramId}});
+
+  console.log('           >> fetched dataPp :', dataPp);
+  console.log('           >> fetched dataApplicants :', dataApplicants);
+  pp.value = dataPp;
+  applicants.value = dataApplicants;
+}
 </script>
 <template>
   <main>
@@ -312,15 +318,17 @@ const requestGuestApproval = () => {
                   </div>
 
                   <!-- md:footer: card-footer영역에 존재하다가 992px이상에서 card-main의 우측으로 이동 -->
-                  <div class="applicant-status lg:show">
-                    <div class="guest-profile-container">
-                      <div v-if="pp.guestProfileImgSrcs.length > 0" v-for="img in pp.guestProfileImgSrcs" class="guest-profile-wrapper">
-                        <img :src="`${config.public.apiBase}${img}`" alt="게스트 프로필">
-                      </div>
-                    </div>
-                    <span class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">
-                      {{ pp.groupSizeCurrent }} / {{ pp.groupSizeMax }}
-                    </span>
+                  <div class="btn-box">
+                    <button v-if="pp.statusName !== 'Canceled' && pp.statusName !== 'Finished'"
+                            class="n-btn n-btn:hover n-btn-bg-color:main"
+                            :class="{'no-click': pp.groupSizeCurrent === 0 || pp.statusName==='Confirmed', 'disabled': pp.groupSizeCurrent === 0 || pp.statusName==='Confirmed'}"
+                            @click.prevent="ppToConfirm=pp; openModal('confirmConfirmModal')">예약확정</button>
+                    <button v-if="pp.statusName !== 'Canceled' && pp.statusName !== 'Finished'"
+                            class="n-btn n-btn:hover n-btn-bd:main" style="--btn-bg-hover: var(--color-base-2);"
+                            @click.prevent="ppToCancel=pp; openModal('confirmCancelModal')">예약취소</button>
+                    <button v-if="pp.statusName !== 'Canceled' && pp.statusName !== 'Finished'"
+                            class="n-btn n-btn:hover"
+                            @click.prevent="OpenPublishProgramModalHandler(pp.programId)">추가개설</button>
                   </div>
                 </div>
 
@@ -340,6 +348,68 @@ const requestGuestApproval = () => {
               </div>
             </div>
 
+            <section class="applicant-container">
+              <!--    예약자 관리           +전체 chat-->
+              <header class="n-title">
+                <h1 class="" style="font-size: 20px">예약자 관리</h1>
+                <div>
+                  <button @click.prevent=""
+                          class="active n-btn n-btn-pg-filter n-btn:hover" style="--btn-padding: 8px 12px">전체 Chat</button>
+                </div>
+              </header>
+
+              <section class="applicants">
+                <h1 class="d:none">참가자 정보</h1>
+                <details class="applicant" v-for="applicant in applicants" :key="applicant.reservationId">
+                  <summary class="summary">
+                    <div class="applicant-profile">
+                      <div class="guest-profile-wrapper">
+                        <img v-if="applicant.guestProfileImgSrc!==null" :src="`${config.public.apiBase}${applicant.guestProfileImgSrc}`" alt="게스트 프로필">
+                        <img v-else src="/assets/image/default-profile.png" alt="게스트 프로필">
+                      </div>
+                      <span class="nickname">{{applicant.memberNickname}}</span>
+                    </div>
+                    <button class="chat-btn n-btn n-btn:hover n-btn-bg-color:sub">Chat</button>
+                    <span class="n-icon n-icon:arrow_up margin-left:auto">펼치기 버튼</span>
+                  </summary>
+                  <section class="applicant-info">
+                    <h1>참가자 정보</h1>
+                    <div class="info-row">
+                      <span class="label">이름</span>
+                      <span class="value">{{ applicant.applicantName }}</span>
+                    </div>
+                    <div class="info-row">
+                      <span class="label">예약인원</span>
+                      <span class="value">{{ applicant.numberOfGuest }}</span>
+                    </div>
+                    <div class="info-row">
+                      <span class="label">e-mail</span>
+                      <span class="value">{{ applicant.email }}</span>
+                    </div>
+                    <div class="info-row">
+                      <span class="label">전화번호</span>
+                      <span class="value">{{ applicant.phone }}</span>
+                    </div>
+                  </section>
+                  <section v-if="applicant.hostRequirement" class="requirement">
+                    <h1>요청사항</h1>
+                    <p class="hostRequirement">
+                      {{ applicant.hostRequirement }}
+                    </p>
+                    <p class="guestRequirement">
+                      {{ (applicant.requirement)? applicant.requirement : `요청사항이 존재하지 않습니다.` }}
+                    </p>
+                  </section>
+                  <div class="footer">
+                    <button class="n-btn n-btn:hover n-btn-bd:none">
+                      추방하기
+                    </button>
+                  </div>
+                </details>
+              </section>
+
+            </section>
+
         </div>
       </div>
 
@@ -347,6 +417,10 @@ const requestGuestApproval = () => {
   </main>
 </template>
 <style scoped>
+.no-click {
+  pointer-events: none;
+}
+
 .layout-body {
   .layout-main {
     display: flex;
@@ -411,6 +485,12 @@ const requestGuestApproval = () => {
                 --btn-bg-hover: var(--color-base-4);
               }
 
+              @media (min-width: 768px) {
+                .morePopup-btn {
+                  display: none;
+                }
+              }
+
               .morePopup {
                 width: 120px;
                 position: absolute;
@@ -452,6 +532,163 @@ const requestGuestApproval = () => {
                 color: var(--color-base-1);
               }
             }
+
+            .btn-box {
+              display: none;
+              gap: 16px;
+
+              .n-btn {
+                --btn-padding: 12px 20px;
+              }
+
+              .disabled {
+                opacity: 0.6;
+              }
+            }
+
+            @media (min-width: 768px) {
+              .btn-box {
+                display: flex;
+              }
+            }
+          }
+
+          .card-footer {
+            display: flex;
+          }
+        }
+      }
+
+      .applicant-container {
+        margin-top: 30px;
+
+        .n-title {
+          margin-bottom: 12px;
+        }
+
+        .applicants {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          padding: 0 20px;
+
+          .applicant {
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 2px solid var(--color-base-3);
+            box-shadow: 0 2px 5px 0.5px var(--color-base-3);
+
+
+            .summary {
+              display: flex;
+              align-items: center;
+              width: auto;
+              padding: 12px 14px;
+              /*
+              list-style-type: none;
+              pointer-events: none;
+              */
+
+              .applicant-profile {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+
+                .nickname {
+                  font-size: 18px;
+                }
+
+                .guest-profile-wrapper {
+                  flex-shrink: 0;
+                  flex-grow: 0;
+                  margin-left: -12px;
+                  aspect-ratio: 1 / 1;
+                  overflow: hidden;
+                  width: 44px;
+                  border-radius: 50%;
+                  border: 1px solid var(--color-base-2);
+
+                  img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: var(--border-radius-4);
+                  }
+                }
+              }
+
+              .chat-btn {
+                margin-left: 20px;
+              }
+            }
+
+            .applicant-info, .requirement {
+              padding: 16px 8px;
+
+              h1 {
+                font-size: 16px;
+                font-weight: 600;
+                margin-bottom: 10px;
+              }
+            }
+
+            .applicant-info {
+              padding-top: 24px;
+              margin-top: 8px;
+              margin-bottom: 8px;
+              border-top: 1.5px solid var(--color-base-3);
+
+              .info-row {
+                display: flex;
+                justify-content: space-between;
+                padding: 10px 0;
+                font-size: 14px;
+                border-bottom: 1px solid #f0f0f0;
+
+                .label {
+                  color: #666;
+                }
+
+                .value {
+                  color: #333;
+                }
+              }
+            }
+
+            .requirement {
+              h1 {
+                margin-bottom: 4px;
+              }
+              .hostRequirement {
+                color: var(--color-base-7);
+                padding: 8px 0;
+                margin-bottom: 8px;
+              }
+              .guestRequirement {
+                padding: 10px 10px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                background-color: #f9f9f9;
+              }
+            }
+
+            .footer {
+              margin-top: 6px;
+              margin-bottom: 10px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              button { /* 추방하기 */
+                font-size: 16px;
+                text-decoration: underline;
+                text-underline-offset: 3px; /* 밑줄 간격 */
+              }
+            }
+          }
+
+          .applicant[open] .summary .n-icon\:arrow_up:before {
+            --icon: url(/assets/image/icon/arrow_down.svg);
           }
         }
       }

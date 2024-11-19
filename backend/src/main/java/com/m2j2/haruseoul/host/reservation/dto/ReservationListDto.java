@@ -14,7 +14,10 @@ public class ReservationListDto {
     private Long memberId;
     private String memberNickname;
     private String applicantName;
+    private Integer numberOfGuest;
+    private String guestProfileImgSrc;
     private String email;
     private String phone;
-    private String requirement;
+    private String hostRequirement; // host가 프로그램 등록 시 게스트에게 요청한 질문
+    private String requirement; // guest가 결제할 때 작성한 답
 }

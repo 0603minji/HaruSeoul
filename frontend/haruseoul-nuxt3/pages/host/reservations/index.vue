@@ -348,7 +348,7 @@ const userDetails = useUserDetails();
 const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지, 게스트이미지 로드용
 // 모달창
 const { isModalVisible, openModal, closeModal } = useModal();
-const confirmPpPost = ref(false);
+const confirmPpPost = ref(false); // 개설확인모달창에서 확인 눌렀을 때 PublishProgramModal에 전달하여 post요청
 const PublishProgramModalKey = ref(false); // 예약취소 시 리렌더링 유발용
 
 
