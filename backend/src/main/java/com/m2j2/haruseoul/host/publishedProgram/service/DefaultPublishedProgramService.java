@@ -59,17 +59,31 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
                 .findAll(memberIds, start, end, statusIds, programIds, pageable);
 
         // List<ppListDto>----------------------------------------------------------------------------------------------
+        Converter<List<Reservation>, List<Long>> reservationsToReservationIdsConverter = ctx -> ctx.getSource().stream()
+                .map(Reservation::getId)
+                .toList();
+
+        Converter<List<Reservation>, List<String>> reservationsToProfileImgSrcsConverter = ctx -> ctx.getSource().stream()
+                .map(Reservation::getMember)
+                .map(Member::getProfileImgSrc)
+                .toList();
+
         modelMapper.typeMap(PublishedProgram.class, PublishedProgramListDto.class)
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getProgram().getGroupSizeMax(), PublishedProgramListDto::setGroupSizeMax);
                     mapper.map(src -> src.getProgram().getGroupSizeMin(), PublishedProgramListDto::setGroupSizeMin);
+                    mapper
+                            .using(reservationsToReservationIdsConverter)
+                            .map(PublishedProgram::getReservations, PublishedProgramListDto::setReservationIds);
+                    mapper.using(reservationsToProfileImgSrcsConverter)
+                                    .map(PublishedProgram::getReservations, PublishedProgramListDto::setGuestProfileImgSrcs);
                     mapper.map(
                             src -> Optional.ofNullable(src.getProgram().getImages())
                                     .map(images -> images.stream()
                                             .sorted(Comparator.comparing(Image::getOrder))
                                             .toList())
-                                    .orElse(Collections.emptyList()),
-                            PublishedProgramListDto::setImages
+                                    .orElse(Collections.emptyList())
+                            , PublishedProgramListDto::setImages
                     );
                 });
 

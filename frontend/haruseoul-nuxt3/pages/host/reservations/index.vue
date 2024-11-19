@@ -239,6 +239,18 @@ const CancelHandler = async (pp) => {
   });
   console.log('          PublishedProgram Update result: ', response);
 
+  // 예약한 게스트들의 reservation도 cancel처리
+  console.log('          pp.reservationIds: ', pp.reservationIds)
+  for (const rId of pp.reservationIds) {
+    let rvCancelResponse = await useDataFetch(`host/reservations/${rId}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json"
+      }
+    });
+    console.log('          Reservation Cancel result: ', rvCancelResponse);
+  }
+
   // 예약취소 확인 모달창
   openModal('completeCancelModal');
 
@@ -1010,7 +1022,7 @@ watchEffect(() => {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* Dark background */
   backdrop-filter: blur(5px); /* Blur effect */
-  z-index: 999; /* Behind modal but above other content */
+  z-index: 990; /* Behind modal but above other content */
 }
 
 .backdrop.active {
