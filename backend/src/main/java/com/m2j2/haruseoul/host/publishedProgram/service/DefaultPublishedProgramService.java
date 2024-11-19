@@ -59,17 +59,24 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
                 .findAll(memberIds, start, end, statusIds, programIds, pageable);
 
         // List<ppListDto>----------------------------------------------------------------------------------------------
+        Converter<List<Reservation>, List<Long>> reservationsToReservationIdsConverter = ctx -> ctx.getSource().stream()
+                .map(Reservation::getId)
+                .toList();
+
         modelMapper.typeMap(PublishedProgram.class, PublishedProgramListDto.class)
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getProgram().getGroupSizeMax(), PublishedProgramListDto::setGroupSizeMax);
                     mapper.map(src -> src.getProgram().getGroupSizeMin(), PublishedProgramListDto::setGroupSizeMin);
+                    mapper
+                            .using(reservationsToReservationIdsConverter)
+                            .map(PublishedProgram::getReservations, PublishedProgramListDto::setReservationIds);
                     mapper.map(
                             src -> Optional.ofNullable(src.getProgram().getImages())
                                     .map(images -> images.stream()
                                             .sorted(Comparator.comparing(Image::getOrder))
                                             .toList())
-                                    .orElse(Collections.emptyList()),
-                            PublishedProgramListDto::setImages
+                                    .orElse(Collections.emptyList())
+                            , PublishedProgramListDto::setImages
                     );
                 });
 

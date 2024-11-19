@@ -20,7 +20,6 @@ public class ReservationController {
 
     @PutMapping("{rid}")
     public ResponseEntity<String> cancel(@PathVariable(name = "rid") Long reservationId) {
-
         try {
             reservationService.cancel(reservationId);
             return ResponseEntity.ok("Reservation cancelled successfully.");

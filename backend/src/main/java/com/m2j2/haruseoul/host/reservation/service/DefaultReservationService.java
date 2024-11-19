@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
-@Service
+@Service("DefaultHostReservationService")
 public class DefaultReservationService implements ReservationService {
 
     ReservationRepository reservationRepository;

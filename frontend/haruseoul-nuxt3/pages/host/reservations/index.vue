@@ -241,6 +241,7 @@ const CancelHandler = async (pp) => {
 
   // 예약한 게스트들의 reservation도 cancel처리
 
+
   // 예약취소 확인 모달창
   openModal('completeCancelModal');
 
