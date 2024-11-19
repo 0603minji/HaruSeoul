@@ -8,6 +8,7 @@ import com.m2j2.haruseoul.member.dto.MemberUpdateDto;
 import com.m2j2.haruseoul.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -43,10 +44,12 @@ public class MemberController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<String> update(@PathVariable Long id, @RequestPart("memberUpdateDto") MemberUpdateDto memberUpdateDto) {
+    public ResponseEntity<String> update(@PathVariable Long id,
+                                         @RequestPart("memberUpdateDto") MemberUpdateDto memberUpdateDto,
+                                         @RequestPart("profileImgSrc") MultipartFile profileImgSrc) {
 
         memberUpdateDto.setId(id);
-        memberService.update(memberUpdateDto);
+        memberService.update(memberUpdateDto,profileImgSrc);
 
         return ResponseEntity.ok("개인정보 변경 완료");
     }

@@ -5,6 +5,7 @@ export default () => {
     const birth = useState('birth', () => null);
     const username = useState('username', () => null);
     // const roles = useState('roles', () => []);
+    const profileImgSrc = useState('profileImgSrc', () => null);
     const token = useState('token', () => null);
 
     const isAnonymous = () => {
@@ -18,6 +19,7 @@ export default () => {
         username.value = loginInfo.username;
         email.value = loginInfo.email;
         birth.value = loginInfo.birth;
+        profileImgSrc.value = loginInfo.profileImgSrc;
         // roles.value = loginInfo.roles;
         token.value = loginInfo.token;
 
@@ -27,6 +29,7 @@ export default () => {
             localStorage.setItem('email', loginInfo.email);
             localStorage.setItem('birth', loginInfo.birth);
             localStorage.setItem('username', loginInfo.username);
+            localStorage.setItem('profileImgSrc', loginInfo.profileImgSrc);
             localStorage.setItem('token', loginInfo.token);
             // localStorage.setItem('roles', JSON.stringify(loginInfo.roles)); //[] -> "[]"
         }
@@ -45,6 +48,7 @@ export default () => {
                 username.value = localStorage.getItem('username');
                 birth.value = localStorage.getItem('birth');
                 email.value = localStorage.getItem('email');
+                profileImgSrc.value = localStorage.getItem('profileImgSrc');
             }
         }
     }
@@ -64,6 +68,7 @@ export default () => {
             localStorage.removeItem('birth');
             localStorage.removeItem('username');
             localStorage.removeItem('token');
+            localStorage.removeItem('profileImgSrc');
         }
 
     }
@@ -77,6 +82,7 @@ export default () => {
         birth,
         username,
         token,
+        profileImgSrc,
         // roles,
         isAnonymous,
         loadUserFromStorage,

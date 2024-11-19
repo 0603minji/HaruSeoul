@@ -58,9 +58,13 @@ public class JwtUtil {
     public String extractNickname(String token) {
         return extractAllClaims(token).get("nickname", String.class);
     }
+
     public LocalDate extractBirthday(String token) {
         String birth = extractAllClaims(token).get("birth", String.class);
         return LocalDate.parse(birth, DateTimeFormatter.ISO_DATE);
+    }
+    public String extractProfileImgSrc(String token) {
+        return extractAllClaims(token).get("profileImgSrc", String.class);
     }
 
 
@@ -96,6 +100,7 @@ public class JwtUtil {
         claims.put("email", userDetails.getEmail());
         claims.put("birth", userDetails.getBirth().format(DateTimeFormatter.ISO_DATE));
         claims.put("nickname", userDetails.getNickname());
+        claims.put("profileImgSrc", userDetails.getProfileImgSrc());
 //        claims.put("roles", userDetails.getAuthorities());
 
         return Jwts.builder()

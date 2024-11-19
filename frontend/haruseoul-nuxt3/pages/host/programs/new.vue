@@ -247,13 +247,14 @@
               @removeRoute="removeRoute"
           />
         </div>
-        <!--        <div class="map">지도</div>-->
+
         <div class="d:flex jc:end m-top:5">
           <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center"
                   @click.prevent="addRouteFunction">
             + 경유지
           </button>
         </div>
+        <div id="map1"></div>
         <div class="button-group">
           <div>
             <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#detail')">이전</div>
@@ -448,6 +449,10 @@ onMounted(() => {
   }
   activeSection.value = window.location.hash;
   fetchCategories();
+
+
+
+
 })
 
 //==================Data Functions=====================

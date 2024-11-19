@@ -23,6 +23,7 @@ public class HaruSeoulUserDetails implements UserDetails {
     private String email;
     private String name;
     private LocalDate birth;
+    private String profileImgSrc;
 
     private Collection<? extends GrantedAuthority> authorities;
 }

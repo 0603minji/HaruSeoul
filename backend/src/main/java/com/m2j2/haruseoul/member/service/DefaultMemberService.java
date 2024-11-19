@@ -67,21 +67,21 @@ public class DefaultMemberService implements MemberService {
 
     @Override
     @Transactional
-    public void update(MemberUpdateDto memberUpdateDto) {
+    public void update(MemberUpdateDto memberUpdateDto,MultipartFile file) {
 
         Member member = memberRepository.findById(memberUpdateDto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
 
-        if(memberUpdateDto.getProfileImgSrc() != null) {
-            MultipartFile profileImg = memberUpdateDto.getProfileImgSrc();
+        if(file != null) {
+            MultipartFile profileImg = file;
             String fileName = UUID.randomUUID() + "_" + profileImg.getOriginalFilename();
             Path filePath = Paths.get(uploadDir, fileName);
             try {
                 Files.createDirectories(filePath.getParent());
                 Files.write(filePath, profileImg.getBytes());
 
-                member.setProfileImgSrc("upload/" + fileName);
+                member.setProfileImgSrc("uploads/" + fileName);
 
             } catch (IOException e) {
                 e.printStackTrace();

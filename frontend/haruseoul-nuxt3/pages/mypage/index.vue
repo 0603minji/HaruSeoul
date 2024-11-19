@@ -2,26 +2,40 @@
   <main>
     <div class="container">
       <section class="profile-header">
-        <div class="profile-image-container">
-          <img v-if="data.profileImgSrc" class="profile-image" :src="`http://localhost:8080/api/v1/${data.profileImgSrc}`" alt="프로필 이미지"/>
+        <div class="profile-image-container" :key="profileImageKey">
+          <img
+              v-if="data.profileImgSrc"
+              class="profile-image"
+              :key="userDetails.profileImgSrc"
+              :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}?timestamp=${new Date().getTime()}`"
+              alt="프로필 이미지"/>
           <img v-else class="profile-image" src="/assets/image/default-profile.png" alt="프로필 이미지"/>
-          <input type="file" class="n-icon cursor:pointer"/>
+          <input
+          type="file"
+          accept="image/*"
+          class="n-icon cursor:pointer"
+          @change="handleProfileImageChange"
+          />
         </div>
         <div class="profile-name">
           <!-- 읽기 모드 -->
           <template v-if="!editingNickname">
             <p>{{ data.nickname }}</p>
-            <span class="n-icon edit-icon" @click="enableEdit">✏️</span>
+            <span class="n-icon edit-icon" style="cursor: pointer" @click.prevent="enableEdit">✏️</span>
           </template>
 
           <!-- 편집 모드 -->
           <template v-else>
+            <div>
             <input
                 type="text"
                 v-model="editedNickname"
                 placeholder="Enter new nickname"
+                style="border: 1px solid; position: relative"
             />
-            <button class="confirm-button" @click="updateNickname">확인</button>
+            <button style="cursor: pointer; position: relative; right: 20px" @click.prevent="cancelEdit">x</button>
+            </div>
+            <button class="n-btn n-btn-background-color:sub" @click.prevent="updateNickname">확인</button>
           </template>
         </div>
       </section>
@@ -80,7 +94,7 @@ const userDetails = useUserDetails();
 const nickname = ref(); // 기존 닉네임
 const editedNickname = ref(nickname.value); // 수정할 닉네임 값
 const editingNickname = ref(false);
-const profileImg = ref();
+const profileImageKey = ref(0);
 
 
 const response = await useDataFetch(`members/${memberId}`);
@@ -93,11 +107,18 @@ const enableEdit = () => {
   editedNickname.value = nickname.value; // 기존 닉네임 복사
 };
 
+const cancelEdit = () => {
+  editingNickname.value = false; // 편집 모드 종료
+  editedNickname.value = nickname.value; // 변경된 닉네임 초기화
+};
+
+
 // 닉네임 업데이트
 const updateNickname = async () => {
   const formData = new FormData();
 
   const updateNickname = {
+    id:memberId,
     nickname: editedNickname.value,
   }
 
@@ -117,12 +138,61 @@ const updateNickname = async () => {
           },
         }
     );
-    data.value.nickname = editedNickname;
+    data.value.nickname = editedNickname.value;
     editingNickname.value = false; // 편집 모드 종료
     alert("닉네임이 성공적으로 변경되었습니다.");
   } catch (error) {
     console.error("닉네임 변경 중 오류 발생:", error);
     alert("닉네임 변경에 실패했습니다. 다시 시도해주세요.");
+  }
+};
+// 프사 변경
+const handleProfileImageChange = async (event) => {
+  const file = event.target.files[0];
+  if (!file) {
+    alert("파일을 선택해주세요.");
+    return;
+  }
+
+  const formData = new FormData();
+  const updateProfileImg = {
+    id:memberId,
+  }
+
+  formData.append(
+      "memberUpdateDto",
+      new Blob([JSON.stringify(updateProfileImg)], { type: "application/json" })
+  );
+
+  formData.append("profileImgSrc", file);
+
+  try {
+    const response = await axios.put(
+        `http://localhost:8080/api/v1/members/${memberId}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+    );
+
+    // 새 데이터 가져오기
+    const updatedData = await useDataFetch(`members/${memberId}`);
+    console.log("업데이트된 데이터:", updatedData);
+
+    // 전역 상태 업데이트 및 Vue 강제 갱신
+    userDetails.profileImgSrc.value = ''; // 초기화
+    setTimeout(() => {
+      userDetails.profileImgSrc.value = `${updatedData.profileImgSrc}?timestamp=${new Date().getTime()}`;
+    }, 0);
+
+
+    console.log("전역 상태 profileImgSrc:", userDetails.profileImgSrc);
+    alert("프로필 이미지가 성공적으로 변경되었습니다.");
+  } catch (error) {
+    console.error("프로필 이미지 변경 중 오류 발생:", error);
+    alert("프로필 이미지 변경에 실패했습니다. 다시 시도해주세요.");
   }
 };
 
@@ -152,6 +222,9 @@ const confirmDelete = async () => {
 </script>
 
 <style scoped>
+
+
+
 .profile-header {
   display: flex;
   flex-direction: column;

@@ -70,11 +70,16 @@
       </ul>
 
       <div class="profile-img-container lg:show">
-        <div @click.prevent="toggleModal" class="profile-img-wrapper">
-          <img
+        <div @click.prevent="toggleModal" class="profile-img-wrapper" style="cursor: pointer">
+          <img v-if="userDetails.profileImgSrc"
             class="profile-img"
-            src="/image/profile_cat.png"
+            :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`"
             alt="게스트 프로필 사진"
+          />
+          <img v-else
+              class="profile-img"
+              src="/assets/image/default-profile.png"
+              alt="게스트 프로필 사진"
           />
         </div>
         <div v-if="showModal" class="modal-content">
@@ -83,7 +88,8 @@
 
           <!-- 프로필 사진과 마이페이지 링크 -->
           <div class="modal-header">
-            <img class="modal-profile-img" src="/image/profile_cat.png" alt="프로필 사진" />
+            <img v-if="userDetails.profileImgSrc" class="modal-profile-img" :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`" alt="프로필 사진" />
+            <img v-else class="modal-profile-img" src="/assets/image/default-profile.png" alt="프로필 사진" />
             <NuxtLink href="/mypage" class="mypage-link">마이페이지</NuxtLink>
           </div>
 
@@ -124,10 +130,15 @@
         <section class="aside-profile">
           <h1>게스트 프로필</h1>
           <div class="profile-img-container">
-            <img
-                class="profile-img"
-                src="/image/profile_cat.png"
-                alt="게스트 프로필 사진"
+            <img v-if="userDetails.profileImgSrc"
+                 class="profile-img"
+                 :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`"
+                 alt="게스트 프로필 사진"
+            />
+            <img v-else
+                 class="profile-img"
+                 src="/assets/image/default-profile.png"
+                 alt="게스트 프로필 사진"
             />
           </div>
           <div class="profile-info">
@@ -297,7 +308,7 @@ onBeforeUnmount(() => {
   border-radius: 8px;
   width: 220px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 10;
+  z-index: 600;
   font-size: 14px;
 }
 

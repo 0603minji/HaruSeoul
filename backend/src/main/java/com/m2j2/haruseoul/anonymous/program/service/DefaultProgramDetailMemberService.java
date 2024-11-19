@@ -1,6 +1,7 @@
 package com.m2j2.haruseoul.anonymous.program.service;
 
 import com.m2j2.haruseoul.anonymous.program.dto.ProgramDetailMemberDto;
+import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.repository.MemberRepository;
 import com.m2j2.haruseoul.repository.ProgramRepository;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,14 @@ public class DefaultProgramDetailMemberService implements ProgramDetailMemberSer
     @Override
     public ProgramDetailMemberDto getName(Long id) {
         Long regMemberId = programRepository.findMemberIdByProgramId(id);
-
         String regMemberName = memberRepository.getNameById(regMemberId);
+        Member member = memberRepository.findById(regMemberId).orElse(null);
 
         ProgramDetailMemberDto programDetailMemberDto
                 = ProgramDetailMemberDto.builder()
                 .hostId(regMemberId)
                 .hostName(regMemberName)
+                .hostProfileImg(member.getProfileImgSrc())
                 .build();
         return programDetailMemberDto;
     }

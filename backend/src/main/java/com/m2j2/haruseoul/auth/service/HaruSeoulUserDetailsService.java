@@ -31,6 +31,7 @@ public class HaruSeoulUserDetailsService implements UserDetailsService {
                 .birth(member.getBirth())
                 .email(member.getEmail())
                 .nickname(member.getNickname())
+                .profileImgSrc(member.getProfileImgSrc())
                 .build();
     }
 }
