@@ -26,6 +26,7 @@ public class PublishedProgramListDto {
     private Integer groupSizeMin;
     private Integer groupSizeCurrent;
     private LocalDate date;
+    private Long statusId;
     private String statusName;
     private List<Image> images;
     private List<Long> reservationIds;

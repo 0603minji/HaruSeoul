@@ -1,6 +1,7 @@
 <script setup>
 const props = defineProps({
   isVisible: { type: Boolean, required: true },
+
 });
 const emit = defineEmits(['close', 'confirm']);
 

@@ -60,7 +60,7 @@ public class DefaultReservationService implements ReservationService {
                         }
                 );
 
-        List<ReservationListDto> reservationListDtos = reservationRepository.findByPublishedProgramId(ppId)
+        List<ReservationListDto> reservationListDtos = reservationRepository.findByPublishedProgramIdAndDeleteDateIsNull(ppId)
                 .stream()
                 .map(reservation -> modelMapper.map(reservation, ReservationListDto.class))
                 .toList();

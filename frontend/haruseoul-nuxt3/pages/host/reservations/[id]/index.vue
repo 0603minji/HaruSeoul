@@ -7,11 +7,13 @@ const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지 로�
 const route = useRoute();
 const publishedProgramId = route.params.id;
 const {data:publishedProgramData} = await useAuthFetch(`host/published-programs/${publishedProgramId}`);
-const pp = ref(publishedProgramData.value);
+const pp = ref(publishedProgramData.value); // publishedProgram
+console.log('pp: ', pp.value);
 const {data:rvListDtosData} = await useAuthFetch(`host/reservations`, {query: {ppId: publishedProgramId}});
-const applicants = ref(rvListDtosData);
+const applicants = ref(rvListDtosData); // 해당 publishedProgram에 참가한 참가자들
+console.log('applicants: ', applicants.value);
+const applicantToDismiss = ref(null); // 추방할 참가자. 추방확인모달에서 사용
 
-console.log('applicants: ', applicants.value)
 
 // 모달창
 const { isModalVisible, openModal, closeModal } = useModal();
@@ -185,6 +187,59 @@ const requestGuestApproval = () => {
   console.log('   requestGuestApproval called')
 }
 
+// todo 호스트가 게스트 추방
+const dismissHandler = async (reservationId) => {
+  console.log('   dismissHandler called')
+  console.log(`          ->  Put host/reservations/${reservationId}`);
+
+  // reservation테이블에서 해당 예약을 삭제처리(delete_date 업데이트)----------------------------------------------------------
+  const rvCancelResponse = await useDataFetch(`host/reservations/${reservationId}`, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    }
+  });
+  console.log('          Reservation Cancel result: ', rvCancelResponse);
+
+
+  // publishedProgram테이블에서도 변동사항 처리-----------------------------------------------------------------------------
+    console.log('          publishedProgram에 추방사항 적용');
+  let updatedStatusId = pp.value.statusId; // statusId=5가 아닐 때 변경없음
+  // statusId=5(예약확정대기, 풀방)일 때는 groupSizeCurrent-- 후에 모집중 or 폐지임박으로 변경
+  // 현재시간 기준 d-1이면 폐지임박 그외엔 모집중
+  if (pp.value.statusId === 5) {
+    const Dday = calculateKoreanDDay(pp.value.date);
+    console.log('             예약확정대기상태일 경우, pp status변경을 위한 Dday계산, Dday: ', Dday);
+    if (Dday <= 2) updatedStatusId = 2;
+    else updatedStatusId = 1;
+  }
+
+  const publishedProgramUpdateDto = {
+    id: pp.value.id,
+    groupSizeCurrent: pp.value.groupSizeCurrent - applicantToDismiss.value.numberOfGuest,
+    // 예약대기 상태(풀방)에서 추방하면 모집중 or 폐지임박으로 변경
+    statusId: updatedStatusId
+  }
+
+  const ppResponse = await useDataFetch(`host/published-programs`, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: publishedProgramUpdateDto
+  })
+  console.log('          PublishProgram update result: ', ppResponse);
+
+
+  // 예약취소 확인 모달창
+  openModal('completeDismissModal');
+
+  // 취소된 pp반영한 목록으로 갱신
+  await fetchData();
+  // publishProgramModal reRender
+  PublishProgramModalKey.value = !PublishProgramModalKey.value;
+}
+
 
 // === $fetch ==========================================================================================================
 const fetchData = async () => {
@@ -249,6 +304,15 @@ const fetchData = async () => {
     </Modal>
     <Modal class="onlyConfirm" :isVisible="isModalVisible('completeRequestGuestApproval')" @confirm="closeModal('completeRequestGuestApproval')">
       <p>게스트들에게 예약확정 동의요청이 전송되었습니다.</p>
+    </Modal>
+
+    <!--  참가자추방확인  -->
+    <Modal :isVisible="isModalVisible('confirmDismissModal')" @close="closeModal('confirmDismissModal')"
+           @confirm="() => {dismissHandler(applicantToDismiss.reservationId); closeModal('confirmDismissModal');}">
+      <p>{{ applicantToDismiss.applicantName }} 참가자를 추방하시겠습니까?</p>
+    </Modal>
+    <Modal class="onlyConfirm" :isVisible="isModalVisible('completeDismissModal')" @confirm="closeModal('completeDismissModal')">
+      <p>{{ applicantToDismiss.applicantName }} 참가자가 추방되었습니다.</p>
     </Modal>
 
     <!-- ============================================================================================================= -->
@@ -401,7 +465,8 @@ const fetchData = async () => {
                     </p>
                   </section>
                   <div class="footer">
-                    <button class="n-btn n-btn:hover n-btn-bd:none">
+                    <button @click.prevent="applicantToDismiss=applicant; openModal('confirmDismissModal');" class="n-btn n-btn:hover n-btn-bd:none"
+                            v-if="!(pp.statusId === 3 || pp.statusId === 4)">
                       추방하기
                     </button>
                   </div>
