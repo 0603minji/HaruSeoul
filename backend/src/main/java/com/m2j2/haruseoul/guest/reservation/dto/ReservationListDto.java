@@ -30,4 +30,6 @@ public class ReservationListDto {
     private Integer numberOfGuest;
 
     private String src;
+
+    private Integer guestConsent;
 }
