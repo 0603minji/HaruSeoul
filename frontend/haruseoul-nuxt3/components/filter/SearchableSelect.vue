@@ -85,8 +85,10 @@ const config = useRuntimeConfig();
 const { data: programData } = await useAuthFetch(`host/programs/user/${userDetails.id.value}`, { params: programQuery });
 
 programOptions.value = programData.value;
+console.log('programOptions: ', programOptions.value);
 // filteredOptions 초기화, 검색어가 입력되어있을 경우, 필터링
 filterOptions();
+console.log('filteredOptions: ', filteredOptions.value)
 // selectedOption 초기화
 selectedOption.value = props.defaultProgramId === null? null : programOptions.value.find(program => program.id === props.defaultProgramId);
 emit('selectionChanged', selectedOption.value); // Emit the default selected option

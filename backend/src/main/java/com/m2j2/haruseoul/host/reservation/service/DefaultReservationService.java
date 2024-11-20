@@ -5,6 +5,7 @@ import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.entity.PublishedProgram;
 import com.m2j2.haruseoul.entity.Reservation;
 import com.m2j2.haruseoul.host.publishedProgram.dto.PublishedProgramListDto;
+import com.m2j2.haruseoul.host.reservation.dto.ReservationCancelDto;
 import com.m2j2.haruseoul.host.reservation.dto.ReservationListDto;
 import com.m2j2.haruseoul.repository.ReservationRepository;
 import org.modelmapper.Converter;
@@ -29,7 +30,7 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
-    public Long cancel(Long id) {
+    public Reservation cancel(Long id, ReservationCancelDto reservationCancelDto) {
         // 예약 ID로 해당 예약을 찾아옵니다.
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
@@ -37,13 +38,17 @@ public class DefaultReservationService implements ReservationService {
         // 삭제 날짜를 현재 시간으로 설정합니다.
         reservation.setDeleteDate(Instant.now());  // 삭제 일자를 현재 시간으로 설정 (LocalDateTime으로 변경 가능)
 
+        // cancelMethod와 cancelReason 설정
+        reservation.setCancelMethod(reservationCancelDto.getCancelMethod());
+        reservation.setCancelReason(reservationCancelDto.getCancelReason());
+
         // 예약을 업데이트합니다.
         Reservation saved = reservationRepository.save(reservation);
 
         // 로그를 남겨서 예약 삭제에 대한 기록을 남길 수 있습니다.
         // System.out.println("Reservation with ID " + reservationId + " has been soft deleted at " + Instant.now());
 
-        return saved.getId();
+        return saved;
     }
 
     @Override
@@ -60,10 +65,12 @@ public class DefaultReservationService implements ReservationService {
                         }
                 );
 
-        List<ReservationListDto> reservationListDtos = reservationRepository.findByPublishedProgramIdAndDeleteDateIsNull(ppId)
+        List<ReservationListDto> reservationListDtos = reservationRepository.findByPpIdByCancelMethod(ppId)
                 .stream()
                 .map(reservation -> modelMapper.map(reservation, ReservationListDto.class))
                 .toList();
+        System.out.println("=================================================================================================");
+        System.out.println(reservationListDtos);
 
         return reservationListDtos;
     }

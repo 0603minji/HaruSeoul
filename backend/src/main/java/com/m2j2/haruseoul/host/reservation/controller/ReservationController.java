@@ -1,6 +1,8 @@
 package com.m2j2.haruseoul.host.reservation.controller;
 
+import com.m2j2.haruseoul.entity.Reservation;
 import com.m2j2.haruseoul.host.reservation.dto.ReservationListDto;
+import com.m2j2.haruseoul.host.reservation.dto.ReservationCancelDto;
 import com.m2j2.haruseoul.host.reservation.service.ReservationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +21,12 @@ public class ReservationController {
     }
 
     @PutMapping("{rid}")
-    public ResponseEntity<String> cancel(@PathVariable(name = "rid") Long reservationId) {
+    public ResponseEntity<String> cancel(@PathVariable(name = "rid") Long reservationId,
+                                         @RequestBody ReservationCancelDto dto) {
         try {
-            Long rId = reservationService.cancel(reservationId);
-            return ResponseEntity.ok("Reservation(id: " + rId + ") cancelled successfully.");
+            Reservation rv = reservationService.cancel(reservationId, dto);
+            return ResponseEntity
+                    .ok("Reservation(id: " + rv.getId() + ") cancelled successfully.\ncancelMethod: "+rv.getCancelMethod()+"\ncancelReason: "+rv.getCancelReason());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 예약이 없을 경우 404 Not Found 반환
         }

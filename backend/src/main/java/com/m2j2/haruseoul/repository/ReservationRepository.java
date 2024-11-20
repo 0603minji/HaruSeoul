@@ -17,5 +17,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "and (:isDeleted = false or r.deleteDate is not null)")
     Page<Reservation> findAll(@Param("sIds") List<Long> sIds, @Param("mIds") List<Long> mIds,@Param("isDeleted") Boolean isDeleted, Pageable pageable);
 
-    List<Reservation> findByPublishedProgramIdAndDeleteDateIsNull(Long ppId);
+    @Query("from Reservation r " +
+            "where (r.publishedProgram.id = :ppId)" +
+            "and (r.cancelMethod = 3 or r.deleteDate is null)")
+    List<Reservation> findByPpIdByCancelMethod(Long ppId);
 }

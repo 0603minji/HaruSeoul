@@ -110,7 +110,7 @@ const CancelHandler = async (pp) => {
   // publishedProgramUpdateDto
   const publishedProgramUpdateDto = {
     "id": pp.id,
-    "groupSizeCurrent": pp.groupSizeCurrent,
+    "groupSizeCurrent": pp.groupSizeCurrent, // 폐지 당시 예약된 참가자수 박제
     "statusId": 4
   }
 
@@ -130,6 +130,10 @@ const CancelHandler = async (pp) => {
       method: "PUT",
       headers: {
         "Content-type": "application/json"
+      },
+      body: {
+        "cancelMethod": 3, // 3:호스트가 pp취소 or 정원미달로 자동폐지
+        "cancelReason": "호스트가 예약을 취소함"
       }
     });
     console.log('          Reservation Cancel result: ', rvCancelResponse);
@@ -197,6 +201,10 @@ const dismissHandler = async (reservationId) => {
     method: "PUT",
     headers: {
       "Content-type": "application/json"
+    },
+    body: {
+      "cancelMethod": 2, // 2:kick
+      "cancelReason": "호스트에 의해 추방됨. 추방사유 입력받기는 아직 미구현"
     }
   });
   console.log('          Reservation Cancel result: ', rvCancelResponse);
