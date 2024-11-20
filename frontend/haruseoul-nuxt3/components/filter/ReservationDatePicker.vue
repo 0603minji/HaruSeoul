@@ -136,6 +136,10 @@ const reservableRange = 21;
 
 rangeStart.setDate(today.getDate() + 1); // today + 1
 rangeEnd.setDate(today.getDate() + 2 + reservableRange); //  21 days
+console.log('rangeStart: ', rangeStart);
+console.log('rangeStart: ', rangeStart);
+
+
 /*=== 달력 dates 생성 ==================================================================================================*/
 // selectedYear or selectedMonth가 변하면 update
 const dates = computed(() => {
