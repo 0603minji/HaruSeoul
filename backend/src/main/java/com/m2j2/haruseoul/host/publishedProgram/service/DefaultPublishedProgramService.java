@@ -64,6 +64,7 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
                 .toList();
 
         Converter<List<Reservation>, List<String>> reservationsToProfileImgSrcsConverter = ctx -> ctx.getSource().stream()
+                .filter(rv -> rv.getDeleteDate() == null || (rv.getCancelMethod()!=null && rv.getCancelMethod() == 3)) // reservation 중 게스트가 자의로 취소, 호스트가 kick한 것 제외하되 폐지로 취소된 예약은 포함
                 .map(Reservation::getMember)
                 .map(Member::getProfileImgSrc)
                 .toList();
@@ -239,6 +240,44 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
         return OnGoingPublishedProgramListDto.builder()
                 .onGoingPrograms(programListDtos)
                 .build();
+    }
+
+    @Override
+    public PublishedProgramListDto getById(Long id) {
+        PublishedProgram pp = publishedProgramRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("PublishedProgram not found with ID: " + id));
+
+        // List<ppListDto>----------------------------------------------------------------------------------------------
+        Converter<List<Reservation>, List<Long>> reservationsToReservationIdsConverter = ctx -> ctx.getSource().stream()
+                .map(Reservation::getId)
+                .toList();
+
+        Converter<List<Reservation>, List<String>> reservationsToProfileImgSrcsConverter = ctx -> ctx.getSource().stream()
+                .filter(rv -> rv.getDeleteDate() == null || (rv.getCancelMethod()!=null && rv.getCancelMethod() == 3)) // reservation 중 게스트가 자의로 취소, 호스트가 kick한 것 제외하되 폐지로 취소된 예약은 포함
+                .map(Reservation::getMember)
+                .map(Member::getProfileImgSrc)
+                .toList();
+
+        modelMapper.typeMap(PublishedProgram.class, PublishedProgramListDto.class)
+                .addMappings(mapper -> {
+                    mapper.map(src -> src.getProgram().getGroupSizeMax(), PublishedProgramListDto::setGroupSizeMax);
+                    mapper.map(src -> src.getProgram().getGroupSizeMin(), PublishedProgramListDto::setGroupSizeMin);
+                    mapper
+                            .using(reservationsToReservationIdsConverter)
+                            .map(PublishedProgram::getReservations, PublishedProgramListDto::setReservationIds);
+                    mapper.using(reservationsToProfileImgSrcsConverter)
+                            .map(PublishedProgram::getReservations, PublishedProgramListDto::setGuestProfileImgSrcs);
+                    mapper.map(
+                            src -> Optional.ofNullable(src.getProgram().getImages())
+                                    .map(images -> images.stream()
+                                            .sorted(Comparator.comparing(Image::getOrder))
+                                            .toList())
+                                    .orElse(Collections.emptyList())
+                            , PublishedProgramListDto::setImages
+                    );
+                });
+
+        return modelMapper.map(pp, PublishedProgramListDto.class);
     }
 
     @Override

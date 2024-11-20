@@ -1,6 +1,7 @@
 <script setup>
 const props = defineProps({
   isVisible: { type: Boolean, required: true },
+
 });
 const emit = defineEmits(['close', 'confirm']);
 
@@ -46,6 +47,7 @@ const confirmModal = () => {
   position: relative;
   z-index: 100;
   min-width: 300px;
+  max-width: 360px;
   background: white;
   padding: 30px;
   border-radius: 8px;

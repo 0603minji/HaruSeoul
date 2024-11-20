@@ -44,4 +44,10 @@ public class Reservation {
 
     @Column(name = "requirement")
     private String requirement;
+
+    @Column(name = "cancel_method")
+    private Integer cancelMethod;
+
+    @Column(name = "cancel_reason")
+    private String cancelReason;
 }

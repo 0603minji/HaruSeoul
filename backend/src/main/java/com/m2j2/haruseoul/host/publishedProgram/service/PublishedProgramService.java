@@ -19,4 +19,5 @@ public interface PublishedProgramService {
     boolean delete(Long id);
     PublishedProgramProgramFilterResponseDto getProgramFilterList(Long hostId);
     OnGoingPublishedProgramListDto findByProgramId(Long pId);
+    PublishedProgramListDto getById(Long id);
 }

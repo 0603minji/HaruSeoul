@@ -156,7 +156,7 @@
 
         .guest-profile-container {
             display: flex;
-            flex-basis: 16px;
+            /*flex-basis: 16px;*/
 
             .guest-profile-wrapper {
                 flex-shrink: 0;

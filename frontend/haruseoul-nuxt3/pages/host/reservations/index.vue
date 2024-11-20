@@ -345,10 +345,10 @@ const closeMorePopup = (id) => {
 const route = useRoute();
 const router = useRouter();
 const userDetails = useUserDetails();
-const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지 로드용
+const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지, 게스트이미지 로드용
 // 모달창
 const { isModalVisible, openModal, closeModal } = useModal();
-const confirmPpPost = ref(false);
+const confirmPpPost = ref(false); // 개설확인모달창에서 확인 눌렀을 때 PublishProgramModal에 전달하여 post요청
 const PublishProgramModalKey = ref(false); // 예약취소 시 리렌더링 유발용
 
 
@@ -675,14 +675,8 @@ watchEffect(() => {
                   <!-- md:footer: card-footer영역에 존재하다가 992px이상에서 card-main의 우측으로 이동 -->
                   <div class="applicant-status lg:show">
                     <div class="guest-profile-container">
-                      <div class="guest-profile-wrapper">
-                        <img src="/public/image/program_01.png" alt="게스트 프로필">
-                      </div>
-                      <div class="guest-profile-wrapper">
-                        <img src="/image/profile.png" alt="게스트 프로필">
-                      </div>
-                      <div class="guest-profile-wrapper">
-                        <img src="/public/image/program_02.png" alt="게스트 프로필">
+                      <div v-if="pp.guestProfileImgSrcs.length > 0" v-for="img in pp.guestProfileImgSrcs" class="guest-profile-wrapper">
+                        <img :src="`${config.public.apiBase}${img}`" alt="게스트 프로필">
                       </div>
                     </div>
                     <span class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">
@@ -694,14 +688,9 @@ watchEffect(() => {
                 <div class="card-footer">
                   <div class="applicant-status margin-left:auto">
                     <div class="guest-profile-container">
-                      <div class="guest-profile-wrapper">
-                        <img src="/public/image/program_01.png" alt="게스트 프로필">
-                      </div>
-                      <div class="guest-profile-wrapper">
-                        <img src="/image/profile.png" alt="게스트 프로필">
-                      </div>
-                      <div class="guest-profile-wrapper">
-                        <img src="/public/image/program_02.png" alt="게스트 프로필">
+                      <div v-if="pp.guestProfileImgSrcs.length > 0" v-for="img in pp.guestProfileImgSrcs" class="guest-profile-wrapper">
+                        <img v-if="img!==null" :src="`${config.public.apiBase}${img}`" alt="게스트 프로필">
+                        <img v-else src="/assets/image/default-profile.png" alt="게스트 프로필">
                       </div>
                     </div>
                     <span class="n-icon n-icon:group n-icon-size:2 n-icon-color:main-3 n-deco n-deco-gap:1">
