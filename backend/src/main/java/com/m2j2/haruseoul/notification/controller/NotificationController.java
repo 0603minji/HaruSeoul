@@ -23,6 +23,7 @@ public class NotificationController {
         SseEmitter emitter = new SseEmitter(0L); // 무한 타임아웃
         sseClientRegistry.addClient(id, emitter); // SseClientRegistry에 클라이언트 등록
 
+
         System.out.println("클라이언트 등록: userId=" + id); // 등록 로그 추가
         System.out.println("현재 클라이언트 상태: " + sseClientRegistry.getClients());
 
