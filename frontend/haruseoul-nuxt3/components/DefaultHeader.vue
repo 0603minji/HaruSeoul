@@ -37,12 +37,9 @@
           >
         </li>
         <li class="header-menu">
-          <NuxtLink
-              class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:alert"
-              href="/guest/reservations"
-          >알림
-          </NuxtLink
-          >
+          <div class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:alert">
+            알림
+          </div>
         </li>
       </ul>
 
@@ -74,8 +71,9 @@
 
           <!-- 프로필 사진과 마이페이지 링크 -->
           <div class="modal-header">
-            <img v-if="userDetails.profileImgSrc" class="modal-profile-img" :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`" alt="프로필 사진" />
-            <img v-else class="modal-profile-img" src="/assets/image/default-profile.png" alt="프로필 사진" />
+            <img v-if="userDetails.profileImgSrc" class="modal-profile-img"
+                 :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`" alt="프로필 사진"/>
+            <img v-else class="modal-profile-img" src="/assets/image/default-profile.png" alt="프로필 사진"/>
             <NuxtLink href="/mypage" class="mypage-link">마이페이지</NuxtLink>
           </div>
 
@@ -233,19 +231,22 @@
 
 <script setup>
 import {useDataFetch} from "~/composables/useDataFetch.js";
+import {useNotification} from "~/composables/useNotification.js";
 
 const userDetails = useUserDetails();
-
 const data = ref({});
 const memberId = process.client ? localStorage.getItem("id") : null;
+console.log(userDetails.id.value);
+
+const {notifications, hasNewNotification} = useNotification(userDetails.id.value);
+
+
 const showModal = ref(false);
-console.log("유저디테일즈프사",userDetails.profileImgSrc.value)
 
 if (process.client && memberId) {
   (async () => {
     const response = await useDataFetch(`members/${memberId}`);
     data.value = response;
-    console.log("디폴트헤더유저정보",response);
   })();
 }
 
@@ -288,6 +289,10 @@ onBeforeUnmount(() => {
   if (process.client) {
     document.removeEventListener('click', handleClickOutside);
   }
+});
+
+watch(notifications, (newNotifications) => {
+  console.log("새 알림:", newNotifications);
 });
 
 </script>

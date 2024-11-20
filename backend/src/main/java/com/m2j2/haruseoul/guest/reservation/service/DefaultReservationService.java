@@ -2,6 +2,8 @@ package com.m2j2.haruseoul.guest.reservation.service;
 
 import com.m2j2.haruseoul.entity.*;
 import com.m2j2.haruseoul.guest.reservation.dto.*;
+import com.m2j2.haruseoul.notification.dto.NotificationSendDto;
+import com.m2j2.haruseoul.notification.service.NotificationService;
 import com.m2j2.haruseoul.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ public class DefaultReservationService implements ReservationService {
     private ReviewRepository reviewRepository;
     private RouteRepository routeRepository;
     private PublishedProgramRepository publishedProgramRepository;
+    private final NotificationService notificationService;
     ModelMapper modelMapper;
 
     public DefaultReservationService(ReservationRepository reservationRepository,
@@ -32,7 +35,7 @@ public class DefaultReservationService implements ReservationService {
                                      ReviewRepository reviewRepository,
                                      RouteRepository routeRepository,
                                      PublishedProgramRepository publishedProgramRepository,
-                                     ModelMapper modelMapper, ProgramRepository programRepository, ImageRepository imageRepository) {
+                                     ModelMapper modelMapper, ProgramRepository programRepository, ImageRepository imageRepository, NotificationService notificationService) {
         this.reservationRepository = reservationRepository;
         this.memberRepository = memberRepository;
         this.statusRepository = statusRepository;
@@ -42,6 +45,7 @@ public class DefaultReservationService implements ReservationService {
         this.modelMapper = modelMapper;
         this.programRepository = programRepository;
         this.imageRepository = imageRepository;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -246,5 +250,20 @@ public class DefaultReservationService implements ReservationService {
 
         // 로그를 남겨서 예약 삭제에 대한 기록을 남길 수 있습니다.
         System.out.println("Reservation with ID " + reservationId + " has been soft deleted at " + Instant.now());
+
+
+        //==========알림부분=====================
+        Long senderId = reservation.getMember().getId();
+        Long programId = reservation.getPublishedProgram().getProgram().getId();
+
+        NotificationSendDto notificationSendDto = NotificationSendDto.builder()
+                .senderId(senderId)
+                .programId(programId)
+                .type("CANCEL")
+                .build();
+        notificationService.send(notificationSendDto);
+
+
+
     }
 }

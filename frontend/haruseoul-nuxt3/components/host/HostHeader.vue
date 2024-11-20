@@ -235,6 +235,8 @@
 </template>
 <script setup>
 
+import {useNotification} from "~/composables/useNotification.js";
+
 const userDetails = useUserDetails();
 const data = ref({});
 const showModal = ref(false);
@@ -246,6 +248,9 @@ if (process.client && memberId) {
     data.value = response;
   })();
 }
+
+const {notifications, hasNewNotification} = useNotification(userDetails.id.value);
+
 const toggleModal = () => {
   showModal.value = !showModal.value;
 };

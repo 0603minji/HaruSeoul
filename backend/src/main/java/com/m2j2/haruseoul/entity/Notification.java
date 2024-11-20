@@ -23,24 +23,25 @@ public class Notification {
     @Column(name = "id" , nullable = false)
     private Long id;
 
-    @Column(name = "sender_id")
+    @Column(name = "sender_id", nullable = false)
     private Long senderId;
 
-    @Column(name = "receiver_id")
+    @Column(name = "receiver_id", nullable = false)
     private Long receiverId;
 
-    @Column(name = "program_id")
+    @Column(name = "program_id", nullable = false)
     private Long programId;
 
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private String type;
 
     @ColumnDefault("current_timestamp()")
-    @Column(name = "reg_date")
+    @Column(name = "reg_date", nullable = false)
     @CreationTimestamp
     private Instant regDate;
 
-    @Column(name = "is_read")
+    @ColumnDefault("false")
+    @Column(name = "is_read", nullable = false)
     private Boolean isRead;
 
 }
