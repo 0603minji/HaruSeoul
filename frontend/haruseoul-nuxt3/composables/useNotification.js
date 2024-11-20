@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted } from "vue";
+import {ref, onMounted, onUnmounted} from "vue";
 
 const notifications = ref([]); // 알림 목록 저장
 const hasNewNotification = ref(false); // 새 알림 여부
@@ -9,14 +9,16 @@ export function useNotification(userId) {
         // SSE 연결 시작
         eventSource = new EventSource(`http://localhost:8080/api/v1/notifications/${userId}`);
 
+        eventSource.onopen = () => console.log("sse 연결 성공");
+
         // 새 알림 수신 시 처리
-        eventSource.onmessage = (event) => {
-            console.log("Received message", event.data);
+        eventSource.addEventListener("notification", (event) => {
+            console.log("Received notification:", event.data);
             const notification = JSON.parse(event.data);
-            notifications.value.push(notification); // 알림 목록에 추가
-            hasNewNotification.value = true; // 새 알림이 있음을 표시
-            console.log("새 알림:", notification);
-        };
+            notifications.value.push(notification);
+            hasNewNotification.value = true;
+        });
+
 
         // 연결 오류 시 처리
         eventSource.onerror = (error) => {

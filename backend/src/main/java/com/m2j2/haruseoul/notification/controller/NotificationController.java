@@ -23,11 +23,23 @@ public class NotificationController {
         SseEmitter emitter = new SseEmitter(0L); // 무한 타임아웃
         sseClientRegistry.addClient(id, emitter); // SseClientRegistry에 클라이언트 등록
 
-        emitter.onCompletion(() -> sseClientRegistry.removeClient(id));
-        emitter.onTimeout(() -> sseClientRegistry.removeClient(id));
-        emitter.onError((e) -> sseClientRegistry.removeClient(id));
+        System.out.println("클라이언트 등록: userId=" + id); // 등록 로그 추가
+        System.out.println("현재 클라이언트 상태: " + sseClientRegistry.getClients());
 
+        emitter.onCompletion(() -> {
+            sseClientRegistry.removeClient(id);
+            System.out.println("클라이언트 연결 종료: userId=" + id);
+        });
+        emitter.onTimeout(() -> {
+            sseClientRegistry.removeClient(id);
+            System.out.println("클라이언트 타임아웃: userId=" + id);
+        });
+        emitter.onError((e) -> {
+            sseClientRegistry.removeClient(id);
+            System.out.println("클라이언트 연결 오류: userId=" + id + ", 오류: " + e.getMessage());
+        });
 
         return emitter;
     }
+
 }

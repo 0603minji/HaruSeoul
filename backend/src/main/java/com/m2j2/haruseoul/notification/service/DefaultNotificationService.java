@@ -5,6 +5,7 @@ import com.m2j2.haruseoul.notification.config.SseClientRegistry;
 import com.m2j2.haruseoul.notification.dto.NotificationSendDto;
 import com.m2j2.haruseoul.repository.NotificationRepository;
 import com.m2j2.haruseoul.repository.ProgramRepository;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -47,7 +48,7 @@ public class DefaultNotificationService implements NotificationService {
             try {
                 emitter.send(SseEmitter.event()
                         .name("notification")
-                        .data(notification));
+                        .data(notification, MediaType.APPLICATION_JSON));
                 System.out.println("알림 전송 성공: " + notification);
             } catch (IOException e) {
                 sseClientRegistry.removeClient(programRegMemberId);

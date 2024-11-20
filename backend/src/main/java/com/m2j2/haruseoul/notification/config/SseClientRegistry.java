@@ -13,13 +13,22 @@ public class SseClientRegistry {
 
     public void addClient(Long userId, SseEmitter emitter) {
         clients.put(userId, emitter);
+        System.out.println("SseEmitter 등록: userId=" + userId);
     }
 
     public SseEmitter getClient(Long userId) {
-        return clients.get(userId);
+        SseEmitter emitter = clients.get(userId);
+        System.out.println("SseClientRegistry 상태: " + clients);
+        System.out.println("SseEmitter 조회: userId=" + userId + ", emitter=" + emitter);
+        return emitter;
     }
 
     public void removeClient(Long userId) {
         clients.remove(userId);
+        System.out.println("SseEmitter 제거: userId=" + userId);
+    }
+
+    public Map<Long, SseEmitter> getClients() {
+        return clients;
     }
 }

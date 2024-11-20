@@ -36,16 +36,16 @@
           </NuxtLink
           >
         </li>
-<!--        <li v-if="notifications.length" v-for="notification in notifications" :key="notification.id">-->
-<!--          {{notification.type}} - {{notification.regDate}}-->
-<!--        </li>-->
+        <li v-if="notifications.length" v-for="notification in notifications" :key="notification.id">
+          {{notification.type}} - {{notification.regDate}}
+        </li>
         <li class="header-menu">
           <div class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:alert">
             알림
           </div>
-<!--          <span v-if="hasNewNotification">-->
-<!--            새알람이 있습니다!!!!-->
-<!--          </span>-->
+          <span v-if="hasNewNotification">
+            새알람이 있습니다!!!!
+          </span>
         </li>
       </ul>
 
@@ -242,8 +242,11 @@ import {useNotification} from "~/composables/useNotification.js";
 const userDetails = useUserDetails();
 const data = ref({});
 const memberId = process.client ? localStorage.getItem("id") : null;
+console.log(userDetails.id.value);
 
-const {notifications, hasNewNotification} = useNotification(memberId);
+const {notifications, hasNewNotification} = useNotification(userDetails.id.value);
+console.log(notifications.value)
+console.log(hasNewNotification.value);
 
 
 const showModal = ref(false);
