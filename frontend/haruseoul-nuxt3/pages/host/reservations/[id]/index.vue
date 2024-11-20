@@ -151,14 +151,6 @@ const CancelHandler = async (pp) => {
 // 예약확정
 const confirmHandler = async (pp) => {
   console.log('   confirmHandler called')
-
-  // 최대인원 > 현재인원 : 게스트들에게 예약확정 동의요청 보내기
-  if (pp.groupSizeMax > pp.groupSizeCurrent) {
-    requestGuestApproval();
-    openModal('completeRequestGuestApproval');
-    return;
-  }
-
   console.log('          ->  Put host/published-programs');
 
   // publishedProgramUpdateDto
@@ -177,8 +169,14 @@ const confirmHandler = async (pp) => {
   });
   console.log('          PublishedProgram Update result: ', response);
 
+  // 최대인원 > 현재인원 : 게스트들에게 예약확정 동의요청 보내기
+  if (pp.groupSizeMax > pp.groupSizeCurrent) {
+    await requestGuestApproval();
+    openModal('completeRequestGuestApproval');
+  }
   // 예약확정 확인 모달창
-  openModal('completeConfirmModal');
+  else
+    openModal('completeConfirmModal');
 
   // 취소된 pp반영한 목록으로 갱신
   await fetchData();
@@ -190,7 +188,19 @@ const confirmHandler = async (pp) => {
 const requestGuestApproval = async () => {
   console.log('   requestGuestApproval called')
   // reservation테이블에 guest_consent 1(미응답)로 설정
-  const guestConsentResponse = await  useDataFetch()
+  for (const rId of pp.value.reservationIds) {
+    const guestConsentResponse = await  useDataFetch(`host/reservations/consent`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: {
+        "id": rId,
+        "guestConsent": 1 // 미응답으로 초기화
+      }
+    });
+    console.log('          Reservation Update result: ', guestConsentResponse);
+  }
 }
 
 // todo 호스트가 게스트 추방
@@ -303,7 +313,7 @@ const fetchData = async () => {
       <div v-if="ppToConfirm.groupSizeCurrent < ppToConfirm.groupSizeMax">
 
           <p class="font-weight:bold margin-bottom:6">[예약 확정 안내] <span class="font-weight:400" style="color: var(--color-red-1)">현재 예약인원 ({{ ppToConfirm.groupSizeCurrent }}/{{ ppToConfirm.groupSizeMax }})</span></p>
-          <p>최소 인원 미달 상태로 프로그램을 확정하시겠습니까?</p>
+          <p>인원 미달 상태로 프로그램을 확정하시겠습니까?</p>
         <ul>
           <li class="margin-top:7">예약 확정 시, 참가자에게 참가 동의 여부를 요청하는 알림이 발송됩니다.</li>
           <li>동의하지 않은 참가자의 예약은 자동으로 취소 및 환불 처리됩니다.</li>
