@@ -247,13 +247,14 @@
               @removeRoute="removeRoute"
           />
         </div>
-        <!--        <div class="map">지도</div>-->
+
         <div class="d:flex jc:end m-top:5">
           <button type="button" class="n-btn n-btn-color:sub-1 n-btn-size:3 al-items:center"
                   @click.prevent="addRouteFunction">
             + 경유지
           </button>
         </div>
+        <div class="map-img-wrapper" id="map1"></div>
         <div class="button-group">
           <div>
             <div class="n-btn n-btn-bg-color:main" @click.prevent="scrollToSection('#detail')">이전</div>
@@ -441,6 +442,8 @@ const fetchCategories = async () => {
   categories.value = response.data;
 }
 
+
+
 //================LifeCycle Functions==================
 onMounted(() => {
   if (!window.location.hash) {
@@ -448,7 +451,91 @@ onMounted(() => {
   }
   activeSection.value = window.location.hash;
   fetchCategories();
+
+  const initMaps = () => {
+    if (window.kakao && window.kakao.maps) {
+      kakao.maps.load(() => {
+        loadMap1();
+      });
+    }
+  };
+
+
+  if (!window.kakao) {
+    const script = document.createElement("script");
+    script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=16a77f29af1bb5775a70cd85a9cfb9cc&autoload=false&libraries=services";
+    script.onload = initMaps;
+    document.head.appendChild(script);
+  } else {
+    initMaps();
+  }
+
+
 })
+
+const loadMap1 = (departure, stops = [], destination) => {
+  const container = document.getElementById('map1');
+  if (!container) {
+    console.warn("Map1 container not found. Skipping map initialization.");
+    return;
+  }
+
+  const options = {
+    center: new kakao.maps.LatLng(33.450701, 126.570667),
+    level: 5
+  };
+  const map = new kakao.maps.Map(container, options);
+
+  const geocoder = new kakao.maps.services.Geocoder();
+  const locations = [departure, ...stops, destination];
+
+
+  const coordsPromises = locations.map(location => {
+    return new Promise((resolve, reject) => {
+      if (location && location.address) {
+        geocoder.addressSearch(location.address, (result, status) => {
+          if (status === kakao.maps.services.Status.OK) {
+            resolve(new kakao.maps.LatLng(result[0].y, result[0].x));
+          } else {
+            console.error(`주소를 찾을 수 없습니다: ${location.address}`);
+            resolve(null);
+          }
+        });
+      } else {
+        resolve(null);
+      }
+    });
+  });
+
+  Promise.all(coordsPromises).then(coords => {
+    const filteredCoords = coords.filter(coord => coord !== null);
+
+    const polyline = new kakao.maps.Polyline({
+      map: map,
+      path: filteredCoords,
+      strokeWeight: 5,
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeStyle: 'solid'
+    });
+
+    filteredCoords.forEach((coord, index) => {
+      const markerContent = `<div style="width: 24px; height: 24px; background-color: #FF6347; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">${index + 1}</div>`;
+
+      new kakao.maps.CustomOverlay({
+        map: map,
+        position: coord,
+        content: markerContent,
+        yAnchor: 1
+      });
+    });
+
+    const bounds = new kakao.maps.LatLngBounds();
+    filteredCoords.forEach(coord => bounds.extend(coord));
+    map.setBounds(bounds);
+  });
+};
+
 
 //==================Data Functions=====================
 //  자식 컴포넌트로부터 데이터를 받아 업데이트하는 함수
@@ -457,6 +544,16 @@ const updateRoute = (index, data) => {
   console.log(`Updating route at index ${index}`, data);
   programCreateDto.routes.splice(index - 1, 1, data);
   console.log("Updated routes:", programCreateDto.routes);
+
+
+  const departure = programCreateDto.routes[0];
+  const stops = programCreateDto.routes.slice(1, -1); // 배열 슬라이스
+  const destination = programCreateDto.routes[programCreateDto.routes.length - 1];
+
+
+  loadMap1(departure, stops, destination);
+
+
 };
 
 
@@ -639,6 +736,16 @@ const removeRoute = (index) => {
   if (index === 0) return; // 출발지는 삭제하지 않음
   programCreateDto.routes.splice(index, 1);
   routeComponentCount.value -= 1;
+
+
+  const departure = programCreateDto.routes[0];
+  const stops = programCreateDto.routes.slice(1, -1); // 배열 슬라이스
+  const destination = programCreateDto.routes[programCreateDto.routes.length - 1];
+
+
+  loadMap1(departure, stops, destination);
+
+
 };
 
 //======== Validation Checking Functions =============
@@ -733,6 +840,20 @@ const scrollToSection = (sectionId) => {
 </script>
 
 <style scoped>
+
+.map-img-wrapper {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+  overflow: hidden;
+  min-width: 85px;
+  aspect-ratio: 2 / 1;
+}
+
 /* 경고 문구 스타일 */
 .warning {
   color: red;

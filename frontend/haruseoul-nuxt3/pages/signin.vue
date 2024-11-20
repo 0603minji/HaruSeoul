@@ -75,6 +75,7 @@ const signinHandler = async () => {
       username: userInfo.name,
       birth: userInfo.birth,
       email: userInfo.email,
+      profileImgSrc: userInfo.profileImgSrc,
       token: response.token
     });
 

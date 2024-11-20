@@ -41,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String nickname = jwtUtil.extractNickname(token);
                 String email = jwtUtil.extractEmail(token);
                 LocalDate birthday = jwtUtil.extractBirthday(token);
+                String profileImgSrc = jwtUtil.extractProfileImgSrc(token);
 
 //                List<String> roles = jwtUtil.extractRoles(token);
 
@@ -60,6 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             .email(email)
                             .birth(birthday)
                             .nickname(nickname)
+                            .profileImgSrc(profileImgSrc)
 //                            .authorities(authorities)
                             .build();
 

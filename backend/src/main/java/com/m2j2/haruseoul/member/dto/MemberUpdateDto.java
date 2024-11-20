@@ -16,6 +16,5 @@ public class MemberUpdateDto {
     private String currentPwd;
     private String newPwd;
     private String nickname;
-    private MultipartFile profileImgSrc;
 
 }
