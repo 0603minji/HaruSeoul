@@ -1,14 +1,12 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useReservationFetch } from "~/composables/useReservationFetch.js";
-import Status from "~/components/filter/Status.vue";
+import {onMounted, ref, watch} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import {useReservationFetch} from "~/composables/useReservationFetch.js";
 import Pager from "~/components/Pager.vue";
 import ReservationCancelModal from "~/components/modal/CancelReservationModal.vue";
 import useShare from '~/composables/useShare';
 
 const reservations = ref([]);
-const selectedStatus = ref(0);
 
 const route = useRoute();
 const router = useRouter(); // router 인스턴스 가져오기
@@ -23,79 +21,85 @@ const hasNextPage = ref(false); // 다음 페이지가 있는지
 const currentPage = ref(1); // 현제 페이지 초기값은 1
 const guestId = userDetails.id.value;
 
-const { shareToKakao } = useShare();  // useShare 모듈에서 shareToKakao 함수 가져오기
+// 카카오톡 공유하기 ------------------------------------------------
+const {shareToKakao} = useShare();  // useShare 모듈에서 shareToKakao 함수 가져오기
 
 // 버튼 클릭 시 공유 함수 호출
 const handleShare = (url) => {
   shareToKakao(url);  // 여기서 원하는 URL을 넣어 공유
 };
 
-// 예약 목록을 가져오는 함수
+
+// 예약 목록 -------------------------------------------------------
+
+// 상태 필터링을 위한 선택된 상태 ID
+const selectedStatusId = ref([1, 2, 3, 4, 5, 6]); // 초기에는 모든 상태 표시
+
+// 상태 필터 함수
+const filterByStatus = (statusIds) => {
+  selectedStatusId.value = statusIds;  // 선택된 상태 값 저장
+  fetchReservations();
+};
+
+// 예약 목록 불러오기
 const fetchReservations = async () => {
-  try {
-    const params = {
-      s: Array.isArray(selectedStatus.value) ? selectedStatus.value.join(",") : [1,2,3,4,5,6],
-      pageNum: isNaN(currentPage.value) || currentPage.value <= 0 ? 1 : currentPage.value,
-      m: guestId
-    };
+      try {
+        const token = localStorage.getItem("token");
 
-    // console.log("params:", params);  // params 확인용 로그
+        const response = await useReservationFetch("guest/reservations",
+            {
+              headers: {Authorization: `Bearer ${token}`},
+              params: {
+                s: selectedStatusId.value, // 선택된 상태로 필터링
+                pageNum: currentPage.value || 1,
+                m: guestId,
+              }
+            }
+        );
+        console.log("Params?:", response)
 
-    const token = localStorage.getItem("token");
+        reservations.value = response.reservations;
+        totalRowCount.value = response.totalRowCount;
+        totalPageCount.value = response.totalPageCount;
 
-    const response = await useReservationFetch("guest/reservations",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: params,
-          //  이 URL에 params 객체를 함께 전송하여 필터링된 결과를
-          //  response 변수에 받기
+        hasPreviousPage.value = currentPage.value > 1;
+        hasNextPage.value = currentPage.value < totalPageCount.value;
+
+        // 5개씩 페이지 번호를 나누기
+        startNum.value = Math.floor((currentPage.value - 1) / 5) * 5 + 1;
+        pageNumbers.value = Array.from({length: Math.min(5, totalPageCount.value - startNum.value + 1)}, (_, index) => startNum.value + index);
+
+        // 각 예약의 날짜 차이를 계산하여 dDay 속성을 추가합니다.
+        const currentDate = new Date();
+
+
+        reservations.value = reservations.value.map(r => {
+          if (r.date) {
+            const reservationDate = new Date(r.date);
+            r.dDay = Math.floor((reservationDate - currentDate) / (1000 * 60 * 60 * 24));
+          } else {
+            r.dDay = null;
+          }
+
+          // deleteDate가 존재하면 statusName을 '취소됨'으로 설정
+          if (r.deleteDate) {
+            r.statusName = 'Canceled'; // '취소됨' 상태로 처리
+          }
+
+          console.log("reservation 값좀 보자!!!!!", r)
+          return r;
+        });
+
+      } catch
+          (error) {
+        if (error.response) {
+          console.error("예약 목록을 가져오는 중 오류 발생:", error.response.data);
+        } else {
+          console.error("예약 목록을 가져오는 중 알 수 없는 오류 발생:", error.message);
         }
-    );
-
-    reservations.value = response.reservations;
-    totalRowCount.value = response.totalRowCount;
-    totalPageCount.value = response.totalPageCount;
-
-    hasPreviousPage.value = currentPage.value > 1;
-    hasNextPage.value = currentPage.value < totalPageCount.value;
-
-    // 5개씩 페이지 번호를 나누기
-    startNum.value = Math.floor((currentPage.value - 1) / 5) * 5 + 1;
-    pageNumbers.value = Array.from({ length: Math.min(5, totalPageCount.value - startNum.value + 1) }, (_, index) => startNum.value + index);
-
-    // 각 예약의 날짜 차이를 계산하여 dDay 속성을 추가합니다.
-    const currentDate = new Date();
-    reservations.value = reservations.value.map(r => {
-      // 예약 날짜가 유효한 경우에만 dDay 계산
-      if (r.date) {
-        const reservationDate = new Date(r.date);
-        r.dDay = Math.floor((reservationDate - currentDate) / (1000 * 60 * 60 * 24)); // dDay 계산
-        // 1초 x 60(분) x 60(시) x 24(일)
-      } else {
-        r.dDay = null; // 날짜가 없을 경우 null 처리
       }
-      return r; // 수정된 예약 객체 반환
-      }
-    );
-  } catch (error) {
-    if (error.response) {
-      console.error("예약 목록을 가져오는 중 오류 발생:", error.response.data);
-    } else {
-      console.error("예약 목록을 가져오는 중 알 수 없는 오류 발생:", error.message);
     }
-  }
-};
-
-// 상태가 변경될 때 호출되는 함수
-const StatusChangeHandler = async (status) => {
-  selectedStatus.value = status;
-  currentPage.value = 1; // 상태 변경 시 페이지 초기화
-  await router.replace({ query: { ...route.query, p: 1 } }); // status 를 변경할때 p=1로 초기화
-  console.log("현재 URL:", window.location.href);  // URL 확인
-  await fetchReservations();
-};
+;
 
 // 페이지 클릭 핸들러
 const pageClickHandler = (newPage) => {
@@ -117,19 +121,12 @@ const handleCancelClick = (reservationId) => {
   showModal.value = true;  // 누르면 모달을 표시하게끔
 };
 
-const SelectedReservationsHandler = (selectedReservations) => {
-  reservations.value = selectedReservations;
-}
-
 // 모달을 닫을 때
 const closeModal = () => {
   showModal.value = false;
 };
 
-//------------------------------------------------------------------------------------
-
-
-// 페이지가 변경될 때 쿼리 문자열을 업데이트
+// 페이지가 변경될 때 쿼리 문자열을 업데이트 ----------------------------------------------------
 watch(
     () => route.query.p,
     (newPage) => {
@@ -138,13 +135,13 @@ watch(
     }
 );
 
-// 초기 예약 데이터 로드
+// 생명주기 함수 ----------------------------------------------------------------------------
 onMounted(() => {
   // 쿼리 파라미터 p가 없거나 유효하지 않으면 p=1로 설정
   if (!route.query.p || parseInt(route.query.p) > totalPageCount.value) {
     currentPage.value = 1;
     // router.replace로 쿼리 문자열을 p=1로 설정
-    router.replace({ query: { ...route.query, p: 1 } });
+    router.replace({query: {...route.query, p: 1}});
   } else {
     currentPage.value = parseInt(route.query.p); // 쿼리 파라미터 값을 currentPage에 설정
   }
@@ -160,15 +157,72 @@ onMounted(() => {
         <h1>예약 내역 ({{ totalRowCount }})</h1>
       </header>
 
-      <Status @selectStatusIds="StatusChangeHandler"
-      @selected-reservations="SelectedReservationsHandler"/>
+      <div class="n-filter n-filter-rv bg-color:base-1 padding-x:6">
+        <div class="overflow-x:auto">
+          <ul class="item-wrapper padding-y:6">
+            <li>
+              <NuxtLink
+                  href=""
+                  class="n-btn n-btn-rv-filter n-btn:hover"
+                  @click.prevent="filterByStatus([1, 2, 3, 4, 5, 6])"
+                  :class="{ active: selectedStatusId.join(',') === '1,2,3,4,5,6' }"
+              >전체
+              </NuxtLink>
+            </li>
+
+            <!-- 결제완료 버튼을 1개로 고정 -->
+            <li>
+              <NuxtLink
+                  href=""
+                  class="n-btn n-btn n-btn-rv-filter n-btn:hover"
+                  @click.prevent="filterByStatus([1, 2, 5])"
+                  :class="{ active: selectedStatusId.join(',') === '1,2,5' }"
+              >결제완료
+              </NuxtLink>
+            </li>
+
+            <!-- 예약확정, 이용완료, 취소됨 버튼 -->
+            <li>
+              <NuxtLink
+                  href=""
+                  class="n-btn n-btn-rv-filter n-btn:hover"
+                  @click.prevent="filterByStatus([6])"
+                  :class="{ active: selectedStatusId.join(',') === '6' }"
+              >
+                예약확정
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                  href=""
+                  class="n-btn n-btn-rv-filter n-btn:hover"
+                  @click.prevent="filterByStatus([4])"
+                  :class="{ active: selectedStatusId.join(',') === '4' }"
+              >
+                취소됨
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                  href=""
+                  class="n-btn n-btn-rv-filter n-btn:hover"
+                  @click.prevent="filterByStatus([3])"
+                  :class="{ active: selectedStatusId.join(',') === '3' }"
+              >
+                이용완료
+              </NuxtLink>
+            </li>
+          </ul>
+        </div>
+      </div>
 
       <div class="n-card-container bg-color:base-1">
         <div class="n-card bg-color:base-1 padding:6" v-for="r in reservations" :key="r.id">
           <RouterLink :to="`/guest/reservations/${r.id}`" class="n-link-box" href="detail?id=1"></RouterLink>
           <div class="card-header">
             <div class="left">
-              <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
+              <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)"
+                    class="n-panel-tag">
                 결제완료
               </span>
 
@@ -181,7 +235,7 @@ onMounted(() => {
               </span>
 
               <span v-else-if="r.statusName === 'Canceled' || r.deleteDate !== null" class="n-panel-tag not-submitted"
-              style="border-color: #DB4455; color: #DB4455;">
+                    style="border-color: #DB4455; color: #DB4455;">
                 취소됨
               </span>
               <span style="font-weight: bold; padding: 5px;">[{{ r.id }}]</span>
@@ -190,16 +244,17 @@ onMounted(() => {
 
           <div class="card-main">
             <div v-if="r.src && r.src.startsWith('uploads')" class="img-wrapper">
-              <img :src="`http://localhost:8080/api/v1/${r.src}`" alt="대표사진" />
+              <img :src="`http://localhost:8080/api/v1/${r.src}`" alt="대표사진"/>
             </div>
             <div v-else class="img-wrapper">
-              <img src="assets/image/default-program-image.png" alt="대표사진" />
+              <img src="assets/image/default-program-image.png" alt="대표사진"/>
             </div>
 
             <div class="card-info-wrapper">
               <div class="card-header-responsive">
                 <div class="left">
-                  <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
+                  <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)"
+                        class="n-panel-tag">
                     결제완료
                   </span>
 
@@ -211,8 +266,9 @@ onMounted(() => {
                     예약확정
                   </span>
 
-                  <span v-else-if="r.deleteDate !== null || r.statusName === 'Canceled'" class="n-panel-tag not-submitted"
-                  style="border-color: #DB4455; color: #DB4455;">
+                  <span v-else-if="r.deleteDate !== null || r.statusName === 'Canceled'"
+                        class="n-panel-tag not-submitted"
+                        style="border-color: #DB4455; color: #DB4455;">
                     취소됨
                   </span>
                   <span style="font-weight: bold; padding: 5px;">[{{ r.id }}]</span>
@@ -228,20 +284,25 @@ onMounted(() => {
                     <span v-if="r.dDay >= 0">
 
                       {{ r.date }}
-                      <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3) && (r.dDay > 0)" style="color: #DB4455;">
+                      <span
+                          v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3) && (r.dDay > 0)"
+                          style="color: #DB4455;">
                         (D-{{ r.dDay }})
                       </span>
 
-                      <span v-else-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
+                      <span
+                          v-else-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
                         (D-{{ r.dDay }})
                       </span>
 
-                      <span v-else-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay === 0)" style="color: #DB4455;">
+                      <span
+                          v-else-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay === 0)"
+                          style="color: #DB4455;">
                         (D-day)
                       </span>
-                      
+
                     </span>
-                    
+
                   </div>
                   <div class="card-info">
                     <span class="n-icon n-icon:group n-deco">예약인원</span>
@@ -250,13 +311,14 @@ onMounted(() => {
                 </div>
 
                 <div v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
-                  class="card-footer-responsive">
+                     class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal" style="color: #DB4455; --btn-border-color:#DB4455;">
+                  <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal"
+                     style="color: #DB4455; --btn-border-color:#DB4455;">
                     예약 취소
                   </a>
                   <a href="#"
-                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
                      @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
                 </div>
 
@@ -264,14 +326,14 @@ onMounted(() => {
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
                   <a href="#" class="n-btn">리뷰 작성</a>
                   <a href="#"
-                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
                      @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
                 </div>
 
                 <div v-else-if="r.statusName === 'Canceled' || r.deleteDate !== null" class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
                   <a href="#"
-                    class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
+                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
                      @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
                 </div>
 
@@ -280,9 +342,10 @@ onMounted(() => {
           </div>
 
           <div v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
-            class="card-footer margin-top:2">
+               class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-            <a href="#" class="n-btn" @click="handleCancelClick(r.id)" style="color: #DB4455; --btn-border-color:#DB4455;">
+            <a href="#" class="n-btn" @click="handleCancelClick(r.id)"
+               style="color: #DB4455; --btn-border-color:#DB4455;">
               예약 취소
             </a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
@@ -296,7 +359,8 @@ onMounted(() => {
                @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
           </div>
 
-          <div v-else-if="r.statusName === 'Canceled' || r.deleteDate !== null" class="card-footer margin-top:2" style="padding-left: 10px; justify-content: space-between;">
+          <div v-else-if="r.statusName === 'Canceled' || r.deleteDate !== null" class="card-footer margin-top:2"
+               style="padding-left: 10px; justify-content: space-between;">
             <a href="#" class="n-btn bg-color:main-1 color:base-1" style="max-width: 478px;">호스트 문의</a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
                @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
@@ -316,7 +380,7 @@ onMounted(() => {
 
       <!-- Pager 부분 -->
       <Pager class="mb:4" :page-numbers="pageNumbers" :start-number="startNum" :total-page-count="totalPageCount"
-      :href="`reservations`" @pageChange="pageClickHandler" />
+             :href="`reservations`" @pageChange="pageClickHandler"/>
 
     </section>
   </main>
@@ -361,7 +425,7 @@ onMounted(() => {
   .card-footer {
     /* max-width: 432px; */
 
-    >.n-btn {
+    > .n-btn {
       position: relative;
       z-index: 2;
     }

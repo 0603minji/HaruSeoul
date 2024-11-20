@@ -1,7 +1,6 @@
 <script setup>
 import {ref, watch, watchEffect} from 'vue';
 import ReservationDatePicker from "~/components/filter/ReservationDatePicker.vue";
-import MoveReservationModal from "~/components/Modal/MoveReservationModal.vue";
 
 // Props
 const props = defineProps({
@@ -14,6 +13,10 @@ const props = defineProps({
     default: null
   },
   groupSizeMax: {
+    type: Number,
+    default: null
+  },
+  price: {
     type: Number,
     default: null
   }
@@ -69,6 +72,7 @@ const submitHandler = async () => {
       },
       body: reservationCreateDto
     });
+    console.log("응답 값:", response)
   } catch (error) {
     console.error('         Error creating Reservations: ', error);
   }
@@ -107,6 +111,26 @@ const openMoveReservationModal = () => {
           @update-number-of-guest="updateNumberOfGuest"
           @update-selected-published-program="updateSelectedPublishedProgram"/>
 
+      <div>
+        <div style="display: flex; height: 32px; padding: 10px 0 0 10px; align-items: center; margin-bottom: 14px;">
+          <span class="font-size:8">가격</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: end; padding: 3px 30px;">
+          <div v-if="props.price" style="width: 100%; display: flex; justify-content: space-between;">
+            <span>1인 기준</span>
+            <span style="font-weight: bold;">{{ props.price }} 원</span>
+          </div>
+          <div v-if="numberOfGuest" style="padding-top: 5px;">
+            <span>x </span>
+            <span style="font-weight: bold;">{{ numberOfGuest }} 명</span>
+          </div>
+          <div v-if="props.price && numberOfGuest"
+               style="padding-top: 10px; width: 100%; display: flex; justify-content: space-between;">
+            <span>총 결제금액</span>
+            <span style="font-weight: bold;">{{ props.price * numberOfGuest }} 원</span>
+          </div>
+        </div>
+      </div>
 
       <div class="submit">
         <button class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1"
@@ -117,7 +141,8 @@ const openMoveReservationModal = () => {
                   height: 20px;"
                 :disabled="!selectedPublishedProgram"
                 @click="openMoveReservationModal"
-        >결제하기</button>
+        >결제하기
+        </button>
       </div>
     </form>
   </aside>

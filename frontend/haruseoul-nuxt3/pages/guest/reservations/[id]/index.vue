@@ -184,7 +184,8 @@ onMounted(() => {
         <div class="n-card bg-color:base-1 padding:6" v-if="r.id">
           <div class="card-header">
             <div class="left">
-                  <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
+                  <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)"
+                        class="n-panel-tag">
                     결제완료
                   </span>
 
@@ -205,16 +206,17 @@ onMounted(() => {
 
           <div class="card-main">
             <div v-if="r.src && r.src.startsWith('uploads')" class="img-wrapper">
-              <img :src="`http://localhost:8080/api/v1/${r.src}`" alt="대표사진" />
+              <img :src="`http://localhost:8080/api/v1/${r.src}`" alt="대표사진"/>
             </div>
             <div v-else class="img-wrapper">
-              <img src="assets/image/default-program-image.png" alt="대표사진" />
+              <img src="assets/image/default-program-image.png" alt="대표사진"/>
             </div>
 
             <div class="card-info-wrapper">
               <div class="card-header-responsive">
                 <div class="left">
-                  <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)" class="n-panel-tag">
+                  <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm'].includes(r.statusName)"
+                        class="n-panel-tag">
                     결제완료
                   </span>
 
@@ -226,7 +228,8 @@ onMounted(() => {
                     예약확정
                   </span>
 
-                  <span v-else-if="r.deleteDate !== null || r.statusName === 'Canceled'" class="n-panel-tag not-submitted"
+                  <span v-else-if="r.deleteDate !== null || r.statusName === 'Canceled'"
+                        class="n-panel-tag not-submitted"
                         style="border-color: #DB4455; color: #DB4455;">
                     취소됨
                   </span>
@@ -243,15 +246,20 @@ onMounted(() => {
                     <span v-if="r.dDay >= 0">
 
                       {{ r.date }}
-                      <span v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3) && (r.dDay > 0)" style="color: #DB4455;">
+                      <span
+                          v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay <= 3) && (r.dDay > 0)"
+                          style="color: #DB4455;">
                         (D-{{ r.dDay }})
                       </span>
 
-                      <span v-else-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
+                      <span
+                          v-else-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay > 3)">
                         (D-{{ r.dDay }})
                       </span>
 
-                      <span v-else-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay === 0)" style="color: #DB4455;">
+                      <span
+                          v-else-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName) && (r.dDay === 0)"
+                          style="color: #DB4455;">
                         (D-day)
                       </span>
 
@@ -267,7 +275,8 @@ onMounted(() => {
                 <div v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
                      class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal" style="color: #DB4455; --btn-border-color:#DB4455;">
+                  <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal"
+                     style="color: #DB4455; --btn-border-color:#DB4455;">
                     예약 취소
                   </a>
                   <a href="#"
@@ -297,7 +306,8 @@ onMounted(() => {
           <div v-if="!r.deleteDate && ['On Going', 'Urgent', 'Wait Confirm', 'Confirmed'].includes(r.statusName)"
                class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-            <a href="#" class="n-btn" @click="handleCancelClick(r.id)" style="color: #DB4455; --btn-border-color:#DB4455;">
+            <a href="#" class="n-btn" @click="handleCancelClick(r.id)"
+               style="color: #DB4455; --btn-border-color:#DB4455;">
               예약 취소
             </a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
@@ -311,7 +321,8 @@ onMounted(() => {
                @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
           </div>
 
-          <div v-else-if="r.statusName === 'Canceled' || r.deleteDate !== null" class="card-footer margin-top:2" style="padding-left: 10px; justify-content: space-between;">
+          <div v-else-if="r.statusName === 'Canceled' || r.deleteDate !== null" class="card-footer margin-top:2"
+               style="padding-left: 10px; justify-content: space-between;">
             <a href="#" class="n-btn bg-color:main-1 color:base-1" style="max-width: 478px;">호스트 문의</a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
                @click="handleShare(`http://localhost:3000/programs/${program.programId}`)">공유하기</a>
@@ -324,7 +335,7 @@ onMounted(() => {
       <section class="content">
         <h1>콘텐츠 정보</h1>
 
-        <section v-if="guest">
+        <section v-if="guest && Object.keys(guest).length > 0">
           <h1>참가자 정보</h1>
           <div>
             <details open>
@@ -333,11 +344,11 @@ onMounted(() => {
                 <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
               </summary>
               <div class="details">
-                <div class="info">
+                <div class="info" v-if="guest.memberName">
                   <span class="info-form">이름</span>
                   <span class="info-input">{{ guest.memberName }}</span>
                 </div>
-                <div class="info">
+                <div class="info" v-if="guest.memberEmail">
                   <span class="info-form">이메일</span>
                   <span class="info-input">{{ guest.memberEmail }}</span>
                 </div>
@@ -354,7 +365,7 @@ onMounted(() => {
           </div>
         </section>
 
-        <section v-if="host">
+        <section v-if="host && Object.keys(host).length > 0">
           <h1>호스트정보</h1>
           <div>
             <details open>
@@ -370,10 +381,10 @@ onMounted(() => {
                     <img src="/public/image/profile.png" alt="호스트프사"/>
                   </div>
                   <div>
-                    <div>{{ host.memberName }}</div>
+                    <div v-if="host.memberName">{{ host.memberName }}</div>
                     <div class="n-icon n-icon:star n-deco" style="--deco-gap: 3px">
-                      <span>{{ host.programRating }} / 5.0</span>
-                      <span>({{ host.ratingCount }})</span>
+                      <span v-if="host.programRating">{{ host.programRating }} / 5.0</span>
+                      <span v-if="host.ratingCount">({{ host.ratingCount }})</span>
                     </div>
                   </div>
                 </div>
@@ -383,7 +394,7 @@ onMounted(() => {
           </div>
         </section>
 
-        <section class="program" v-if="program">
+        <section class="program" v-if="program && Object.keys(program).length > 0">
           <h1>프로그램 정보 및 정책</h1>
           <div>
             <details open>
@@ -404,7 +415,9 @@ onMounted(() => {
                         <section style="padding-top: 0">
                           <h1>만나는장소</h1>
                           <div class="info-container">
-                            <p>{{ program.programStartTime }} {{ program.meetingSpotTitle }}</p>
+                            <p v-if="program.programStartTime || program.meetingSpotTitle">
+                              {{ program.programStartTime }} {{ program.meetingSpotTitle }}
+                            </p>
                             <div style="
                                 display: flex;
                                 align-items: center;
@@ -412,7 +425,7 @@ onMounted(() => {
                                 color: var(--color-base-7);
                               ">
                               <span class="n-icon n-icon:placeholder" style="margin-right: 0">위치아이콘</span>
-                              <span style="margin-right: var(--gap-1)" id="copyText">
+                              <span v-if="program.meetingSpotAddress" style="margin-right: var(--gap-1)" id="copyText">
                                 {{ program.meetingSpotAddress }}
                               </span>
                               <button @click="copy" class="copy-btn">주소복사</button>
@@ -423,33 +436,27 @@ onMounted(() => {
                       </div>
                     </div>
 
-                    <div id="inclusions" class="id-container">
+                    <div v-if="program.programInclusion || program.programExclusion" id="inclusions"
+                         class="id-container">
                       <div class="content-header" style="padding-top: 10px;">
                         <span class="title">포함사항</span>
                       </div>
                       <div class="details">
                         <section>
                           <h1>포함사항</h1>
-                          <div class="list-container">
+                          <div v-if="program.programInclusion" class="list-container">
                             <ul style="padding-left: 0">
-                              <li class="info-input n-icon n-icon:success-circle-green">
-                                {{ program.programInclusion }}
-                              </li>
-                              <li class="info-input n-icon n-icon:success-circle-green">
-                                {{ program.programInclusion }}
+                              <li v-for="(item, index) in program.programInclusion.split('\n')" :key="index"
+                                  class="info-input n-icon n-icon:success-circle-green">
+                                {{ item }}
                               </li>
                             </ul>
                           </div>
-                          <div class="list-container">
+                          <div v-if="program.programExclusion" class="list-container">
                             <ul style="padding-left: 0">
-                              <li class="info-input n-icon n-icon:error">
-                                {{ program.programExclusion }}
-                              </li>
-                              <li class="info-input n-icon n-icon:error">
-                                {{ program.programExclusion }}
-                              </li>
-                              <li class="info-input n-icon n-icon:error">
-                                {{ program.programExclusion }}
+                              <li v-for="(item, index) in program.programExclusion.split('\n')" :key="index"
+                                  class="info-input n-icon n-icon:error">
+                                {{ item }}
                               </li>
                             </ul>
                           </div>
@@ -457,7 +464,7 @@ onMounted(() => {
                       </div>
                     </div>
 
-                    <div id="things-to-know" class="id-container">
+                    <div class="id-container">
                       <div class="content-header">
                         <span class="title">꼭 알아두세요!</span>
                       </div>
@@ -465,48 +472,26 @@ onMounted(() => {
                         <section>
                           <h1>꼭 알아두세요!</h1>
 
-                          <div>
+                          <div v-if="program.programPackingList">
                             <h2 class="info-form n-icon n-icon:success-decagon">
                               준비물
                             </h2>
                             <ul>
-                              <li class="list-content">
-                                {{ program.programPackingList }}
-                              </li>
-                              <li class="list-content">
-                                {{ program.programPackingList }}
-                              </li>
-                              <li class="list-content">
-                                {{ program.programPackingList }}
+                              <li v-for="(item, index) in program.programPackingList.split('\n')"
+                                  :key="index" class="list-content">
+                                {{ item }}
                               </li>
                             </ul>
                           </div>
 
-                          <div>
+                          <div v-if="program.programCaution">
                             <h2 class="info-form n-icon n-icon:caution">
                               주의사항
                             </h2>
                             <ul>
-                              <li class="list-content">
-                                {{ program.programCaution }}
-                              </li>
-                              <li class="list-content">
-                                {{ program.programCaution }}
-                              </li>
-                              <li class="list-content">
-                                {{ program.programCaution }}
-                              </li>
-                              <li class="list-content">
-                                {{ program.programCaution }}
-                              </li>
-                              <li class="list-content">
-                                {{ program.programCaution }}
-                              </li>
-                              <li class="list-content">
-                                {{ program.programCaution }}
-                              </li>
-                              <li class="list-content">
-                                {{ program.programCaution }}
+                              <li v-for="(item, index) in program.programCaution.split('\n')"
+                                  :key="index" class="list-content">
+                                {{ item }}
                               </li>
                             </ul>
                           </div>
@@ -544,7 +529,7 @@ onMounted(() => {
           </div>
         </section>
 
-        <section v-if="requirement">
+        <section v-if="requirement && Object.keys(requirement).length > 0">
           <h1>요청사항 정보</h1>
           <div>
             <details open>
@@ -553,7 +538,7 @@ onMounted(() => {
                 <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
               </summary>
               <div class="details" style="margin-top: 0">
-                <div class="info" style="flex-direction: column; padding: 0 14px;">
+                <div v-if="requirement.hostRequirement" class="info" style="flex-direction: column; padding: 0 14px;">
                   <span>
                     <span class="info-form n-icon n-icon:request"
                           style="width: max-content;
@@ -571,7 +556,7 @@ onMounted(() => {
                       requirement.hostRequirement
                     }}</span>
                 </div>
-                <div class="info" style="flex-direction: column; padding: 0 14px;">
+                <div v-if="requirement.guestRequirement" class="info" style="flex-direction: column; padding: 0 14px;">
                   <span class="info-form n-icon n-icon:request n-deco-pos:right"
                         style="
                         width: 100%;
@@ -625,7 +610,7 @@ onMounted(() => {
         </section>
 
         <!--  이용완료, 취소됨 상태만 예약 삭제할 수 있도록 설정     -->
-        <div v-if="['Finished', 'Canceled'].includes(reservationCard.statusName)" style="
+        <div v-if="['Finished', 'Canceled'].includes(reservationCard.statusName) || reservationCard.deleteDate" style="
             display: flex;
             justify-content: center;
             padding: var(--gap-8) 0;
@@ -952,7 +937,7 @@ onMounted(() => {
           width: 400px;
           display: flex;
           align-items: center;
-          justify-content: center;
+          justify-content: end;
           gap: 20px;
 
           .n-btn {
