@@ -1,11 +1,13 @@
 package com.m2j2.haruseoul.notification.config;
 
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Getter
 @Component
 public class SseClientRegistry {
 
@@ -28,7 +30,4 @@ public class SseClientRegistry {
         System.out.println("SseEmitter 제거: userId=" + userId);
     }
 
-    public Map<Long, SseEmitter> getClients() {
-        return clients;
-    }
 }
