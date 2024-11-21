@@ -133,7 +133,8 @@ const CancelHandler = async (pp) => {
       },
       body: {
         "cancelMethod": 3, // 3:호스트가 pp취소 or 정원미달로 자동폐지
-        "cancelReason": "호스트가 예약을 취소함"
+        "cancelReason": "호스트가 예약을 취소함",
+        "reservationStatus": 3
       }
     });
     console.log('          Reservation Cancel result: ', rvCancelResponse);
@@ -216,7 +217,8 @@ const dismissHandler = async (reservationId) => {
     },
     body: {
       "cancelMethod": 2, // 2:kick
-      "cancelReason": "호스트에 의해 추방됨. 추방사유 입력받기는 아직 미구현"
+      "cancelReason": "호스트에 의해 추방됨. 추방사유 입력받기는 아직 미구현",
+      "reservationStatus": 3
     }
   });
   console.log('          Reservation Cancel result: ', rvCancelResponse);

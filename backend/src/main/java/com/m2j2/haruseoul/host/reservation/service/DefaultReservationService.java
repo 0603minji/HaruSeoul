@@ -43,6 +43,9 @@ public class DefaultReservationService implements ReservationService {
         // cancelMethod와 cancelReason 설정
         reservation.setCancelMethod(reservationCancelDto.getCancelMethod());
         reservation.setCancelReason(reservationCancelDto.getCancelReason());
+        // reservationStatus 설정
+        reservation.setReservationStatus(reservationCancelDto.getReservationStatus());
+
 
         // 예약을 업데이트합니다.
         Reservation saved = reservationRepository.save(reservation);
