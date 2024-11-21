@@ -49,16 +49,47 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
-    public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, Boolean isDeleted, int pageNum) {
+    public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, int pageNum) {
 
-        Sort sort = Sort.by("publishedProgram.date").ascending();
-        Pageable pageable = PageRequest.of(pageNum-1, 6, sort);
+//        Sort sort = Sort.by("regDate").ascending();
+
+        // 기본적으로 정렬할 필드
+        Sort sort;
+
+        // sIds 목록의 첫 번째 값에 따른 정렬 기준 설정 (예: sIds의 첫 번째 값으로 예약 상태 판단)
+        if (!sIds.isEmpty()) {
+            Long statusId = sIds.get(0); // 첫 번째 값으로 상태 ID 판단 (예: sIds의 첫 번째 값이 예약 상태 ID)
+
+            // reservationStatus 값에 따른 정렬 기준 설정
+            switch (statusId.intValue()) { // statusId를 int로 변환하여 비교
+                case 1: // 결제완료
+                    sort = Sort.by(Sort.Order.asc("publishedProgram.date"));
+                    break;
+                case 2: // 예약확정
+                    sort = Sort.by(Sort.Order.asc("publishedProgram.date"));
+                    break;
+                case 3: // 취소됨
+                    sort = Sort.by(Sort.Order.desc("deleteDate"));
+                    break;
+                case 4: // 이용완료
+                    sort = Sort.by(Sort.Order.desc("publishedProgram.date"));
+                    break;
+                default: // 상태 값이 없는 경우 (기본값)
+                    sort = Sort.by(Sort.Order.desc("regDate"));
+                    break;
+            }
+        } else {
+            // sIds가 비어있다면 기본값으로 정렬
+            sort = Sort.by(Sort.Order.asc("regDate"));
+        }
+
+        Pageable pageable = PageRequest.of(pageNum - 1, 6, sort);
 
         // 요청 페이지 번호 확인
         System.out.println("Requesting page number: " + (pageNum - 1));
 
         // Status ID가 없는 경우 해당 회원의 전체 예약 조회, Status ID가 있으면
-        Page<Reservation> reservations = reservationRepository.findAll(sIds, mIds, isDeleted, pageable);
+        Page<Reservation> reservations = reservationRepository.findAll(sIds, mIds, pageable);
 
         modelMapper.typeMap(Reservation.class, ReservationListDto.class)
                 .addMappings(mapper -> {
@@ -161,6 +192,7 @@ public class DefaultReservationService implements ReservationService {
         Long totalRating = reviewRepository.sumRatingByMemberId(reservation.getPublishedProgram().getProgram().getMember().getId()); // 모든 rating 값의 합
         Double averageRating = ratingCount != 0 ? totalRating / ratingCount : 0.0;
         ReservationDetailHostDto reservationDetailHostDto = ReservationDetailHostDto.builder()
+                .memberImg(reservation.getPublishedProgram().getProgram().getMember().getProfileImgSrc())
                 .memberName(reservation.getPublishedProgram().getProgram().getMember().getName())
                 .programRating(String.valueOf(averageRating))
                 .ratingCount(ratingCount)
@@ -192,7 +224,7 @@ public class DefaultReservationService implements ReservationService {
         // 예약할때 받은 공개 프로그램 ID로 공개 프로그램 가져오기
         PublishedProgram publishedProgram = publishedProgramRepository.findById(reservationCreateDto.getPublishedProgramId())
                 .orElseThrow(() -> new IllegalArgumentException("PublishedProgram not found")
-        );
+                );
 
         // 예약하는 멤버 ID로 멤버 가져오기
         Member member = memberRepository.findById(reservationCreateDto.getGuestId()).orElseThrow(() ->
@@ -226,8 +258,7 @@ public class DefaultReservationService implements ReservationService {
             Status WaitConfirm = statusRepository.findById(5L).orElseThrow(() ->
                     new IllegalArgumentException("Status not found"));
             if (updatedGroupSize == programGroupMaxSize) publishedProgram.setStatus(WaitConfirm);
-        }
-        else {
+        } else {
             throw new IllegalStateException("예약 불가: 총 그룹 인원이 " + programGroupMaxSize + " 명을 초과할 수 없습니다.");
         }
 
@@ -243,10 +274,10 @@ public class DefaultReservationService implements ReservationService {
 
         // 삭제 날짜를 현재 시간으로 설정합니다.
         reservation.setDeleteDate(Instant.now());  // 삭제 일자를 현재 시간으로 설정 (LocalDateTime으로 변경 가능)
+        reservation.setReservationStatus(3);
 
         // 예약을 업데이트합니다.
         reservationRepository.save(reservation);
-
 
         // 로그를 남겨서 예약 삭제에 대한 기록을 남길 수 있습니다.
         System.out.println("Reservation with ID " + reservationId + " has been soft deleted at " + Instant.now());
@@ -262,7 +293,6 @@ public class DefaultReservationService implements ReservationService {
                 .type("CANCEL")
                 .build();
         notificationService.send(notificationSendDto);
-
 
 
     }

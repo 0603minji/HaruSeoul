@@ -3,7 +3,11 @@ import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import {useReservationFetch} from "~/composables/useReservationFetch.js";
 import ReservationCancelModal from "~/components/modal/CancelReservationModal.vue";
-import useShare from '~/composables/useShare';
+import useShare from '~/composables/useShare.js';
+
+definePageMeta({
+  layout: false
+})
 
 const reservation = ref({
   guest: {},
@@ -34,7 +38,7 @@ const handleShare = (url) => {
 const fetchreservation = async (rId) => {
   const params = {rId: rId};
   const token = localStorage.getItem("token");
-  const response = await useReservationFetch(`guest/reservations/${rId}`,
+  const response = await useReservationFetch(`share/${rId}`,
       {
         headers: {
           Authorization: `Bearer ${token.value}`,
@@ -180,7 +184,7 @@ onMounted(() => {
 
 <template>
   <main>
-    <section class="reservation-detail">
+    <section class="reservation-detail" style="margin: 30px 0;">
       <h1 class="d:none">guest-reservation-detail 페이지</h1>
 
       <div style="
@@ -194,7 +198,7 @@ onMounted(() => {
         예약번호 {{ reservation.reservationId }}
       </div>
 
-      <div class="n-card-container bg-color:base-1" v-for="r in reservation" :key="r.id">
+      <NuxtLink :to="`/programs/${program.programId}`" class="n-card-container bg-color:base-1" v-for="r in reservation" :key="r.id">
         <div class="n-card bg-color:base-1 padding:6" v-if="r.id">
           <div class="card-header">
             <div class="left">
@@ -226,7 +230,7 @@ onMounted(() => {
               <img :src="`http://localhost:8080/api/v1/${r.src}`" alt="대표사진"/>
             </div>
             <div v-else class="img-wrapper">
-              <img src="assets/image/default-program-image.png" alt="대표사진"/>
+              <img src="../../../assets/image/default-program-image.png" alt="대표사진"/>
             </div>
 
             <div class="card-info-wrapper">
@@ -291,64 +295,11 @@ onMounted(() => {
                   </div>
                 </div>
 
-                <div v-if="[1, 2].includes(r.reservationStatus)"
-                     class="card-footer-responsive">
-                  <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal"
-                     style="color: #DB4455; --btn-border-color:#DB4455;">
-                    예약 취소
-                  </a>
-                  <a href="#"
-                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
-                     @click="handleShare(`http://localhost:3000/share/${r.id}`)">공유하기</a>
-                </div>
-
-                <div v-else-if="r.reservationStatus === 4" class="card-footer-responsive">
-                  <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#" class="n-btn">리뷰 작성</a>
-                  <a href="#"
-                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
-                     @click="handleShare(`http://localhost:3000/share/${r.id}`)">공유하기</a>
-                </div>
-
-                <div v-else-if="r.reservationStatus === 3" class="card-footer-responsive">
-                  <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#"
-                     class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
-                     @click="handleShare(`http://localhost:3000/share/${r.id}`)">공유하기</a>
-                </div>
-
               </div>
             </div>
           </div>
-
-          <div v-if="[1, 2].includes(r.reservationStatus)"
-               class="card-footer margin-top:2">
-            <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-            <a href="#" class="n-btn" @click="handleCancelClick(r.id)"
-               style="color: #DB4455; --btn-border-color:#DB4455;">
-              예약 취소
-            </a>
-            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
-               @click="handleShare(`http://localhost:3000/share/${r.id}`)">공유하기</a>
-          </div>
-
-          <div v-else-if="r.reservationStatus === 4" class="card-footer margin-top:2">
-            <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-            <a href="#" class="n-btn">리뷰 작성</a>
-            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
-               @click="handleShare(`http://localhost:3000/share/${r.id}`)">공유하기</a>
-          </div>
-
-          <div v-else-if="r.reservationStatus === 3" class="card-footer margin-top:2"
-               style="padding-left: 10px; justify-content: space-between;">
-            <a href="#" class="n-btn bg-color:main-1 color:base-1" style="max-width: 478px;">호스트 문의</a>
-            <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
-               @click="handleShare(`http://localhost:3000/share/${r.id}`)">공유하기</a>
-          </div>
-
         </div>
-      </div>
+      </NuxtLink>
 
       <!--  본문  -->
       <section class="content">
@@ -396,8 +347,8 @@ onMounted(() => {
               <section class="profile-card">
                 <h1>프로필 카드</h1>
                 <div class="overview">
-                  <div v-if="host.memberImg && host.memberImg.startsWith('uploads')" class="img-wrapper">
-                    <img :src="`http://localhost:8080/api/v1/${host.memberImg}`" alt="대표사진"/>
+                  <div class="img-wrapper">
+                    <img src="/public/image/profile.png" alt="호스트프사"/>
                   </div>
                   <div>
                     <div v-if="host.memberName">{{ host.memberName }}</div>
@@ -590,38 +541,6 @@ onMounted(() => {
                         border-radius: 4px;">{{
                       requirement.guestRequirement
                     }}</span>
-                </div>
-              </div>
-            </details>
-          </div>
-        </section>
-
-        <section>
-          <h1>결제정보</h1>
-          <div>
-            <details open>
-              <summary class="collapse">
-                <span class="title">결제 정보</span>
-                <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
-              </summary>
-              <div class="details">
-                <div class="info">
-                  <span class="info-form">결제일</span>
-                  <span class="info-input">2024.9.10 19:24GMT</span>
-                </div>
-                <div class="info">
-                  <span class="info-form">결제수단</span>
-                  <div style="padding-right: 0">
-                    <span class="info-input" style="justify-content: right">Credit card</span>
-                    <span class="info-input n-icon n-icon:credit_card">1234 1245 1234 1234</span>
-                  </div>
-                </div>
-                <div class="info" style="margin-bottom: 13px; align-items: center">
-                  <span class="info-form">결제금액</span>
-                  <span class="info-input">30,000 (KRW)</span>
-                </div>
-                <div style="display: flex; justify-content: end">
-                  <a class="n-btn n-btn:hover" href="#">영수증 보기</a>
                 </div>
               </div>
             </details>

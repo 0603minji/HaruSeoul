@@ -15,6 +15,8 @@ import java.time.LocalDate;
 public class ReservationListDto {
 
     private Long id;
+
+    private Long programId;
     
     private Long hostId; // host 문의
 
@@ -30,4 +32,6 @@ public class ReservationListDto {
     private Integer numberOfGuest;
 
     private String src;
+
+    private Integer reservationStatus;
 }

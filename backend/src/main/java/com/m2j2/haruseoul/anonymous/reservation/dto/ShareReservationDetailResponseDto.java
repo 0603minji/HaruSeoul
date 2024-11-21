@@ -1,5 +1,6 @@
-package com.m2j2.haruseoul.guest.reservation.dto;
+package com.m2j2.haruseoul.anonymous.reservation.dto;
 
+import com.m2j2.haruseoul.guest.reservation.dto.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReservationDetailResponseDto {
+public class ShareReservationDetailResponseDto {
 
     private Long reservationId;
 
@@ -22,7 +23,4 @@ public class ReservationDetailResponseDto {
     private ReservationDetailGuestDto guest;
 
     private ReservationDetailHostDto host;
-
-//    private ReservationDetailPaymentDto payment;
-
 }
