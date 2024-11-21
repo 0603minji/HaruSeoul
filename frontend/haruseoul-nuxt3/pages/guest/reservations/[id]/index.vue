@@ -20,6 +20,7 @@ const host = computed(() => reservation.value.host);
 const program = computed(() => reservation.value.program);
 const requirement = computed(() => reservation.value.requirement);
 const reservationCard = computed(() => reservation.value.reservationCard);
+const guestConsent = ref(null); // 호스트가 풀방아닌 상태에서 예약확정하려고 했을 때 게스트 동의여부를 저장
 const config = useRuntimeConfig();
 
 const {shareToKakao} = useShare();  // useShare 모듈에서 shareToKakao 함수 가져오기
@@ -46,7 +47,8 @@ const fetchreservation = async (rId) => {
   );
 
   reservation.value = response;
-
+  console.log('fetchreservation called. reservation: ' ,reservation.value);
+  guestConsent.value = reservation.value.reservationCard.guestConsent;
 
   // 날짜 차이를 계산하여 dDay 속성을 추가합니다.
   const currentDate = new Date();
@@ -176,6 +178,37 @@ onMounted(() => {
 });
 
 
+const confirmParticipationHandler = async () => {
+  console.log('          confirmParticipationHandler called.');
+  const guestConsentResponse = await useDataFetch(`host/reservations/consent`, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: {
+      "id": route.params.id,
+      "guestConsent": 2 // 참가동의로 초기화
+    }
+  });
+  console.log('          Reservation Update result: ', guestConsentResponse);
+  guestConsent.value = 2;
+}
+
+const cancelParticipationHandler = async () => {
+  console.log('          cancelParticipationHandler called.');
+  const guestConsentResponse = await useDataFetch(`host/reservations/consent`, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: {
+      "id": route.params.id,
+      "guestConsent": 3 // 예약취소로 초기화
+    }
+  });
+  console.log('          Reservation Update result: ', guestConsentResponse);
+  guestConsent.value = 3;
+}
 </script>
 
 <template>
@@ -349,6 +382,34 @@ onMounted(() => {
 
         </div>
       </div>
+
+      <section v-if="guestConsent===1" class="guest-consent">
+        <header>
+          <img src="/assets/image/icon/warning.png" alt="warning icon">
+          <h1>프로그램 진행 안내</h1>
+        </header>
+        <p>해당 프로그램은 예약 인원이 최소 기준에 미달되더라도 예정대로 진행될 예정입니다.</p>
+        <p>동의 여부를 선택해 주세요.</p>
+        <ul>
+          <li>참가 동의: 프로그램에 참여합니다.</li>
+          <li>예약취소: 예약을 취소하고 전액 환불받습니다.</li>
+          <li class="notice">프로그램 진행일 전날까지 미응답 시 자동으로 예약취소처리됩니다.</li>
+        </ul>
+        <div>
+          <button @click.prevent="confirmParticipationHandler">참가동의</button>
+          <button @click.prevent="cancelParticipationHandler">예약취소</button>
+        </div>
+      </section>
+
+      <section v-if="guestConsent===2" class="guest-consent-confirmed">
+        <img src="/assets/image/icon/success.png" alt="success icon"/>
+        <p>예약 인원이 최소 기준에 미달되더라도 프로그램에 참가하는 것에 동의하셨습니다.</p>
+      </section>
+
+      <section v-if="guestConsent===3" class="guest-consent-rejected">
+        <img src="/assets/image/icon/error2.png" alt="error2 icon"/>
+        <p>예약인원이 최소 기준에 미달된 채로 프로그램을 진행하는 것에 동의하지 않아 예약이 취소되었습니다.</p>
+      </section>
 
       <!--  본문  -->
       <section class="content">
@@ -656,6 +717,124 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.guest-consent {
+  max-width: 600px; /* 콘텐츠 폭 제한 */
+  margin: 20px auto; /* 가운데 정렬 */
+  padding: 20px; /* 내부 여백 */
+  border-radius: 12px; /* 둥근 모서리 */
+  background-color: #FFF4E4; /* 연한 배경색 */
+  /*
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); !* 약간의 그림자 *!
+  */
+  width: calc(100% - 32px); /* 최소 좌우 여백 16px 확보 */
+
+  /* 헤더 스타일 */
+  header {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+
+    h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      text-align: center; /* 가운데 정렬 */
+    }
+  }
+
+  /* 본문 텍스트 */
+  p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    margin: 4px 0;
+  }
+
+  .notice {
+    font-size: 12px;
+    color: #888;
+    list-style: none;
+  }
+
+  /* 리스트 스타일 */
+  ul {
+    list-style-type: disc;
+    margin: 20px 0 24px 0; /* 안쪽 여백 추가 */
+    padding-left: 20px; /* 목록 들여쓰기 */
+
+    li {
+      margin-bottom: 8px; /* 항목 간 간격 */
+      color: #555;
+    }
+  }
+
+  /* 버튼 컨테이너 */
+  div {
+    display: flex;
+    justify-content: space-between; /* 버튼을 양쪽에 배치 */
+    gap: 16px; /* 버튼 간 간격 */
+    margin-top: 20px;
+
+    /* 버튼 스타일 */
+    button {
+      flex: 1; /* 버튼 크기 균등화 */
+      padding: 10px 15px;
+      font-size: 1rem;
+      border: 1px solid transparent; /* 기본 투명한 테두리 */
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s; /* 전환 효과 */
+    }
+
+    button:first-child {
+      background-color: #fff;
+      color: var(--color-sub-1);
+      border: 1px solid var(--color-sub-1);
+    }
+
+    button:first-child:hover {
+      color: #fff; /* 텍스트 흰색 */
+      background-color: var(--color-sub-1); /* 호버 시 더 어두운 색상 */
+    }
+
+    button:last-child {
+      background-color: #fff; /* 예약 취소 버튼 색 */
+      color: #dc3545; /* 빨간 텍스트 */
+      border: 1px solid #dc3545; /* 빨간 테두리 */
+    }
+
+    button:last-child:hover {
+      background-color: var(--color-red-1); /* 호버 시 빨간 배경 */
+      color: #fff; /* 텍스트 흰색 */
+    }
+  }
+}
+.guest-consent-confirmed, .guest-consent-rejected {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 600px; /* 콘텐츠 폭 제한 */
+  margin: 20px auto; /* 가운데 정렬 */
+  padding: 20px; /* 내부 여백 */
+  border-radius: 12px; /* 둥근 모서리 */
+  background-color: #f9f9f9; /* 연한 배경색 */
+  width: calc(100% - 32px); /* 최소 좌우 여백 16px 확보 */
+
+  p {
+    line-height: 1.5;
+    margin: 4px 0;
+  }
+}
+.guest-consent-confirmed {
+  background-color: var(--color-green-3);
+}
+.guest-consent-rejected {
+  background-color: var(--color-red-3);
+}
+
 /* n-icon */
 
 .n-icon {

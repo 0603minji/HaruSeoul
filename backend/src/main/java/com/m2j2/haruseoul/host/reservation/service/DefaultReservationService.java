@@ -6,7 +6,11 @@ import com.m2j2.haruseoul.entity.PublishedProgram;
 import com.m2j2.haruseoul.entity.Reservation;
 import com.m2j2.haruseoul.host.publishedProgram.dto.PublishedProgramListDto;
 import com.m2j2.haruseoul.host.reservation.dto.ReservationCancelDto;
+import com.m2j2.haruseoul.host.reservation.dto.ReservationConsentUpdateDto;
+import com.m2j2.haruseoul.host.reservation.dto.ReservationConsentUpdatedDto;
 import com.m2j2.haruseoul.host.reservation.dto.ReservationListDto;
+import com.m2j2.haruseoul.notification.dto.NotificationSendDto;
+import com.m2j2.haruseoul.notification.service.NotificationService;
 import com.m2j2.haruseoul.repository.ReservationRepository;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -23,10 +27,12 @@ public class DefaultReservationService implements ReservationService {
 
     ReservationRepository reservationRepository;
     ModelMapper modelMapper;
+    private final NotificationService notificationService;
 
-    public DefaultReservationService(ReservationRepository reservationRepository, ModelMapper modelMapper) {
+    public DefaultReservationService(ReservationRepository reservationRepository, ModelMapper modelMapper, NotificationService notificationService) {
         this.reservationRepository = reservationRepository;
         this.modelMapper = modelMapper;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -41,12 +47,26 @@ public class DefaultReservationService implements ReservationService {
         // cancelMethod와 cancelReason 설정
         reservation.setCancelMethod(reservationCancelDto.getCancelMethod());
         reservation.setCancelReason(reservationCancelDto.getCancelReason());
+        // reservationStatus 설정
+        reservation.setReservationStatus(reservationCancelDto.getReservationStatus());
+
 
         // 예약을 업데이트합니다.
         Reservation saved = reservationRepository.save(reservation);
 
         // 로그를 남겨서 예약 삭제에 대한 기록을 남길 수 있습니다.
         // System.out.println("Reservation with ID " + reservationId + " has been soft deleted at " + Instant.now());
+
+        //==================알림부분=================================
+
+        Long senderId = saved.getPublishedProgram().getProgram().getMember().getId();
+        Long programId = saved.getPublishedProgram().getId();
+        NotificationSendDto notificationSendDto = NotificationSendDto.builder()
+                .senderId(senderId)
+                .programId(programId)
+                .type("CANCEL FROM HOST")
+                .build();
+        notificationService.send(notificationSendDto);
 
         return saved;
     }
@@ -69,9 +89,22 @@ public class DefaultReservationService implements ReservationService {
                 .stream()
                 .map(reservation -> modelMapper.map(reservation, ReservationListDto.class))
                 .toList();
-        System.out.println("=================================================================================================");
-        System.out.println(reservationListDtos);
 
         return reservationListDtos;
+    }
+
+    @Override
+    public ReservationConsentUpdatedDto updateConsent(ReservationConsentUpdateDto dto) {
+        Optional<Reservation> rv = reservationRepository.findById(dto.getId());
+        if (rv.isPresent()) {
+            rv.get().setGuestConsent(dto.getGuestConsent());
+            reservationRepository.save(rv.get());
+        }
+        else
+            throw new IllegalArgumentException("예약을 찾을 수 없습니다.");
+        return ReservationConsentUpdatedDto.builder()
+                .id(rv.get().getId())
+                .guestConsent(rv.get().getGuestConsent())
+                .build();
     }
 }

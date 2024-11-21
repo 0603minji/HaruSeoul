@@ -262,6 +262,17 @@ public class DefaultReservationService implements ReservationService {
             throw new IllegalStateException("예약 불가: 총 그룹 인원이 " + programGroupMaxSize + " 명을 초과할 수 없습니다.");
         }
 
+        //============알림부분=====================
+        Long senderId = reservation.getMember().getId();
+        Long programId = reservation.getPublishedProgram().getId();
+        NotificationSendDto notificationSendDto = NotificationSendDto.builder()
+                .senderId(senderId)
+                .programId(programId)
+                .type("RESERVE")
+                .build();
+        notificationService.send(notificationSendDto);
+
+
         return null;
     }
 
@@ -285,7 +296,7 @@ public class DefaultReservationService implements ReservationService {
 
         //==========알림부분=====================
         Long senderId = reservation.getMember().getId();
-        Long programId = reservation.getPublishedProgram().getProgram().getId();
+        Long programId = reservation.getPublishedProgram().getId();
 
         NotificationSendDto notificationSendDto = NotificationSendDto.builder()
                 .senderId(senderId)

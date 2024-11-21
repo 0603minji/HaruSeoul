@@ -133,7 +133,8 @@ const CancelHandler = async (pp) => {
       },
       body: {
         "cancelMethod": 3, // 3:호스트가 pp취소 or 정원미달로 자동폐지
-        "cancelReason": "호스트가 예약을 취소함"
+        "cancelReason": "호스트가 예약을 취소함",
+        "reservationStatus": 3
       }
     });
     console.log('          Reservation Cancel result: ', rvCancelResponse);
@@ -151,14 +152,6 @@ const CancelHandler = async (pp) => {
 // 예약확정
 const confirmHandler = async (pp) => {
   console.log('   confirmHandler called')
-
-  // 최대인원 > 현재인원 : 게스트들에게 예약확정 동의요청 보내기
-  if (pp.groupSizeMax > pp.groupSizeCurrent) {
-    requestGuestApproval();
-    openModal('completeRequestGuestApproval');
-    return;
-  }
-
   console.log('          ->  Put host/published-programs');
 
   // publishedProgramUpdateDto
@@ -177,8 +170,14 @@ const confirmHandler = async (pp) => {
   });
   console.log('          PublishedProgram Update result: ', response);
 
+  // 최대인원 > 현재인원 : 게스트들에게 예약확정 동의요청 보내기
+  if (pp.groupSizeMax > pp.groupSizeCurrent) {
+    await requestGuestApproval();
+    openModal('completeRequestGuestApproval');
+  }
   // 예약확정 확인 모달창
-  openModal('completeConfirmModal');
+  else
+    openModal('completeConfirmModal');
 
   // 취소된 pp반영한 목록으로 갱신
   await fetchData();
@@ -186,9 +185,23 @@ const confirmHandler = async (pp) => {
   PublishProgramModalKey.value = !PublishProgramModalKey.value;
 }
 
-// todo 게스트들에게 예약확정 동의요청보내기
-const requestGuestApproval = () => {
+// todo 게스트들에게 참가여부 확인 알림 보내기
+const requestGuestApproval = async () => {
   console.log('   requestGuestApproval called')
+  // reservation테이블에 guest_consent 1(미응답)로 설정
+  for (const rId of pp.value.reservationIds) {
+    const guestConsentResponse = await  useDataFetch(`host/reservations/consent`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: {
+        "id": rId,
+        "guestConsent": 1 // 미응답으로 초기화
+      }
+    });
+    console.log('          Reservation Update result: ', guestConsentResponse);
+  }
 }
 
 // todo 호스트가 게스트 추방
@@ -204,7 +217,8 @@ const dismissHandler = async (reservationId) => {
     },
     body: {
       "cancelMethod": 2, // 2:kick
-      "cancelReason": "호스트에 의해 추방됨. 추방사유 입력받기는 아직 미구현"
+      "cancelReason": "호스트에 의해 추방됨. 추방사유 입력받기는 아직 미구현",
+      "reservationStatus": 3
     }
   });
   console.log('          Reservation Cancel result: ', rvCancelResponse);
@@ -295,12 +309,17 @@ const fetchData = async () => {
     </Modal>
 
     <!--  예약확정확인  -->
-    <Modal :isVisible="isModalVisible('confirmConfirmModal')" @close="closeModal('confirmConfirmModal')"
+    <Modal class="confirmModal"
+           :isVisible="isModalVisible('confirmConfirmModal')" @close="closeModal('confirmConfirmModal')"
            @confirm="() => {confirmHandler(ppToConfirm); closeModal('confirmConfirmModal');}">
       <div v-if="ppToConfirm.groupSizeCurrent < ppToConfirm.groupSizeMax">
-        <p style="color: var(--color-red-1)">현재 예약인원 ({{ ppToConfirm.groupSizeCurrent }}/{{ ppToConfirm.groupSizeMax }})</p>
-        <p>현재 예약인원이 최대 예약인원보다 부족할 경우, 모든 게스트 동의 후 예약확정이 가능합니다.</p>
-        <p>게스트에게 예약확정 동의요청을 보내시겠습니까?</p>
+
+          <p class="font-weight:bold margin-bottom:6">[예약 확정 안내] <span class="font-weight:400" style="color: var(--color-red-1)">현재 예약인원 ({{ ppToConfirm.groupSizeCurrent }}/{{ ppToConfirm.groupSizeMax }})</span></p>
+          <p>인원 미달 상태로 프로그램을 확정하시겠습니까?</p>
+        <ul>
+          <li class="margin-top:7">예약 확정 시, 참가자에게 참가 동의 여부를 요청하는 알림이 발송됩니다.</li>
+          <li>동의하지 않은 참가자의 예약은 자동으로 취소 및 환불 처리됩니다.</li>
+        </ul>
       </div>
       <div v-if="ppToConfirm.groupSizeCurrent === ppToConfirm.groupSizeMax">
         <p style="color: var(--color-green-1)">현재 예약인원 ({{ ppToConfirm.groupSizeCurrent }}/{{ ppToConfirm.groupSizeMax }})</p>
@@ -311,7 +330,7 @@ const fetchData = async () => {
       <p>예약이 확정되었습니다.</p>
     </Modal>
     <Modal class="onlyConfirm" :isVisible="isModalVisible('completeRequestGuestApproval')" @confirm="closeModal('completeRequestGuestApproval')">
-      <p>게스트들에게 예약확정 동의요청이 전송되었습니다.</p>
+      <p>참가자들에게 참가 동의요청이 발송되었습니다.</p>
     </Modal>
 
     <!--  참가자추방확인  -->
@@ -492,6 +511,21 @@ const fetchData = async () => {
 <style scoped>
 .no-click {
   pointer-events: none;
+}
+
+.confirmModal {
+  ul {
+    list-style-type: disc; /* 또는 'circle', 'square', 'none' 등 */
+    padding-left: 20px; /* 왼쪽 들여쓰기 */
+  }
+
+  ul li {
+    margin-bottom: 10px; /* 각 항목 간 간격 */
+  }
+
+  ul li strong {
+    font-weight: bold;
+  }
 }
 
 .layout-body {

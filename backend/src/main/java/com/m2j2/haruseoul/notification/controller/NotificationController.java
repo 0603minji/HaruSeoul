@@ -2,10 +2,10 @@ package com.m2j2.haruseoul.notification.controller;
 
 
 import com.m2j2.haruseoul.notification.config.SseClientRegistry;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.m2j2.haruseoul.notification.dto.NotificationResponseDto;
+import com.m2j2.haruseoul.notification.service.NotificationService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
@@ -13,10 +13,28 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class NotificationController {
 
     private final SseClientRegistry sseClientRegistry;
+    private final NotificationService notificationService;
 
-    public NotificationController(SseClientRegistry sseClientRegistry) {
+    public NotificationController(SseClientRegistry sseClientRegistry, NotificationService notificationService) {
         this.sseClientRegistry = sseClientRegistry;
+        this.notificationService = notificationService;
     }
+
+    @GetMapping("user/{id}")
+    public ResponseEntity<NotificationResponseDto> getList(@PathVariable(name = "id") Long id) {
+        
+        return ResponseEntity.ok(notificationService.getNotificationResponseDtoList(id));
+
+    }
+
+    @PostMapping("{id}")
+    public ResponseEntity<String> readNotification(@PathVariable(name = "id") Long notificationId) {
+        notificationService.confirmNotification(notificationId);
+
+        return ResponseEntity.ok("알림확인");
+    }
+
+
 
     @GetMapping("{id}")
     public SseEmitter notifications(@PathVariable Long id) {

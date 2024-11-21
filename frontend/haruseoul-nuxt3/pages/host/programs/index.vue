@@ -17,49 +17,110 @@
           <section class="n-filter bg-color:base-1 padding-x:6">
             <h1 class="d:none">필터</h1>
 
-            <div class="overflow-x:visible">
+              <div v-show="activeDropdown === 'program'" class="dropdown-menu program" :style="dropdownPosition">
+                <div class="d:flex jc:space-between">
+                  <h3>프로그램 필터</h3>
+                  <span @click.prevent="toggleDropdown" class="n-icon n-icon:exit cursor:pointer"></span>
+                </div>
+                <div class="custom-dropdown">
+                  <input
+                      type="text"
+                      id="program-select"
+                      class="dropdown-search"
+                      placeholder="프로그램 검색"
+                      v-model="searchQuery"
+                      @focus="openDropdown"
+                      @input="filterProgramsBySearch"
+                  />
+
+                  <div v-if="isDropdownOpen" class="dropdown-list">
+                    <div class="dropdown-header">
+                      <span>프로그램 선택</span>
+                      <button @click="closeDropdown" class="n-icon n-icon:arrow_up cursor:pointer"></button>
+                    </div>
+                    <label v-for="pt in filteredPrograms" :key="pt.id" class="dropdown-item">
+                      <input
+                          type="checkbox"
+                          :value="pt.id"
+                          v-model="selectedProgramIds"
+                          @change="applyProgramFilter"
+                      />
+                      {{ pt.title }}
+                    </label>
+                  </div>
+
+                </div>
+              </div>
+
+              <div v-show="activeDropdown === 'status'" class="dropdown-menu status" :style="dropdownPosition">
+                <div class="d:flex jc:space-between">
+                  <h3>프로그램 상태</h3>
+                  <span @click.prevent="toggleDropdown" class="n-icon n-icon:exit cursor:pointer"></span>
+                </div>
+                <label><input class="statusCheckboxAll" type="checkbox"
+                              @change="selectStatusAll"/>전체</label>
+                <label>
+                  <input
+                      type="checkbox"
+                      :value="'In Progress'"
+                      v-model="selectedStatus"
+                      @change="selectStatus"
+                  />
+                  작성중
+                </label>
+                <label>
+                  <input
+                      type="checkbox"
+                      :value="'Unpublished'"
+                      v-model="selectedStatus"
+                      @change="selectStatus"
+                  />
+                  작성완료
+                </label>
+                <label>
+                  <input
+                      type="checkbox"
+                      :value="'Published'"
+                      v-model="selectedStatus"
+                      @change="selectStatus"
+                  />
+                  모집중
+                </label>
+              </div>
+
+              <div v-show="activeDropdown === 'category'" class="dropdown-menu category" :style="dropdownPosition">
+                <div class="d:flex jc:space-between">
+                  <h3>카테고리 필터</h3>
+                  <span @click.prevent="toggleDropdown" class="n-icon n-icon:exit cursor:pointer"></span>
+                </div>
+                <label>
+                  <input
+                      class="categoryAll"
+                      type="checkbox"
+                      @change="selectCategoryAll"
+                  />
+                  All
+                </label>
+                <label v-for="c in categories" :key="c.id">
+                  <input
+                      type="checkbox"
+                      :value="c.id"
+                      v-model="selectedCategories"
+                      @change="selectCategory"
+                  />
+                  {{ c.name }}
+                </label>
+              </div>
+
+            <div class="overflow-x:auto">
               <ul class="item-wrapper padding-y:5">
                 <!-- 프로그램 필터 버튼 -->
                 <li class="filter-item">
                   <div
-                      :class="['n-btn', 'n-btn-pg-filter', 'n-btn:hover', 'n-icon', 'n-icon:pending', 'n-icon-size:1', 'n-deco', 'n-deco-gap:1', { active: isProgramFilterActive }]"
-                      @click="toggleDropdown('program')"
+                      :class="['n-btn', 'n-btn-pg-filter', 'n-btn:hover', 'n-icon', 'n-icon:search', 'n-icon-size:1', 'n-deco', 'n-deco-gap:1', { active: isProgramFilterActive }]"
+                      @click="toggleDropdown($event, 'program')"
                   >
                     프로그램
-                  </div>
-                  <div v-if="activeDropdown === 'program'" class="dropdown-menu">
-                    <div class="d:flex jc:space-between">
-                      <h3>프로그램 필터</h3>
-                      <span @click.prevent="toggleDropdown" class="n-icon n-icon:exit cursor:pointer"></span>
-                    </div>
-                    <div class="custom-dropdown">
-                      <input
-                          type="text"
-                          id="program-select"
-                          class="dropdown-search"
-                          placeholder="프로그램 검색"
-                          v-model="searchQuery"
-                          @focus="openDropdown"
-                          @input="filterProgramsBySearch"
-                      />
-
-                      <div v-if="isDropdownOpen" class="dropdown-list">
-                        <div class="dropdown-header">
-                          <span>프로그램 선택</span>
-                          <button @click="closeDropdown" class="n-icon n-icon:arrow_up cursor:pointer"></button>
-                        </div>
-                        <label v-for="pt in filteredPrograms" :key="pt.id" class="dropdown-item">
-                          <input
-                              type="checkbox"
-                              :value="pt.id"
-                              v-model="selectedProgramIds"
-                              @change="applyProgramFilter"
-                          />
-                          {{ pt.title }}
-                        </label>
-                      </div>
-
-                    </div>
                   </div>
                 </li>
 
@@ -67,77 +128,19 @@
                 <li class="filter-item">
                   <div
                       :class="['n-btn', 'n-btn-pg-filter', 'n-btn:hover', 'n-icon', 'n-icon:pending', 'n-icon-size:1', 'n-deco', 'n-deco-gap:1', { active: isStatusFilterActive }]"
-                      @click="toggleDropdown('status')"
+                      @click="toggleDropdown($event,'status')"
                   >
                     프로그램 상태
-                  </div>
-                  <div v-if="activeDropdown === 'status'" class="dropdown-menu">
-                    <div class="d:flex jc:space-between">
-                      <h3>프로그램 필터</h3>
-                      <span @click.prevent="toggleDropdown" class="n-icon n-icon:exit cursor:pointer"></span>
-                    </div>
-                    <label><input class="statusCheckboxAll" type="checkbox"
-                                  @change="selectStatusAll"/>전체</label>
-                    <label>
-                      <input
-                          type="checkbox"
-                          :value="'In Progress'"
-                          v-model="selectedStatus"
-                          @change="selectStatus"
-                      />
-                      작성중
-                    </label>
-                    <label>
-                      <input
-                          type="checkbox"
-                          :value="'Unpublished'"
-                          v-model="selectedStatus"
-                          @change="selectStatus"
-                      />
-                      작성완료
-                    </label>
-                    <label>
-                      <input
-                          type="checkbox"
-                          :value="'Published'"
-                          v-model="selectedStatus"
-                          @change="selectStatus"
-                      />
-                      모집중
-                    </label>
                   </div>
                 </li>
 
                 <!-- 카테고리 필터 버튼 -->
                 <li class="filter-item">
                   <div
-                      :class="['n-btn', 'n-btn-pg-filter', 'n-btn:hover', 'n-icon', 'n-icon:pending', 'n-icon-size:1', 'n-deco', 'n-deco-gap:1', { active: isCategoryFilterActive }]"
-                      @click="toggleDropdown('category')"
+                      :class="['n-btn', 'n-btn-pg-filter', 'n-btn:hover', 'n-icon', 'n-icon:category', 'n-icon-size:1', 'n-deco', 'n-deco-gap:1', { active: isCategoryFilterActive }]"
+                      @click="toggleDropdown($event,'category')"
                   >
                     카테고리
-                  </div>
-                  <div v-if="activeDropdown === 'category'" class="dropdown-menu">
-                    <div class="d:flex jc:space-between">
-                      <h3>프로그램 필터</h3>
-                      <span @click.prevent="toggleDropdown" class="n-icon n-icon:exit cursor:pointer"></span>
-                    </div>
-                    <label>
-                      <input
-                          class="categoryAll"
-                          type="checkbox"
-                          @change="selectCategoryAll"
-                      />
-                      All
-                    </label>
-                    <label v-for="c in categories" :key="c.id">
-                      <input
-                          type="checkbox"
-                          :value="c.id"
-                          v-model="selectedCategories"
-                          @change="selectCategory"
-                      />
-                      {{ c.name }}
-                    </label>
                   </div>
                 </li>
               </ul>
@@ -520,10 +523,57 @@ const isModalOpen = ref(false); // 모달 열림 상태
 const activeFilter = ref("");
 
 const activeDropdown = ref(""); // 현재 활성화된 드롭다운 ('program', 'status', 'category')
+const dropdownPosition = ref({}); // 드롭다운의 위치
+
 
 // 드롭다운 열기/닫기
-const toggleDropdown = (filter) => {
-  activeDropdown.value = activeDropdown.value === filter ? "" : filter;
+const toggleDropdown = (event, filter) => {
+  if (activeDropdown.value === filter)
+    activeDropdown.value = "";
+  else {
+    activeDropdown.value = filter;
+    calculateDropdownPosition(event.target, filter);
+  }
+};
+
+const calculateDropdownPosition = (buttonElement, filter) => {
+  const buttonRect = buttonElement.getBoundingClientRect(); // 버튼의 위치
+  const container = document.querySelector('.n-filter'); // 기준이 되는 요소
+  const containerRect = container.getBoundingClientRect(); // 기준 요소의 위치
+
+  console.log('buttonRect: ', buttonRect)
+  console.log('containerRect: ', containerRect)
+
+  let dropdownWidth = 200;
+  // 드롭다운의 width 값을 정확하게 가져옴
+  if (filter === 'program')
+    dropdownWidth = 200;
+  else if (filter === 'status')
+    dropdownWidth = 200;
+  else if (filter === 'category')
+    dropdownWidth = 200;
+
+  let leftOffset = buttonRect.left - containerRect.left;
+  console.log('dropdownWidth: ', dropdownWidth)
+  console.log('leftOffset: ', leftOffset)
+
+
+  // 드롭다운의 왼쪽 경계가 화면을 벗어나는 경우 처리
+  if (leftOffset < 0) {
+    leftOffset = 16; // 왼쪽 여백을 16px로 설정
+  }
+
+  // 드롭다운의 오른쪽 경계가 화면을 벗어나는 경우 처리
+  if (leftOffset + dropdownWidth > window.innerWidth) {
+    leftOffset = window.innerWidth - (34 + dropdownWidth); // 화면 오른쪽 끝에 맞추기
+  }
+
+  dropdownPosition.value = {
+    position: 'absolute',
+    top: `${buttonRect.bottom - containerRect.top + 8}px`, // 버튼 아래로 드롭다운 배치
+    left: `${leftOffset}px`, // 버튼의 x 좌표에 맞춤
+    zIndex: 1000,
+  };
 };
 
 //============= Lifecycle Functions ================
@@ -893,9 +943,11 @@ const OpenPublishProgramModalHandler = (programId) => {
 </script>
 
 <style scoped>
-
 .filter-item {
   position: relative;
+  .n-btn {
+    --btn-font-size: 12px;
+  }
 }
 
 .dropdown-menu {
@@ -912,7 +964,7 @@ const OpenPublishProgramModalHandler = (programId) => {
 }
 
 .dropdown-menu h3 {
-  font-size: 16px;
+  font-size: 12px;
   margin-bottom: 10px;
 }
 
@@ -1286,6 +1338,7 @@ const OpenPublishProgramModalHandler = (programId) => {
 
   .layout-list {
     flex-grow: 1;
+    width: 100%;
   }
 
   .n-filter-aside {
