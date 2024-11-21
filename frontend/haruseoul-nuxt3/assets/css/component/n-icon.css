@@ -158,6 +158,10 @@
   --icon: url(/assets/image/icon/alert.svg);
 }
 
+.n-icon\:notification:before {
+  --icon: url(/assets/image/icon/notification.png);
+}
+
 .n-icon\:arrow_swap:before {
   --icon: url(/assets/image/icon/arrow_swap.svg);
 }

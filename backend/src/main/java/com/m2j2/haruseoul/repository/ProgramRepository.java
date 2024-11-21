@@ -93,6 +93,7 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
     Program findByProgramId(@Param("programId") Long programId);
 
 
+    Program findTitleById(Long programId);
 }
 
 

@@ -45,8 +45,8 @@ public class MemberController {
 
     @PutMapping("{id}")
     public ResponseEntity<String> update(@PathVariable Long id,
-                                         @RequestPart("memberUpdateDto") MemberUpdateDto memberUpdateDto,
-                                         @RequestPart("profileImgSrc") MultipartFile profileImgSrc) {
+                                         @RequestPart(value = "memberUpdateDto",required = false) MemberUpdateDto memberUpdateDto,
+                                         @RequestPart(value = "profileImgSrc" ,required = false) MultipartFile profileImgSrc) {
 
         memberUpdateDto.setId(id);
         memberService.update(memberUpdateDto,profileImgSrc);
