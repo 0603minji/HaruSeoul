@@ -296,7 +296,6 @@
                     </div>
                   </section>
 
-
                 </div>
               </div>
             </div>
@@ -598,14 +597,18 @@ const departure = computed(() =>
         : null
 );
 
+
 const destination = computed(() =>
     data.value && data.value.programDetailRouteDto
-        ? data.value.programDetailRouteDto.reduce(
-            (max, route) => (route.order > max.order ? route : max),
-            data.value.programDetailRouteDto[0]
-        )
+        ? data.value.programDetailRouteDto.some(route => route.order !== 1) // order가 1이 아닌 값이 있는지 확인
+            ? data.value.programDetailRouteDto.reduce(
+                (max, route) => (route.order > max.order ? route : max),
+                data.value.programDetailRouteDto[0]
+            )
+            : null // 모두 order가 1인 경우 null 반환
         : null
 );
+
 
 const stops = computed(() =>
     data.value && data.value.programDetailRouteDto
@@ -613,6 +616,9 @@ const stops = computed(() =>
         : []
 );
 
+console.log("Departure:", departure.value);
+console.log("Destination:", destination.value);
+console.log("Stops:", stops.value);
 
 const formatDuration = (hours, minutes) => {
   return `${hours}시간 ${minutes}분`;

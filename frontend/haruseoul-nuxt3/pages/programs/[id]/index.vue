@@ -768,10 +768,12 @@ const departure = computed(() =>
 
 const destination = computed(() =>
     data.value && data.value.programDetailRouteDto
-        ? data.value.programDetailRouteDto.reduce(
-            (max, route) => (route.order > max.order ? route : max),
-            data.value.programDetailRouteDto[0]
-        )
+        ? data.value.programDetailRouteDto.some(route => route.order !== 1) // order가 1이 아닌 값이 있는지 확인
+            ? data.value.programDetailRouteDto.reduce(
+                (max, route) => (route.order > max.order ? route : max),
+                data.value.programDetailRouteDto[0]
+            )
+            : null // 모두 order가 1인 경우 null 반환
         : null
 );
 
