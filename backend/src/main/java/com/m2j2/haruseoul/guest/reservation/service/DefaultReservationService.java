@@ -184,6 +184,8 @@ public class DefaultReservationService implements ReservationService {
                 .reservationRequirement(reservationProgram.getRequirement() != null
                         ? reservationProgram.getRequirement().trim()
                         : "")
+                .publishedProgramId(reservation.getPublishedProgram().getId())
+                .publishedProgramStatus(reservation.getPublishedProgram().getStatus().getId())
                 .build();
 
 
@@ -291,14 +293,8 @@ public class DefaultReservationService implements ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
 
-        // 삭제 날짜를 현재 시간으로 설정합니다.
-        reservation.setDeleteDate(Instant.now());  // 삭제 일자를 현재 시간으로 설정 (LocalDateTime으로 변경 가능)
         reservation.setReservationStatus(3);
 
-
-        PublishedProgram publishedProgram = publishedProgramRepository.findById(reservation.getPublishedProgram().getId()).orElse(null);
-        int ppGroupSizeCurrent = publishedProgram.getGroupSizeCurrent();
-//        publishedProgramRepository.save();
 
         // 예약을 업데이트합니다.
         reservationRepository.save(reservation);

@@ -32,7 +32,7 @@ const handleShare = (url) => {
 
 // 데이터 함수
 
-const fetchreservation = async (rId) => {
+const fetchReservation = async (rId) => {
   const params = {rId: rId};
   const token = localStorage.getItem("token");
   const response = await useReservationFetch(`guest/reservations/${rId}`,
@@ -115,7 +115,7 @@ const closeModal = () => {
 onMounted(() => {
   const rId = route.params.id;
   if (rId) {
-    fetchreservation(rId);  // rId가 있을 때만 데이터를 가져옵니다.
+    fetchReservation(rId);  // rId가 있을 때만 데이터를 가져옵니다.
   }
 
   const initMaps = () => {
@@ -714,6 +714,8 @@ const cancelParticipationHandler = async () => {
             v-if="showModal"
             :showModal="showModal"
             :selectedReservationId="currentReservationId"
+            :fetchReservation="fetchReservation"
+            :reservation="reservation"
             @close="closeModal"
         />
       </section>

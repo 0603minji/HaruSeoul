@@ -9,10 +9,18 @@ const router = useRouter();
 const props = defineProps({
   showModal: Boolean,
   selectedReservationId: Number,
-  fetchReservations: Function
+  fetReservation:Function,
+  reservation: {
+    type: Object,
+    default: () => ({}) // 기본값 설정
+  }
 });
 
 console.log("프롭스", props)
+console.log("publishedProgramId 이다",props.reservation.program.publishedProgramId)
+console.log("publishedProgramStatus 이다",props.reservation.program.publishedProgramStatus)
+console.log("reservationId 이다",props.reservation.reservationId)
+console.log("reservationStatus 이다",props.reservation.reservationCard.reservationStatus)
 
 const emit = defineEmits(['close', 'cancel']);
 
@@ -39,6 +47,23 @@ const cancelReservation = async () => {
           },
           data: {
             deleteDate: currentDate,  // 삭제일자 현재 날짜
+          },
+        }
+    );
+
+    // API 요청 보내기
+    await useReservationFetch(
+        `guest/published-programs`,
+        {
+          method: "PUT",  // 예약을 취소하는 PUT 요청
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            id: props.reservation.program.publishedProgramId,
+            statusId: props.reservation.program.publishedProgramStatus,
+            reservationId: props.reservation.reservationId,
+            reservationStatus: props.reservation.reservationCard.reservationStatus
           },
         }
     );
