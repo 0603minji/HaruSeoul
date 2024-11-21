@@ -4,10 +4,9 @@
       <section class="profile-header">
         <div class="profile-image-container" :key="profileImageKey">
           <img
-              v-if="data.profileImgSrc"
+              v-if="userDetails.profileImgSrc.value"
               class="profile-image"
-              :key="userDetails.profileImgSrc"
-              :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}?timestamp=${new Date().getTime()}`"
+              :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`"
               alt="프로필 이미지"/>
           <img v-else class="profile-image" src="/assets/image/default-profile.png" alt="프로필 이미지"/>
           <input

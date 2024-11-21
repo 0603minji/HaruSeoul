@@ -352,9 +352,9 @@
                     <section>
                       <h1>꼭 알아두세요!</h1>
 
-                      <div style="padding: 0 var(--gap-6);">
+                      <div v-if="data.programDetailProgramDto.packingList" style="padding: 0 var(--gap-6);">
                         <h2 class="info-form n-icon n-icon:success-decagon">준비물</h2>
-                        <ul v-if="data.programDetailProgramDto.packingList">
+                        <ul>
                           <li v-for="(item, index) in data.programDetailProgramDto.packingList.split('\n')"
                               :key="index"
                               class="list-content">
@@ -364,9 +364,9 @@
 
                       </div>
 
-                      <div style="padding: var(--gap-6); padding-bottom: 0;">
+                      <div v-if="data.programDetailProgramDto.caution" style="padding: var(--gap-6); padding-bottom: 0;">
                         <h2 class="info-form n-icon n-icon:caution">주의사항</h2>
-                        <ul v-if="data.programDetailProgramDto.caution">
+                        <ul>
                           <li v-for="(item, index) in data.programDetailProgramDto.caution.split('\n')"
                               :key="index"
                               class="list-content">

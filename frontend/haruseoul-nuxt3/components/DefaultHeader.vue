@@ -101,7 +101,7 @@
       </div>
       <div v-if="!userDetails.isAnonymous()" class="profile-img-container md:show">
         <div @click.prevent="toggleModal" style="cursor: pointer" class="profile-img-wrapper">
-          <img v-if="userDetails.profileImgSrc"
+          <img v-if="userDetails.profileImgSrc.value"
                class="profile-img"
                :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`"
                alt="게스트 프로필 사진"
@@ -118,7 +118,7 @@
 
           <!-- 프로필 사진과 마이페이지 링크 -->
           <div class="modal-header">
-            <img v-if="userDetails.profileImgSrc" class="modal-profile-img"
+            <img v-if="userDetails.profileImgSrc.value" class="modal-profile-img"
                  :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`" alt="프로필 사진"/>
             <img v-else class="modal-profile-img" src="/assets/image/default-profile.png" alt="프로필 사진"/>
             <NuxtLink href="/mypage" class="mypage-link">마이페이지</NuxtLink>
@@ -207,7 +207,7 @@
           <h1>게스트 프로필</h1>
           <div class="profile-img-container">
             <div @click.prevent="toggleModal" class="profile-img-wrapper" style="cursor: pointer">
-              <img v-if="userDetails.profileImgSrc"
+              <img v-if="userDetails.profileImgSrc.value"
                    class="profile-img"
                    :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`"
                    alt="게스트 프로필 사진"
@@ -338,8 +338,8 @@ const {
   hasNewNotification,
   fetchNotifications
 } = useNotification(userDetails.id.value);
-console.log("알림정보",notifications.value);
 
+console.log("사진이있는가?",userDetails.profileImgSrc.value)
 
 const confirmNotification = async (notificationId) => {
   const confirm = await axios.post(`http://localhost:8080/api/v1/notifications/${notificationId}`)

@@ -272,7 +272,7 @@
                   </div>
                   <div v-if="activeMenuIndex[index]" class="menu-dropdown">
                     <ul>
-                      <NuxtLink class="edit" :href="`/host/programs/${p.id}/edit`">수정</NuxtLink>
+                      <NuxtLink v-if="!(p.status === 'Published')" class="edit" :href="`/host/programs/${p.id}/edit`">수정</NuxtLink>
                       <li @click.prevent="deleteProgram(p.id)">삭제</li>
                     </ul>
                   </div>

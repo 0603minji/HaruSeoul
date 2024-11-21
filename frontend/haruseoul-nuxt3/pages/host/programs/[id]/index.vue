@@ -315,7 +315,9 @@
                   <section style="padding-top: 0;">
                     <h1>만나는장소</h1>
                     <div class="info-container">
-                      <p>{{ meetingTimeWithOrderOne }} {{ titleWithOrderOne }}</p>
+                      <p>{{
+                          data.programDetailProgramDto.startTime ? data.programDetailProgramDto.startTime.split(':').slice(0, 2).join(':') : '시간 없음'
+                        }} {{ titleWithOrderOne }}</p>
                       <div
                           style="display:flex; align-items: center; padding: var(--gap-3) 0; color: var(--color-base-7);">
                                                 <span class="n-icon n-icon:placeholder"
@@ -642,7 +644,13 @@ watchEffect(() => {
   console.log("Error:", error.value);
 });
 
+
 const goToIntro = () => {
+
+  if(data.value.programDetailProgramDto.status === 'Published') {
+    alert("모집중인 프로그램은 수정할 수 없습니다.")
+    return;
+  }
   // 먼저 /edit 경로로 이동
   router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
     // 이동 후 해시값 변경
@@ -651,6 +659,10 @@ const goToIntro = () => {
 };
 
 const goToDetail = () => {
+  if(data.value.programDetailProgramDto.status === 'Published') {
+    alert("모집중인 프로그램은 수정할 수 없습니다.")
+    return;
+  }
   // 먼저 /edit 경로로 이동
   router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
     // 이동 후 해시값 변경
@@ -658,8 +670,11 @@ const goToDetail = () => {
   });
 };
 
-
 const goToCourse = () => {
+  if(data.value.programDetailProgramDto.status === 'Published') {
+    alert("모집중인 프로그램은 수정할 수 없습니다.")
+    return;
+  }
   // 먼저 /edit 경로로 이동
   router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
     // 이동 후 해시값 변경
@@ -667,8 +682,11 @@ const goToCourse = () => {
   });
 };
 
-
 const goToInclusion = () => {
+  if(data.value.programDetailProgramDto.status === 'Published') {
+    alert("모집중인 프로그램은 수정할 수 없습니다.")
+    return;
+  }
   // 먼저 /edit 경로로 이동
   router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
     // 이동 후 해시값 변경
@@ -677,6 +695,10 @@ const goToInclusion = () => {
 };
 
 const goToCaution = () => {
+  if(data.value.programDetailProgramDto.status === 'Published') {
+    alert("모집중인 프로그램은 수정할 수 없습니다.")
+    return;
+  }
   // 먼저 /edit 경로로 이동
   router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
     // 이동 후 해시값 변경
@@ -684,8 +706,11 @@ const goToCaution = () => {
   });
 };
 
-
 const goToImage = () => {
+  if(data.value.programDetailProgramDto.status === 'Published') {
+    alert("모집중인 프로그램은 수정할 수 없습니다.")
+    return;
+  }
   // 먼저 /edit 경로로 이동
   router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
     // 이동 후 해시값 변경

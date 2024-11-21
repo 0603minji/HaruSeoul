@@ -188,7 +188,7 @@ const route = reactive({
   order: props.order, // 현재 길이를 기준으로 순서를 설정
   address: '',
   description: '',
-  duration: '',
+  duration: 0,
   transportationId: '',
   transportationDuration: null
 });

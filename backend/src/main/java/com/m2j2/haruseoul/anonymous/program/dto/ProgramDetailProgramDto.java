@@ -27,5 +27,6 @@ public class ProgramDetailProgramDto {
     private String caution;
     private Float duration;
     private LocalTime startTime;
+    private String status;
 
 }
