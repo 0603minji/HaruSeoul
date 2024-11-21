@@ -37,8 +37,55 @@
           >
         </li>
         <li class="header-menu">
-          <div class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:alert">
+          <div v-if="(notifications && notifications.length > 0) || hasNewNotification"
+               class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:notification"
+               @click.prevent="toggleNotificationModal"
+          >
             알림
+          </div>
+          <div v-else
+               class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:alert"
+               @click.prevent="toggleNotificationModal"
+          >
+            알림
+          </div>
+          <div v-if="showNotificationModal" class="modal-content-notification">
+            <header>
+              <button class="modal-close" @click="showNotificationModal = false">×</button>
+              <div class="modal-header">
+                <h2>알림</h2>
+              </div>
+            </header>
+            <div class="modal-body">
+              <div style="margin-bottom: 10px">미확인 알림: {{ notificationCount }}개</div>
+              <ul>
+                <li
+                    v-for="notification in notifications"
+                    :key="notification.id"
+                    class="notification-items"
+                    :class="{
+                    'bg-color-green': notification.type === 'RESERVE',
+                    'bg-color-red': notification.type === 'CANCEL'
+                     }"
+                >
+                  <div>
+                    <NuxtLink
+                        :href="notification.type === 'CANCEL FROM HOST'
+                      ? `/guest/reservations/${notification.programId}`
+                      : `/host/reservations/${notification.programId}`">
+                      <span style="font-weight: bold">{{ notification.title }}</span>
+                    </NuxtLink>
+                    이(가) {{ notification.type === 'RESERVE' ? '예약' : notification.type === 'CANCEL' ? '취소' : '취소' }}
+                    되었습니다
+                  </div>
+                  <button
+                      class="notification-close"
+                      @click.prevent="confirmNotification(notification.notificationId)">
+                    ×
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
         </li>
       </ul>
@@ -100,16 +147,61 @@
 
       <!--어사이드-->
       <aside class="n-aside" style="height: 100vh; overflow-y: auto;">
-        <header class="aside-header">
+        <header class="aside-header" style="overflow: visible; position: relative">
           <h1>게스트 로그인 어사이드</h1>
           <label
               for="menu-toggle"
               class="n-icon n-deco n-icon:exit cursor:pointer"
           ></label>
-          <div>
-            <a href="#" class="n-icon n-icon:chat"></a>
-            <a href="#" class="n-icon n-icon:alert"></a>
+          <div v-if="!userDetails.isAnonymous()">
+            <span class="n-icon n-icon:chat"></span>
+            <span v-if="(notifications && notifications.length > 0) || hasNewNotification"
+                  @click.prevent="toggleNotificationModal"
+                  class="n-icon n-icon:notification" style="cursor: pointer"></span>
+            <span v-else
+                  @click.prevent="toggleNotificationModal"
+                  class="n-icon n-icon:alert" style="cursor: pointer"></span>
           </div>
+
+          <div v-if="showNotificationModal" class="modal-content-notification-aside">
+            <header>
+              <button class="modal-close" @click="showNotificationModal = false">×</button>
+              <div class="modal-header">
+                <h2>알림</h2>
+              </div>
+            </header>
+            <div class="modal-body d:flex fl-dir:column">
+              <div style="margin-bottom: 10px">미확인 알림: {{ notificationCount }}개</div>
+              <ul>
+                <li
+                    v-for="notification in notifications"
+                    :key="notification.id"
+                    class="notification-items"
+                    :class="{
+                    'bg-color-green': notification.type === 'RESERVE',
+                    'bg-color-red': notification.type === 'CANCEL'
+                     }"
+                >
+                  <div>
+                    <NuxtLink
+                        :href="notification.type === 'CANCEL FROM HOST'
+                      ? `/guest/reservations/${notification.programId}`
+                      : `/host/reservations/${notification.programId}`">
+                      <span style="font-weight: bold">{{ notification.title }}</span>
+                    </NuxtLink>
+                    이(가) {{ notification.type === 'RESERVE' ? '예약' : notification.type === 'CANCEL' ? '취소' : '취소' }}
+                    되었습니다
+                  </div>
+                  <button
+                      class="notification-close"
+                      @click.prevent="confirmNotification(notification.notificationId)">
+                    ×
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
         </header>
         <section v-if="!userDetails.isAnonymous()" class="aside-profile">
           <h1>게스트 프로필</h1>
@@ -232,16 +324,33 @@
 <script setup>
 import {useDataFetch} from "~/composables/useDataFetch.js";
 import {useNotification} from "~/composables/useNotification.js";
+import axios from "axios";
 
 const userDetails = useUserDetails();
 const data = ref({});
 const memberId = process.client ? localStorage.getItem("id") : null;
-console.log(userDetails.id.value);
 
-const {notifications, hasNewNotification} = useNotification(userDetails.id.value);
+const {
+  notifications,
+  notificationCount,
+  hasNewNotification,
+  fetchNotifications
+} = useNotification(userDetails.id.value);
+console.log("알림정보",notifications.value);
 
+
+const confirmNotification = async (notificationId) => {
+  const confirm = await axios.post(`http://localhost:8080/api/v1/notifications/${notificationId}`)
+  await fetchNotifications();
+}
 
 const showModal = ref(false);
+
+const showNotificationModal = ref(false);
+
+const toggleNotificationModal = () => {
+  showNotificationModal.value = !showNotificationModal.value;
+};
 
 if (process.client && memberId) {
   (async () => {
@@ -282,6 +391,7 @@ const closeAsideHandler = () => {
 onMounted(() => {
   if (process.client) {
     document.addEventListener('click', handleClickOutside);
+    fetchNotifications();
   }
 });
 
@@ -318,6 +428,94 @@ watch(notifications, (newNotifications) => {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 600;
   font-size: 14px;
+}
+
+
+.modal-content-notification {
+  position: fixed;
+  top: 8%; /* 모달 위치는 고정 */
+  left: 80%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  color: #333;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  z-index: 999;
+  max-height: 60vh; /* 모달 전체의 최대 높이 */
+  font-size: 14px;
+  overflow: hidden; /* 모달 외부로 내용이 넘치지 않도록 설정 */
+  border: 1px solid #ccc;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-body {
+  max-height: calc(3 * 72px + 20px); /* li가 최대 3개 높이까지만 보이도록 설정 */
+  overflow-y: auto; /* 초과되는 내용은 스크롤 가능 */
+  width: 100%; /* 스크롤 시 너비 고정 */
+}
+
+.notification-items {
+  display: flex;
+  align-items: center; /* 세로 정렬 */
+  justify-content: space-between; /* 텍스트와 버튼 분리 */
+  gap: 20px;
+  background-color: #f9f9f9; /* 카드 배경색 */
+  border: 1px solid #ddd; /* 카드 테두리 */
+  border-radius: 8px; /* 둥근 모서리 */
+  padding: 15px; /* 내부 여백 */
+  margin-bottom: 10px; /* 카드 간 간격 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  transition: transform 0.2s, box-shadow 0.2s; /* 호버 시 애니메이션 */
+}
+
+.notification-items:last-child {
+  margin-bottom: 0; /* 마지막 아이템의 간격 제거 */
+}
+
+.bg-color-green {
+  background-color: #E7F4E8; /* 초록색 배경 (예약) */
+}
+
+.bg-color-red {
+  background-color: #FFE2E5; /* 빨간색 배경 (취소) */
+}
+
+
+.notification-close {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.notification-close:hover {
+  color: #333;
+}
+
+.modal-content-notification-aside {
+  position: fixed;
+  top: 6%; /* 모달 위치는 고정 */
+  left: 70%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  color: #333;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  z-index: 600;
+  max-height: 60vh; /* 모달 전체의 최대 높이 */
+  font-size: 14px;
+  overflow: hidden; /* 모달 외부로 내용이 넘치지 않도록 설정 */
+  border: 1px solid #ddd;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* 닫기 버튼 스타일 */

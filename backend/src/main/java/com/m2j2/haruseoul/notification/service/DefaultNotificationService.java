@@ -1,35 +1,78 @@
 package com.m2j2.haruseoul.notification.service;
 
 import com.m2j2.haruseoul.entity.Notification;
+import com.m2j2.haruseoul.entity.Program;
 import com.m2j2.haruseoul.notification.config.SseClientRegistry;
+import com.m2j2.haruseoul.notification.dto.NotificationListDto;
+import com.m2j2.haruseoul.notification.dto.NotificationResponseDto;
 import com.m2j2.haruseoul.notification.dto.NotificationSendDto;
 import com.m2j2.haruseoul.repository.NotificationRepository;
 import com.m2j2.haruseoul.repository.ProgramRepository;
+import com.m2j2.haruseoul.repository.PublishedProgramRepository;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class DefaultNotificationService implements NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final ProgramRepository programRepository;
+    private final PublishedProgramRepository publishedProgramRepository;
     private final SseClientRegistry sseClientRegistry;
 
-    public DefaultNotificationService(NotificationRepository notificationRepository, ProgramRepository programRepository, SseClientRegistry sseClientRegistry) {
+    public DefaultNotificationService(NotificationRepository notificationRepository, ProgramRepository programRepository, PublishedProgramRepository publishedProgramRepository, SseClientRegistry sseClientRegistry) {
         this.notificationRepository = notificationRepository;
         this.programRepository = programRepository;
+        this.publishedProgramRepository = publishedProgramRepository;
         this.sseClientRegistry = sseClientRegistry;
+    }
+
+    @Override
+    @Transactional
+    public NotificationResponseDto getNotificationResponseDtoList(Long id) {
+
+        List<NotificationListDto> notificationListDtos = new ArrayList<>();
+
+
+        List<Notification> notifications = notificationRepository.findUnreadListById(id);
+        for (Notification notification : notifications) {
+            Long programId = publishedProgramRepository.findProgramIdByPublishedProgramId(notification.getProgramId());
+            Program program = programRepository.findTitleById(programId);
+            String title = program.getTitle();
+            NotificationListDto notificationListDto = NotificationListDto.builder()
+                    .notificationId(notification.getId())
+                    .programId(notification.getProgramId())
+                    .title(title)
+                    .type(notification.getType())
+                    .regDate(LocalDate.from(notification.getRegDate()))
+                    .build();
+            notificationListDtos.add(notificationListDto);
+        }
+
+        Integer totalCount = notifications.size();
+
+        NotificationResponseDto notificationResponseDto = NotificationResponseDto.builder()
+                .notificationListDtos(notificationListDtos)
+                .totalCount(totalCount)
+                .build();
+
+        return notificationResponseDto;
     }
 
     @Override
     @Transactional
     public void send(NotificationSendDto notificationSendDto) {
 
-        Long programRegMemberId = programRepository.findMemberIdByProgramId(notificationSendDto.getProgramId());
+        Long programId = publishedProgramRepository.findProgramIdByPublishedProgramId(notificationSendDto.getProgramId());
+        Program program = programRepository.findById(programId).get();
+        Long programRegMemberId = program.getMember().getId();
 
         Notification notification = Notification.builder()
                 .senderId(notificationSendDto.getSenderId())
@@ -55,5 +98,14 @@ public class DefaultNotificationService implements NotificationService {
         } else {
             System.out.println("SseEmitter가 존재하지 않음: userId=" + programRegMemberId);
         }
+    }
+
+    @Override
+    public void confirmNotification(Long id) {
+
+        Notification notification = notificationRepository.findById(id).get();
+        notification.setIsRead(true);
+        notificationRepository.save(notification);
+
     }
 }

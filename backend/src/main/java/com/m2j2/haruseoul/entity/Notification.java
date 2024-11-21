@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 
 @AllArgsConstructor
@@ -38,7 +39,7 @@ public class Notification {
     @ColumnDefault("current_timestamp()")
     @Column(name = "reg_date", nullable = false)
     @CreationTimestamp
-    private Instant regDate;
+    private LocalDateTime regDate;
 
     @ColumnDefault("false")
     @Column(name = "is_read", nullable = false)
