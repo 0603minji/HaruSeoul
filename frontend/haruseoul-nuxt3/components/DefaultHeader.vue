@@ -114,16 +114,18 @@
         <section v-if="!userDetails.isAnonymous()" class="aside-profile">
           <h1>게스트 프로필</h1>
           <div class="profile-img-container">
-            <img v-if="userDetails.profileImgSrc"
-                 class="profile-img"
-                 :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`"
-                 alt="게스트 프로필 사진"
-            />
-            <img v-else
-                 class="profile-img"
-                 src="/assets/image/default-profile.png"
-                 alt="게스트 프로필 사진"
-            />
+            <div @click.prevent="toggleModal" class="profile-img-wrapper" style="cursor: pointer">
+              <img v-if="userDetails.profileImgSrc"
+                   class="profile-img"
+                   :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`"
+                   alt="게스트 프로필 사진"
+              />
+              <img v-else
+                   class="profile-img"
+                   src="/assets/image/default-profile.png"
+                   alt="게스트 프로필 사진"
+              />
+            </div>
           </div>
           <div class="profile-info">
             <p class="nickname">{{ data.nickname }}</p>
