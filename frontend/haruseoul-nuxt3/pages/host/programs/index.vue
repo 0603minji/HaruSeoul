@@ -893,7 +893,6 @@ const OpenPublishProgramModalHandler = (programId) => {
 </script>
 
 <style scoped>
-
 .filter-item {
   position: relative;
 }
@@ -1286,6 +1285,7 @@ const OpenPublishProgramModalHandler = (programId) => {
 
   .layout-list {
     flex-grow: 1;
+    width: 100%;
   }
 
   .n-filter-aside {
