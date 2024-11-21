@@ -19,6 +19,8 @@ const reservation = ref({
 
 const route = useRoute();
 
+//
+
 const guest = computed(() => reservation.value.guest);
 const host = computed(() => reservation.value.host);
 const program = computed(() => reservation.value.program);
