@@ -917,7 +917,7 @@ watchEffect(() => {
 .n-bar-underline {
   position: sticky;
   top: 0;
-  z-index: 500; /* 다른 콘텐츠보다 위에 오도록 설정 */
+  z-index: 20; /* 다른 콘텐츠보다 위에 오도록 설정 */
   background-color: white; /* 배경색 지정 (필요시 조정) */
   padding: 0;
 }

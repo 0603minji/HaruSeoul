@@ -748,6 +748,7 @@ const goToImage = () => {
 .n-icon\:edit {
   mask-image: url("assets/image/icon/edit.svg");
   mask-repeat: no-repeat;
+  right: -100px;
 }
 
 .n-icon\:credit_card:before {
@@ -884,6 +885,7 @@ const goToImage = () => {
     .n-icon {
       --icon-size: var(--icon-size-5);
       margin: 0;
+
     }
 
     .n-icon:before {
@@ -973,8 +975,7 @@ const goToImage = () => {
     .n-icon {
       cursor: pointer;
       border: none;
-      position: absolute;
-      right: var(--gap-7);
+      margin-left: 20px
     }
   }
 

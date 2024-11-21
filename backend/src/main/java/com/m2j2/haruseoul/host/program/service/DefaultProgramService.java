@@ -309,7 +309,7 @@ public class DefaultProgramService implements ProgramService {
                     .order(routeCreateDto.getOrder())
                     .startTime(getLocalTimeByHourAndMinute(routeCreateDto.getStartTimeHour(), routeCreateDto.getStartTimeMinute()))
                     .transportation(newTransportation)
-                    .transportationDuration(getLocalTimeByDuration(routeCreateDto.getDuration()))
+                    .transportationDuration(convertMinutesToLocalTime(routeCreateDto.getTransportationDuration())) // String을 LocalTime으로
                     .build();
             routes.add(route);
         }
