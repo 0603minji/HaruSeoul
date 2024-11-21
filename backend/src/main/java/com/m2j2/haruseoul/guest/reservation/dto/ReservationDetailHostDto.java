@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReservationDetailHostDto {
 
-//    private String memberImg; // 프사
+    private String memberImg; // 프사
 
     private String memberName;
 

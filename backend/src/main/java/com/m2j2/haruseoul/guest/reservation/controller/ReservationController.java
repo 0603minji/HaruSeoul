@@ -1,6 +1,5 @@
 package com.m2j2.haruseoul.guest.reservation.controller;
 
-import com.m2j2.haruseoul.entity.Reservation;
 import com.m2j2.haruseoul.guest.reservation.dto.ReservationCreateDto;
 import com.m2j2.haruseoul.guest.reservation.dto.ReservationCreatedDto;
 import com.m2j2.haruseoul.guest.reservation.dto.ReservationDetailResponseDto;
@@ -26,9 +25,8 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> getList(
             @RequestParam(name = "s", required = false)List<Long> statusIds,
             @RequestParam(name = "m", required = false)List<Long> memberIds,
-            @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-            @RequestParam(defaultValue = "false") Boolean isDeleted){
-        ReservationResponseDto reservationResponseDto = reservationService.getList(statusIds, memberIds, isDeleted, pageNum);
+            @RequestParam(name = "pageNum", defaultValue = "1") int pageNum){
+        ReservationResponseDto reservationResponseDto = reservationService.getList(statusIds, memberIds, pageNum);
 
         return ResponseEntity.ok(reservationResponseDto);
     }

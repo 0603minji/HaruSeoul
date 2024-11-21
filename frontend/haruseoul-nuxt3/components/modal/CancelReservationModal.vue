@@ -12,6 +12,8 @@ const props = defineProps({
   fetchReservations: Function
 });
 
+console.log("프롭스", props)
+
 const emit = defineEmits(['close', 'cancel']);
 
 const errorMessage = ref('');

@@ -12,10 +12,9 @@ import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     @Query("from Reservation r " +
-            "where (:sIds is null or :isDeleted = true or r.publishedProgram.status.id in :sIds)" +
-            "and (:mIds is null or r.member.id in :mIds)" +
-            "and (:isDeleted = false or r.deleteDate is not null)")
-    Page<Reservation> findAll(@Param("sIds") List<Long> sIds, @Param("mIds") List<Long> mIds,@Param("isDeleted") Boolean isDeleted, Pageable pageable);
+            "where (:sIds is null or r.reservationStatus in :sIds)" +
+            "and (:mIds is null or r.member.id in :mIds)")
+    Page<Reservation> findAll(@Param("sIds") List<Long> sIds, @Param("mIds") List<Long> mIds, Pageable pageable);
 
     @Query("from Reservation r " +
             "where (r.publishedProgram.id = :ppId)" +
