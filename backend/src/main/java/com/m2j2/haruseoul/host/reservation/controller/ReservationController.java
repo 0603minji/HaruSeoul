@@ -1,6 +1,8 @@
 package com.m2j2.haruseoul.host.reservation.controller;
 
 import com.m2j2.haruseoul.entity.Reservation;
+import com.m2j2.haruseoul.host.reservation.dto.ReservationConsentUpdateDto;
+import com.m2j2.haruseoul.host.reservation.dto.ReservationConsentUpdatedDto;
 import com.m2j2.haruseoul.host.reservation.dto.ReservationListDto;
 import com.m2j2.haruseoul.host.reservation.dto.ReservationCancelDto;
 import com.m2j2.haruseoul.host.reservation.service.ReservationService;
@@ -30,6 +32,11 @@ public class ReservationController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 예약이 없을 경우 404 Not Found 반환
         }
+    }
+
+    @PutMapping("consent")
+    public ResponseEntity<ReservationConsentUpdatedDto> updateConsent(@RequestBody ReservationConsentUpdateDto dto) {
+        return ResponseEntity.ok(reservationService.updateConsent(dto));
     }
 
     @GetMapping

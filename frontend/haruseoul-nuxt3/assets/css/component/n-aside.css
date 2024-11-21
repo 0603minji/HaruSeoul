@@ -54,10 +54,19 @@
             height: fit-content;
             width: fit-content;
 
-            .profile-img {
-                /*이미지 크기 고정*/
-                width: 62px;
+            .profile-img-wrapper {
+                display: inline-flex;
+                aspect-ratio: 1 / 1;
+                width: 60px;
+                border-radius: 50%;
+                overflow: hidden;
+
+                .profile-img {
+                    /*이미지 크기 고정*/
+                    width: 62px;
+                }
             }
+
         }
 
         .profile-info {

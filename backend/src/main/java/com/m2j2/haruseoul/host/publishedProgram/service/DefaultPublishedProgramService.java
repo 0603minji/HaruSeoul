@@ -60,6 +60,7 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
 
         // List<ppListDto>----------------------------------------------------------------------------------------------
         Converter<List<Reservation>, List<Long>> reservationsToReservationIdsConverter = ctx -> ctx.getSource().stream()
+                .filter(rv -> rv.getDeleteDate() == null || (rv.getCancelMethod()!=null && rv.getCancelMethod() == 3)) // reservation 중 게스트가 자의로 취소, 호스트가 kick한 것 제외하되 폐지로 취소된 예약은 포함
                 .map(Reservation::getId)
                 .toList();
 
@@ -249,6 +250,7 @@ public class DefaultPublishedProgramService implements PublishedProgramService {
 
         // List<ppListDto>----------------------------------------------------------------------------------------------
         Converter<List<Reservation>, List<Long>> reservationsToReservationIdsConverter = ctx -> ctx.getSource().stream()
+                .filter(rv -> rv.getDeleteDate() == null || (rv.getCancelMethod()!=null && rv.getCancelMethod() == 3)) // reservation 중 게스트가 자의로 취소, 호스트가 kick한 것 제외하되 폐지로 취소된 예약은 포함
                 .map(Reservation::getId)
                 .toList();
 
