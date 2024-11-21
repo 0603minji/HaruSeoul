@@ -37,7 +37,7 @@
           >
         </li>
         <li class="header-menu">
-          <div v-if="notifications || hasNewNotification"
+          <div v-if="(notifications && notifications.length > 0) || hasNewNotification"
                class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:notification"
                @click.prevent="toggleNotificationModal"
           >
@@ -155,7 +155,7 @@
           ></label>
           <div v-if="!userDetails.isAnonymous()">
             <span class="n-icon n-icon:chat"></span>
-            <span v-if="notifications || hasNewNotification"
+            <span v-if="(notifications && notifications.length > 0) || hasNewNotification"
                   @click.prevent="toggleNotificationModal"
                   class="n-icon n-icon:notification" style="cursor: pointer"></span>
             <span v-else
@@ -336,6 +336,7 @@ const {
   hasNewNotification,
   fetchNotifications
 } = useNotification(userDetails.id.value);
+console.log("알림정보",notifications.value);
 
 
 const confirmNotification = async (notificationId) => {

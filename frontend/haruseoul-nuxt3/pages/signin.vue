@@ -18,10 +18,10 @@
       </div>
 
       <div class="additional-options">
-        <div class="remember-me">
-          <input type="checkbox" id="remember-me" v-model="rememberMe">
-          <label for="remember-me">Remember me</label>
-        </div>
+<!--        <div class="remember-me">-->
+<!--          <input type="checkbox" id="remember-me" v-model="rememberMe">-->
+<!--          <label for="remember-me">Remember me</label>-->
+<!--        </div>-->
         <div class="links">
           <a href="#">Forgot ID</a>
           <a href="#">Forgot Password</a>
@@ -106,7 +106,8 @@ const signinHandler = async () => {
 
 <style scoped>
 .container {
-  width: 490px;
+  max-width: 490px;
+  min-width: 400px;
   margin: auto;
   padding: 20px;
   background-color: #fff;
