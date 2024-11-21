@@ -9,6 +9,7 @@ import com.m2j2.haruseoul.repository.MemberRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,26 +26,29 @@ public class DefaultMemberService implements MemberService {
 
     final MemberRepository memberRepository;
     final ModelMapper modelMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
 
 
-    public DefaultMemberService(MemberRepository memberRepository, ModelMapper modelMapper) {
+    public DefaultMemberService(MemberRepository memberRepository, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.memberRepository = memberRepository;
         this.modelMapper = modelMapper;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
     public Member save(MemberCreateDto memberCreateDto) {
 
-        modelMapper.typeMap(MemberCreateDto.class,Member.class).addMappings(
-                modelMapper ->{
-                    modelMapper.skip(Member::setId);  // userId와 id가 헷갈리지않게 스킵설정
-                }
-        );
-
-        Member member = modelMapper.map(memberCreateDto, Member.class);
+        Member member = Member.builder()
+                .name(memberCreateDto.getName())
+                .userId(memberCreateDto.getUserId())
+                .userPwd(bCryptPasswordEncoder.encode(memberCreateDto.getUserPwd()))
+                .nickname(memberCreateDto.getNickname())
+                .email(memberCreateDto.getEmail())
+                .birth(memberCreateDto.getBirth())
+                .build();
 
         return memberRepository.save(member);
     }

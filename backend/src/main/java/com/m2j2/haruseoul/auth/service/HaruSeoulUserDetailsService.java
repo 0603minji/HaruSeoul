@@ -26,7 +26,7 @@ public class HaruSeoulUserDetailsService implements UserDetailsService {
         return HaruSeoulUserDetails.builder()
                 .id(member.getId())
                 .username(member.getUserId())
-                .password("{noop}"+member.getUserPwd())
+                .password(member.getUserPwd())
                 .name(member.getName())
                 .birth(member.getBirth())
                 .email(member.getEmail())

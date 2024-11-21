@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class ReservationCancelDto {
     private Integer cancelMethod;
     private String cancelReason;
+    private Integer reservationStatus;
 }

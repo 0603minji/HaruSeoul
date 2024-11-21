@@ -173,7 +173,11 @@
                   <section class="profile-card">
                     <h1>프로필 카드</h1>
                     <div class="overview">
-                      <div class="img-wrapper"><img src="/public/image/profile.png" alt="호스트프사">
+                      <div class="img-wrapper">
+                        <img v-if="data.programDetailMemberDto.hostProfileImg"
+                             :src="`http://localhost:8080/api/v1/${data.programDetailMemberDto.hostProfileImg}`"
+                             alt="호스트프사">
+                        <img v-else src="/assets/image/default-profile.png" alt="호스트프사">
                       </div>
                       <div>
                         <div>{{ data.programDetailMemberDto.hostName }}</div>
@@ -317,7 +321,7 @@
                     <section>
                       <h1>포함사항</h1>
                       <div class="list-container">
-                        <ul v-if="data.programDetailProgramDto.inclusion">
+                        <ul v-if="data.programDetailProgramDto.inclusion" class="d:flex fl-dir:column">
                           <li v-for="(item, index) in data.programDetailProgramDto.inclusion.split('\n')"
                               :key="index"
                               class="list-content n-icon n-icon:success-circle-green">
@@ -327,7 +331,7 @@
 
                       </div>
                       <div class="list-container">
-                        <ul v-if="data.programDetailProgramDto.exclusion">
+                        <ul v-if="data.programDetailProgramDto.exclusion" class="d:flex fl-dir:column">
                           <li v-for="(item, index) in data.programDetailProgramDto.exclusion.split('\n')"
                               :key="index"
                               class="list-content n-icon n-icon:error">
@@ -562,6 +566,13 @@
           <div :class="{'active': isModalVisible}" class="backdrop"></div>
           <!-- ============================================================================================================= -->
         </section>
+        <!-- === 큰 화면 달력 =================================================================================================== -->
+        <!--        <CreateReservationAside class="CreateReservationAside"-->
+        <!--                                :class="{'show': modalVisible === 'CreateReservationAside'}"-->
+        <!--                                :pId="programId"-->
+        <!--                                :hostId="data.programDetailMemberDto.hostId"-->
+        <!--                                :group-size-max="data.programDetailProgramDto.groupSizeMax"-->
+        <!--                                @close-modal="() => { modalVisible = ''; }"/>-->
 
         <MoveReservationModal  v-if="showMoveReservationModal" @close="showMoveReservationModal = false"/>
       </section>

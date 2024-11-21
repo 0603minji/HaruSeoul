@@ -235,6 +235,7 @@ public class DefaultReservationService implements ReservationService {
                 .publishedProgram(publishedProgram)
                 .member(member)
                 .numberOfGuest(reservationCreateDto.getNumberOfGuest())
+                .reservationStatus(1)
                 .requirement(reservationCreateDto.getReservationRequirement())
                 .build();
 

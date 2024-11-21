@@ -51,9 +51,8 @@ public class Reservation {
     @Column(name = "cancel_reason")
     private String cancelReason;
 
-
-    @Column(name = "reservation_status")
-    private Integer reservationStatus;
+    @Column(name = "reservation_status", nullable = false)
+    private Integer reservationStatus ;
 
     @Column(name = "guest_consent")
     private Integer guestConsent;
