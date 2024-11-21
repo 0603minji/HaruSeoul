@@ -50,9 +50,6 @@ public class DefaultReservationService implements ReservationService {
 
     @Override
     public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, int pageNum) {
-
-//        Sort sort = Sort.by("regDate").ascending();
-
         // 기본적으로 정렬할 필드
         Sort sort;
 
@@ -172,11 +169,21 @@ public class DefaultReservationService implements ReservationService {
                 .programStartTime(String.valueOf(reservationProgram.getStartTime()))
                 .meetingSpotTitle(meetingSpotTitle)
                 .meetingSpotAddress(meetingSpotAddress)
-                .programInclusion(String.valueOf(reservationProgram.getInclusion()))
-                .programExclusion(String.valueOf(reservationProgram.getExclusion()))
-                .programPackingList(String.valueOf(reservationProgram.getPackingList()))
-                .programCaution(String.valueOf(reservationProgram.getCaution()))
-                .reservationRequirement(String.valueOf(reservationProgram.getRequirement()))
+                .programInclusion(reservationProgram.getInclusion() != null
+                        ? reservationProgram.getInclusion().trim()
+                        : "")
+                .programExclusion(reservationProgram.getExclusion() != null
+                        ? reservationProgram.getExclusion().trim()
+                        : "")
+                .programPackingList(reservationProgram.getPackingList() != null
+                        ? reservationProgram.getPackingList().trim()
+                        : "")
+                .programCaution(reservationProgram.getCaution() != null
+                        ? reservationProgram.getCaution().trim()
+                        : "")
+                .reservationRequirement(reservationProgram.getRequirement() != null
+                        ? reservationProgram.getRequirement().trim()
+                        : "")
                 .build();
 
 
@@ -287,6 +294,11 @@ public class DefaultReservationService implements ReservationService {
         // 삭제 날짜를 현재 시간으로 설정합니다.
         reservation.setDeleteDate(Instant.now());  // 삭제 일자를 현재 시간으로 설정 (LocalDateTime으로 변경 가능)
         reservation.setReservationStatus(3);
+
+
+        PublishedProgram publishedProgram = publishedProgramRepository.findById(reservation.getPublishedProgram().getId()).orElse(null);
+        int ppGroupSizeCurrent = publishedProgram.getGroupSizeCurrent();
+//        publishedProgramRepository.save();
 
         // 예약을 업데이트합니다.
         reservationRepository.save(reservation);

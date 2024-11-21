@@ -43,6 +43,7 @@ const cancelReservation = async () => {
         }
     );
 
+
     // cancel 이벤트 전달
     emit('cancel');
 

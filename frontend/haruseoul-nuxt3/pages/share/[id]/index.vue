@@ -19,7 +19,6 @@ const reservation = ref({
 
 const route = useRoute();
 
-//
 
 const guest = computed(() => reservation.value.guest);
 const host = computed(() => reservation.value.host);
@@ -38,17 +37,7 @@ const handleShare = (url) => {
 // 데이터 함수
 
 const fetchreservation = async (rId) => {
-  const params = {rId: rId};
-  const token = localStorage.getItem("token");
   const response = await useReservationFetch(`share/${rId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token.value}`,
-        },
-        params: params,
-        //  이 URL에 params 객체를 함께 전송하여 필터링된 결과를
-        //  response 변수에 받기
-      }
   );
 
   reservation.value = response;
@@ -200,7 +189,7 @@ onMounted(() => {
         예약번호 {{ reservation.reservationId }}
       </div>
 
-      <NuxtLink :to="`/programs/${program.programId}`" class="n-card-container bg-color:base-1" v-for="r in reservation" :key="r.id">
+      <NuxtLink :to="`../../programs/${reservation.program.programId}`" class="n-card-container bg-color:base-1" v-for="r in reservation" :key="r.id">
         <div class="n-card bg-color:base-1 padding:6" v-if="r.id">
           <div class="card-header">
             <div class="left">
@@ -261,9 +250,9 @@ onMounted(() => {
                   > [취소일자: {{ formatDeleteDate(reservationCard.deleteDate) }}]</span>
                 </div>
               </div>
-              <p class="title">
+              <NuxtLink :to="`../../programs/${reservation.program.programId}`" class="title">
                 {{ r.programTitle }}
-              </p>
+              </NuxtLink>
               <div class="card-info-responsive">
                 <div class="d:flex flex-direction:column">
                   <div class="card-info">
@@ -349,8 +338,11 @@ onMounted(() => {
               <section class="profile-card">
                 <h1>프로필 카드</h1>
                 <div class="overview">
-                  <div class="img-wrapper">
-                    <img src="/public/image/profile.png" alt="호스트프사"/>
+                  <div v-if="host.memberImg && host.memberImg.startsWith('uploads')" class="img-wrapper">
+                    <img :src="`http://localhost:8080/api/v1/${host.memberImg}`" alt="대표사진"/>
+                  </div>
+                  <div v-else class="img-wrapper">
+                    <img src="/assets/image/default-profile.png" alt="호스트프사">
                   </div>
                   <div>
                     <div v-if="host.memberName">{{ host.memberName }}</div>

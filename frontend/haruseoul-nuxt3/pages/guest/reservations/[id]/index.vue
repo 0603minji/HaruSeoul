@@ -187,7 +187,8 @@ const confirmParticipationHandler = async () => {
     },
     body: {
       "id": route.params.id,
-      "guestConsent": 2 // 참가동의로 초기화
+      "guestConsent": 2,// 참가동의로 초기화
+      "reservationStatus": 2
     }
   });
   console.log('          Reservation Update result: ', guestConsentResponse);
@@ -255,9 +256,9 @@ const cancelParticipationHandler = async () => {
           </div>
 
           <div class="card-main">
-            <div v-if="r.src && r.src.startsWith('uploads')" class="img-wrapper">
+            <NuxtLink :to="`../../programs/${reservation.program.programId}`" v-if="r.src && r.src.startsWith('uploads')" class="img-wrapper">
               <img :src="`http://localhost:8080/api/v1/${r.src}`" alt="대표사진"/>
-            </div>
+            </NuxtLink>
             <div v-else class="img-wrapper">
               <img src="assets/image/default-program-image.png" alt="대표사진"/>
             </div>
@@ -288,9 +289,9 @@ const cancelParticipationHandler = async () => {
                   > [취소일자: {{ formatDeleteDate(reservationCard.deleteDate) }}]</span>
                 </div>
               </div>
-              <p class="title">
+              <NuxtLink :to="`../../programs/${reservation.program.programId}`" class="title">
                 {{ r.programTitle }}
-              </p>
+              </NuxtLink>
               <div class="card-info-responsive">
                 <div class="d:flex flex-direction:column">
                   <div class="card-info">
@@ -397,6 +398,7 @@ const cancelParticipationHandler = async () => {
         </ul>
         <div>
           <button @click.prevent="confirmParticipationHandler">참가동의</button>
+<!--          -->
           <button @click.prevent="cancelParticipationHandler">예약취소</button>
         </div>
       </section>
@@ -459,6 +461,9 @@ const cancelParticipationHandler = async () => {
                 <div class="overview">
                   <div v-if="host.memberImg && host.memberImg.startsWith('uploads')" class="img-wrapper">
                     <img :src="`http://localhost:8080/api/v1/${host.memberImg}`" alt="대표사진"/>
+                  </div>
+                  <div v-else class="img-wrapper">
+                    <img src="/assets/image/default-profile.png" alt="호스트프사">
                   </div>
                   <div>
                     <div v-if="host.memberName">{{ host.memberName }}</div>
