@@ -244,7 +244,7 @@
               <h1 class="d:none">프로그램 목록</h1>
               <div>
                 <span>{{ totalRowCount }} Result</span>
-                <a href="" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">
+                <a href="#" class="n-icon n-icon:arrow_swap n-deco n-deco-gap:1">
                   정렬
                 </a>
               </div>
@@ -364,7 +364,7 @@
               </button>
 
               <!-- 다음 버튼 -->
-              <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPageCount">
+              <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPageCount || totalPageCount <= 1">
                 〉
               </button>
             </div>

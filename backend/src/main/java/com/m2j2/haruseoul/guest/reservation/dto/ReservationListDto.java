@@ -33,9 +33,9 @@ public class ReservationListDto {
 
     private String src;
 
-
     private Integer reservationStatus;
 
     private Integer guestConsent;
 
+    private Long publishedProgramId;
 }

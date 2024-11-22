@@ -92,7 +92,7 @@ const cancelParticipationHandler = async () => {
     <div class="modal-content">
       <p style="font-size: 15px; font-weight: bold">정말 예약을 취소하시겠습니까?</p>
       <div style="width: 180px; padding-left: 20px; padding-top: 15px; display: flex; justify-content: space-between">
-        <button class="n-btn n-btn:hover" style="color:#DB4455" @click.prevent="cancelReservation">확인</button>
+        <button class="n-btn n-btn:hover" style="background-color:#DB4455; color: white;" @click.prevent="cancelReservation">확인</button>
         <button class="n-btn n-btn:hover" @click="closeModal">닫기</button>
       </div>
     </div>

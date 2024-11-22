@@ -20,6 +20,12 @@ const hasPreviousPage = ref(false); // 이전 페이지가 있는지
 const hasNextPage = ref(false); // 다음 페이지가 있는지
 const currentPage = ref(1); // 현제 페이지 초기값은 1
 const guestId = userDetails.id.value;
+const reservationStatus = ref(0);
+
+const getPublishedProgramIdByReservationId = (reservationId) => {
+  const reservation = reservations.value.find(r => r.id === reservationId);
+  return reservation ? reservation.publishedProgramId : null;
+};
 
 // 카카오톡 공유하기 ------------------------------------------------
 const {shareToKakao} = useShare();  // useShare 모듈에서 shareToKakao 함수 가져오기
@@ -57,11 +63,8 @@ const fetchReservations = async () => {
               }
             }
         );
-        console.log("Params?:", response)
 
         reservations.value = response.reservations;
-
-        console.log("예약값이뭐죵", reservations.value)
         totalRowCount.value = response.totalRowCount;
         totalPageCount.value = response.totalPageCount;
 
@@ -98,17 +101,22 @@ const fetchReservations = async () => {
 
 const formatDeleteDate = (deleteDate) => {
   const date = new Date(deleteDate);  // UTC 시간을 로컬 시간으로 변환
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  // 월이 한 자리일 경우 앞에 0을 추가
-  const formattedMonth = String(month).padStart(2, '0');
-  const day = date.getDay();
-  // 날짜가 한 자리일 경우 앞에 0을 추가
+
+  // 한국 시간으로 변환 (UTC+9)
+  const koreaTimeOffset = 15 * 60; // 9 hours in minutes
+  const localDate = new Date(date.getTime() + koreaTimeOffset * 60 * 1000);
+
+  const year = localDate.getFullYear();
+  const month = localDate.getMonth();
+  const formattedMonth = String(month + 1).padStart(2, '0');  // 월은 0부터 시작하므로 +1
+  const day = localDate.getDate();  // getDay()는 요일을 반환하므로 getDate()로 날짜를 가져옴
   const formattedDay = String(day).padStart(2, '0');
-  const hours = date.getHours();  // 시간
-  const minutes = date.getMinutes();  // 분
-  return `${year}-${formattedMonth}-${formattedDay} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;  // 분이 한 자리일 경우 앞에 0을 붙여서 반환
+  const hours = localDate.getHours();
+  const minutes = localDate.getMinutes();
+
+  return `${year}-${formattedMonth}-${formattedDay} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
 };
+
 
 // 페이지 클릭 핸들러
 const pageClickHandler = (newPage) => {
@@ -120,19 +128,20 @@ const pageClickHandler = (newPage) => {
 
 // 예약취소--------------------------------------------------------------------------------
 
-const showModal = ref(false); // 모달을 표시할지 여부를 결정하는 변수
+const showModal = ref(null); // 모달을 표시할지 여부를 결정하는 변수
 const selectedReservationId = ref(null); // 취소할 예약의 ID 저장
 
 // 예약 취소 버튼 클릭 핸들러
-const handleCancelClick = (reservationId) => {
+const handleCancelClick = (reservationId,modalName) => {
   console.log("취소 클릭 ID:", reservationId); // ID가 제대로 넘어오는지 확인
   selectedReservationId.value = reservationId;  // 클릭한 예약의 ID 설정
-  showModal.value = true;  // 누르면 모달을 표시하게끔
+  showModal.value = modalName;  // 누르면 모달을 표시하게끔
 };
 
 // 모달을 닫을 때
 const closeModal = () => {
-  showModal.value = false;
+  showModal.value = "";
+  fetchReservations();
 };
 
 // 페이지가 변경될 때 쿼리 문자열을 업데이트 ----------------------------------------------------
@@ -323,7 +332,7 @@ onMounted(() => {
                 <div v-if="[1, 2].includes(r.reservationStatus)"
                      class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal"
+                  <a href="#" class="n-btn" @click="handleCancelClick(r.id, 'cancelReservationModal')"
                      style="color: #DB4455; --btn-border-color:#DB4455;">
                     예약 취소
                   </a>
@@ -354,7 +363,7 @@ onMounted(() => {
           <div v-if="[1, 2].includes(r.reservationStatus)"
                class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-            <a href="#" class="n-btn" @click="handleCancelClick(r.id)"
+            <a href="#" class="n-btn" @click="handleCancelClick(r.id, 'cancelReservationModal')"
                style="color: #DB4455; --btn-border-color:#DB4455;">
               예약 취소
             </a>
@@ -377,11 +386,12 @@ onMounted(() => {
           </div>
 
           <!-- 예약 취소 모달 -->
-          <ReservationCancelModal
+          <CancelReservationModal
               v-if="showModal"
               :showModal="showModal"
               :selectedReservationId="selectedReservationId"
-              :fetchReservations="fetchReservations"
+              :publishedProgramId="getPublishedProgramIdByReservationId(selectedReservationId)"
+              :reservationId="selectedReservationId"
               @close="closeModal"
           />
 

@@ -75,17 +75,22 @@ function copy() {
 
 const formatDeleteDate = (deleteDate) => {
   const date = new Date(deleteDate);  // UTC 시간을 로컬 시간으로 변환
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  // 월이 한 자리일 경우 앞에 0을 추가
-  const formattedMonth = String(month).padStart(2, '0');
-  const day = date.getDay();
-  // 날짜가 한 자리일 경우 앞에 0을 추가
+
+  // 한국 시간으로 변환 (UTC+9)
+  const koreaTimeOffset = 15 * 60; // 9 hours in minutes
+  const localDate = new Date(date.getTime() + koreaTimeOffset * 60 * 1000);
+
+  const year = localDate.getFullYear();
+  const month = localDate.getMonth();
+  const formattedMonth = String(month + 1).padStart(2, '0');  // 월은 0부터 시작하므로 +1
+  const day = localDate.getDate();  // getDay()는 요일을 반환하므로 getDate()로 날짜를 가져옴
   const formattedDay = String(day).padStart(2, '0');
-  const hours = date.getHours();  // 시간
-  const minutes = date.getMinutes();  // 분
-  return `${year}-${formattedMonth}-${formattedDay} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;  // 분이 한 자리일 경우 앞에 0을 붙여서 반환
+  const hours = localDate.getHours();
+  const minutes = localDate.getMinutes();
+
+  return `${year}-${formattedMonth}-${formattedDay} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
 };
+
 
 
 // 예약취소--------------------------------------------------------------------------------
@@ -707,7 +712,8 @@ const confirmParticipationHandler = async () => {
             :showModal="showModal"
             :selectedReservationId="currentReservationId"
             :fetchReservation="fetchReservation"
-            :reservation="reservation"
+            :publishedProgramId="program.publishedProgramId"
+            :reservationId="reservationCard.id"
             @close="closeModal"
         />
 

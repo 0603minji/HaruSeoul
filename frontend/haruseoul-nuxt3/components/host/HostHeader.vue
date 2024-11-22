@@ -46,13 +46,13 @@
       </ul>
 
       <ul class="header-menus:icon-only md:show">
-        <li class="header-menu">
-          <NuxtLink
-            class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:dashboard"
-            href="/host/programs"
-            >대시보드</NuxtLink
-          >
-        </li>
+<!--        <li class="header-menu">-->
+<!--          <NuxtLink-->
+<!--            class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:dashboard"-->
+<!--            href="/host/programs"-->
+<!--            >대시보드</NuxtLink-->
+<!--          >-->
+<!--        </li>-->
         <li class="header-menu">
           <NuxtLink
             class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:chat"
@@ -248,7 +248,7 @@
           <details open class="filter">
             <summary class="collapse">
               <span class="title">Guest Menu</span>
-              <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
             </summary>
             <ul class="aside-menu">
               <li>
@@ -263,7 +263,7 @@
           <details open class="filter">
             <summary class="collapse">
               <span class="title">Host Menu</span>
-              <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
             </summary>
             <ul class="aside-menu">
               <li>
@@ -297,7 +297,7 @@
           <details open class="filter">
             <summary class="collapse">
               <span class="title">Customer Center</span>
-              <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
             </summary>
             <ul class="aside-menu">
               <li>

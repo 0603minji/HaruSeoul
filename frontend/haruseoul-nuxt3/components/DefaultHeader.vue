@@ -14,6 +14,14 @@
       <ul v-if="!userDetails.isAnonymous()" class="header-menus:icon-only md:show">
         <li class="header-menu">
           <NuxtLink
+              class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:dashboard"
+              href="/guest/reservations" :to="`../programs`"
+          >프로그램 목록
+          </NuxtLink
+          >
+        </li>
+        <li class="header-menu">
+          <NuxtLink
               class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:ticket"
               href="/guest/reservations"
           >내 예약
@@ -21,11 +29,11 @@
           >
         </li>
         <li class="header-menu">
-          <NuxtLink
+          <a
               class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:wishlist"
-              href="/guest/reservations"
+              href="#"
           >찜 목록
-          </NuxtLink
+          </a
           >
         </li>
         <li class="header-menu">
@@ -237,7 +245,7 @@
           <details v-if="!userDetails.isAnonymous()" open class="filter">
             <summary class="collapse">
               <span class="title">Guest Menu</span>
-              <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
             </summary>
             <ul class="aside-menu">
               <li>
@@ -252,11 +260,11 @@
           <details v-if="!userDetails.isAnonymous()" open class="filter">
             <summary class="collapse">
               <span class="title">Host Menu</span>
-              <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
             </summary>
             <ul class="aside-menu">
               <li>
-                <a href="#" class="menu n-icon n-deco n-icon:dashboard"
+                <a href="" class="menu n-icon n-deco n-icon:dashboard"
                 >대시보드</a
                 >
               </li>
@@ -289,7 +297,7 @@
           <details open class="filter">
             <summary class="collapse">
               <span class="title">Customer Center</span>
-              <span class="n-icon n-icon:arrow_up">펼치기 버튼</span>
+              <span class="n-icon n-icon:arrow_down">펼치기 버튼</span>
             </summary>
             <ul class="aside-menu">
               <li>
