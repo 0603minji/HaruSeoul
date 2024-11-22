@@ -82,7 +82,7 @@
               <p>분</p>
             </div>
           </div>
-          <div v-else class="d:flex">
+          <div v-else class="d:flex min-width:5">
             <!-- 경유지: 선택 가능 -->
             <div class="time-select-wrapper">
               <label>
@@ -172,6 +172,7 @@ const props = defineProps({
 });
 
 
+
 //  자식이 부모한테 전달할 때
 //  defineEmits : 자식 컴포넌트가 부모 컴포넌트로 이벤트를 전달하는 함수
 //  emit('updateRoute', data) 형태로 이벤트 발생
@@ -189,12 +190,17 @@ const startTimeMinute = computed(() => props.startTimeMinute || '00');
 
 const route = reactive({
   ...props.routeData,
-  startTimeHour: props.startTimeHour || '00',
-  startTimeMinute: props.startTimeMinute || '00',
+  startTimeHour: props.routeData.startTimeHour || '00',
+  startTimeMinute: props.routeData.startTimeMinute || '00',
 });
 
+watch(() => props.routeData, (newRouteData) => {
+  Object.assign(route, newRouteData); // 새로운 데이터로 route 업데이트
+}, { deep: true });
 
 
+
+console.log("부모에서 가져오는 데이터",props.routeData);
 
 console.log("컴포넌트수정페이지루트:", route);
 
@@ -210,7 +216,7 @@ const removeRoute = () => {
 };
 
 watch(route, () => {
-  emit('updateRoute', props.order - 1, {...route});
+  emit('updateRoute', props.order - 1, {...route,order:props.order});
 }, {deep: true});
 
 

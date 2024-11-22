@@ -117,7 +117,7 @@
 
       <div class="profile-img-container lg:show">
         <div @click.prevent="toggleModal" class="profile-img-wrapper" style="cursor: pointer">
-          <img v-if="userDetails.profileImgSrc"
+          <img v-if="userDetails.profileImgSrc.value"
             class="profile-img"
             :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`"
             alt="게스트 프로필 사진"
@@ -222,7 +222,7 @@
           <h1>게스트 프로필</h1>
           <div class="profile-img-container">
             <div @click.prevent="toggleModal" class="profile-img-wrapper" style="cursor: pointer">
-              <img v-if="userDetails.profileImgSrc"
+              <img v-if="userDetails.profileImgSrc.value"
                    class="profile-img"
                    :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`"
                    alt="게스트 프로필 사진"

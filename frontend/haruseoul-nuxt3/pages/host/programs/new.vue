@@ -270,7 +270,7 @@
       <section id="inclusion" class="inclusion">
         <h1 class="d:none">포함 사항</h1>
         <div class="form-group">
-          <div class="font-size:9 fw:bold p-bottom:4">포함 사항</div>
+          <div class="font-size:9 fw:bold p-bottom:4">포함 사항 <span class="font-size:6 fw:1">(선택사항)</span></div>
           <p class="fw:100 p-bottom:2">List all the features that are included in the price so customers
             understand the value for money of
             your activity. Start a new line for each one.</p>

@@ -81,7 +81,7 @@
               <p>분</p>
             </div>
           </div>
-          <div v-else class="d:flex">
+          <div v-else class="d:flex min-width:5">
             <!-- 경유지: 선택 가능 -->
             <div class="time-select-wrapper">
               <label>
@@ -188,7 +188,7 @@ const route = reactive({
   order: props.order, // 현재 길이를 기준으로 순서를 설정
   address: '',
   description: '',
-  duration: '',
+  duration: 0,
   transportationId: '',
   transportationDuration: null
 });

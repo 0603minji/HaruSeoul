@@ -140,6 +140,15 @@ const CancelHandler = async (pp) => {
     console.log('          Reservation Cancel result: ', rvCancelResponse);
   }
 
+  // 개설된 프로그램이 더이상 존재하지 않는다면 프로그램 상태르 Published -> Unpublished로 변경
+  let statusCheckResponse = await useDataFetch(`host/programs/${pp.programId}/statusCheck`, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    }
+  });
+  console.log('          statusCheck result: ', statusCheckResponse);
+
   // 예약취소 확인 모달창
   openModal('completeCancelModal');
 

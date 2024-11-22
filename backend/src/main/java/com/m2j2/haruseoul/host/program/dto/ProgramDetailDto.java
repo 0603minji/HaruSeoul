@@ -15,33 +15,19 @@ import java.util.List;
 public class ProgramDetailDto {
 
     private Long id;
-
     private String title;
-
     private String detail;
-
     private Instant regDate;
-
     private Instant endTime;
-
     private String status;
-
     private Integer price;
-
     private Integer groupSizeMax;
-
     private Integer groupSizeMin;
-
     private Float rating;
-
     private Instant updateDate;
-
     private String language;
-
     private Instant startTime;
-
     private List<String> categoryNames;
-
     private Long memberId;
 
 //    private List<Image> images;

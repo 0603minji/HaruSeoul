@@ -234,7 +234,7 @@ label {
 
 @media (min-width: 768px) {
   .container {
-    max-width: 1096px;
+    max-width: 600px;
     margin: 0 auto; /* 가운데 정렬 */
   }
 }

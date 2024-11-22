@@ -296,7 +296,6 @@
                     </div>
                   </section>
 
-
                 </div>
               </div>
             </div>
@@ -315,7 +314,9 @@
                   <section style="padding-top: 0;">
                     <h1>만나는장소</h1>
                     <div class="info-container">
-                      <p>{{ meetingTimeWithOrderOne }} {{ titleWithOrderOne }}</p>
+                      <p>{{
+                          data.programDetailProgramDto.startTime ? data.programDetailProgramDto.startTime.split(':').slice(0, 2).join(':') : '시간 없음'
+                        }} {{ titleWithOrderOne }}</p>
                       <div
                           style="display:flex; align-items: center; padding: var(--gap-3) 0; color: var(--color-base-7);">
                                                 <span class="n-icon n-icon:placeholder"
@@ -596,14 +597,18 @@ const departure = computed(() =>
         : null
 );
 
+
 const destination = computed(() =>
     data.value && data.value.programDetailRouteDto
-        ? data.value.programDetailRouteDto.reduce(
-            (max, route) => (route.order > max.order ? route : max),
-            data.value.programDetailRouteDto[0]
-        )
+        ? data.value.programDetailRouteDto.some(route => route.order !== 1) // order가 1이 아닌 값이 있는지 확인
+            ? data.value.programDetailRouteDto.reduce(
+                (max, route) => (route.order > max.order ? route : max),
+                data.value.programDetailRouteDto[0]
+            )
+            : null // 모두 order가 1인 경우 null 반환
         : null
 );
+
 
 const stops = computed(() =>
     data.value && data.value.programDetailRouteDto
@@ -611,6 +616,9 @@ const stops = computed(() =>
         : []
 );
 
+console.log("Departure:", departure.value);
+console.log("Destination:", destination.value);
+console.log("Stops:", stops.value);
 
 const formatDuration = (hours, minutes) => {
   return `${hours}시간 ${minutes}분`;
@@ -642,7 +650,13 @@ watchEffect(() => {
   console.log("Error:", error.value);
 });
 
+
 const goToIntro = () => {
+
+  if(data.value.programDetailProgramDto.status === 'Published') {
+    alert("모집중인 프로그램은 수정할 수 없습니다.")
+    return;
+  }
   // 먼저 /edit 경로로 이동
   router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
     // 이동 후 해시값 변경
@@ -651,6 +665,10 @@ const goToIntro = () => {
 };
 
 const goToDetail = () => {
+  if(data.value.programDetailProgramDto.status === 'Published') {
+    alert("모집중인 프로그램은 수정할 수 없습니다.")
+    return;
+  }
   // 먼저 /edit 경로로 이동
   router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
     // 이동 후 해시값 변경
@@ -658,8 +676,11 @@ const goToDetail = () => {
   });
 };
 
-
 const goToCourse = () => {
+  if(data.value.programDetailProgramDto.status === 'Published') {
+    alert("모집중인 프로그램은 수정할 수 없습니다.")
+    return;
+  }
   // 먼저 /edit 경로로 이동
   router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
     // 이동 후 해시값 변경
@@ -667,8 +688,11 @@ const goToCourse = () => {
   });
 };
 
-
 const goToInclusion = () => {
+  if(data.value.programDetailProgramDto.status === 'Published') {
+    alert("모집중인 프로그램은 수정할 수 없습니다.")
+    return;
+  }
   // 먼저 /edit 경로로 이동
   router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
     // 이동 후 해시값 변경
@@ -677,6 +701,10 @@ const goToInclusion = () => {
 };
 
 const goToCaution = () => {
+  if(data.value.programDetailProgramDto.status === 'Published') {
+    alert("모집중인 프로그램은 수정할 수 없습니다.")
+    return;
+  }
   // 먼저 /edit 경로로 이동
   router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
     // 이동 후 해시값 변경
@@ -684,8 +712,11 @@ const goToCaution = () => {
   });
 };
 
-
 const goToImage = () => {
+  if(data.value.programDetailProgramDto.status === 'Published') {
+    alert("모집중인 프로그램은 수정할 수 없습니다.")
+    return;
+  }
   // 먼저 /edit 경로로 이동
   router.push(`/host/programs/${data.value.programDetailProgramDto.id}/edit`).then(() => {
     // 이동 후 해시값 변경
@@ -723,6 +754,7 @@ const goToImage = () => {
 .n-icon\:edit {
   mask-image: url("assets/image/icon/edit.svg");
   mask-repeat: no-repeat;
+  right: -100px;
 }
 
 .n-icon\:credit_card:before {
@@ -859,6 +891,7 @@ const goToImage = () => {
     .n-icon {
       --icon-size: var(--icon-size-5);
       margin: 0;
+
     }
 
     .n-icon:before {
@@ -948,8 +981,7 @@ const goToImage = () => {
     .n-icon {
       cursor: pointer;
       border: none;
-      position: absolute;
-      right: var(--gap-7);
+      margin-left: 20px
     }
   }
 

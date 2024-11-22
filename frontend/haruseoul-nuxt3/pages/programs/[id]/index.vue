@@ -352,9 +352,9 @@
                     <section>
                       <h1>꼭 알아두세요!</h1>
 
-                      <div style="padding: 0 var(--gap-6);">
+                      <div v-if="data.programDetailProgramDto.packingList" style="padding: 0 var(--gap-6);">
                         <h2 class="info-form n-icon n-icon:success-decagon">준비물</h2>
-                        <ul v-if="data.programDetailProgramDto.packingList">
+                        <ul>
                           <li v-for="(item, index) in data.programDetailProgramDto.packingList.split('\n')"
                               :key="index"
                               class="list-content">
@@ -364,9 +364,9 @@
 
                       </div>
 
-                      <div style="padding: var(--gap-6); padding-bottom: 0;">
+                      <div v-if="data.programDetailProgramDto.caution" style="padding: var(--gap-6); padding-bottom: 0;">
                         <h2 class="info-form n-icon n-icon:caution">주의사항</h2>
-                        <ul v-if="data.programDetailProgramDto.caution">
+                        <ul>
                           <li v-for="(item, index) in data.programDetailProgramDto.caution.split('\n')"
                               :key="index"
                               class="list-content">
@@ -768,10 +768,12 @@ const departure = computed(() =>
 
 const destination = computed(() =>
     data.value && data.value.programDetailRouteDto
-        ? data.value.programDetailRouteDto.reduce(
-            (max, route) => (route.order > max.order ? route : max),
-            data.value.programDetailRouteDto[0]
-        )
+        ? data.value.programDetailRouteDto.some(route => route.order !== 1) // order가 1이 아닌 값이 있는지 확인
+            ? data.value.programDetailRouteDto.reduce(
+                (max, route) => (route.order > max.order ? route : max),
+                data.value.programDetailRouteDto[0]
+            )
+            : null // 모두 order가 1인 경우 null 반환
         : null
 );
 
@@ -917,7 +919,7 @@ watchEffect(() => {
 .n-bar-underline {
   position: sticky;
   top: 0;
-  z-index: 500; /* 다른 콘텐츠보다 위에 오도록 설정 */
+  z-index: 20; /* 다른 콘텐츠보다 위에 오도록 설정 */
   background-color: white; /* 배경색 지정 (필요시 조정) */
   padding: 0;
 }

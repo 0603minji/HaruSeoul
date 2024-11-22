@@ -47,6 +47,7 @@ public class DefaultProgramDetailService implements ProgramDetailService {
                 .duration(hours)
                 .startTime(startTime)
                 .caution(program.getCaution())
+                .status(program.getStatus())
                 .build();
         return programDetailProgramDto;
     }

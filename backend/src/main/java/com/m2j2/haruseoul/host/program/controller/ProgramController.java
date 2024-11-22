@@ -71,4 +71,8 @@ public class ProgramController {
         return ResponseEntity.ok(service.getList(hostId, pIds, statuses));
     }
 
+    @PutMapping("{id}/statusCheck")
+    public ResponseEntity<Program> statusCheck(@PathVariable(name = "id") Long pId) {
+        return ResponseEntity.ok(service.statusCheck(pId));
+    }
 }

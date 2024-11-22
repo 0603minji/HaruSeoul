@@ -309,7 +309,7 @@ public class DefaultProgramService implements ProgramService {
                     .order(routeCreateDto.getOrder())
                     .startTime(getLocalTimeByHourAndMinute(routeCreateDto.getStartTimeHour(), routeCreateDto.getStartTimeMinute()))
                     .transportation(newTransportation)
-                    .transportationDuration(getLocalTimeByDuration(routeCreateDto.getDuration()))
+                    .transportationDuration(convertMinutesToLocalTime(routeCreateDto.getTransportationDuration())) // String을 LocalTime으로
                     .build();
             routes.add(route);
         }
@@ -433,6 +433,19 @@ public class DefaultProgramService implements ProgramService {
         else {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "공개중인 프로그램이라 삭제할 수 없습니다");
         }
+    }
+
+    @Override
+    public Program statusCheck(Long pId) {
+        Program program = programRepository.findById(pId).orElseThrow(() -> new IllegalArgumentException("프로그램이 존재하지 않습니다."));
+        List<PublishedProgram> allUnpaged = publishedProgramRepository.findAllUnpaged(null, null, null, List.of(1L, 2L, 5L, 6L), List.of(pId), null);
+
+        // 개설된 프로그램이 없다면 프로그램 상태를 변경. Published -> Unpublished
+        if (allUnpaged.isEmpty()) {
+            program.setStatus("Unpublished");
+            programRepository.save(program);
+        }
+        return program;
     }
 
     private LocalTime getLocalTimeByHourAndMinute(String hour, String minute) {

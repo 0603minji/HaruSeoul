@@ -19,4 +19,6 @@ public interface ProgramService {
     Program update(ProgramUpdateDto programUpdateDto,List<MultipartFile> images);
 
     void delete(Long programId);
+
+    Program statusCheck(Long pId);
 }

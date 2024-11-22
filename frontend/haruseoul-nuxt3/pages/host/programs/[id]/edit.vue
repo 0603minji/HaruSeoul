@@ -257,7 +257,7 @@
       <section id="inclusion" class="inclusion">
         <h1 class="d:none">포함 사항</h1>
         <div class="form-group">
-          <div class="font-size:9 fw:bold p-bottom:4">포함 사항</div>
+          <div class="font-size:9 fw:bold p-bottom:4">포함 사항 <span class="font-size:6 fw:1">(선택사항)</span></div>
           <p class="fw:100 p-bottom:2">List all the features that are included in the price so customers
             understand the value for money of
             your activity. Start a new line for each one.</p>
@@ -464,7 +464,7 @@ const addRouteFunction = () => {
       title: '',
       address: '',
       description: '',
-      order: routeComponentCount.value+1,
+      order: routeComponentCount.value + 1,
       startTimeHour: '00',
       startTimeMinute: '00',
       duration: 0,
@@ -620,6 +620,7 @@ const loadProgramData = async () => {
           }
         });
     const data = response.data;
+    console.log("처음에 로드해오는 데이터",data);
     // 가져온 데이터를 programCreateDto에 설정하여 input 박스에 미리 입력되도록 설정
     Object.assign(programCreateDto, {
       title: data.title,
@@ -661,7 +662,9 @@ const loadProgramData = async () => {
 const removeRoute = (index) => {
   if (index === 0) return; // 출발지는 삭제하지 않음
   programCreateDto.routes.splice(index, 1);
-  routeComponentCount.value -= 1;
+  programCreateDto.routes.forEach((route, idx) => {
+    route.order = idx + 1;
+  });
 };
 
 const minusGroupSizeMax = () => {
