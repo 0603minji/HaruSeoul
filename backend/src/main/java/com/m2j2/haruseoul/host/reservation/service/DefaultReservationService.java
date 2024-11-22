@@ -16,6 +16,7 @@ import com.m2j2.haruseoul.repository.ReservationRepository;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -37,6 +38,7 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
+    @Transactional
     public Reservation cancel(Long id, ReservationCancelDto reservationCancelDto) {
         // 예약 ID로 해당 예약을 찾아옵니다.
         Reservation reservation = reservationRepository.findById(id)
@@ -61,13 +63,15 @@ public class DefaultReservationService implements ReservationService {
         //==================알림부분=================================
 
         Long senderId = saved.getPublishedProgram().getProgram().getMember().getId();
+        Long receiverId = saved.getMember().getId();
         Long programId = saved.getPublishedProgram().getId();
+        Long deletedReservationId = saved.getId();
         NotificationSendDto notificationSendDto = NotificationSendDto.builder()
                 .senderId(senderId)
                 .programId(programId)
                 .type("CANCEL FROM HOST")
                 .build();
-        notificationService.send(notificationSendDto);
+        notificationService.sendFromHost(notificationSendDto,receiverId,deletedReservationId);
 
         return saved;
     }

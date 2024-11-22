@@ -1,5 +1,7 @@
 package com.m2j2.haruseoul.repository;
 
+import com.m2j2.haruseoul.entity.Member;
+import com.m2j2.haruseoul.entity.PublishedProgram;
 import com.m2j2.haruseoul.entity.Reservation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,4 +22,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "where (r.publishedProgram.id = :ppId)" +
             "and (r.cancelMethod = 3 or r.deleteDate is null)")
     List<Reservation> findByPpIdByCancelMethod(Long ppId);
+
+
 }

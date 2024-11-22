@@ -30,8 +30,11 @@ public class Notification {
     @Column(name = "receiver_id", nullable = false)
     private Long receiverId;
 
-    @Column(name = "program_id", nullable = false)
+    @Column(name = "program_id")
     private Long programId;
+
+    @Column(name = "reservation_id")
+    private Long reservationId;
 
     @Column(name = "type", nullable = false)
     private String type;

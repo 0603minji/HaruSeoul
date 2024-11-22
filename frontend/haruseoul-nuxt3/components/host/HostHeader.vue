@@ -95,8 +95,8 @@
                   <div>
                     <NuxtLink
                         :href="notification.type === 'CANCEL FROM HOST'
-                      ? `/guest/reservations/${notification.programId}`
-                      : `/host/reservations/${notification.programId}`">
+                      ? `/guest/reservations/${notification.reservationId}`
+                      : `/host/reservations/${notification.reservationId}`">
                       <span style="font-weight: bold">{{ notification.title }}</span>
                     </NuxtLink>
                     이(가) {{ notification.type === 'RESERVE' ? '예약' : notification.type === 'CANCEL' ? '취소' : '취소' }}
@@ -201,8 +201,8 @@
                   <div class="d:block">
                     <NuxtLink
                         :href="notification.type === 'CANCEL FROM HOST'
-                      ? `/guest/reservations/${notification.programId}`
-                      : `/host/reservations/${notification.programId}`">
+                      ? `/guest/reservations/${notification.reservationId}`
+                      : `/host/reservations/${notification.reservationId}`">
                       <span style="font-weight: bold">{{ notification.title }}</span>
                     </NuxtLink>
                     이(가) {{ notification.type === 'RESERVE' ? '예약' : notification.type === 'CANCEL' ? '취소' : '취소' }}

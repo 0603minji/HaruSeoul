@@ -280,7 +280,7 @@ public class DefaultReservationService implements ReservationService {
                 .programId(programId)
                 .type("RESERVE")
                 .build();
-        notificationService.send(notificationSendDto);
+        notificationService.sendFromGuest(notificationSendDto);
 
 
         return null;
@@ -318,7 +318,7 @@ public class DefaultReservationService implements ReservationService {
                 .programId(programId)
                 .type("CANCEL")
                 .build();
-        notificationService.send(notificationSendDto);
+        notificationService.sendFromGuest(notificationSendDto);
 
 
     }
