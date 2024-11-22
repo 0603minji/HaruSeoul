@@ -569,28 +569,75 @@ const allRoutesValid = () => {
 };
 
 const createProgram = async () => {
-  // 1. 입력된것이 0개일때 (필수입력인 제목도 입력안됬을때)
-  if (
-      !programCreateDto.title ||                    // 제목이 비어 있는지 확인
-      !programCreateDto.detail ||                   // 세부사항이 비어 있는지 확인
-      !programCreateDto.categoryIds.length ||       // 카테고리가 선택되었는지 확인
-      !programCreateDto.groupSizeMax ||
-      !programCreateDto.groupSizeMin ||
-      !programCreateDto.startTimeHour ||
-      !programCreateDto.startTimeMinute ||
-      !programCreateDto.endTimeHour ||
-      !programCreateDto.endTimeMinute ||
-      !programCreateDto.language ||
-      !programCreateDto.price ||
-      !programCreateDto.inclusion ||
-      !programCreateDto.images ||
-      programCreateDto.routes.length === 0 ||       // 적어도 하나의 route가 있는지 확인
-      programCreateDto.routes.some(route => !route.title || !route.address) // 각 route가 필수 정보(title, address)를 포함하는지 확인
-  ) {
-    alert("모든 필수 입력 항목을 채워주세요.");
+  if (!programCreateDto.title) {
+    alert("제목을 입력해주세요.");
     return;
   }
 
+  if (!programCreateDto.detail) {
+    alert("상세 설명을 입력해주세요.");
+    return;
+  }
+
+  if (!programCreateDto.categoryIds.length) {
+    alert("카테고리를 선택해주세요.");
+    return;
+  }
+
+  if (!programCreateDto.groupSizeMax) {
+    alert("최대 그룹 크기를 입력해주세요.");
+    return;
+  }
+
+  if (!programCreateDto.groupSizeMin) {
+    alert("최소 그룹 크기를 입력해주세요.");
+    return;
+  }
+
+  if (!programCreateDto.startTimeHour) {
+    alert("시작 시간을 입력해주세요 (시간).");
+    return;
+  }
+
+  if (!programCreateDto.startTimeMinute) {
+    alert("시작 시간을 입력해주세요 (분).");
+    return;
+  }
+
+  if (!programCreateDto.endTimeHour) {
+    alert("종료 시간을 입력해주세요 (시간).");
+    return;
+  }
+
+  if (!programCreateDto.endTimeMinute) {
+    alert("종료 시간을 입력해주세요 (분).");
+    return;
+  }
+
+  if (!programCreateDto.language) {
+    alert("언어를 선택해주세요.");
+    return;
+  }
+
+  if (!programCreateDto.images) {
+    alert("이미지를 추가해주세요.");
+    return;
+  }
+
+  if (programCreateDto.routes.length === 0) {
+    alert("최소 하나의 경로를 추가해주세요.");
+    return;
+  }
+
+  if (programCreateDto.routes.some(route => !route.title)) {
+    alert("각 경로에 제목을 입력해주세요.");
+    return;
+  }
+
+  if (programCreateDto.routes.some(route => !route.address)) {
+    alert("각 경로에 주소를 입력해주세요.");
+    return;
+  }
 
   if (!allRoutesValid()) {
     alert("모든 코스 입력이 유효하지 않습니다. 다시 확인해주세요.");
