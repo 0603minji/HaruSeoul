@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij+all,java,maven,gradle,macos,eclipse,visualstudiocode
 
 # application-secret.yml 파일 무시
-/src/main/resources/application-secret.yml
+application-secret.yml
 
 ### Eclipse ###
 .metadata
