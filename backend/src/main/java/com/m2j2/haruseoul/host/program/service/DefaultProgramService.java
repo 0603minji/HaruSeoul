@@ -435,6 +435,19 @@ public class DefaultProgramService implements ProgramService {
         }
     }
 
+    @Override
+    public Program statusCheck(Long pId) {
+        Program program = programRepository.findById(pId).orElseThrow(() -> new IllegalArgumentException("프로그램이 존재하지 않습니다."));
+        List<PublishedProgram> allUnpaged = publishedProgramRepository.findAllUnpaged(null, null, null, List.of(1L, 2L, 5L, 6L), List.of(pId), null);
+
+        // 개설된 프로그램이 없다면 프로그램 상태를 변경. Published -> Unpublished
+        if (allUnpaged.isEmpty()) {
+            program.setStatus("Unpublished");
+            programRepository.save(program);
+        }
+        return program;
+    }
+
     private LocalTime getLocalTimeByHourAndMinute(String hour, String minute) {
         int intHour = (hour == null ? 0 : Integer.parseInt(hour));
         int intMinute = (minute == null ? 0 : Integer.parseInt(minute));
