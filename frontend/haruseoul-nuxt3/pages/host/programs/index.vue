@@ -663,6 +663,11 @@ const fetchPrograms = async (
 
 const deleteProgram = async (programId) => {
   const token = localStorage.getItem("token");
+
+  if(programs.value.status === 'Published') {
+    alert("모집중인 프로그램은 삭제할 수 없습니다.")
+    return;
+  }
   try {
     await axios.delete(`http://localhost:8080/api/v1/host/programs/${programId}`, {
       headers: {
@@ -677,7 +682,6 @@ const deleteProgram = async (programId) => {
 
 
   } catch (error) {
-    if (error.response && error.response.status === 409)
       alert("공개된 프로그램이라 삭제할 수 없습니다.");
 
   }

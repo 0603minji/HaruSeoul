@@ -394,7 +394,6 @@ const programCreateDto = reactive({
   regMemberId: regMemberId,
   categoryIds: [],
   routes: [],
-  images: [],
   groupSizeMin: 2,
   groupSizeMax: 2,
   title: '', // 빈 문자열로 초기화
@@ -561,7 +560,7 @@ const addRouteFunction = () => {
       startTimeHour: '00',
       startTimeMinute: '00',
       duration: 0,
-      transportationId: 0,
+      transportationId: null,
       transportationDuration: null,
     });
   }
@@ -631,7 +630,7 @@ const createProgram = async () => {
     return;
   }
 
-  if (!programCreateDto.images) {
+  if (!imageFiles.value) {
     alert("이미지를 추가해주세요.");
     return;
   }

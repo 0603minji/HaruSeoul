@@ -412,7 +412,6 @@ const programCreateDto = reactive({
   regMemberId: regMemberId,
   categoryIds: [],
   routes: [], // route 객체를 여러개 가진 List
-  images: [],
   groupSizeMin: 1,
   groupSizeMax: 1,
   title: '',
@@ -620,7 +619,7 @@ const createProgram = async () => {
     return;
   }
 
-  if (!programCreateDto.images) {
+  if (!imageFiles.value) {
     alert("이미지를 추가해주세요.");
     return;
   }

@@ -309,7 +309,7 @@
                   </div>
                 </div>
 
-                <div id="inclusions" class="id-container" style="border-bottom:0;">
+                <div v-if="data.programDetailProgramDto.inclusion || data.programDetailProgramDto.exclusion" id="inclusions" class="id-container" style="border-bottom:0;">
                   <div class="content-header">
                     <span class="title">포함사항</span>
                   </div>
