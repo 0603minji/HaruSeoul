@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class ReservationConsentUpdatedDto {
     private Long id;
     private Integer guestConsent;
+    private Integer reservationStatus;
 }

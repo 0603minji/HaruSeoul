@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("guest/published-programs")
 public class GuestPublishedProgramController {
 
-    private final GuestPublishedProgramService guestPublishedProgramService;
+    private GuestPublishedProgramService guestPublishedProgramService;
 
     public GuestPublishedProgramController(GuestPublishedProgramService guestPublishedProgramService) {
         this.guestPublishedProgramService = guestPublishedProgramService;
     }
 
     @PutMapping
-    public ResponseEntity<GuestPublishedProgramUpdatedDto> update(@RequestBody GuestPublishedProgramUpdateDto guestPublishedProgramUpdateDto) {
+    public ResponseEntity<GuestPublishedProgramUpdatedDto> update(
+            @RequestBody GuestPublishedProgramUpdateDto guestPublishedProgramUpdateDto) {
         return ResponseEntity.ok(guestPublishedProgramService.update(guestPublishedProgramUpdateDto));
     }
 }

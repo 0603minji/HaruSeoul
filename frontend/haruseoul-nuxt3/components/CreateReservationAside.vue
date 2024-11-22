@@ -41,7 +41,9 @@ const updateNumberOfGuest = (selectedOption) => {
 };
 
 const updateSelectedPublishedProgram = (selectedOptions) => {
-  selectedPublishedProgram.value = selectedOptions;
+  if (selectedOptions)
+  {selectedPublishedProgram.value = selectedOptions;}
+  else selectedPublishedProgram.value = null;
   console.log('******* CreateReservationModal: updateSelectedPublishedProgram called');
   console.log('          ->  selectedPublishedProgram: ', selectedPublishedProgram.value);
 };
@@ -105,15 +107,6 @@ const closeModal = () => {
                   height: 20px;"
                 :disabled="!selectedPublishedProgram"
         >결제하기</button>
-
-        <!--        <NuxtLink to="../guest/reservations" class="n-btn n-btn:hover n-btn-bg-color:sub n-btn-size:1"-->
-        <!--                  style="margin-left: var(&#45;&#45;gap-2);-->
-        <!--                  background-color: var(&#45;&#45;color-sub-1);-->
-        <!--                  color: var(&#45;&#45;color-base-1);-->
-        <!--                  width: var(&#45;&#45;width-9p);-->
-        <!--                  height: 20px;"-->
-        <!--                  :disabled="!isReservable">결제하기-->
-        <!--        </NuxtLink>-->
       </div>
     </form>
   </aside>

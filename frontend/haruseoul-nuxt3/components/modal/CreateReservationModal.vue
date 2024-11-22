@@ -82,6 +82,7 @@ const submitHandler = async () => {
 };
 
 const closeModal = () => {
+  selectedPublishedProgram.value = null;
   emit('closeModal');
 
   setTimeout(() => {

@@ -13,6 +13,5 @@ import java.util.Date;
 @NoArgsConstructor
 public class GuestPublishedProgramUpdatedDto {
     private Long id;
-    private Long statusId;
     private Long reservationId;
 }

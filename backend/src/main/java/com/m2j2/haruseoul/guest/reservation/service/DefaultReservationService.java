@@ -293,11 +293,17 @@ public class DefaultReservationService implements ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
 
+        // 예약 상태를 취소됨으로 바꾸기
         reservation.setReservationStatus(3);
-
-
-        // 예약을 업데이트합니다.
+        // 예약에 삭제 날짜 추가하기
+        Date deleteDate = new Date(); // 현재 시간
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(deleteDate);
+        calendar.add(Calendar.HOUR, 9); // 9시간 추가
+        deleteDate = calendar.getTime();
+        reservation.setDeleteDate(deleteDate.toInstant());
         reservationRepository.save(reservation);
+
 
         // 로그를 남겨서 예약 삭제에 대한 기록을 남길 수 있습니다.
         System.out.println("Reservation with ID " + reservationId + " has been soft deleted at " + Instant.now());

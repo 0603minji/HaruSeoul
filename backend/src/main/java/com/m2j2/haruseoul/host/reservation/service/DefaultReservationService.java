@@ -99,6 +99,7 @@ public class DefaultReservationService implements ReservationService {
         Optional<Reservation> rv = reservationRepository.findById(dto.getId());
         if (rv.isPresent()) {
             rv.get().setGuestConsent(dto.getGuestConsent());
+            rv.get().setReservationStatus(2);
             reservationRepository.save(rv.get());
         }
         else
@@ -106,6 +107,7 @@ public class DefaultReservationService implements ReservationService {
         return ReservationConsentUpdatedDto.builder()
                 .id(rv.get().getId())
                 .guestConsent(rv.get().getGuestConsent())
+                .reservationStatus(rv.get().getReservationStatus())
                 .build();
     }
 }
