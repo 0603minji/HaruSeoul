@@ -81,7 +81,7 @@
               <p>분</p>
             </div>
           </div>
-          <div v-else class="d:flex">
+          <div v-else class="d:flex min-width:5">
             <!-- 경유지: 선택 가능 -->
             <div class="time-select-wrapper">
               <label>
