@@ -2,6 +2,7 @@
 import {ref, watch, watchEffect} from 'vue';
 import {useAuthFetch} from "~/composables/useAuthFetch.js";
 import {useRoute} from "#vue-router";
+import {useReservationFetch} from "~/composables/useReservationFetch.js";
 //props
 const props = defineProps({
   hostId: {
@@ -21,9 +22,10 @@ const emit = defineEmits(['updateNumberOfGuest', 'updateSelectedPublishedProgram
 /*=== variables =======================================================================================================*/
 const route = useRoute();
 const programId = route.params.id; // route에서 programId를 가져옴
+const reservation = useReservationFetch(route.params.id);
 
 // 예약할 인원수
-const numberOfGuest = ref(1); // todo 임시값
+const numberOfGuest = ref(1);
 // 선택된 publishedProgram
 const selectedPublishedProgram = ref(null);
 
@@ -111,10 +113,10 @@ const isReservable = (dateSchedule) => {
   */
   if (!dateSchedule.schedules || dateSchedule.schedules.length === 0) return false;
 
+
   // todo 불러올 공개프로그램 id중에 내 예약한 목록의 공개프로그램 id랑 일치하면 false 반환하게
-  // for (const pp of dateSchedule.schedules) {
-  //   if(pp.id === reservation.publishedId)
-  //     return false;
+  // if (dateSchedule.schedules.some(pp => publishedData.publishedPrograms.reservationIds.includes(pp.id))) {
+  //   return false;
   // }
 
 
@@ -175,7 +177,7 @@ const dates = computed(() => {
 const publishedProgramQuery = computed(() => (
     {
       mIds: props.hostId,
-      s: [1, 2, 5, 6].join(","),
+      s: [1, 2].join(","),
       d: [rangeStart, rangeEnd] // 달력에 표시된 첫날 ~ 끝날 dates.getFirst getLast 한국시간 자정
           .map((date) =>
               new Intl.DateTimeFormat('ko-KR', {

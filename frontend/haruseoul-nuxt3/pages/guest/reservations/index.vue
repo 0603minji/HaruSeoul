@@ -3,7 +3,7 @@ import {onMounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useReservationFetch} from "~/composables/useReservationFetch.js";
 import Pager from "~/components/Pager.vue";
-import ReservationCancelModal from "~/components/modal/CancelReservationModal.vue";
+import CancelReservationModal from "~/components/modal/CancelReservationModal.vue";
 import useShare from '~/composables/useShare';
 
 const reservations = ref([]);
@@ -77,8 +77,8 @@ const fetchReservations = async () => {
 
         reservations.value = reservations.value.map(r => {
           if (r.date) {
-            const reservationDate = new Date(r.date);
-            r.dDay = Math.floor((reservationDate - currentDate) / (1000 * 60 * 60 * 24));
+            const reservationDate = new Date(r.date + `T00:00:00+09:00`);
+            r.dDay = Math.ceil((reservationDate - currentDate) / (1000 * 60 * 60 * 24));
           } else {
             r.dDay = null;
           }

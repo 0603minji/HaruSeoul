@@ -101,7 +101,7 @@
                 <p style="color: var(--color-base-9);
               font-size: var(--font-size-11);
               font-weight: bold;
-              padding: var(--gap-3) var(--gap-5);">{{ data.programDetailProgramDto.title }}</p>
+              padding: var(--gap-3) var(--gap-6);">{{ data.programDetailProgramDto.title }}</p>
                 <div
                     style="display:flex;  flex-grow: 1; padding: var(--gap-3) var(--gap-7) var(--gap-8) var(--gap-7); gap: var(--gap-2); align-items: center;">
                 <span class="card-info n-icon n-icon:star n-deco"

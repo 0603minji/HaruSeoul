@@ -50,9 +50,6 @@ public class DefaultReservationService implements ReservationService {
 
     @Override
     public ReservationResponseDto getList(List<Long> sIds, List<Long> mIds, int pageNum) {
-
-//        Sort sort = Sort.by("regDate").ascending();
-
         // 기본적으로 정렬할 필드
         Sort sort;
 
@@ -172,11 +169,23 @@ public class DefaultReservationService implements ReservationService {
                 .programStartTime(String.valueOf(reservationProgram.getStartTime()))
                 .meetingSpotTitle(meetingSpotTitle)
                 .meetingSpotAddress(meetingSpotAddress)
-                .programInclusion(String.valueOf(reservationProgram.getInclusion()))
-                .programExclusion(String.valueOf(reservationProgram.getExclusion()))
-                .programPackingList(String.valueOf(reservationProgram.getPackingList()))
-                .programCaution(String.valueOf(reservationProgram.getCaution()))
-                .reservationRequirement(String.valueOf(reservationProgram.getRequirement()))
+                .programInclusion(reservationProgram.getInclusion() != null
+                        ? reservationProgram.getInclusion().trim()
+                        : "")
+                .programExclusion(reservationProgram.getExclusion() != null
+                        ? reservationProgram.getExclusion().trim()
+                        : "")
+                .programPackingList(reservationProgram.getPackingList() != null
+                        ? reservationProgram.getPackingList().trim()
+                        : "")
+                .programCaution(reservationProgram.getCaution() != null
+                        ? reservationProgram.getCaution().trim()
+                        : "")
+                .reservationRequirement(reservationProgram.getRequirement() != null
+                        ? reservationProgram.getRequirement().trim()
+                        : "")
+                .publishedProgramId(reservation.getPublishedProgram().getId())
+                .publishedProgramStatus(reservation.getPublishedProgram().getStatus().getId())
                 .build();
 
 
@@ -284,12 +293,17 @@ public class DefaultReservationService implements ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
 
-        // 삭제 날짜를 현재 시간으로 설정합니다.
-        reservation.setDeleteDate(Instant.now());  // 삭제 일자를 현재 시간으로 설정 (LocalDateTime으로 변경 가능)
+        // 예약 상태를 취소됨으로 바꾸기
         reservation.setReservationStatus(3);
-
-        // 예약을 업데이트합니다.
+        // 예약에 삭제 날짜 추가하기
+        Date deleteDate = new Date(); // 현재 시간
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(deleteDate);
+        calendar.add(Calendar.HOUR, 9); // 9시간 추가
+        deleteDate = calendar.getTime();
+        reservation.setDeleteDate(deleteDate.toInstant());
         reservationRepository.save(reservation);
+
 
         // 로그를 남겨서 예약 삭제에 대한 기록을 남길 수 있습니다.
         System.out.println("Reservation with ID " + reservationId + " has been soft deleted at " + Instant.now());

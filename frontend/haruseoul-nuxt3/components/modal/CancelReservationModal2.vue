@@ -1,9 +1,10 @@
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { nextTick } from 'vue';
 import {ref, defineProps, defineEmits} from 'vue';
 import {useReservationFetch} from "~/composables/useReservationFetch.js";
 
+const route = useRoute;
 const router = useRouter();
 
 const props = defineProps({
@@ -16,11 +17,7 @@ const props = defineProps({
   }
 });
 
-console.log("프롭스", props)
-console.log("publishedProgramId 이다",props.reservation.program.publishedProgramId)
-console.log("reservationId 이다",props.reservation.reservationId)
-
-const emit = defineEmits(['close', 'cancel']);
+const emit = defineEmits(['close', 'cancel', 'updateGuestConsent']);
 
 const errorMessage = ref('');
 
@@ -31,6 +28,7 @@ const closeModal = () => {
 
 // 예약 취소 확인 시 API 요청 처리
 const cancelReservation = async () => {
+  console.log("erasd")
   try {
     const token = localStorage.getItem("token");
     const currentDate = new Date().toISOString(); // 현재 시간
@@ -64,34 +62,37 @@ const cancelReservation = async () => {
         }
     );
 
-
-    // cancel 이벤트 전달
-    emit('cancel');
-
-    // 모달 닫기
-    closeModal();
-
-    // 예약 취소 후, p=1 위치로 리다이렉트
-    await router.push({path: '/guest/reservations', query: {p: 1}});
-
-    // nextTick: 데이터가 변경되는 DOM 처리가 완료된 후에, 진행되도록 해주는 함수, Vue3부터 지원
-    await nextTick(() => {
-      props.fetchReservations(); // 쿼리 파라미터가 바뀌면 fetch 호출
-    });
+    cancelParticipationHandler();
 
   } catch (error) {
     errorMessage.value = '예약 취소 실패: ' + error.message;
   }
 };
 
+const cancelParticipationHandler = async () => {
+  console.log('          cancelParticipationHandler called.');
+  const guestConsentResponse = await useDataFetch(`host/reservations/consent`, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: {
+      "id": props.selectedReservationId,
+      "guestConsent": 3 // 예약취소로 초기화
+    }
+  });
+  console.log('          Reservation Update result: ', guestConsentResponse);
+  emit('updateGuestConsent', 3);
+}
+
 </script>
 
 <template>
-  <div v-show="showModal===`cancelReservationModal`" class="modal">
+  <div v-show="showModal ===`cancelReservationModal2`" class="modal">
     <div class="modal-content">
       <p style="font-size: 15px; font-weight: bold">정말 예약을 취소하시겠습니까?</p>
       <div style="width: 180px; padding-left: 20px; padding-top: 15px; display: flex; justify-content: space-between">
-        <button class="n-btn n-btn:hover" style="color:#DB4455" @click="cancelReservation">확인</button>
+        <button class="n-btn n-btn:hover" style="color:#DB4455" @click.prevent="cancelReservation">확인</button>
         <button class="n-btn n-btn:hover" @click="closeModal">닫기</button>
       </div>
     </div>
