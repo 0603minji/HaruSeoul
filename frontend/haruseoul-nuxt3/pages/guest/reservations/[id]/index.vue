@@ -2,8 +2,9 @@
 import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import {useReservationFetch} from "~/composables/useReservationFetch.js";
-import ReservationCancelModal from "~/components/modal/CancelReservationModal.vue";
 import useShare from '~/composables/useShare';
+import CancelReservationModal from "~/components/modal/CancelReservationModal.vue";
+import CancelReservationModal2 from "~/components/modal/CancelReservationModal2.vue";
 
 const reservation = ref({
   guest: {},
@@ -32,7 +33,7 @@ const handleShare = (url) => {
 
 // 데이터 함수
 
-const fetchreservation = async (rId) => {
+const fetchReservation = async (rId) => {
   const params = {rId: rId};
   const token = localStorage.getItem("token");
   const response = await useReservationFetch(`guest/reservations/${rId}`,
@@ -53,8 +54,8 @@ const fetchreservation = async (rId) => {
   // 날짜 차이를 계산하여 dDay 속성을 추가합니다.
   const currentDate = new Date();
   if (reservationCard.value.date && reservationCard.value) {
-    const reservationDate = new Date(reservationCard.value.date);
-    reservationCard.value.dDay = Math.floor((reservationDate - currentDate) / (1000 * 60 * 60 * 24));
+    const reservationDate = new Date(reservationCard.value.date + `T00:00:00+09:00`);
+    reservationCard.value.dDay = Math.ceil((reservationDate - currentDate) / (1000 * 60 * 60 * 24));
   } else {
     reservationCard.value.dDay = null;
   }
@@ -89,33 +90,37 @@ const formatDeleteDate = (deleteDate) => {
 
 // 예약취소--------------------------------------------------------------------------------
 
-const showModal = ref(false); // 모달을 표시할지 여부를 결정하는 변수
+const showModal = ref(null); // 모달을 표시할지 여부를 결정하는 변수
 const currentReservationId = ref(null); // 취소할 예약의 ID 저장
 
 // 예약 취소 버튼 클릭 핸들러
-const handleCancelClick = (reservationId) => {
+const modalOpenHandler = (reservationId, modalName) => {
   console.log("취소 클릭 ID:", reservationId); // ID가 제대로 넘어오는지 확인
   currentReservationId.value = reservationId;  // 클릭한 예약의 ID 설정
-  showModal.value = true;  // 모달을 표시
+  showModal.value = modalName;  // 모달을 표시
 };
 
-// 모달을 열 때
-const openModal = () => {
-  showModal.value = true;
-};
+const openModal = (modalName) => {
+  showModal.value = modalName;
+}
 
 // 모달을 닫을 때
 const closeModal = () => {
-  showModal.value = false;
+  showModal.value = "";
 };
 
+const updateGuestConsent = (consent) => {
+  guestConsent.value = consent;
+  showModal.value = "";
+  fetchReservation(route.params.id)
+}
 
 // 생명주기 함수
 
 onMounted(() => {
   const rId = route.params.id;
   if (rId) {
-    fetchreservation(rId);  // rId가 있을 때만 데이터를 가져옵니다.
+    fetchReservation(rId);  // rId가 있을 때만 데이터를 가져옵니다.
   }
 
   const initMaps = () => {
@@ -186,28 +191,15 @@ const confirmParticipationHandler = async () => {
       "Content-type": "application/json"
     },
     body: {
-      "id": route.params.id,
-      "guestConsent": 2 // 참가동의로 초기화
+      "id": reservationCard.value.id,
+      "guestConsent": 2,// 참가동의로 초기화
+      "reservationStatus": 2
     }
   });
   console.log('          Reservation Update result: ', guestConsentResponse);
   guestConsent.value = 2;
-}
-
-const cancelParticipationHandler = async () => {
-  console.log('          cancelParticipationHandler called.');
-  const guestConsentResponse = await useDataFetch(`host/reservations/consent`, {
-    method: "PUT",
-    headers: {
-      "Content-type": "application/json"
-    },
-    body: {
-      "id": route.params.id,
-      "guestConsent": 3 // 예약취소로 초기화
-    }
-  });
-  console.log('          Reservation Update result: ', guestConsentResponse);
-  guestConsent.value = 3;
+  closeModal();
+  await fetchReservation(reservationCard.value.id);
 }
 </script>
 
@@ -255,9 +247,9 @@ const cancelParticipationHandler = async () => {
           </div>
 
           <div class="card-main">
-            <div v-if="r.src && r.src.startsWith('uploads')" class="img-wrapper">
+            <NuxtLink :to="`../../programs/${reservation.program.programId}`" v-if="r.src && r.src.startsWith('uploads')" class="img-wrapper">
               <img :src="`http://localhost:8080/api/v1/${r.src}`" alt="대표사진"/>
-            </div>
+            </NuxtLink>
             <div v-else class="img-wrapper">
               <img src="assets/image/default-program-image.png" alt="대표사진"/>
             </div>
@@ -288,9 +280,9 @@ const cancelParticipationHandler = async () => {
                   > [취소일자: {{ formatDeleteDate(reservationCard.deleteDate) }}]</span>
                 </div>
               </div>
-              <p class="title">
+              <NuxtLink :to="`../../programs/${reservation.program.programId}`" class="title">
                 {{ r.programTitle }}
-              </p>
+              </NuxtLink>
               <div class="card-info-responsive">
                 <div class="d:flex flex-direction:column">
                   <div class="card-info">
@@ -327,7 +319,7 @@ const cancelParticipationHandler = async () => {
                 <div v-if="[1, 2].includes(r.reservationStatus)"
                      class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#" class="n-btn" @click="handleCancelClick(r.id); openModal"
+                  <a v-if="guestConsent !==1" href="#" class="n-btn" @click="modalOpenHandler(r.id, `cancelReservationModal`);"
                      style="color: #DB4455; --btn-border-color:#DB4455;">
                     예약 취소
                   </a>
@@ -358,7 +350,7 @@ const cancelParticipationHandler = async () => {
           <div v-if="[1, 2].includes(r.reservationStatus)"
                class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-            <a href="#" class="n-btn" @click="handleCancelClick(r.id)"
+            <a v-if="guestConsent !==1" href="#" class="n-btn" @click="modalOpenHandler(r.id, `cancelReservationModal`)"
                style="color: #DB4455; --btn-border-color:#DB4455;">
               예약 취소
             </a>
@@ -383,6 +375,8 @@ const cancelParticipationHandler = async () => {
         </div>
       </div>
 
+<!--   todo   -->
+
       <section v-if="guestConsent===1" class="guest-consent">
         <header>
           <img src="/assets/image/icon/warning.png" alt="warning icon">
@@ -396,8 +390,8 @@ const cancelParticipationHandler = async () => {
           <li class="notice">프로그램 진행일 전날까지 미응답 시 자동으로 예약취소처리됩니다.</li>
         </ul>
         <div>
-          <button @click.prevent="confirmParticipationHandler">참가동의</button>
-          <button @click.prevent="cancelParticipationHandler">예약취소</button>
+          <button @click.prevent="openModal('acceptReservationModal')">참가동의</button>
+          <button @click.prevent="modalOpenHandler(reservationCard.id, `cancelReservationModal2`)">예약취소</button>
         </div>
       </section>
 
@@ -459,6 +453,9 @@ const cancelParticipationHandler = async () => {
                 <div class="overview">
                   <div v-if="host.memberImg && host.memberImg.startsWith('uploads')" class="img-wrapper">
                     <img :src="`http://localhost:8080/api/v1/${host.memberImg}`" alt="대표사진"/>
+                  </div>
+                  <div v-else class="img-wrapper">
+                    <img src="/assets/image/default-profile.png" alt="호스트프사">
                   </div>
                   <div>
                     <div v-if="host.memberName">{{ host.memberName }}</div>
@@ -705,12 +702,35 @@ const cancelParticipationHandler = async () => {
         </div>
 
         <!-- 예약 취소 모달 -->
-        <ReservationCancelModal
+        <CancelReservationModal
             v-if="showModal"
             :showModal="showModal"
             :selectedReservationId="currentReservationId"
+            :fetchReservation="fetchReservation"
+            :reservation="reservation"
             @close="closeModal"
         />
+
+        <CancelReservationModal2
+            v-if="showModal"
+            :showModal="showModal"
+            :selectedReservationId="currentReservationId"
+            :fetchReservation="fetchReservation"
+            :reservation="reservation"
+            @close="closeModal"
+            @update-guest-consent="updateGuestConsent"
+        />
+
+        <div v-show="showModal ===`acceptReservationModal`" class="modal">
+          <div class="modal-content" style="display: flex; flex-direction: column; align-items: center">
+            <p style="font-size: 15px; font-weight: bold">참가에 동의하시겠습니까?</p>
+              <p>(예약이 확정됩니다.)</p>
+            <div style="width: 180px; padding-left: 20px; padding-top: 15px; display: flex; justify-content: space-between">
+              <button class="n-btn n-btn:hover" style="color:#DB4455" @click.prevent="confirmParticipationHandler">확인</button>
+              <button class="n-btn n-btn:hover" @click="closeModal">닫기</button>
+            </div>
+          </div>
+        </div>
       </section>
     </section>
   </main>
@@ -1178,5 +1198,23 @@ const cancelParticipationHandler = async () => {
       display: none;
     }
   }
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 35px;
+  border-radius: 10px;
 }
 </style>

@@ -1,16 +1,17 @@
-package com.m2j2.haruseoul.host.reservation.dto;
+package com.m2j2.haruseoul.guest.publishedProgram.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class ReservationConsentUpdatedDto {
+public class GuestPublishedProgramUpdatedDto {
     private Long id;
-    private Integer guestConsent;
-    private Integer reservationStatus;
+    private Long reservationId;
 }

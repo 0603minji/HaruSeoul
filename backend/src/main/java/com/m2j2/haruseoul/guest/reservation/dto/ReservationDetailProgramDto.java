@@ -29,4 +29,8 @@ public class ReservationDetailProgramDto {
 
     private String reservationRequirement;
 
+    private Long publishedProgramId;
+
+    private Long publishedProgramStatus;
+
 }

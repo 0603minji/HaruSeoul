@@ -80,11 +80,21 @@ public class DefaultShareReservationService implements ShareReservationService{
                 .programStartTime(String.valueOf(reservationProgram.getStartTime()))
                 .meetingSpotTitle(meetingSpotTitle)
                 .meetingSpotAddress(meetingSpotAddress)
-                .programInclusion(String.valueOf(reservationProgram.getInclusion()))
-                .programExclusion(String.valueOf(reservationProgram.getExclusion()))
-                .programPackingList(String.valueOf(reservationProgram.getPackingList()))
-                .programCaution(String.valueOf(reservationProgram.getCaution()))
-                .reservationRequirement(String.valueOf(reservationProgram.getRequirement()))
+                .programInclusion(reservationProgram.getInclusion() != null
+                        ? reservationProgram.getInclusion().trim()
+                        : "")
+                .programExclusion(reservationProgram.getExclusion() != null
+                        ? reservationProgram.getExclusion().trim()
+                        : "")
+                .programPackingList(reservationProgram.getPackingList() != null
+                        ? reservationProgram.getPackingList().trim()
+                        : "")
+                .programCaution(reservationProgram.getCaution() != null
+                        ? reservationProgram.getCaution().trim()
+                        : "")
+                .reservationRequirement(reservationProgram.getRequirement() != null
+                        ? reservationProgram.getRequirement().trim()
+                        : "")
                 .build();
 
 
