@@ -104,6 +104,7 @@
 
           <select name="language" class="input-select" v-model="programCreateDto.language">
             <option>English</option>
+            <option>Korean</option>
             <option>Japanese</option>
             <option>Chinese</option>
           </select>
@@ -202,7 +203,7 @@
             <div class="form-label">최소 인원</div>
             <div class="counter-wrapper">
               <button class="n-btn n-btn-color:main-2" @click.prevent="minusGroupSizeMin">-</button>
-              <input type="number" name="min-count" class="counter-input no-spinner" min="2" max="5"
+              <input type="number" name="min-count" class="counter-input no-spinner" min="1" max="5"
                      v-model="programCreateDto.groupSizeMin">
               <button class="n-btn n-btn-color:main-2" @click.prevent="plusGroupSizeMin">+</button>
               <p class="people-unit">명</p>
@@ -412,8 +413,8 @@ const programCreateDto = reactive({
   categoryIds: [],
   routes: [], // route 객체를 여러개 가진 List
   images: [],
-  groupSizeMin: 2,
-  groupSizeMax: 2,
+  groupSizeMin: 1,
+  groupSizeMax: 1,
   title: '',
   detail: '',
   language: "English",
@@ -738,7 +739,7 @@ const sendCreateRequest = async () => {
 }
 
 const minusGroupSizeMax = () => {
-  if (programCreateDto.groupSizeMax > 2) {
+  if (programCreateDto.groupSizeMax > 1) {
     programCreateDto.groupSizeMax -= 1;
   }
 };
@@ -750,7 +751,7 @@ const plusGroupSizeMax = () => {
 };
 
 const minusGroupSizeMin = () => {
-  if (programCreateDto.groupSizeMin > 2) {
+  if (programCreateDto.groupSizeMin > 1) {
     programCreateDto.groupSizeMin -= 1;
   }
 };

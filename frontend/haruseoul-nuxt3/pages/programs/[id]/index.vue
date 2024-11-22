@@ -199,7 +199,7 @@
                   </div>
 
                   <div class="text">
-                    <p class="p-summary">{{ data.programDetailProgramDto.detail }}</p>
+                    <pre class="p-summary">{{ data.programDetailProgramDto.detail }}</pre>
                     <!--                  <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">펼치기</button>-->
                   </div>
                 </div>

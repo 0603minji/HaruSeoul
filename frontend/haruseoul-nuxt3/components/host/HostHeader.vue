@@ -100,7 +100,8 @@
                       <span style="font-weight: bold">{{ notification.title }}</span>
                     </NuxtLink>
                     이(가) {{ notification.type === 'RESERVE' ? '예약' : notification.type === 'CANCEL' ? '취소' : '취소' }}
-                    되었습니다
+                    되었습니다.
+                    <div>{{notification.regDate}}</div>
                   </div>
                   <button
                       class="notification-close"
@@ -197,7 +198,7 @@
                     'bg-color-red': notification.type === 'CANCEL'
                      }"
                 >
-                  <div>
+                  <div class="d:block">
                     <NuxtLink
                         :href="notification.type === 'CANCEL FROM HOST'
                       ? `/guest/reservations/${notification.programId}`
@@ -205,7 +206,8 @@
                       <span style="font-weight: bold">{{ notification.title }}</span>
                     </NuxtLink>
                     이(가) {{ notification.type === 'RESERVE' ? '예약' : notification.type === 'CANCEL' ? '취소' : '취소' }}
-                    되었습니다
+                    되었습니다.
+                    <div>{{notification.regDate}}</div>
                   </div>
                   <button
                       class="notification-close"
@@ -505,6 +507,9 @@ watch(notifications, (newNotifications) => {
 
 .notification-close:hover {
   color: #333;
+}
+.n-icon\:notification::before{
+  background-image: var(--icon);
 }
 
 .modal-content-notification-aside {

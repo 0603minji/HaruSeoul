@@ -101,6 +101,7 @@
 
           <select name="language" class="input-select" v-model="programCreateDto.language">
             <option>English</option>
+            <option>Korean</option>
             <option>Japanese</option>
             <option>Chinese</option>
           </select>
