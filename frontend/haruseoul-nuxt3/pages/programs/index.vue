@@ -66,10 +66,6 @@
 
               <form action="" class="form">
                 <div class="price-container">
-                  <!--                  <div class="range-slider">-->
-                  <!--                    <input type="range" class="slider">-->
-                  <!--                    <input type="range" class="slider">-->
-                  <!--                  </div>-->
                   <div class="price-inputs">
                     <input v-model="minPrice" @input="fetchFilteredPrograms" type="number" placeholder="₩0">
                     <span class="tilde">~</span>
@@ -131,9 +127,7 @@
                   <div class="min-section">
                     <span>Min</span>
                     <div class="input-group">
-                      <button class="n-btn">-</button>
                       <input v-model="groupSizeMin" @change="fetchFilteredPrograms" type="number" min="2" max="5">
-                      <button class="n-btn">＋</button>
                     </div>
                   </div>
 
@@ -142,9 +136,7 @@
                   <div class="max-section">
                     <span>Max</span>
                     <div class="input-group">
-                      <button class="n-btn">-</button>
                       <input v-model="groupSizeMax" @change="fetchFilteredPrograms" type="number" min="2" max="5">
-                      <button class="n-btn">＋</button>
                     </div>
                   </div>
                 </div>

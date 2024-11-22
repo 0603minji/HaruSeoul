@@ -77,6 +77,7 @@
                     </NuxtLink>
                     이(가) {{ notification.type === 'RESERVE' ? '예약' : notification.type === 'CANCEL' ? '취소' : '취소' }}
                     되었습니다
+                    <div>{{notification.regDate}}</div>
                   </div>
                   <button
                       class="notification-close"
@@ -182,7 +183,7 @@
                     'bg-color-red': notification.type === 'CANCEL'
                      }"
                 >
-                  <div>
+                  <div class="d:block">
                     <NuxtLink
                         :href="notification.type === 'CANCEL FROM HOST'
                       ? `/guest/reservations/${notification.programId}`
@@ -191,6 +192,7 @@
                     </NuxtLink>
                     이(가) {{ notification.type === 'RESERVE' ? '예약' : notification.type === 'CANCEL' ? '취소' : '취소' }}
                     되었습니다
+                    <div>{{notification.regDate}}</div>
                   </div>
                   <button
                       class="notification-close"
@@ -339,7 +341,6 @@ const {
   fetchNotifications
 } = useNotification(userDetails.id.value);
 
-console.log("사진이있는가?",userDetails.profileImgSrc.value)
 
 const confirmNotification = async (notificationId) => {
   const confirm = await axios.post(`http://localhost:8080/api/v1/notifications/${notificationId}`)
@@ -497,6 +498,10 @@ watch(notifications, (newNotifications) => {
 
 .notification-close:hover {
   color: #333;
+}
+
+.n-icon\:notification::before{
+  background-image: var(--icon);
 }
 
 .modal-content-notification-aside {

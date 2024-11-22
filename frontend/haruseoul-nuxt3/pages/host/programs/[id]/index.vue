@@ -217,7 +217,7 @@
                 </div>
 
                 <div class="text">
-                  <p class="p-summary">{{ data.programDetailProgramDto.detail }}</p>
+                  <pre class="p-summary">{{ data.programDetailProgramDto.detail }}</pre>
                 </div>
               </div>
             </div>

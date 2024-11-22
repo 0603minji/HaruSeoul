@@ -189,7 +189,7 @@ const route = reactive({
   address: '',
   description: '',
   duration: 0,
-  transportationId: '',
+  transportationId: null,
   transportationDuration: null
 });
 

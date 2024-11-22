@@ -3,7 +3,6 @@
     <section class="layout-body">
       <h1 class="d:none">프로그램과 어사이드</h1>
       <section class="layout-main">
-        <!--      <pre>{{ JSON.stringify(data, null, 2) }}</pre>-->
         <section v-if="data" class="program-detail">
           <h1 class="d:none">program-detail 페이지</h1>
           <nav class="n-bar-underline">
@@ -39,7 +38,6 @@
               </li>
             </ul>
           </nav>
-
 
           <!--  프로그램 소개  -->
           <section class="reservation-card bg-color:base-1 width:10p">
@@ -127,7 +125,6 @@
             </div>
           </section>
 
-
           <section class="content">
             <!-- 개요 -->
             <section id="intro" class="intro" style="margin-bottom: 20px;">
@@ -163,7 +160,6 @@
               </div>
             </section>
 
-
             <!--  호스트 프로필 카드  -->
             <section style="margin-bottom: 20px;">
               <h1>호스트정보</h1>
@@ -193,7 +189,6 @@
               </div>
             </section>
 
-
             <!--  프로그램 소개  -->
             <section id="program-overview" style="margin-bottom: 20px;">
               <h1>프로그램 소개</h1>
@@ -204,13 +199,12 @@
                   </div>
 
                   <div class="text">
-                    <p class="p-summary">{{ data.programDetailProgramDto.detail }}</p>
+                    <pre class="p-summary">{{ data.programDetailProgramDto.detail }}</pre>
                     <!--                  <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">펼치기</button>-->
                   </div>
                 </div>
               </div>
             </section>
-
 
             <!--  코스 안내  -->
             <section id="course-information" class="program">
@@ -299,7 +293,9 @@
                     <section style="padding-top: 0;">
                       <h1>만나는장소</h1>
                       <div class="info-container">
-                        <p>{{ meetingTimeWithOrderOne }} {{ titleWithOrderOne }}</p>
+                        <p>{{
+                            data.programDetailProgramDto.startTime ? data.programDetailProgramDto.startTime.split(':').slice(0, 2).join(':') : '시간 없음'
+                          }} {{ titleWithOrderOne }}</p>
                         <div
                             style="display:flex; align-items: center; padding: var(--gap-3) 0; color: var(--color-base-7);">
                                                 <span class="n-icon n-icon:placeholder"
@@ -318,10 +314,10 @@
                     <span class="title">포함사항</span>
                   </div>
                   <div class="details">
-                    <section>
+                    <section v-if="data.programDetailProgramDto.inclusion">
                       <h1>포함사항</h1>
                       <div class="list-container">
-                        <ul v-if="data.programDetailProgramDto.inclusion" class="d:flex fl-dir:column">
+                        <ul class="d:flex fl-dir:column">
                           <li v-for="(item, index) in data.programDetailProgramDto.inclusion.split('\n')"
                               :key="index"
                               class="list-content n-icon n-icon:success-circle-green">
@@ -393,9 +389,7 @@
               </div>
             </section>
 
-
             <!--  리뷰  -->
-
             <div id="review" class="id-container" style="border-bottom:0;">
               <div class="background-color:base-1" style="padding: 0 var(--gap-6);">
                 <div class="content-header">
@@ -499,49 +493,6 @@
                 </div>
               </div>
             </div>
-
-
-            <!--        &lt;!&ndash; 리뷰사진 목록 어사이드 &ndash;&gt;-->
-            <!--        <aside id="reviewList">-->
-            <!--            <h1>리뷰 사진</h1>-->
-            <!--            <span>X</span>-->
-
-            <!--            <ul>-->
-            <!--                <li><a href="#reviewListDetail"><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--                <li><a href=""><img src="" alt="리뷰 대표이미지"></a></li>-->
-            <!--            </ul>-->
-            <!--        </aside>-->
-
-
-            <!--        &lt;!&ndash;  리뷰사진 목록 디테일 어사이드   &ndash;&gt;-->
-            <!--        <aside id="reviewListDetail">-->
-            <!--            <h1>1/6</h1>-->
-            <!--            <span>X</span>-->
-
-            <!--            <div><img src="" alt="리뷰 사진 큰 화면"></div>-->
-            <!--            <ul>-->
-            <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
-            <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
-            <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
-            <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
-            <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
-            <!--                <li><img src="" alt="리뷰 사진 작은 화면"></li>-->
-            <!--            </ul>-->
-
           </section>
 
           <!-- 찜 -->
@@ -566,14 +517,6 @@
           <div :class="{'active': isModalVisible}" class="backdrop"></div>
           <!-- ============================================================================================================= -->
         </section>
-        <!-- === 큰 화면 달력 =================================================================================================== -->
-        <!--        <CreateReservationAside class="CreateReservationAside"-->
-        <!--                                :class="{'show': modalVisible === 'CreateReservationAside'}"-->
-        <!--                                :pId="programId"-->
-        <!--                                :hostId="data.programDetailMemberDto.hostId"-->
-        <!--                                :group-size-max="data.programDetailProgramDto.groupSizeMax"-->
-        <!--                                @close-modal="() => { modalVisible = ''; }"/>-->
-
         <MoveReservationModal  v-if="showMoveReservationModal" @close="showMoveReservationModal = false"/>
       </section>
     </section>
@@ -585,7 +528,6 @@
 import {ref, onMounted} from 'vue';
 import {useFetch} from '#app';
 import {useRoute} from 'vue-router';
-import router from "#app/plugins/router.js";
 import CreateReservationModal from "~/components/modal/CreateReservationModal.vue";
 import MoveReservationModal from "~/components/modal/MoveReservationModal.vue";
 
@@ -737,6 +679,8 @@ onMounted(() => {
   }
 });
 
+
+
 const {data, error} = await useFetch(`http://localhost:8080/api/v1/programs/${programId.value}`);
 
 const addressWithOrderOne = computed(() => {
@@ -816,6 +760,7 @@ const handleShowMoveReservationModal = () => {
   showMoveReservationModal.value = true; // MoveReservationModal 표시 상태 true로 설정
 };
 // -----------------------
+
 
 watchEffect(() => {
   console.log("Fetched data:", data.value);
