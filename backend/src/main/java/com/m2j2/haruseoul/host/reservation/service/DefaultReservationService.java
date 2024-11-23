@@ -5,11 +5,8 @@ import com.m2j2.haruseoul.entity.Member;
 import com.m2j2.haruseoul.entity.PublishedProgram;
 import com.m2j2.haruseoul.entity.Reservation;
 import com.m2j2.haruseoul.host.publishedProgram.dto.PublishedProgramListDto;
-import com.m2j2.haruseoul.host.reservation.dto.ReservationCancelDto;
+import com.m2j2.haruseoul.host.reservation.dto.*;
 
-import com.m2j2.haruseoul.host.reservation.dto.ReservationConsentUpdateDto;
-import com.m2j2.haruseoul.host.reservation.dto.ReservationConsentUpdatedDto;
-import com.m2j2.haruseoul.host.reservation.dto.ReservationListDto;
 import com.m2j2.haruseoul.notification.dto.NotificationSendDto;
 import com.m2j2.haruseoul.notification.service.NotificationService;
 import com.m2j2.haruseoul.repository.ReservationRepository;
@@ -101,13 +98,27 @@ public class DefaultReservationService implements ReservationService {
             rv.get().setGuestConsent(dto.getGuestConsent());
             rv.get().setReservationStatus(2);
             reservationRepository.save(rv.get());
-        }
-        else
+        } else
             throw new IllegalArgumentException("예약을 찾을 수 없습니다.");
         return ReservationConsentUpdatedDto.builder()
                 .id(rv.get().getId())
                 .guestConsent(rv.get().getGuestConsent())
                 .reservationStatus(rv.get().getReservationStatus())
                 .build();
+    }
+
+    @Override
+    public Reservation updateReservationStatus(Long rId, ReservationStatusUpdateDto dto) {
+        // 예약 ID로 해당 예약을 찾아옵니다.
+        Reservation reservation = reservationRepository.findById(rId)
+                .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+
+        // reservationStatus 업데이트
+        reservation.setReservationStatus(dto.getReservationStatus());
+
+        // 예약을 업데이트합니다.
+        Reservation saved = reservationRepository.save(reservation);
+
+        return saved;
     }
 }
