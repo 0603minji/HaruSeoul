@@ -213,7 +213,7 @@ const pageClickHandler = (newPage) => {
   fetchData();
 }
 
-// 예약취소
+// 일정취소
 const CancelHandler = async (pp) => {
   /*// 취소할 publishedProgram의 groupSizeCurrent가 0이면? 그냥 취소
   if (pp.groupSizeCurrent !== 0) {
@@ -242,7 +242,7 @@ const CancelHandler = async (pp) => {
   // 예약한 게스트들의 reservation도 cancel처리
   console.log('          pp.reservationIds: ', pp.reservationIds)
   for (const rId of pp.reservationIds) {
-    let rvCancelResponse = await useDataFetch(`host/reservations/${rId}`, {
+    let rvCancelResponse = await useDataFetch(`host/reservations/${rId}/cancel`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json"
@@ -260,7 +260,7 @@ const CancelHandler = async (pp) => {
   });
   console.log('          statusCheck result: ', statusCheckResponse);
 
-  // 예약취소 확인 모달창
+  // 일정취소 확인 모달창
   openModal('completeCancelModal');
 
   // 취소된 pp반영한 목록으로 갱신
@@ -272,16 +272,9 @@ const CancelHandler = async (pp) => {
 // 예약확정
 const confirmHandler = async (pp) => {
   console.log('   confirmHandler called')
-
-  // 최대인원 > 현재인원 : 게스트들에게 예약확정 동의요청 보내기
-  if (pp.groupSizeMax > pp.groupSizeCurrent) {
-    requestGuestApproval();
-    openModal('completeRequestGuestApproval');
-    return;
-  }
-
   console.log('          ->  Put host/published-programs');
 
+  // publishedProgram 상태 예약확정으로 업데이트-----------------------------------------------------------------------------
   // publishedProgramUpdateDto
   const publishedProgramUpdateDto = {
     "id": pp.id,
@@ -298,8 +291,39 @@ const confirmHandler = async (pp) => {
   });
   console.log('          PublishedProgram Update result: ', response);
 
+
+  // 최대인원 = 현재인원 : reservation엔티티 reservationStatus 2(예약확정)으로 업데이트-----------------------------------------
+  if (pp.groupSizeMax === pp.groupSizeCurrent) {
+    console.log('          게스트 reservationStatus 1 -> 2로 업데이트');
+    console.log('          pp.reservationIds: ', pp.reservationIds);
+    for (const rId of pp.reservationIds) {
+      // reservationStatusUpdateDto
+      const reservationStatusUpdateDto = {
+        "id": rId,
+        "reservationStatus": 2 // 예약확정
+      }
+
+      let rvResponse = await useDataFetch(`host/reservations/${rId}/reservationStatus`, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: reservationStatusUpdateDto
+      });
+      console.log('          PublishedProgram Update result: ', rvResponse);
+    }
+  }
+
+
+  // 최대인원 > 현재인원 : 게스트들에게 예약확정 동의요청 보내기-----------------------------------------------------------------
+  if (pp.groupSizeMax > pp.groupSizeCurrent) {
+    await requestGuestApproval();
+    openModal('completeRequestGuestApproval');
+  }
+
   // 예약확정 확인 모달창
-  openModal('completeConfirmModal');
+  else
+    openModal('completeConfirmModal');
 
   // 취소된 pp반영한 목록으로 갱신
   await fetchData();
@@ -307,9 +331,23 @@ const confirmHandler = async (pp) => {
   PublishProgramModalKey.value = !PublishProgramModalKey.value;
 }
 
-// todo 게스트들에게 예약확정 동의요청보내기
-const requestGuestApproval = () => {
+// todo 게스트들에게 참가여부 확인 알림 보내기
+const requestGuestApproval = async () => {
   console.log('   requestGuestApproval called')
+  // reservation테이블에 guest_consent 1(미응답)로 설정
+  for (const rId of pp.value.reservationIds) {
+    const guestConsentResponse = await  useDataFetch(`host/reservations/consent`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: {
+        "id": rId,
+        "guestConsent": 1 // 미응답으로 초기화
+      }
+    });
+    console.log('          Reservation Update result: ', guestConsentResponse);
+  }
 }
 
 
@@ -358,13 +396,13 @@ const config = useRuntimeConfig(); // 서버 uploads에서 대표이미지, 게�
 // 모달창
 const { isModalVisible, openModal, closeModal } = useModal();
 const confirmPpPost = ref(false); // 개설확인모달창에서 확인 눌렀을 때 PublishProgramModal에 전달하여 post요청
-const PublishProgramModalKey = ref(false); // 예약취소 시 리렌더링 유발용
+const PublishProgramModalKey = ref(false); // 일정취소 시 리렌더링 유발용
 
 
 const hostId = userDetails.id.value; // 프론트에서 저장하고 있는 인증정보에 접근해서 얻어와야함
 console.log('hostId: ', hostId)
 const pIdToPublish = ref(null); // 일정추가, 추가개설할 pubishedprogramId
-const ppToCancel = ref(null); // 예약취소할 프로그램 정보를 모달창으로 전달
+const ppToCancel = ref(null); // 일정취소할 프로그램 정보를 모달창으로 전달
 const ppToConfirm = ref(null); // 예약확정할 프로그램 정보를 모달창으로 전달
 
 // PublishedProgramResponseDto
@@ -474,12 +512,12 @@ watchEffect(() => {
       <p>개설하시겠습니까?</p>
     </Modal>
 
-    <!--  예약취소확인  -->
+    <!--  일정취소확인  -->
     <Modal :isVisible="isModalVisible('confirmCancelModal')" @close="closeModal('confirmCancelModal')"
            @confirm="() => {CancelHandler(ppToCancel); closeModal('confirmCancelModal');}">
       <p v-if="ppToCancel.groupSizeCurrent > 0" style="color: var(--color-red-1)">프로그램을 예약한 게스트가 존재합니다. ({{ ppToCancel.groupSizeCurrent }} 명)</p>
       <p v-if="ppToCancel.statusName==='Confirmed'" style="color: var(--color-red-1)">예약확정된 프로그램을 취소할 경우 페널티가 있을 수 있습니다.</p>
-      <p>예약을 취소하시겠습니까?</p>
+      <p>일정을 취소하시겠습니까?</p>
     </Modal>
     <Modal class="onlyConfirm" :isVisible="isModalVisible('completeCancelModal')" @confirm="closeModal('completeCancelModal')">
       <p>예약이 취소되었습니다.</p>
@@ -653,7 +691,7 @@ watchEffect(() => {
                             :class="{'no-click': pp.groupSizeCurrent === 0 || pp.statusName==='Confirmed', 'disabled': pp.groupSizeCurrent === 0 || pp.statusName==='Confirmed'}"
                             @click.prevent="closeMorePopup(pp.id); ppToConfirm=pp; openModal('confirmConfirmModal')">예약확정</li><!-- groupSizeMin < groupSizeCurrent이면 가능 -->
                         <li v-if="pp.statusName !== 'Canceled' && pp.statusName !== 'Finished'"
-                            @click.prevent="closeMorePopup(pp.id); ppToCancel=pp; openModal('confirmCancelModal')">예약취소</li><!-- 취소, 완료된 일정 아닌 나머지 -->
+                            @click.prevent="closeMorePopup(pp.id); ppToCancel=pp; openModal('confirmCancelModal')">일정취소</li><!-- 취소, 완료된 일정 아닌 나머지 -->
                         <li v-if="pp.statusName !== 'Canceled' && pp.statusName !== 'Finished'"
                             @click.prevent="closeMorePopup(pp.id); OpenPublishProgramModalHandler(pp.programId)">추가개설</li><!-- 취소, 완료된 일정 아닌 나머지 -->
                         <li v-if="pp.statusName==='Canceled' || pp.statusName==='Finished'"
