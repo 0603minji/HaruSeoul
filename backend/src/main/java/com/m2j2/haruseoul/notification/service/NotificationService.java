@@ -8,7 +8,8 @@ import java.util.List;
 public interface NotificationService {
 
     NotificationResponseDto getNotificationResponseDtoList(Long id);
-    void send(NotificationSendDto notificationSendDto);
+    void sendFromGuest(NotificationSendDto notificationSendDto);
+    void sendFromHost(NotificationSendDto notificationSendDto,Long guestId,Long deletedReservationId);
     void confirmNotification(Long id);
 
 }

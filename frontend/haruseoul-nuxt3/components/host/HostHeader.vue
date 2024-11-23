@@ -89,13 +89,13 @@
                     class="notification-items"
                     :class="{
                     'bg-color-green': notification.type === 'RESERVE',
-                    'bg-color-red': notification.type === 'CANCEL'
+                    'bg-color-red': notification.type === 'CANCEL' || notification.type === 'CANCEL FROM HOST'
                      }"
                 >
                   <div>
                     <NuxtLink
                         :href="notification.type === 'CANCEL FROM HOST'
-                      ? `/guest/reservations/${notification.programId}`
+                      ? `/guest/reservations/${notification.reservationId}`
                       : `/host/reservations/${notification.programId}`">
                       <span style="font-weight: bold">{{ notification.title }}</span>
                     </NuxtLink>
@@ -195,13 +195,13 @@
                     class="notification-items"
                     :class="{
                     'bg-color-green': notification.type === 'RESERVE',
-                    'bg-color-red': notification.type === 'CANCEL'
+                    'bg-color-red': notification.type === 'CANCEL' || notification.type === 'CANCEL FROM HOST'
                      }"
                 >
                   <div class="d:block">
                     <NuxtLink
                         :href="notification.type === 'CANCEL FROM HOST'
-                      ? `/guest/reservations/${notification.programId}`
+                      ? `/guest/reservations/${notification.reservationId}`
                       : `/host/reservations/${notification.programId}`">
                       <span style="font-weight: bold">{{ notification.title }}</span>
                     </NuxtLink>

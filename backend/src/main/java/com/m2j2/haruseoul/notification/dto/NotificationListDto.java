@@ -14,6 +14,7 @@ import java.time.LocalDate;
 public class NotificationListDto {
     private Long notificationId;
     private Long programId;
+    private Long reservationId;
     private String title;
     private String type;
     private LocalDate regDate;
