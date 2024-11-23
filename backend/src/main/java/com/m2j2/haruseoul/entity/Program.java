@@ -106,4 +106,7 @@ public class Program {
 
     @Column(name = "requirement")
     private String requirement;
+
+    @Column(name = "delete_date")
+    private Instant deleteDate;
 }

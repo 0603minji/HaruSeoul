@@ -21,4 +21,6 @@ public interface ProgramService {
     void delete(Long programId);
 
     Program statusCheck(Long pId);
+
+    Program softDelete(Long pId);
 }

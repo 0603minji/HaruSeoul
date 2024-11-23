@@ -448,6 +448,22 @@ public class DefaultProgramService implements ProgramService {
         return program;
     }
 
+    @Override
+    public Program softDelete(Long pId) {
+        Program byId = programRepository.findById(pId).orElseThrow(()->new IllegalArgumentException("프로그램이 존재하지 않습니다."));
+
+        // 삭제 날짜 추가하기
+        Date deleteDate = new Date(); // 현재 시간
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(deleteDate);
+        calendar.add(Calendar.HOUR, 9); // 9시간 추가
+        deleteDate = calendar.getTime();
+        byId.setDeleteDate(deleteDate.toInstant());
+        programRepository.save(byId);
+
+        return byId;
+    }
+
     private LocalTime getLocalTimeByHourAndMinute(String hour, String minute) {
         int intHour = (hour == null ? 0 : Integer.parseInt(hour));
         int intMinute = (minute == null ? 0 : Integer.parseInt(minute));

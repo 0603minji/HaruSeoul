@@ -49,7 +49,10 @@ public class ProgramController {
         service.delete(pId);
     }
 
-
+    @PutMapping("{id}/softDelete")
+    public ResponseEntity<Program> softDelete(@PathVariable(name = "id") Long pId) {
+        return ResponseEntity.ok(service.softDelete(pId));
+    }
 
     @PutMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<Program> update(@RequestPart("programUpdateDto") ProgramUpdateDto programUpdateDto,

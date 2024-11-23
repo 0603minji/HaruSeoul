@@ -273,7 +273,7 @@
                   <div v-if="activeMenuIndex[index]" class="menu-dropdown">
                     <ul>
                       <NuxtLink v-if="!(p.status === 'Published')" class="edit" :href="`/host/programs/${p.id}/edit`">수정</NuxtLink>
-                      <li @click.prevent="deleteProgram(p.id)">삭제</li>
+                      <li @click.prevent="deleteProgram(p, index)">삭제</li>
                     </ul>
                   </div>
                 </div>
@@ -661,15 +661,15 @@ const fetchPrograms = async (
   totalPageCount.value = Math.ceil(totalRowCount.value / cardsPerPage); //response.data.totalPageCount; //  response에서 총 페이지 갯수 추출해서 저장
 };
 
-const deleteProgram = async (programId) => {
+const deleteProgram = async (program, index) => {
   const token = localStorage.getItem("token");
-
-  if(programs.value.status === 'Published') {
+  console.log('deleteProgram called. program.status: ', program.status);
+  if(program.status === 'Published') {
     alert("모집중인 프로그램은 삭제할 수 없습니다.")
     return;
   }
   try {
-    await axios.delete(`http://localhost:8080/api/v1/host/programs/${programId}`, {
+    await axios.put(`http://localhost:8080/api/v1/host/programs/${program.id}/softDelete`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -677,11 +677,12 @@ const deleteProgram = async (programId) => {
     alert("프로그램이 성공적으로 삭제되었습니다.");
 
     // 프로그램 목록에서 삭제된 항목 제거
-    programs.value = programs.value.filter(program => program.id !== programId);
+    programs.value = programs.value.filter(p => p.id !== program.id);
     activeMenuIndex.value = {[index]: false};
 
 
   } catch (error) {
+      console.log(error)
       alert("공개된 프로그램이라 삭제할 수 없습니다.");
 
   }

@@ -52,6 +52,9 @@
               >
                 <span class="n-icon n-icon:arrow_left"></span>
               </button>
+              <div style="position: absolute; bottom: 10px; right: 50px; width: fit-content; height: fit-content; background-color: rgba(0, 0, 0, 0.3);; border-radius: 4px; padding: 4px">
+                <span @click.prevent="goToImage" class="n-icon n-icon:edit" style="--icon-color: #fff"></span>
+              </div>
 
               <!-- 현재 이미지 -->
               <img
@@ -80,7 +83,6 @@
               <div class="thumbnail-btn thumbnail-btn:num n-deco">
                 {{ currentImageIndex + 1 }}/{{ totalImages }}
               </div>
-              <span @click.prevent="goToImage" class="n-icon n-icon:edit"></span>
             </div>
 
             <div
@@ -102,7 +104,7 @@
             </div>
 
             <div class="card-info-wrapper">
-              <div class="d:flex">
+              <div class="d:flex al-items:center">
                 <p style="color: var(--color-base-9);
               font-size: var(--font-size-11);
               font-weight: bold;
