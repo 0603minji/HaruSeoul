@@ -65,7 +65,7 @@
                     class="notification-items"
                     :class="{
                     'bg-color-green': notification.type === 'RESERVE',
-                    'bg-color-red': notification.type === 'CANCEL' || 'CANCEL FROM HOST',
+                    'bg-color-red': notification.type === 'CANCEL' || notification.type === 'CANCEL FROM HOST'
                      }"
                 >
                   <div>
@@ -180,7 +180,7 @@
                     class="notification-items"
                     :class="{
                     'bg-color-green': notification.type === 'RESERVE',
-                    'bg-color-red': notification.type === 'CANCEL'
+                    'bg-color-red': notification.type === 'CANCEL' || notification.type === 'CANCEL FROM HOST'
                      }"
                 >
                   <div class="d:block">
@@ -340,6 +340,8 @@ const {
   hasNewNotification,
   fetchNotifications
 } = useNotification(userDetails.id.value);
+
+console.log("알림정보:",notifications.value);
 
 
 const confirmNotification = async (notificationId) => {
