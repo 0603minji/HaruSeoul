@@ -53,6 +53,7 @@ public class DefaultShareReservationService implements ShareReservationService{
                     mapper.map(src -> src.getPublishedProgram().getProgram().getTitle(), ReservationListDto::setProgramTitle);
                     mapper.map(src -> src.getPublishedProgram().getDate(), ReservationListDto::setDate);
                     mapper.map(Reservation::getNumberOfGuest, ReservationListDto::setNumberOfGuest);
+                    mapper.map(src -> src.getPublishedProgram().getId(), ReservationListDto::setPublishedProgramId);
                 });
 
 

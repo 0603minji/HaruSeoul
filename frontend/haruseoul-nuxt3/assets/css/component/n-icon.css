@@ -343,6 +343,11 @@
   --icon: url(/assets/image/icon/price.svg);
 }
 
+.n-icon\:program-list:before {
+  --icon: url(/assets/image/icon/program-list.svg);
+  mask-size:22px;
+}
+
 .n-icon\:programs:before {
   --icon: url(/assets/image/icon/programs.svg);
 }

@@ -17,9 +17,10 @@ const closeModal = () => {
       </div>
       <div style="width: 180px; padding-left: 20px; padding-top: 15px; display: flex; justify-content: space-between">
         <NuxtLink to="../guest/reservations"
-                  class="n-btn n-btn:hover">확인
+                  class="n-btn n-btn:hover"
+                  style="background-color:#249AE4; color: white;">확인
         </NuxtLink>
-        <button class="n-btn n-btn:hover" style="color:#DB4455" @click="closeModal">닫기</button>
+        <button class="n-btn n-btn:hover" @click="closeModal">닫기</button>
       </div>
     </div>
   </div>
@@ -36,7 +37,7 @@ const closeModal = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 3;
+  z-index: 20;
 }
 
 .modal-content {

@@ -893,7 +893,8 @@ watchEffect(() => {
   width: 100%;
   max-width: 700px; /* 최대 크기 제한 */
   aspect-ratio: 16 / 9; /* 가로 세로 비율 고정 */
-  background-color: #f0f0f0; /* 기본 배경색 */
+  background-color: #F2EAE1
+; /* 기본 배경색 */
   border-radius: 8px;
   .thumbnail-img {
     width: 100%;
@@ -1000,7 +1001,7 @@ watchEffect(() => {
 
   .content-header {
     width: max-content;
-    padding: var(--gap-6);
+    padding: 0 var(--gap-6);
     list-style-type: none;
 
     .title {

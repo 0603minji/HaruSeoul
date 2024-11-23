@@ -53,31 +53,33 @@ public class DefaultReservationService implements ReservationService {
         // 기본적으로 정렬할 필드
         Sort sort;
 
-        // sIds 목록의 첫 번째 값에 따른 정렬 기준 설정 (예: sIds의 첫 번째 값으로 예약 상태 판단)
+        // sIds 목록에 따른 정렬 기준 설정
         if (!sIds.isEmpty()) {
-            Long statusId = sIds.get(0); // 첫 번째 값으로 상태 ID 판단 (예: sIds의 첫 번째 값이 예약 상태 ID)
-
-            // reservationStatus 값에 따른 정렬 기준 설정
-            switch (statusId.intValue()) { // statusId를 int로 변환하여 비교
-                case 1: // 결제완료
-                    sort = Sort.by(Sort.Order.asc("publishedProgram.date"));
-                    break;
-                case 2: // 예약확정
-                    sort = Sort.by(Sort.Order.asc("publishedProgram.date"));
-                    break;
-                case 3: // 취소됨
-                    sort = Sort.by(Sort.Order.desc("deleteDate"));
-                    break;
-                case 4: // 이용완료
-                    sort = Sort.by(Sort.Order.desc("publishedProgram.date"));
-                    break;
-                default: // 상태 값이 없는 경우 (기본값)
-                    sort = Sort.by(Sort.Order.desc("regDate"));
-                    break;
+            // 모든 상태가 [1, 2, 3, 4]에 포함되면 regDate 기준 내림차순
+            if (sIds.containsAll(Arrays.asList(1L, 2L, 3L, 4L))) {
+                sort = Sort.by(Sort.Order.desc("regDate"));
+            } else {
+                // 특정 상태에 따른 정렬
+                Long statusId = sIds.get(0); // 첫 번째 값으로 상태 ID 판단
+                switch (statusId.intValue()) {
+                    case 1: // 결제완료
+                    case 2: // 예약확정
+                        sort = Sort.by(Sort.Order.asc("publishedProgram.date")); // 날짜 오름차순
+                        break;
+                    case 3: // 취소됨
+                        sort = Sort.by(Sort.Order.desc("deleteDate")); // 삭제 날짜 내림차순
+                        break;
+                    case 4: // 이용완료
+                        sort = Sort.by(Sort.Order.desc("publishedProgram.date")); // 날짜 내림차순
+                        break;
+                    default:
+                        sort = Sort.by(Sort.Order.desc("regDate")); // 기본값
+                        break;
+                }
             }
         } else {
-            // sIds가 비어있다면 기본값으로 정렬
-            sort = Sort.by(Sort.Order.asc("regDate"));
+            // sIds가 비어있다면 기본값으로 regDate 내림차순
+            sort = Sort.by(Sort.Order.desc("regDate"));
         }
 
         Pageable pageable = PageRequest.of(pageNum - 1, 6, sort);
@@ -94,6 +96,7 @@ public class DefaultReservationService implements ReservationService {
                     mapper.map(src -> src.getPublishedProgram().getProgram().getTitle(), ReservationListDto::setProgramTitle);
                     mapper.map(src -> src.getPublishedProgram().getProgram().getMember().getId(), ReservationListDto::setHostId);
                     mapper.map(src -> src.getPublishedProgram().getStatus().getName(), ReservationListDto::setStatusName);
+                    mapper.map(src -> src.getPublishedProgram().getId(), ReservationListDto::setPublishedProgramId);
                 });
 
         // 결과 확인
@@ -142,6 +145,7 @@ public class DefaultReservationService implements ReservationService {
                     mapper.map(src -> src.getPublishedProgram().getProgram().getTitle(), ReservationListDto::setProgramTitle);
                     mapper.map(src -> src.getPublishedProgram().getDate(), ReservationListDto::setDate);
                     mapper.map(Reservation::getNumberOfGuest, ReservationListDto::setNumberOfGuest);
+                    mapper.map(src -> src.getPublishedProgram().getId(), ReservationListDto::setPublishedProgramId);
                 });
 
 

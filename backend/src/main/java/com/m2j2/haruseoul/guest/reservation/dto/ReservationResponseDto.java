@@ -1,5 +1,6 @@
 package com.m2j2.haruseoul.guest.reservation.dto;
 
+import com.m2j2.haruseoul.entity.PublishedProgram;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

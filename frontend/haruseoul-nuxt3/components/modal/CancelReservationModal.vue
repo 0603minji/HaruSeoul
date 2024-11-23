@@ -9,16 +9,14 @@ const router = useRouter();
 const props = defineProps({
   showModal: String,
   selectedReservationId: Number,
-  fetReservation:Function,
-  reservation: {
-    type: Object,
-    default: () => ({}) // 기본값 설정
-  }
+  fetchReservation:Function,
+  publishedProgramId: Number,
+  reservationId: Number
 });
 
 console.log("프롭스", props)
-console.log("publishedProgramId 이다",props.reservation.program.publishedProgramId)
-console.log("reservationId 이다",props.reservation.reservationId)
+console.log("publishedProgramId 이다",props.publishedProgramId)
+console.log("reservationId 이다",props.reservationId)
 
 const emit = defineEmits(['close', 'cancel']);
 
@@ -58,8 +56,8 @@ const cancelReservation = async () => {
             Authorization: `Bearer ${token}`,
           },
           body: {
-            id: props.reservation.program.publishedProgramId,
-            reservationId: props.reservation.reservationId,
+            id: props.publishedProgramId,
+            reservationId: props.reservationId,
           },
         }
     );
@@ -76,7 +74,7 @@ const cancelReservation = async () => {
 
     // nextTick: 데이터가 변경되는 DOM 처리가 완료된 후에, 진행되도록 해주는 함수, Vue3부터 지원
     await nextTick(() => {
-      props.fetchReservations(); // 쿼리 파라미터가 바뀌면 fetch 호출
+      props.fetchReservation(); // 쿼리 파라미터가 바뀌면 fetch 호출
     });
 
   } catch (error) {
@@ -91,7 +89,7 @@ const cancelReservation = async () => {
     <div class="modal-content">
       <p style="font-size: 15px; font-weight: bold">정말 예약을 취소하시겠습니까?</p>
       <div style="width: 180px; padding-left: 20px; padding-top: 15px; display: flex; justify-content: space-between">
-        <button class="n-btn n-btn:hover" style="color:#DB4455" @click="cancelReservation">확인</button>
+        <button class="n-btn n-btn:hover" style="background-color:#DB4455; color: white;" @click="cancelReservation">확인</button>
         <button class="n-btn n-btn:hover" @click="closeModal">닫기</button>
       </div>
     </div>
@@ -109,7 +107,7 @@ const cancelReservation = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 3;
+  z-index: 20;
 }
 
 .modal-content {
