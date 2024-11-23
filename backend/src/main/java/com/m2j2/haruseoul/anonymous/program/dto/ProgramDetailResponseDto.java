@@ -20,6 +20,4 @@ public class ProgramDetailResponseDto {
     private ProgramDetailMemberDto programDetailMemberDto;
     private ProgramDetailReviewDto programDetailReviewDto;
     private List<ProgramDetailRouteDto> programDetailRouteDto;
-
-
 }

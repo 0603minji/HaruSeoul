@@ -199,8 +199,23 @@
                   </div>
 
                   <div class="text">
-                    <pre class="p-summary">{{ data.programDetailProgramDto.detail }}</pre>
-                    <!--                  <button class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">펼치기</button>-->
+                    <!-- 텍스트 미리보기 (3줄 표시) -->
+                    <pre class="p-summary" v-show="!isExpanded">{{ data.programDetailProgramDto.detail }}</pre>
+
+                    <!-- 텍스트 전체 (전체 내용 표시) -->
+                    <pre class="p-full" v-show="isExpanded">{{ data.programDetailProgramDto.detail }}</pre>
+
+                    <!-- 펼치기 버튼 -->
+                    <button v-if="!isExpanded" @click="toggleExpand"
+                            class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">
+                      펼치기
+                    </button>
+
+                    <!-- 닫기 버튼 -->
+                    <button v-if="isExpanded" @click="toggleExpand"
+                            class="n-icon n-icon:arrow_up n-deco-pos:right n-deco">
+                      닫기
+                    </button>
                   </div>
                 </div>
               </div>
@@ -309,7 +324,8 @@
                   </div>
                 </div>
 
-                <div v-if="data.programDetailProgramDto.inclusion || data.programDetailProgramDto.exclusion" id="inclusions" class="id-container" style="border-bottom:0;">
+                <div v-if="data.programDetailProgramDto.inclusion || data.programDetailProgramDto.exclusion"
+                     id="inclusions" class="id-container" style="border-bottom:0;">
                   <div class="content-header">
                     <span class="title">포함사항</span>
                   </div>
@@ -360,7 +376,8 @@
 
                       </div>
 
-                      <div v-if="data.programDetailProgramDto.caution" style="padding: var(--gap-6); padding-bottom: 0;">
+                      <div v-if="data.programDetailProgramDto.caution"
+                           style="padding: var(--gap-6); padding-bottom: 0;">
                         <h2 class="info-form n-icon n-icon:caution">주의사항</h2>
                         <ul>
                           <li v-for="(item, index) in data.programDetailProgramDto.caution.split('\n')"
@@ -430,9 +447,28 @@
                             <span class="date">{{ review.regDate }}</span>
                           </div>
                         </div>
-                        <div class="text">
-                          <p class="p-summary">!</p>
-                          <button>더보기</button>
+                        <div class="program-container">
+                          <div class="text">
+                            <!-- 텍스트 미리보기 (3줄 표시) -->
+                            <pre class="p-summary"
+                                 v-show="!isExpanded2">{{ data.programDetailReviewDto.reviewDetailDtos.content }}</pre>
+
+                            <!-- 텍스트 전체 (전체 내용 표시) -->
+                            <pre class="p-full"
+                                 v-show="isExpanded2">{{ data.programDetailReviewDto.reviewDetailDtos.content }}</pre>
+
+                            <!-- 펼치기 버튼 -->
+                            <button v-if="!isExpanded2" @click="toggleExpand2"
+                                    class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">
+                              펼치기
+                            </button>
+
+                            <!-- 닫기 버튼 -->
+                            <button v-if="isExpanded2" @click="toggleExpand2"
+                                    class="n-icon n-icon:arrow_up n-deco-pos:right n-deco">
+                              닫기
+                            </button>
+                          </div>
                         </div>
 
 
@@ -517,7 +553,7 @@
           <div :class="{'active': isModalVisible}" class="backdrop"></div>
           <!-- ============================================================================================================= -->
         </section>
-        <MoveReservationModal  v-if="showMoveReservationModal" @close="showMoveReservationModal = false"/>
+        <MoveReservationModal v-if="showMoveReservationModal" @close="showMoveReservationModal = false"/>
       </section>
     </section>
   </main>
@@ -535,6 +571,15 @@ const route = useRoute();
 const programId = ref(route.params.id); // route에서 programId를 가져옴
 const currentHash = computed(() => route.hash || '');
 const isModalVisible = ref("");
+const isExpanded = ref(false);
+const isExpanded2 = ref(false);
+
+const toggleExpand = () => {
+  isExpanded.value = !isExpanded.value;
+};
+const toggleExpand2 = () => {
+  isExpanded2.value = !isExpanded2.value;
+};
 
 const OpenCreateReservationModalHandler = () => isModalVisible.value = "CreateReservationModal";
 
@@ -680,7 +725,6 @@ onMounted(() => {
 });
 
 
-
 const {data, error} = await useFetch(`http://localhost:8080/api/v1/programs/${programId.value}`);
 
 const addressWithOrderOne = computed(() => {
@@ -700,8 +744,7 @@ const meetingTimeWithOrderOne = computed(() => {
   }
 });
 
-console.log("이미지소스입니당",data.value.programDetailImageDto);
-
+console.log("이미지소스입니당", data.value.programDetailImageDto);
 
 
 const departure = computed(() =>
@@ -751,6 +794,8 @@ const copyAddress = async () => {
     console.error('복사 실패:', err);
   }
 };
+
+console.log("리뷰 내용:", data.value.programDetailReviewDto.reviewDetailDtos.content)
 
 // 모달창
 const showMoveReservationModal = ref(false); // MoveReservationModal 표시 상태
@@ -893,9 +938,9 @@ watchEffect(() => {
   width: 100%;
   max-width: 700px; /* 최대 크기 제한 */
   aspect-ratio: 16 / 9; /* 가로 세로 비율 고정 */
-  background-color: #F2EAE1
-; /* 기본 배경색 */
+  background-color: #F2EAE1; /* 기본 배경색 */
   border-radius: 8px;
+
   .thumbnail-img {
     width: 100%;
     height: 100%;
@@ -1001,7 +1046,7 @@ watchEffect(() => {
 
   .content-header {
     width: max-content;
-    padding: 0 var(--gap-6);
+    padding: var(--gap-6) var(--gap-3);
     list-style-type: none;
 
     .title {
@@ -1048,14 +1093,18 @@ watchEffect(() => {
         display: -webkit-box;
         padding: 0 var(--gap-1);
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 2;
         overflow: hidden;
         text-overflow: ellipsis;
         line-height: 1.5;
+        white-space: pre-line;
       }
 
       .p-full {
         display: block;
+        padding: 0 var(--gap-1);
+        white-space: pre-line;
+        line-height: 1.5;
       }
 
 
@@ -1250,6 +1299,7 @@ watchEffect(() => {
     flex-direction: column;
     align-items: center;
   }
+
   .book {
     max-width: 580px;
   }
