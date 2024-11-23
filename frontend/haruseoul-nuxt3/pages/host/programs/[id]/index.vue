@@ -445,6 +445,10 @@ const route = useRoute();
 const router = useRouter();
 const programId = ref(route.params.id); // route에서 programId를 가져옴
 const currentHash = computed(() => route.hash || '');
+const isExpanded = ref(false);
+const toggleExpand = () => {
+  isExpanded.value = !isExpanded.value;
+};
 
 const currentImageIndex = ref(0); // 현재 표시 중인 이미지 인덱스
 const totalImages = computed(() => data.value?.programDetailImageDto?.imgSrc?.length || 0); // 총 이미지 개수
