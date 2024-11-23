@@ -176,7 +176,7 @@
                         <img v-else src="/assets/image/default-profile.png" alt="호스트프사">
                       </div>
                       <div>
-                        <div>{{ data.programDetailMemberDto.hostName }}</div>
+                        <div>{{ data.programDetailMemberDto.hostNickname }}</div>
                         <div class="n-icon n-icon:star n-deco">
                           <span>{{ data.programDetailReviewDto.hostRating }} / 5.0</span>
                           <span>({{ data.programDetailReviewDto.hostRatingCount }})</span>

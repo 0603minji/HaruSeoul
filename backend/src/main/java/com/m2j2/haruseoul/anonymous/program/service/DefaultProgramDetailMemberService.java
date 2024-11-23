@@ -27,6 +27,7 @@ public class DefaultProgramDetailMemberService implements ProgramDetailMemberSer
                 = ProgramDetailMemberDto.builder()
                 .hostId(regMemberId)
                 .hostName(regMemberName)
+                .hostNickname(member.getNickname())
                 .hostProfileImg(member.getProfileImgSrc())
                 .build();
         return programDetailMemberDto;

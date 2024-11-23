@@ -192,7 +192,7 @@
                       <img v-else src="/assets/image/default-profile.png" alt="호스트프사">
                     </div>
                     <div>
-                      <div>{{ data.programDetailMemberDto.hostName }}</div>
+                      <div>{{ data.programDetailMemberDto.hostNickname }}</div>
                       <div class="n-icon n-icon:star n-deco">
                         <span>{{ data.programDetailReviewDto.hostRating }} / 5.0</span>
                         <span>({{ data.programDetailReviewDto.hostRatingCount }})</span>
@@ -986,6 +986,9 @@ const goToImage = () => {
   font-size: var(--font-size-6);
 
   .content-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     width: max-content;
     padding: var(--gap-6) var(--gap-3);
     list-style-type: none;
@@ -1001,8 +1004,6 @@ const goToImage = () => {
     .n-icon {
       cursor: pointer;
       border: none;
-      position: absolute;
-      right: var(--gap-7);
     }
   }
 

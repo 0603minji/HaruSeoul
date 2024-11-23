@@ -14,6 +14,7 @@ public class ProgramDetailMemberDto {
     private Long hostId;
 
     private String hostName;
+    private String hostNickname;
     private String hostProfileImg;
 
 }
