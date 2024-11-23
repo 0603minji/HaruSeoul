@@ -76,8 +76,8 @@ const updateDatesWithSchedules = (dates, publishedPrograms) => {
     // date와 schedules로 dateWithSchedules 생성 후 리턴
     return {date: date, schedules};
   });
-  // console.log("updateDatesWithSchedules called")
-  // console.log("       ->  datesWithSchedules: ", datesWithSchedules.value)
+  console.log("updateDatesWithSchedules called")
+  console.log("       ->  datesWithSchedules: ", datesWithSchedules.value)
 }
 
 const toNextMonth = () => {
@@ -176,7 +176,7 @@ const dates = computed(() => {
 // dates가 변하면 update
 const publishedProgramQuery = computed(() => (
     {
-      mIds: props.hostId,
+      pIds: programId,
       s: [1, 2].join(","),
       d: [rangeStart, rangeEnd] // 달력에 표시된 첫날 ~ 끝날 dates.getFirst getLast 한국시간 자정
           .map((date) =>
