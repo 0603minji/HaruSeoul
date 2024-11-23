@@ -217,7 +217,23 @@
                 </div>
 
                 <div class="text">
-                  <pre class="p-summary">{{ data.programDetailProgramDto.detail }}</pre>
+                  <!-- 텍스트 미리보기 (3줄 표시) -->
+                  <pre class="p-summary" v-show="!isExpanded">{{ data.programDetailProgramDto.detail }}</pre>
+
+                  <!-- 텍스트 전체 (전체 내용 표시) -->
+                  <pre class="p-full" v-show="isExpanded">{{ data.programDetailProgramDto.detail }}</pre>
+
+                  <!-- 펼치기 버튼 -->
+                  <button v-if="!isExpanded" @click="toggleExpand"
+                          class="n-icon n-icon:arrow_down n-deco-pos:right n-deco">
+                    펼치기
+                  </button>
+
+                  <!-- 닫기 버튼 -->
+                  <button v-if="isExpanded" @click="toggleExpand"
+                          class="n-icon n-icon:arrow_up n-deco-pos:right n-deco">
+                    닫기
+                  </button>
                 </div>
               </div>
             </div>
@@ -653,7 +669,7 @@ watchEffect(() => {
 
 const goToIntro = () => {
 
-  if(data.value.programDetailProgramDto.status === 'Published') {
+  if (data.value.programDetailProgramDto.status === 'Published') {
     alert("모집중인 프로그램은 수정할 수 없습니다.")
     return;
   }
@@ -665,7 +681,7 @@ const goToIntro = () => {
 };
 
 const goToDetail = () => {
-  if(data.value.programDetailProgramDto.status === 'Published') {
+  if (data.value.programDetailProgramDto.status === 'Published') {
     alert("모집중인 프로그램은 수정할 수 없습니다.")
     return;
   }
@@ -677,7 +693,7 @@ const goToDetail = () => {
 };
 
 const goToCourse = () => {
-  if(data.value.programDetailProgramDto.status === 'Published') {
+  if (data.value.programDetailProgramDto.status === 'Published') {
     alert("모집중인 프로그램은 수정할 수 없습니다.")
     return;
   }
@@ -689,7 +705,7 @@ const goToCourse = () => {
 };
 
 const goToInclusion = () => {
-  if(data.value.programDetailProgramDto.status === 'Published') {
+  if (data.value.programDetailProgramDto.status === 'Published') {
     alert("모집중인 프로그램은 수정할 수 없습니다.")
     return;
   }
@@ -701,7 +717,7 @@ const goToInclusion = () => {
 };
 
 const goToCaution = () => {
-  if(data.value.programDetailProgramDto.status === 'Published') {
+  if (data.value.programDetailProgramDto.status === 'Published') {
     alert("모집중인 프로그램은 수정할 수 없습니다.")
     return;
   }
@@ -713,7 +729,7 @@ const goToCaution = () => {
 };
 
 const goToImage = () => {
-  if(data.value.programDetailProgramDto.status === 'Published') {
+  if (data.value.programDetailProgramDto.status === 'Published') {
     alert("모집중인 프로그램은 수정할 수 없습니다.")
     return;
   }
@@ -967,7 +983,7 @@ const goToImage = () => {
 
   .content-header {
     width: max-content;
-    padding: var(--gap-6);
+    padding: var(--gap-6) var(--gap-3);
     list-style-type: none;
 
     .title {
@@ -981,7 +997,8 @@ const goToImage = () => {
     .n-icon {
       cursor: pointer;
       border: none;
-      margin-left: 20px
+      position: absolute;
+      right: var(--gap-7);
     }
   }
 
@@ -1013,14 +1030,18 @@ const goToImage = () => {
         display: -webkit-box;
         padding: 0 var(--gap-1);
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 2;
         overflow: hidden;
         text-overflow: ellipsis;
         line-height: 1.5;
+        white-space: pre-line;
       }
 
       .p-full {
         display: block;
+        padding: 0 var(--gap-1);
+        white-space: pre-line;
+        line-height: 1.5;
       }
 
 
