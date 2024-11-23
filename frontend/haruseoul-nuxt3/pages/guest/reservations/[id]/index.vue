@@ -1,213 +1,3 @@
-<script setup>
-import {onMounted, ref} from "vue";
-import {useRoute} from "vue-router";
-import {useReservationFetch} from "~/composables/useReservationFetch.js";
-import useShare from '~/composables/useShare';
-import CancelReservationModal from "~/components/modal/CancelReservationModal.vue";
-import CancelReservationModal2 from "~/components/modal/CancelReservationModal2.vue";
-
-const reservation = ref({
-  guest: {},
-  host: {},
-  program: {},
-  requirement: {},
-  reservationCard: {}
-});
-
-const route = useRoute();
-
-const guest = computed(() => reservation.value.guest);
-const host = computed(() => reservation.value.host);
-const program = computed(() => reservation.value.program);
-const requirement = computed(() => reservation.value.requirement);
-const reservationCard = computed(() => reservation.value.reservationCard);
-const guestConsent = ref(null); // 호스트가 풀방아닌 상태에서 예약확정하려고 했을 때 게스트 동의여부를 저장
-const config = useRuntimeConfig();
-
-const {shareToKakao} = useShare();  // useShare 모듈에서 shareToKakao 함수 가져오기
-
-// 버튼 클릭 시 공유 함수 호출
-const handleShare = (url) => {
-  shareToKakao(url);  // 여기서 원하는 URL을 넣어 공유
-};
-
-// 데이터 함수
-
-const fetchReservation = async (rId) => {
-  const params = {rId: rId};
-  const token = localStorage.getItem("token");
-  const response = await useReservationFetch(`guest/reservations/${rId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token.value}`,
-        },
-        params: params,
-        //  이 URL에 params 객체를 함께 전송하여 필터링된 결과를
-        //  response 변수에 받기
-      }
-  );
-
-  reservation.value = response;
-  console.log('fetchreservation called. reservation: ' ,reservation.value);
-  guestConsent.value = reservation.value.reservationCard.guestConsent;
-
-  // 날짜 차이를 계산하여 dDay 속성을 추가합니다.
-  const currentDate = new Date();
-  if (reservationCard.value.date && reservationCard.value) {
-    const reservationDate = new Date(reservationCard.value.date + `T00:00:00+09:00`);
-    reservationCard.value.dDay = Math.ceil((reservationDate - currentDate) / (1000 * 60 * 60 * 24));
-  } else {
-    reservationCard.value.dDay = null;
-  }
-};
-
-function copy() {
-  const copyText = document.getElementById("copyText");
-  const textToCopy = copyText.innerText; // 텍스트를 가져옴
-
-  // clipboard (API) 에 textToCopy 에 담긴 텍스트를 이동시키고, 알람 띄움
-  navigator.clipboard.writeText(textToCopy).then(() => {
-    alert("주소가 복사되었습니다.");
-  }).catch((err) => {
-    console.error("복사 실패:", err);
-  });
-}
-
-const formatDeleteDate = (deleteDate) => {
-  const date = new Date(deleteDate);  // UTC 시간을 로컬 시간으로 변환
-
-  // 한국 시간으로 변환 (UTC+9)
-  const koreaTimeOffset = 15 * 60; // 9 hours in minutes
-  const localDate = new Date(date.getTime() + koreaTimeOffset * 60 * 1000);
-
-  const year = localDate.getFullYear();
-  const month = localDate.getMonth();
-  const formattedMonth = String(month + 1).padStart(2, '0');  // 월은 0부터 시작하므로 +1
-  const day = localDate.getDate();  // getDay()는 요일을 반환하므로 getDate()로 날짜를 가져옴
-  const formattedDay = String(day).padStart(2, '0');
-  const hours = localDate.getHours();
-  const minutes = localDate.getMinutes();
-
-  return `${year}-${formattedMonth}-${formattedDay} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
-};
-
-
-
-// 예약취소--------------------------------------------------------------------------------
-
-const showModal = ref(null); // 모달을 표시할지 여부를 결정하는 변수
-const currentReservationId = ref(null); // 취소할 예약의 ID 저장
-
-// 예약 취소 버튼 클릭 핸들러
-const modalOpenHandler = (reservationId, modalName) => {
-  console.log("취소 클릭 ID:", reservationId); // ID가 제대로 넘어오는지 확인
-  currentReservationId.value = reservationId;  // 클릭한 예약의 ID 설정
-  showModal.value = modalName;  // 모달을 표시
-};
-
-const openModal = (modalName) => {
-  showModal.value = modalName;
-}
-
-// 모달을 닫을 때
-const closeModal = () => {
-  showModal.value = "";
-};
-
-const updateGuestConsent = (consent) => {
-  guestConsent.value = consent;
-  showModal.value = "";
-  fetchReservation(route.params.id)
-}
-
-// 생명주기 함수
-
-onMounted(() => {
-  const rId = route.params.id;
-  if (rId) {
-    fetchReservation(rId);  // rId가 있을 때만 데이터를 가져옵니다.
-  }
-
-  const initMaps = () => {
-    if (window.kakao && window.kakao.maps) {
-      kakao.maps.load(() => {
-        loadMap();
-      });
-    }
-  };
-
-  const loadMap = () => {
-    const container = document.getElementById('map');
-    if (!container) {
-      console.warn("Map container not found. Skipping map initialization.");
-      return;
-    }
-
-    const options = {
-      center: new kakao.maps.LatLng(33.450701, 126.570667),
-      level: 3
-    };
-    const map = new kakao.maps.Map(container, options);
-
-    if (program.value.meetingSpotAddress) {
-      const geocoder = new kakao.maps.services.Geocoder();
-
-      geocoder.addressSearch(program.value.meetingSpotAddress, (result, status) => {
-        if (status === kakao.maps.services.Status.OK) {
-          const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-          map.setCenter(coords);
-
-          new kakao.maps.Marker({
-            map: map,
-            position: coords
-          });
-        } else {
-          console.error('주소를 찾을 수 없습니다.');
-        }
-      });
-    } else {
-      console.log("주소가 없어 기본 좌표를 표시합니다.");
-    }
-  };
-
-  if (!window.kakao) {
-    const script = document.createElement("script");
-    script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=16a77f29af1bb5775a70cd85a9cfb9cc&autoload=false&libraries=services";
-    script.onload = initMaps;
-    document.head.appendChild(script);
-  } else {
-    initMaps();
-  }
-
-  // reservation의 program이 변경될 때 loadMap 실행
-  watch(() => program.value.meetingSpotAddress, (newAddress) => {
-    if (newAddress) {
-      loadMap();
-    }
-  });
-});
-
-
-const confirmParticipationHandler = async () => {
-  console.log('          confirmParticipationHandler called.');
-  const guestConsentResponse = await useDataFetch(`host/reservations/consent`, {
-    method: "PUT",
-    headers: {
-      "Content-type": "application/json"
-    },
-    body: {
-      "id": reservationCard.value.id,
-      "guestConsent": 2,// 참가동의로 초기화
-      "reservationStatus": 2
-    }
-  });
-  console.log('          Reservation Update result: ', guestConsentResponse);
-  guestConsent.value = 2;
-  closeModal();
-  await fetchReservation(reservationCard.value.id);
-}
-</script>
-
 <template>
   <main>
     <section class="reservation-detail">
@@ -513,7 +303,7 @@ const confirmParticipationHandler = async () => {
                               <button @click="copy" class="copy-btn">주소복사</button>
                             </div>
                           </div>
-                          <div class="map-img-wrapper" id="map" style="width: 100%; height: 400px;"></div>
+                          <div class="map-img-wrapper" id="map2" style="width: 100%; height: 400px;"></div>
                         </section>
                       </div>
                     </div>
@@ -741,6 +531,211 @@ const confirmParticipationHandler = async () => {
     </section>
   </main>
 </template>
+
+<script setup>
+import {onMounted, ref} from "vue";
+import {useRoute} from "vue-router";
+import {useReservationFetch} from "~/composables/useReservationFetch.js";
+import useShare from '~/composables/useShare';
+import CancelReservationModal from "~/components/modal/CancelReservationModal.vue";
+import CancelReservationModal2 from "~/components/modal/CancelReservationModal2.vue";
+
+const reservation = ref({
+  guest: {},
+  host: {},
+  program: {},
+  requirement: {},
+  reservationCard: {}
+});
+
+const route = useRoute();
+
+const guest = computed(() => reservation.value.guest);
+const host = computed(() => reservation.value.host);
+const program = computed(() => reservation.value.program);
+const requirement = computed(() => reservation.value.requirement);
+const reservationCard = computed(() => reservation.value.reservationCard);
+const guestConsent = ref(null); // 호스트가 풀방아닌 상태에서 예약확정하려고 했을 때 게스트 동의여부를 저장
+const config = useRuntimeConfig();
+
+const {shareToKakao} = useShare();  // useShare 모듈에서 shareToKakao 함수 가져오기
+
+// 버튼 클릭 시 공유 함수 호출
+const handleShare = (url) => {
+  shareToKakao(url);  // 여기서 원하는 URL을 넣어 공유
+};
+
+// 데이터 함수
+
+const fetchReservation = async (rId) => {
+  const params = {rId: rId};
+  const token = localStorage.getItem("token");
+  const response = await useReservationFetch(`guest/reservations/${rId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+        params: params,
+        //  이 URL에 params 객체를 함께 전송하여 필터링된 결과를
+        //  response 변수에 받기
+      }
+  );
+
+  reservation.value = response;
+  console.log('fetchreservation called. reservation: ' ,reservation.value);
+  guestConsent.value = reservation.value.reservationCard.guestConsent;
+
+  // 날짜 차이를 계산하여 dDay 속성을 추가합니다.
+  const currentDate = new Date();
+  if (reservationCard.value.date && reservationCard.value) {
+    const reservationDate = new Date(reservationCard.value.date + `T00:00:00+09:00`);
+    reservationCard.value.dDay = Math.ceil((reservationDate - currentDate) / (1000 * 60 * 60 * 24));
+  } else {
+    reservationCard.value.dDay = null;
+  }
+};
+
+function copy() {
+  const copyText = document.getElementById("copyText");
+  const textToCopy = copyText.innerText; // 텍스트를 가져옴
+
+  // clipboard (API) 에 textToCopy 에 담긴 텍스트를 이동시키고, 알람 띄움
+  navigator.clipboard.writeText(textToCopy).then(() => {
+    alert("주소가 복사되었습니다.");
+  }).catch((err) => {
+    console.error("복사 실패:", err);
+  });
+}
+
+const formatDeleteDate = (deleteDate) => {
+  const date = new Date(deleteDate);  // UTC 시간을 로컬 시간으로 변환
+
+  // 한국 시간으로 변환 (UTC+9)
+  const koreaTimeOffset = 15 * 60; // 9 hours in minutes
+  const localDate = new Date(date.getTime() + koreaTimeOffset * 60 * 1000);
+
+  const year = localDate.getFullYear();
+  const month = localDate.getMonth();
+  const formattedMonth = String(month + 1).padStart(2, '0');  // 월은 0부터 시작하므로 +1
+  const day = localDate.getDate();  // getDay()는 요일을 반환하므로 getDate()로 날짜를 가져옴
+  const formattedDay = String(day).padStart(2, '0');
+  const hours = localDate.getHours();
+  const minutes = localDate.getMinutes();
+
+  return `${year}-${formattedMonth}-${formattedDay} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+};
+
+
+
+// 예약취소--------------------------------------------------------------------------------
+
+const showModal = ref(null); // 모달을 표시할지 여부를 결정하는 변수
+const currentReservationId = ref(null); // 취소할 예약의 ID 저장
+
+// 예약 취소 버튼 클릭 핸들러
+const modalOpenHandler = (reservationId, modalName) => {
+  console.log("취소 클릭 ID:", reservationId); // ID가 제대로 넘어오는지 확인
+  currentReservationId.value = reservationId;  // 클릭한 예약의 ID 설정
+  showModal.value = modalName;  // 모달을 표시
+};
+
+const openModal = (modalName) => {
+  showModal.value = modalName;
+}
+
+// 모달을 닫을 때
+const closeModal = () => {
+  showModal.value = "";
+};
+
+const updateGuestConsent = (consent) => {
+  guestConsent.value = consent;
+  showModal.value = "";
+  fetchReservation(route.params.id)
+}
+
+// 생명주기 함수
+
+onMounted(async () => {
+  const rId = route.params.id;
+  if (rId) {
+    await fetchReservation(rId);  // rId가 있을 때만 데이터를 가져옵니다.
+  }
+
+  const initMaps = () => {
+    if (window.kakao && window.kakao.maps) {
+      kakao.maps.load(() => {
+
+        loadMap2();
+      });
+    }
+  };
+
+  const loadMap2 = () => {
+    const container = document.getElementById('map2');
+    if (!container) {
+      console.warn("Map container not found. Skipping map initialization.");
+      return;
+    }
+
+    const options = {
+      center: new kakao.maps.LatLng(33.450701, 126.570667),
+      level: 3
+    };
+    const map = new kakao.maps.Map(container, options);
+
+    if (program.value.meetingSpotAddress) {
+      const geocoder = new kakao.maps.services.Geocoder();
+
+      geocoder.addressSearch(program.value.meetingSpotAddress, (result, status) => {
+        if (status === kakao.maps.services.Status.OK) {
+          const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+          map.setCenter(coords);
+
+          new kakao.maps.Marker({
+            map: map,
+            position: coords
+          });
+        } else {
+          console.error('주소를 찾을 수 없습니다.');
+        }
+      });
+    } else {
+      console.log("주소가 없어 기본 좌표를 표시합니다.");
+    }
+  };
+
+  if (!window.kakao) {
+    const script = document.createElement("script");
+    script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=16a77f29af1bb5775a70cd85a9cfb9cc&autoload=false&libraries=services";
+    script.onload = initMaps;
+    document.head.appendChild(script);
+  } else {
+    initMaps();
+  }
+
+});
+
+
+const confirmParticipationHandler = async () => {
+  console.log('          confirmParticipationHandler called.');
+  const guestConsentResponse = await useDataFetch(`host/reservations/consent`, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: {
+      "id": reservationCard.value.id,
+      "guestConsent": 2,// 참가동의로 초기화
+      "reservationStatus": 2
+    }
+  });
+  console.log('          Reservation Update result: ', guestConsentResponse);
+  guestConsent.value = 2;
+  closeModal();
+  await fetchReservation(reservationCard.value.id);
+}
+</script>
 
 <style scoped>
 .guest-consent {

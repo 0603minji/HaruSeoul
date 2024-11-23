@@ -451,11 +451,11 @@
                           <div class="text">
                             <!-- 텍스트 미리보기 (3줄 표시) -->
                             <pre class="p-summary"
-                                 v-show="!isExpanded2">{{ data.programDetailReviewDto.reviewDetailDtos.content }}</pre>
+                                 v-show="!isExpanded2">{{ review.content }}</pre>
 
                             <!-- 텍스트 전체 (전체 내용 표시) -->
                             <pre class="p-full"
-                                 v-show="isExpanded2">{{ data.programDetailReviewDto.reviewDetailDtos.content }}</pre>
+                                 v-show="isExpanded2">{{ review.content }}</pre>
 
                             <!-- 펼치기 버튼 -->
                             <button v-if="!isExpanded2" @click="toggleExpand2"
@@ -470,53 +470,7 @@
                             </button>
                           </div>
                         </div>
-
-
-                        <!--                      <ul>-->
-                        <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
-                        <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
-                        <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
-                        <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
-                        <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
-                        <!--                        <li><img src="/public/image/face.jpg" alt="reviewPhoto"></li>-->
-                        <!--                      </ul>-->
-
                       </div>
-                      <!--  리뷰 호스트 답글   -->
-                      <!--                    <div style="display: flex; justify-content: center;">-->
-                      <!--                      <div class="reply">-->
-                      <!--                        <div class="host-info">-->
-                      <!--                          <img class="profile-img" src="/public/image/face.jpg" alt="프로필이미지">-->
-                      <!--                          <div style="flex-grow: 1;">-->
-                      <!--                            <div class="meatball-icon">-->
-                      <!--                              <span class="name">김민지</span>-->
-                      <!--                              <label class="n-icon n-icon:meatball"><span>똥똥똥</span><input-->
-                      <!--                                  type="checkbox"></label>-->
-                      <!--                            </div>-->
-                      <!--                            <span class="date">2024-09-30</span>-->
-                      <!--                          </div>-->
-                      <!--                        </div>-->
-                      <!--                        <div class="text">-->
-                      <!--                          <p class="p-summary">If you wanna take a break from Varanasi you-->
-                      <!--                            find a-->
-                      <!--                            great-->
-                      <!--                            location and hospitality-->
-                      <!--                            in this rooftop in the heart of the town. Food is really tasty-->
-                      <!--                            and-->
-                      <!--                            staff-->
-                      <!--                            really-->
-                      <!--                            great! If you wanna take a break from Varanasi you find a great-->
-                      <!--                            location-->
-                      <!--                            and-->
-                      <!--                            hospitality in this rooftop in the heart of the town. Food is-->
-                      <!--                            really-->
-                      <!--                            tasty-->
-                      <!--                            and-->
-                      <!--                            staff really great!</p>-->
-                      <!--                          <button>더보기</button>-->
-                      <!--                        </div>-->
-                      <!--                      </div>-->
-                      <!--                    </div>-->
                     </section>
                   </section>
                   <div
