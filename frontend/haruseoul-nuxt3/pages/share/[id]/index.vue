@@ -105,10 +105,10 @@ const closeModal = () => {
 
 // 생명주기 함수
 
-onMounted(() => {
+onMounted(async () => {
   const rId = route.params.id;
   if (rId) {
-    fetchreservation(rId);  // rId가 있을 때만 데이터를 가져옵니다.
+    await  fetchreservation(rId);  // rId가 있을 때만 데이터를 가져옵니다.
   }
 
   const initMaps = () => {
