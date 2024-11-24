@@ -15,7 +15,7 @@
         <li class="header-menu">
           <NuxtLink
               class="n-btn n-btn:hover n-btn-bd:transparent n-icon n-icon:dashboard"
-              href="/guest/reservations" :to="`../programs`"
+              href="/guest/reservations" :to="`/programs`"
           >프로그램 목록
           </NuxtLink
           >
