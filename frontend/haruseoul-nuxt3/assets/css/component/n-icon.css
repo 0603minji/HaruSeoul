@@ -245,6 +245,10 @@
   --icon: url(/assets/image/icon/dashboard.svg);
 }
 
+.n-icon\:edit:before {
+  --icon: url(/assets/image/icon/edit.svg);
+}
+
 .n-icon\:error:after,
 .n-icon\:error:before {
   --icon: url(/assets/image/icon/error.svg);

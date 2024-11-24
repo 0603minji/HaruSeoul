@@ -494,6 +494,8 @@ const fetchData = async () => {
                         <img v-else src="/assets/image/default-profile.png" alt="게스트 프로필">
                       </div>
                       <span class="nickname">{{applicant.memberNickname}}</span>
+                      <span v-if="applicant.guestConsent===1" class="n-panel-tag">미응답</span>
+                      <span v-if="applicant.guestConsent===2" class="n-panel-tag confirmed">참가동의</span>
                     </div>
                     <button class="chat-btn n-btn n-btn:hover n-btn-bg-color:sub">Chat</button>
                     <span class="n-icon n-icon:arrow_up margin-left:auto">펼치기 버튼</span>
@@ -756,6 +758,12 @@ const fetchData = async () => {
                     object-fit: cover;
                     border-radius: var(--border-radius-4);
                   }
+                }
+
+                .n-panel-tag.confirmed{
+                  --tag-border-color: var(--color-green-1);
+                  --tag-bg-color: var(--color-green-1);
+                  color: var(--color-base-1);
                 }
               }
 

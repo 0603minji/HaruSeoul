@@ -12,7 +12,7 @@
           <input
           type="file"
           accept="image/*"
-          class="n-icon cursor:pointer"
+          class="n-icon n-icon:edit"
           @change="handleProfileImageChange"
           />
         </div>
@@ -20,7 +20,7 @@
           <!-- 읽기 모드 -->
           <template v-if="!editingNickname">
             <p>{{ data.nickname }}</p>
-            <span class="n-icon edit-icon" style="cursor: pointer" @click.prevent="enableEdit">✏️</span>
+            <span class="n-icon n-icon:edit" style="cursor: pointer" @click.prevent="enableEdit">✏️</span>
           </template>
 
           <!-- 편집 모드 -->
@@ -246,12 +246,6 @@ const confirmDelete = async () => {
   font-weight: bold;
   align-items: center;
   gap: 5px;
-}
-
-.n-icon {
-  mask-image: url("assets/image/icon/edit.svg");
-  align-content: center;
-  align-items: center;
 }
 
 .profile-info {
