@@ -22,7 +22,7 @@ const emit = defineEmits(['updateNumberOfGuest', 'updateSelectedPublishedProgram
 /*=== variables =======================================================================================================*/
 const route = useRoute();
 const programId = route.params.id; // route에서 programId를 가져옴
-const reservation = useReservationFetch(route.params.id);
+// const reservation = useReservationFetch(route.params.id);
 
 // 예약할 인원수
 const numberOfGuest = ref(1);
