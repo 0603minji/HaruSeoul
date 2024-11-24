@@ -120,9 +120,6 @@ public class DefaultNotificationService implements NotificationService {
     @Transactional
     public void sendFromHost(NotificationSendDto notificationSendDto,Long guestId,Long deletedReservationId) {
 
-        Long programId = publishedProgramRepository.findProgramIdByPublishedProgramId(notificationSendDto.getProgramId());
-        Program program = programRepository.findById(programId).get();
-        Long programRegMemberId = program.getMember().getId();
 
         Notification notification = Notification.builder()
                 .senderId(notificationSendDto.getSenderId())
@@ -134,7 +131,7 @@ public class DefaultNotificationService implements NotificationService {
 
         notificationRepository.save(notification);
 
-        SseEmitter emitter = sseClientRegistry.getClient(programRegMemberId);
+        SseEmitter emitter = sseClientRegistry.getClient(guestId);
         if (emitter != null) {
             try {
                 emitter.send(SseEmitter.event()
@@ -142,14 +139,12 @@ public class DefaultNotificationService implements NotificationService {
                         .data(notification, MediaType.APPLICATION_JSON));
                 System.out.println("알림 전송 성공: " + notification);
             } catch (IOException e) {
-                sseClientRegistry.removeClient(programRegMemberId);
+                sseClientRegistry.removeClient(guestId);
                 System.out.println("알림 전송 실패: " + e.getMessage());
             }
         } else {
-            System.out.println("SseEmitter가 존재하지 않음: userId=" + programRegMemberId);
+            System.out.println("SseEmitter가 존재하지 않음: userId=" + guestId);
         }
-
-
 
     }
 
