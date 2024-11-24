@@ -27,6 +27,11 @@ const getPublishedProgramIdByReservationId = (reservationId) => {
   return reservation ? reservation.publishedProgramId : null;
 };
 
+const getProgramIdByReservationId = (reservationId) => {
+  const reservation = reservations.value.find(r => r.id === reservationId);
+  return reservation ? reservation.programId : null;
+};
+
 // 카카오톡 공유하기 ------------------------------------------------
 const {shareToKakao} = useShare();  // useShare 모듈에서 shareToKakao 함수 가져오기
 
@@ -63,6 +68,8 @@ const fetchReservations = async () => {
               }
             }
         );
+
+        console.log("리스폰",response)
 
         reservations.value = response.reservations;
         totalRowCount.value = response.totalRowCount;
@@ -130,11 +137,13 @@ const pageClickHandler = (newPage) => {
 
 const showModal = ref(null); // 모달을 표시할지 여부를 결정하는 변수
 const selectedReservationId = ref(null); // 취소할 예약의 ID 저장
+const selectedProgramId = ref(null); // 취소할 예약의 ID 저장
 
 // 예약 취소 버튼 클릭 핸들러
-const handleCancelClick = (reservationId,modalName) => {
+const handleCancelClick = (reservationId,modalName,programId) => {
   console.log("취소 클릭 ID:", reservationId); // ID가 제대로 넘어오는지 확인
   selectedReservationId.value = reservationId;  // 클릭한 예약의 ID 설정
+  selectedProgramId.value = programId;
   showModal.value = modalName;  // 누르면 모달을 표시하게끔
 };
 
@@ -332,7 +341,7 @@ onMounted(() => {
                 <div v-if="[1, 2].includes(r.reservationStatus)"
                      class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#" class="n-btn" @click="handleCancelClick(r.id, 'cancelReservationModal')"
+                  <a href="#" class="n-btn" @click="handleCancelClick(r.id, 'cancelReservationModal', program.programId)"
                      style="color: #DB4455; --btn-border-color:#DB4455;">
                     예약 취소
                   </a>
@@ -363,7 +372,7 @@ onMounted(() => {
           <div v-if="[1, 2].includes(r.reservationStatus)"
                class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-            <a href="#" class="n-btn" @click="handleCancelClick(r.id, 'cancelReservationModal')"
+            <a href="#" class="n-btn" @click="handleCancelClick(r.id, 'cancelReservationModal', r.programId)"
                style="color: #DB4455; --btn-border-color:#DB4455;">
               예약 취소
             </a>
@@ -392,6 +401,7 @@ onMounted(() => {
               :selectedReservationId="selectedReservationId"
               :publishedProgramId="getPublishedProgramIdByReservationId(selectedReservationId)"
               :reservationId="selectedReservationId"
+              :programId="getProgramIdByReservationId(selectedReservationId)"
               @close="closeModal"
           />
 

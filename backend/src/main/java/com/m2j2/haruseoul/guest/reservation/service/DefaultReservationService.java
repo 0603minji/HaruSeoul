@@ -93,6 +93,7 @@ public class DefaultReservationService implements ReservationService {
         modelMapper.typeMap(Reservation.class, ReservationListDto.class)
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getPublishedProgram().getDate(), ReservationListDto::setDate);
+                    mapper.map(src -> src.getPublishedProgram().getProgram().getId(), ReservationListDto::setProgramId);
                     mapper.map(src -> src.getPublishedProgram().getProgram().getTitle(), ReservationListDto::setProgramTitle);
                     mapper.map(src -> src.getPublishedProgram().getProgram().getMember().getId(), ReservationListDto::setHostId);
                     mapper.map(src -> src.getPublishedProgram().getStatus().getName(), ReservationListDto::setStatusName);
@@ -108,10 +109,10 @@ public class DefaultReservationService implements ReservationService {
                     ReservationListDto dto = modelMapper.map(reservation, ReservationListDto.class);
 
                     // publishedProgramId로 programId 조회
-                    Long programId = publishedProgramRepository.findProgramIdByPublishedProgramId(reservation.getPublishedProgram().getId());
+                    Long publishedProgramId = publishedProgramRepository.findProgramIdByPublishedProgramId(reservation.getPublishedProgram().getId());
 
                     // programId로 이미지 src 조회
-                    String image = String.valueOf(imageRepository.findFirstSrcByProgramId(programId));
+                    String image = String.valueOf(imageRepository.findFirstSrcByProgramId(publishedProgramId));
                     dto.setSrc(image);
 
                     return dto;
@@ -143,6 +144,7 @@ public class DefaultReservationService implements ReservationService {
                     mapper.map(src -> src.getPublishedProgram().getProgram().getMember().getId(), ReservationListDto::setHostId);
                     mapper.map(src -> src.getPublishedProgram().getStatus().getName(), ReservationListDto::setStatusName);
                     mapper.map(src -> src.getPublishedProgram().getProgram().getTitle(), ReservationListDto::setProgramTitle);
+                    mapper.map(src -> src.getPublishedProgram().getProgram().getId(), ReservationListDto::setProgramId);
                     mapper.map(src -> src.getPublishedProgram().getDate(), ReservationListDto::setDate);
                     mapper.map(Reservation::getNumberOfGuest, ReservationListDto::setNumberOfGuest);
                     mapper.map(src -> src.getPublishedProgram().getId(), ReservationListDto::setPublishedProgramId);
@@ -153,12 +155,14 @@ public class DefaultReservationService implements ReservationService {
         ReservationListDto reservationListDto = modelMapper.map(reservation, ReservationListDto.class);
 
         Long programId = publishedProgramRepository.findProgramIdByPublishedProgramId(reservation.getPublishedProgram().getId());
+
+        // programId로 이미지 src 조회
         String image = String.valueOf(imageRepository.findFirstSrcByProgramId(programId));
         reservationListDto.setSrc(image);
 
         // ReservationDetailProgramDto program;
         // 예약한 공개 프로그램
-        Program reservationProgram = programRepository.findById(reservation.getPublishedProgram().getProgram().getId()).orElse(null);
+        Program reservationProgram = programRepository.findById(programId).orElse(null);
 
         // 프로그램 ID 에 해당하는 Route 가져오기
         Route meetingSpot = routeRepository.meetingSpotTitleByProgramId(reservationProgram.getId());
