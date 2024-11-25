@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router'
 import { nextTick } from 'vue';
 import {ref, defineProps, defineEmits} from 'vue';
 import {useReservationFetch} from "~/composables/useReservationFetch.js";
+import {useDataFetch} from "~/composables/useDataFetch.js";
 
 const router = useRouter();
 
@@ -11,7 +12,8 @@ const props = defineProps({
   selectedReservationId: Number,
   fetchReservation:Function,
   publishedProgramId: Number,
-  reservationId: Number
+  reservationId: Number,
+  programId: Number
 });
 
 console.log("프롭스", props)
@@ -62,6 +64,13 @@ const cancelReservation = async () => {
         }
     );
 
+    // 개설된 프로그램이 더이상 존재하지 않는다면 프로그램 상태르 Published -> Unpublished로 변경
+    await useDataFetch(`host/programs/${props.programId}/statusCheck`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json"
+      }
+    });
 
     // cancel 이벤트 전달
     emit('cancel');

@@ -42,7 +42,8 @@
           </div>
 
           <div class="card-main">
-            <NuxtLink :to="`../../programs/${reservation.program.programId}`" v-if="r.src && r.src.startsWith('uploads')" class="img-wrapper">
+            <NuxtLink :to="`../../programs/${reservation.program.programId}`"
+                      v-if="r.src && r.src.startsWith('uploads')" class="img-wrapper">
               <img :src="`http://localhost:8080/api/v1/${r.src}`" alt="대표사진"/>
             </NuxtLink>
             <div v-else class="img-wrapper">
@@ -114,7 +115,8 @@
                 <div v-if="[1, 2].includes(r.reservationStatus)"
                      class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a v-if="guestConsent !==1" href="#" class="n-btn" @click="modalOpenHandler(r.id, `cancelReservationModal`);"
+                  <a v-if="guestConsent !==1" href="#" class="n-btn"
+                     @click="modalOpenHandler(r.id, `cancelReservationModal`, reservation.program.programId);"
                      style="color: #DB4455; --btn-border-color:#DB4455;">
                     예약 취소
                   </a>
@@ -145,7 +147,8 @@
           <div v-if="[1, 2].includes(r.reservationStatus)"
                class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-            <a v-if="guestConsent !==1" href="#" class="n-btn" @click="modalOpenHandler(r.id, `cancelReservationModal`)"
+            <a v-if="guestConsent !==1" href="#" class="n-btn"
+               @click="modalOpenHandler(r.id, `cancelReservationModal`, reservation.program.programId)"
                style="color: #DB4455; --btn-border-color:#DB4455;">
               예약 취소
             </a>
@@ -170,7 +173,7 @@
         </div>
       </div>
 
-<!--   todo   -->
+      <!--   todo   -->
 
       <section v-if="guestConsent===1" class="guest-consent">
         <header>
@@ -504,6 +507,7 @@
             :fetchReservation="fetchReservation"
             :publishedProgramId="program.publishedProgramId"
             :reservationId="reservationCard.id"
+            :programId="program.programId"
             @close="closeModal"
         />
 
@@ -513,6 +517,7 @@
             :selectedReservationId="currentReservationId"
             :fetchReservation="fetchReservation"
             :reservation="reservation"
+            :programId="program.programId"
             @close="closeModal"
             @update-guest-consent="updateGuestConsent"
         />
@@ -520,9 +525,11 @@
         <div v-show="showModal ===`acceptReservationModal`" class="modal">
           <div class="modal-content" style="display: flex; flex-direction: column; align-items: center">
             <p style="font-size: 15px; font-weight: bold">참가에 동의하시겠습니까?</p>
-              <p>(예약이 확정됩니다.)</p>
-            <div style="width: 180px; padding-left: 20px; padding-top: 15px; display: flex; justify-content: space-between">
-              <button class="n-btn n-btn:hover" style="color:#DB4455" @click.prevent="confirmParticipationHandler">확인</button>
+            <p>(예약이 확정됩니다.)</p>
+            <div
+                style="width: 180px; padding-left: 20px; padding-top: 15px; display: flex; justify-content: space-between">
+              <button class="n-btn n-btn:hover" style="color:#DB4455" @click.prevent="confirmParticipationHandler">확인
+              </button>
               <button class="n-btn n-btn:hover" @click="closeModal">닫기</button>
             </div>
           </div>
@@ -568,21 +575,17 @@ const handleShare = (url) => {
 // 데이터 함수
 
 const fetchReservation = async (rId) => {
-  const params = {rId: rId};
   const token = localStorage.getItem("token");
   const response = await useReservationFetch(`guest/reservations/${rId}`,
       {
         headers: {
           Authorization: `Bearer ${token.value}`,
-        },
-        params: params,
-        //  이 URL에 params 객체를 함께 전송하여 필터링된 결과를
-        //  response 변수에 받기
+        }
       }
   );
 
   reservation.value = response;
-  console.log('fetchreservation called. reservation: ' ,reservation.value);
+  console.log('fetchreservation called. reservation: ', reservation.value);
   guestConsent.value = reservation.value.reservationCard.guestConsent;
 
   // 날짜 차이를 계산하여 dDay 속성을 추가합니다.
@@ -626,16 +629,17 @@ const formatDeleteDate = (deleteDate) => {
 };
 
 
-
 // 예약취소--------------------------------------------------------------------------------
 
 const showModal = ref(null); // 모달을 표시할지 여부를 결정하는 변수
 const currentReservationId = ref(null); // 취소할 예약의 ID 저장
+const selectedProgramId = ref(null); // 취소할 예약의 ID 저장
 
 // 예약 취소 버튼 클릭 핸들러
-const modalOpenHandler = (reservationId, modalName) => {
+const modalOpenHandler = (reservationId, modalName, programId) => {
   console.log("취소 클릭 ID:", reservationId); // ID가 제대로 넘어오는지 확인
   currentReservationId.value = reservationId;  // 클릭한 예약의 ID 설정
+  selectedProgramId.value = programId;
   showModal.value = modalName;  // 모달을 표시
 };
 
@@ -750,6 +754,7 @@ const confirmParticipationHandler = async () => {
   width: calc(100% - 32px); /* 최소 좌우 여백 16px 확보 */
 
   /* 헤더 스타일 */
+
   header {
     width: 100%;
     display: inline-flex;
@@ -767,6 +772,7 @@ const confirmParticipationHandler = async () => {
   }
 
   /* 본문 텍스트 */
+
   p {
     font-size: 14px;
     color: #555;
@@ -781,6 +787,7 @@ const confirmParticipationHandler = async () => {
   }
 
   /* 리스트 스타일 */
+
   ul {
     list-style-type: disc;
     margin: 20px 0 24px 0; /* 안쪽 여백 추가 */
@@ -793,6 +800,7 @@ const confirmParticipationHandler = async () => {
   }
 
   /* 버튼 컨테이너 */
+
   div {
     display: flex;
     justify-content: space-between; /* 버튼을 양쪽에 배치 */
@@ -800,6 +808,7 @@ const confirmParticipationHandler = async () => {
     margin-top: 20px;
 
     /* 버튼 스타일 */
+
     button {
       flex: 1; /* 버튼 크기 균등화 */
       padding: 10px 15px;
@@ -833,6 +842,7 @@ const confirmParticipationHandler = async () => {
     }
   }
 }
+
 .guest-consent-confirmed, .guest-consent-rejected {
   display: flex;
   align-items: center;
@@ -849,9 +859,11 @@ const confirmParticipationHandler = async () => {
     margin: 4px 0;
   }
 }
+
 .guest-consent-confirmed {
   background-color: var(--color-green-3);
 }
+
 .guest-consent-rejected {
   background-color: var(--color-red-3);
 }
@@ -1200,6 +1212,7 @@ const confirmParticipationHandler = async () => {
     }
   }
 }
+
 .modal {
   position: fixed;
   top: 0;
