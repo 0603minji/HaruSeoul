@@ -1,11 +1,11 @@
 spring:
   profiles:
-    active: prod #dev #prod
+    active: dev #dev #prod
     include: secret #민감정보 secret파일
 
-  config:
+#  config:
 #    import: "file:/C:/Users/user/Desktop/HaruSeoul-final/application-secret.yml"
-    import: "file:/home/new8th3/application-secret.yml"
+#    import: "file:/home/new8th3/application-secret.yml"
 
   web:
     resources:

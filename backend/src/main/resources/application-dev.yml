@@ -23,7 +23,7 @@ haruSeoul:
     secret: ${SPRING_JWT_SECRET_KEY}
 
 server:
-  port: 8080
+  port: 8083
 #  address: ...
 
 

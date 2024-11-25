@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   css: ['@/assets/bundle.css'],
   runtimeConfig: {
     public: {
-      apiBase: 'http://hi.newlecture.com:8083/api/v1/'
+      apiBase: 'http://localhost:8083/api/v1/'
     }
   },
   plugins: [
