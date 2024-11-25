@@ -34,9 +34,10 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:./uploads/");
+        registry.addResourceHandler("/api/v1/uploads/**")
+                .addResourceLocations("file:/home/new8th3/HaruSeoul/backend/uploads/");
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -75,6 +76,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                                 .requestMatchers("/host/**").authenticated()
                                 .requestMatchers("/guest/**").authenticated()
                                 .requestMatchers("/uploads/**").permitAll()
+                                .requestMatchers("/api/v1/uploads/**").permitAll()
                                 .requestMatchers("/notifications/**").permitAll()
 
                                 .anyRequest().permitAll()
