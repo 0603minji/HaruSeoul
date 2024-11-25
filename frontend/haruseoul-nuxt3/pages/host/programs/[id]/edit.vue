@@ -444,7 +444,7 @@ onMounted(() => {
 
   if (!window.kakao) {
     const script = document.createElement("script");
-    script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=16a77f29af1bb5775a70cd85a9cfb9cc&autoload=false&libraries=services";
+    script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=9fcf4fe8de11c60a0d6702af06ca856e&autoload=false&libraries=services";
     script.onload = initMaps;
     document.head.appendChild(script);
   } else {

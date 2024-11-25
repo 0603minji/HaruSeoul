@@ -347,7 +347,7 @@ onMounted(() => {
                   </a>
                   <a href="#"
                      class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
-                     @click="handleShare(`http://localhost:3000/share/${r.id}`)">공유하기</a>
+                     @click="handleShare(`http://localhost:3003/share/${r.id}`)">공유하기</a>
                 </div>
 
                 <div v-else-if="r.reservationStatus === 4" class="card-footer-responsive">
@@ -355,14 +355,14 @@ onMounted(() => {
                   <a href="#" class="n-btn">리뷰 작성</a>
                   <a href="#"
                      class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
-                     @click="handleShare(`http://localhost:3000/share/${r.id}`)">공유하기</a>
+                     @click="handleShare(`http://localhost:3003/share/${r.id}`)">공유하기</a>
                 </div>
 
                 <div v-else-if="r.reservationStatus === 3" class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
                   <a href="#"
                      class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
-                     @click="handleShare(`http://localhost:3000/share/${r.id}`)">공유하기</a>
+                     @click="handleShare(`http://localhost:3003/share/${r.id}`)">공유하기</a>
                 </div>
 
               </div>
@@ -377,21 +377,21 @@ onMounted(() => {
               예약 취소
             </a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
-               @click="handleShare(`http://localhost:3000/share/${r.id}`)">공유하기</a>
+               @click="handleShare(`http://localhost:3003/share/${r.id}`)">공유하기</a>
           </div>
 
           <div v-else-if="r.reservationStatus === 4" class="card-footer margin-top:2">
             <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
             <a href="#" class="n-btn">리뷰 작성</a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
-               @click="handleShare(`http://localhost:3000/share/${r.id}`)">공유하기</a>
+               @click="handleShare(`http://localhost:3003/share/${r.id}`)">공유하기</a>
           </div>
 
           <div v-else-if="r.reservationStatus === 3" class="card-footer margin-top:2"
                style="padding-left: 10px; justify-content: space-between;">
             <a href="#" class="n-btn bg-color:main-1 color:base-1" style="max-width: 478px;">호스트 문의</a>
             <a href="#" class="n-btn n-icon n-icon:share border-color:transparent flex-grow:0 padding:0"
-               @click="handleShare(`http://localhost:3000/share/${r.id}`)">공유하기</a>
+               @click="handleShare(`http://localhost:3003/share/${r.id}`)">공유하기</a>
           </div>
 
           <!-- 예약 취소 모달 -->

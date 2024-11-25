@@ -34,8 +34,8 @@ export default function useShare() {
                     {
                         title: "Haru Seoul!",
                         link: {
-                            mobileWebUrl: "http://localhost:3000/",
-                            webUrl: "http://localhost:3000/",
+                            mobileWebUrl: "http://localhost:3003/",
+                            webUrl: "http://localhost:3003/",
                         },
                     },
                 ],
