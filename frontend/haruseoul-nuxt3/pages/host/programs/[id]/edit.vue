@@ -420,7 +420,7 @@ const activeSection = ref(window.location.hash || "#intro");
 
 //================Fetch Functions==============
 const fetchCategories = async () => {
-  const response = await axios.get("http://localhost:8080/api/v1/categories");
+  const response = await axios.get("http://localhost:8083/api/v1/categories");
   categories.value = response.data;
 }
 
@@ -737,7 +737,7 @@ const sendCreateRequest = async () => {
   console.log("이미지파일수정데이터:", formData);
 
   try {
-    const response = await axios.put(`http://localhost:8080/api/v1/host/programs`, formData, {
+    const response = await axios.put(`http://localhost:8083/api/v1/host/programs`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data"
@@ -755,7 +755,7 @@ const sendCreateRequest = async () => {
 const loadProgramData = async () => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(`http://localhost:8080/api/v1/host/programs/${programId}`,
+    const response = await axios.get(`http://localhost:8083/api/v1/host/programs/${programId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -785,10 +785,10 @@ const loadProgramData = async () => {
       images: data.src || []
     });
 
-    previewImages.value = (data.src || []).map(src => `http://localhost:8080/api/v1/${src}`);
+    previewImages.value = (data.src || []).map(src => `http://localhost:8083/api/v1/${src}`);
     // 기존 이미지를 Blob 형태로 imageFiles에 추가
     for (const src of data.src || []) {
-      const response = await fetch(`http://localhost:8080/api/v1/${src}`);
+      const response = await fetch(`http://localhost:8083/api/v1/${src}`);
       const blob = await response.blob();
       const file = new File([blob], src.split('/').pop(), { type: blob.type });
       imageFiles.value.push(file);

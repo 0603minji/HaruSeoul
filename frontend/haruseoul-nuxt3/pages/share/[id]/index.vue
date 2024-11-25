@@ -218,7 +218,7 @@ onMounted(async () => {
 
           <div class="card-main">
             <div v-if="r.src && r.src.startsWith('uploads')" class="img-wrapper">
-              <img :src="`http://localhost:8080/api/v1/${r.src}`" alt="대표사진"/>
+              <img :src="`http://localhost:8083/api/v1/${r.src}`" alt="대표사진"/>
             </div>
             <div v-else class="img-wrapper">
               <img src="../../../assets/image/default-program-image.png" alt="대표사진"/>
@@ -339,7 +339,7 @@ onMounted(async () => {
                 <h1>프로필 카드</h1>
                 <div class="overview">
                   <div v-if="host.memberImg && host.memberImg.startsWith('uploads')" class="img-wrapper">
-                    <img :src="`http://localhost:8080/api/v1/${host.memberImg}`" alt="대표사진"/>
+                    <img :src="`http://localhost:8083/api/v1/${host.memberImg}`" alt="대표사진"/>
                   </div>
                   <div v-else class="img-wrapper">
                     <img src="/assets/image/default-profile.png" alt="호스트프사">

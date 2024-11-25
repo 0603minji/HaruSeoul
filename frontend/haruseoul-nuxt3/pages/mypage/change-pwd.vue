@@ -76,7 +76,7 @@ const confirmPasswordChange = async () => {
 
     try {
       const response = await axios.put(
-          `http://localhost:8080/api/v1/members/${memberId}`,
+          `http://localhost:8083/api/v1/members/${memberId}`,
           formData,
           {
             headers: {

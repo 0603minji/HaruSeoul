@@ -201,7 +201,7 @@ const removeRoute = () => {
 
 //===================== Fetch Functions ====================
 const fetchTransportationIds = async () => {
-  const response = await axios.get("http://localhost:8080/api/v1/transportation");
+  const response = await axios.get("http://localhost:8083/api/v1/transportation");
   transportationIds.value = response.data;
 }
 

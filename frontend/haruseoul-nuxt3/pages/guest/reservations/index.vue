@@ -273,7 +273,7 @@ onMounted(() => {
 
           <div class="card-main">
             <div v-if="r.src && r.src.startsWith('uploads')" class="img-wrapper">
-              <img :src="`http://localhost:8080/api/v1/${r.src}`" alt="대표사진"/>
+              <img :src="`http://localhost:8083/api/v1/${r.src}`" alt="대표사진"/>
             </div>
 
             <div class="card-info-wrapper">
@@ -341,7 +341,7 @@ onMounted(() => {
                 <div v-if="[1, 2].includes(r.reservationStatus)"
                      class="card-footer-responsive">
                   <a href="#" class="n-btn bg-color:main-1 color:base-1">호스트 문의</a>
-                  <a href="#" class="n-btn" @click="handleCancelClick(r.id, 'cancelReservationModal', program.programId)"
+                  <a href="#" class="n-btn" @click="handleCancelClick(r.id, 'cancelReservationModal', r.programId)"
                      style="color: #DB4455; --btn-border-color:#DB4455;">
                     예약 취소
                   </a>

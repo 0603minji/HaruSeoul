@@ -22,7 +22,7 @@ export function useNotification(userId) {
 
     onMounted(() => {
         // SSE 연결 시작
-        eventSource = new EventSource(`http://localhost:8080/api/v1/notifications/${userId}`);
+        eventSource = new EventSource(`http://localhost:8083/api/v1/notifications/${userId}`);
 
         eventSource.onopen = () => console.log("sse 연결 성공");
 

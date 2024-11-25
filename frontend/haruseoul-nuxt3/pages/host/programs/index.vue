@@ -594,14 +594,14 @@ onMounted(() => {
 
 //============= Data Functions =======================
 const fetchCategories = async () => {
-  const response = await axios.get("http://localhost:8080/api/v1/categories");
+  const response = await axios.get("http://localhost:8083/api/v1/categories");
   categories.value = response.data;
 };
 
 const fetchProgramsTitle = async () => {
   const userId = localStorage.getItem("id");
   const token = localStorage.getItem("token");
-  const response = await axios.get(`http://localhost:8080/api/v1/host/programs/user/${userId}`,
+  const response = await axios.get(`http://localhost:8083/api/v1/host/programs/user/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -643,7 +643,7 @@ const fetchPrograms = async (
 
   const response = await axios.get(
       //  axios.get : 비동기적으로 서버의 API로 GET 요청 보냄
-      "http://localhost:8080/api/v1/host/programs",
+      "http://localhost:8083/api/v1/host/programs",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -669,7 +669,7 @@ const deleteProgram = async (program, index) => {
     return;
   }
   try {
-    await axios.put(`http://localhost:8080/api/v1/host/programs/${program.id}/softDelete`, {
+    await axios.put(`http://localhost:8083/api/v1/host/programs/${program.id}/softDelete`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -696,7 +696,7 @@ const toggleMenu = (index) => {
 
 
 const getImageSrc = (program) => {
-  const BASE_URL = 'http://localhost:8080/api/v1/'
+  const BASE_URL = 'http://localhost:8083/api/v1/'
   const image = program.images.find(img => img.order === 1)
   // 이미지가 있을 경우, 경로 앞에 BASE_URL을 추가
   return image ? `${BASE_URL}${image.src.startsWith('uploads') ? image.src : image.src}` : `${BASE_URL}uploads/default.jpg`
@@ -875,7 +875,7 @@ const isCategoryFilterActive = computed(() => selectedCategories.value.length > 
 watchEffect(() => {
   if (programs.value && programs.value.images && programs.value.images.length > 0) {
     const mainImage = programs.value.images.find(image => image.order === 1);
-    mainImageSrc.value = mainImage ? `http://localhost:8080/api/v1/${mainImage.src}` : '';
+    mainImageSrc.value = mainImage ? `http://localhost:8083/api/v1/${mainImage.src}` : '';
   }
 });
 

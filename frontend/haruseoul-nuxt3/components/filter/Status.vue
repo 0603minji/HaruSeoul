@@ -15,7 +15,7 @@ const userDetail = useUserDetails();
 // 상태를 가져오는 비동기 함수
 const fetchStatuses = async () => {
   try {
-    const response = await axios.get("http://localhost:8080/api/v1/statuses", {
+    const response = await axios.get("http://localhost:8083/api/v1/statuses", {
       headers: {
         Authorization: `Bearer ${token}` // JWT 토큰 추가
       }
@@ -57,7 +57,7 @@ const fetchReservations = async (statusIds) => {
     const params = createQuery(statusIds); // 쿼리 생성 함수 호출
     console.log("파람값:",params)
     const response = await useReservationFetch(
-        `http://localhost:8080/api/v1/guest/reservations`,
+        `http://localhost:8083/api/v1/guest/reservations`,
         {query: params}
     );
 

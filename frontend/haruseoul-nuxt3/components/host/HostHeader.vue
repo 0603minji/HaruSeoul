@@ -120,7 +120,7 @@
         <div @click.prevent="toggleModal" class="profile-img-wrapper" style="cursor: pointer">
           <img v-if="userDetails.profileImgSrc.value"
             class="profile-img"
-            :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`"
+            :src="`http://localhost:8083/api/v1/${userDetails.profileImgSrc.value}`"
             alt="게스트 프로필 사진"
           />
           <img v-else
@@ -135,7 +135,7 @@
 
           <!-- 프로필 사진과 마이페이지 링크 -->
           <div class="modal-header">
-            <img v-if="userDetails.profileImgSrc" class="modal-profile-img" :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`" alt="프로필 사진" />
+            <img v-if="userDetails.profileImgSrc" class="modal-profile-img" :src="`http://localhost:8083/api/v1/${userDetails.profileImgSrc.value}`" alt="프로필 사진" />
             <img v-else class="modal-profile-img" src="/assets/image/default-profile.png" alt="프로필 사진" />
             <NuxtLink href="/mypage" class="mypage-link">마이페이지</NuxtLink>
           </div>
@@ -226,7 +226,7 @@
             <div @click.prevent="toggleModal" class="profile-img-wrapper" style="cursor: pointer">
               <img v-if="userDetails.profileImgSrc.value"
                    class="profile-img"
-                   :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`"
+                   :src="`http://localhost:8083/api/v1/${userDetails.profileImgSrc.value}`"
                    alt="게스트 프로필 사진"
               />
               <img v-else
@@ -367,7 +367,7 @@ const toggleNotificationModalAside = () => {
 
 
 const confirmNotification = async (notificationId) => {
-  const confirm = await axios.post(`http://localhost:8080/api/v1/notifications/${notificationId}`)
+  const confirm = await axios.post(`http://localhost:8083/api/v1/notifications/${notificationId}`)
   await fetchNotifications();
 }
 

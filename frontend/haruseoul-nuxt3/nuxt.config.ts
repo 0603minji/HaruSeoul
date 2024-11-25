@@ -5,10 +5,15 @@ export default defineNuxtConfig({
   css: ['@/assets/bundle.css'],
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:8080/api/v1/'
+      apiBase: 'http://localhost:8083/api/v1/'
     }
   },
   plugins: [
     { src: '~/plugins/kakao.js', mode: 'client' }  // 카카오 SDK 플러그인 추가 (클라이언트에서만 로드)
-  ]
+  ],
+  nitro: {
+    devServer: {
+      port: 3003, // 원하는 포트 번호로 변경
+    },
+  }
 });

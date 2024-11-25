@@ -117,7 +117,7 @@ const submitHandler = async () => {
   };
 
   try {
-    const response = await axios.post('http://localhost:8080/api/v1/members/signup', memberData);
+    const response = await axios.post('http://localhost:8083/api/v1/members/signup', memberData);
     // 회원가입 성공 시 http://localhost:5173/success 페이지로 리디렉션
     navigateTo('/signup-success');
   } catch (error) {
@@ -130,7 +130,7 @@ const validHandler = async () => {
   const userIdData = {userId: userId.value};
 
   try {
-    const response = await axios.post('http://localhost:8080/api/v1/members/idvalid', userIdData);
+    const response = await axios.post('http://localhost:8083/api/v1/members/idvalid', userIdData);
     alert("중복확인 완료");
     isChecked.value = true;
   } catch (error) {

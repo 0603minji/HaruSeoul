@@ -438,7 +438,7 @@ const activeSection = ref();
 
 //================Fetch Functions==============
 const fetchCategories = async () => {
-  const response = await axios.get("http://localhost:8080/api/v1/categories");
+  const response = await axios.get("http://localhost:8083/api/v1/categories");
   categories.value = response.data;
 }
 
@@ -722,7 +722,7 @@ const sendCreateRequest = async () => {
 
 
   try {
-    const response = await axios.post("http://localhost:8080/api/v1/host/programs", formData, {
+    const response = await axios.post("http://localhost:8083/api/v1/host/programs", formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         // "Content-Type": "multipart/form-data"

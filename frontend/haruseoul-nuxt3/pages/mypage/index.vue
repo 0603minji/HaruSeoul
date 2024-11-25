@@ -6,7 +6,7 @@
           <img
               v-if="userDetails.profileImgSrc.value"
               class="profile-image"
-              :src="`http://localhost:8080/api/v1/${userDetails.profileImgSrc.value}`"
+              :src="`http://localhost:8083/api/v1/${userDetails.profileImgSrc.value}`"
               alt="프로필 이미지"/>
           <img v-else class="profile-image" src="/assets/image/default-profile.png" alt="프로필 이미지"/>
           <input
@@ -130,7 +130,7 @@ const updateNickname = async () => {
   }
   try {
     await axios.put(
-        `http://localhost:8080/api/v1/members/${memberId}`,formData,
+        `http://localhost:8083/api/v1/members/${memberId}`,formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -167,7 +167,7 @@ const handleProfileImageChange = async (event) => {
 
   try {
     const response = await axios.put(
-        `http://localhost:8080/api/v1/members/${memberId}`,
+        `http://localhost:8083/api/v1/members/${memberId}`,
         formData,
         {
           headers: {
