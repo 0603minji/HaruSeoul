@@ -669,7 +669,7 @@ const deleteProgram = async (program, index) => {
     return;
   }
   try {
-    await axios.put(`http://localhost:8083/api/v1/host/programs/${program.id}/softDelete`, {
+    await axios.put(`http://localhost:8083/api/v1/host/programs/${program.id}/softDelete`, {}, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
