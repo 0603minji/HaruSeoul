@@ -4,6 +4,17 @@ spring:
   web:
     resources:
       static-locations: file:./uploads/
+      chain:
+        content:
+          mime-mappings:
+            jpg: image/jpeg
+            jpeg: image/jpeg
+            png: image/png
+            gif: image/gif
+            svg: image/svg+xml
+            css: text/css
+            js: application/javascript
+
 
   jpa:
     generate-ddl: false
