@@ -51,7 +51,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:3003", "http://haruseoul.com:3003"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:3003",
+                "http://haruseoul.com:3003","http://hi.newlecture.com:3003"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowCredentials(true);
         config.addAllowedHeader("*");
