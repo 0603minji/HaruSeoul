@@ -1,10 +1,10 @@
 spring:
   profiles:
-    active: dev #dev #prod
+    active: prod #dev #prod
     include: secret #민감정보 secret파일
 
-#  config:
-#    import: "file:/home/new8th3/application-secret.yml"
+  config:
+    import: "file:/home/new8th3/application-secret.yml"
 
   web:
     resources:
