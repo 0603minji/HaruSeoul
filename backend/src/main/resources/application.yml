@@ -7,9 +7,9 @@ spring:
 #    import: "file:/C:/Users/user/Desktop/HaruSeoul-final/application-secret.yml"
     import: "file:/home/new8th3/application-secret.yml"
 
-  web:
-    resources:
-      static-locations: file:./uploads/
+#  web:
+#    resources:
+#      static-locations: file:./uploads/
   servlet:
     multipart:
       enabled: true

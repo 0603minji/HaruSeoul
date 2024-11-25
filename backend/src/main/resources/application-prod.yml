@@ -1,6 +1,9 @@
 spring:
   application:
     name: HaruSeoul
+  web:
+    resources:
+      static-locations: file:./uploads/
 
   jpa:
     generate-ddl: false
@@ -15,3 +18,4 @@ spring:
 
 server:
   port: 8083
+
