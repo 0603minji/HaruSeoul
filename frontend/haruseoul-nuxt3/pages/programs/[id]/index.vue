@@ -171,7 +171,7 @@
                     <div class="overview">
                       <div class="img-wrapper">
                         <img v-if="data.programDetailMemberDto.hostProfileImg"
-                             :src="`http://localhost:8083/api/v1/${data.programDetailMemberDto.hostProfileImg}`"
+                             :src="`http://hi.newlecture.com:8083/api/v1/${data.programDetailMemberDto.hostProfileImg}`"
                              alt="호스트프사">
                         <img v-else src="/assets/image/default-profile.png" alt="호스트프사">
                       </div>
@@ -542,7 +542,7 @@ const totalImages = computed(() => data.value?.programDetailImageDto?.imgSrc?.le
 
 const currentImage = computed(() => {
   return totalImages.value > 0
-      ? `http://localhost:8083/api/v1/${data.value.programDetailImageDto.imgSrc[currentImageIndex.value]}`
+      ? `http://hi.newlecture.com:8083/api/v1/${data.value.programDetailImageDto.imgSrc[currentImageIndex.value]}`
       : '';
 });
 
@@ -679,7 +679,7 @@ onMounted(() => {
 });
 
 
-const {data, error} = await useFetch(`http://localhost:8083/api/v1/programs/${programId.value}`);
+const {data, error} = await useFetch(`http://hi.newlecture.com:8083/api/v1/programs/${programId.value}`);
 
 const addressWithOrderOne = computed(() => {
   const item = data.value.programDetailRouteDto.find(route => route.order === 1);

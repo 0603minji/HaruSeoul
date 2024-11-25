@@ -461,7 +461,7 @@
 
                 <div class="card-main">
                   <div class="img-wrapper">
-                    <img :src="`http://localhost:8083/api/v1/${p.img}`" alt="대표사진">
+                    <img :src="`http://hi.newlecture.com:8083/api/v1/${p.img}`" alt="대표사진">
                   </div>
 
                   <div class="card-info-wrapper">
@@ -540,7 +540,7 @@ const isDurationActive = ref(false);
 let observer;
 
 const fetchCategories = async () => {
-  const response = await axios.get("http://localhost:8083/api/v1/categories");
+  const response = await axios.get("http://hi.newlecture.com:8083/api/v1/categories");
   categories.value = response.data;
 
 };
@@ -554,7 +554,7 @@ const fetchFilteredPrograms = async () => {
     page.value = 1; // 검색 시 페이지 초기화
     programs.value = []; // 기존 데이터 초기화
 
-    const response = await axios.get('http://localhost:8083/api/v1/programs', {
+    const response = await axios.get('http://hi.newlecture.com:8083/api/v1/programs', {
       params: {
         categoryIds: selectedCategoryIds.value.length === 0 ? null : selectedCategoryIds.value.join(','),
         startDate: startDate.value,
@@ -587,7 +587,7 @@ const fetchNextPage = async () => {
 
   try {
     page.value += 1; // 다음 페이지 로드
-    const response = await axios.get('http://localhost:8083/api/v1/programs', {
+    const response = await axios.get('http://hi.newlecture.com:8083/api/v1/programs', {
       params: {
         categoryIds: selectedCategoryIds.value.length === 0 ? null : selectedCategoryIds.value.join(','),
         startDate: startDate.value,
