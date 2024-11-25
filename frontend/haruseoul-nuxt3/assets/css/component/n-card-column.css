@@ -1,0 +1,88 @@
+/* ====================== .card-main의 flex-direction: column ==================== */
+
+.n-card-container-column {
+    --column-number: 2; /* 한 줄에 표시될 카드 개수 */
+    --card-list-gap: var(--gap-5); /* !0이 되면 절대 안됨..! */
+    display: flex;
+    flex-direction: row; /**/
+    flex-wrap: wrap; /**/
+    gap: var(--card-list-gap);
+    /*max-width: 600px;*/
+    /*min-width: 300px;*/
+
+    box-sizing: content-box; /**/
+    padding: 8px 16px;
+}
+
+@media (min-width:992px) {
+    .n-card-container-column {
+        --column-number: 4;
+    }
+}
+
+.n-card-column {
+     flex-basis: calc((100% - var(--card-list-gap) * (var(--column-number) - 1)) / var(--column-number)); /**/
+     max-width: calc((100% - var(--card-list-gap) * (var(--column-number) - 1)) / var(--column-number));
+     min-width: calc((100% - var(--card-list-gap) * (var(--column-number) - 1)) / var(--column-number));
+
+     /*flex-basis: 50%; !**!*/
+     /*max-width: 50%;*/
+     /*min-width: 50%;*/
+
+     border-radius: 0;
+     border: 0 solid var(--color-base-3);
+     gap: 0;
+     margin-bottom: 30px;
+
+     .card-main {
+         flex-direction: column; /**/
+         align-items: stretch;
+         gap: 0;
+         width: 100%;
+
+         .img-wrapper {
+             width: 100%;
+             min-width: 100%;
+             margin-bottom: 8px;
+
+             img {
+                 width: var(--width-10p);
+                 height: var(--height-10p);
+                 object-fit: cover;
+             }
+         }
+
+         .card-info-wrapper {
+             word-break: break-all;
+             padding: 0 10px;
+             /*gap: var(--gap-2);*/
+             /*margin-top: var(--gap-2);*/
+
+             .title {
+                 font-size: 14px;
+                 margin-bottom: 8px;
+             }
+
+             .card-info {
+                 font-size: 12px;
+                 display: flex;
+                 align-items: center;
+                 flex-direction: row;
+                 gap: var(--gap-2);
+
+                 .n-icon {
+                     --icon-color: var(--color-main-3);
+                     --icon-size: var(--icon-size-1);
+                 }
+
+                 .n-deco {
+                     --deco-gap: 4px;
+                 }
+             }
+         }
+     }
+
+     .card-footer {
+        display: flex;
+     }
+ }

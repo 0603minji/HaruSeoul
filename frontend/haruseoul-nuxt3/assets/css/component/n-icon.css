@@ -1,0 +1,421 @@
+.n-icon {
+  --icon-size-1: 12px;
+  --icon-size-2: 16px;
+  --icon-size-3: 18px;
+  --icon-size-4: 20px;
+  --icon-size-5: 24px;
+  --icon-size-6: 30px;
+  --icon-size-7: 32px;
+  --icon-size-8: 40px;
+  --icon-size-9: 48px;
+  --icon-size-ex: 0;
+  --icon-size: 24px;
+  --icon-color: var(--color-base-9);
+  align-items: center;
+}
+
+.n-icon,
+.n-icon:before {
+  display: inline-flex;
+  height: var(--icon-size);
+  overflow: hidden;
+  width: var(--icon-size);
+}
+
+.n-icon:before {
+  background-color: var(--icon-color);
+  background-repeat: no-repeat;
+  content: "";
+  flex-shrink: 0;
+  mask-image: var(--icon);
+  mask-size: var(--icon-size);
+  mask-repeat: no-repeat;
+}
+
+/*=== size ============================================================*/
+
+.n-icon-size\:1 {
+  --icon-size: var(--icon-size-1);
+}
+
+.n-icon-size\:2 {
+  --icon-size: var(--icon-size-2);
+}
+
+.n-icon-size\:3 {
+  --icon-size: var(--icon-size-3);
+}
+
+.n-icon-size\:4 {
+  --icon-size: var(--icon-size-4);
+}
+
+.n-icon-size\:5 {
+  --icon-size: var(--icon-size-5);
+}
+
+.n-icon-size\:6 {
+  --icon-size: var(--icon-size-6);
+}
+
+.n-icon-size\:7 {
+  --icon-size: var(--icon-size-7);
+}
+
+.n-icon-size\:8 {
+  --icon-size: var(--icon-size-8);
+}
+
+.n-icon-size\:9 {
+  --icon-size: var(--icon-size-9);
+}
+
+.n-icon-size\:ex {
+  --icon-size: var(--icon-size-ex);
+}
+
+/* === color =======================================================*/
+
+.n-icon-color\:main-1:before {
+  background-color: var(--color-main-1);
+}
+
+.n-icon-color\:main-2:before {
+  background-color: var(--color-main-2);
+}
+
+.n-icon-color\:main-3:before {
+  background-color: var(--color-main-3);
+}
+
+.n-icon-color\:sub-1:before {
+  background-color: var(--color-sub-1);
+}
+
+.n-icon-color\:sub-2:before {
+  background-color: var(--color-sub-2);
+}
+
+.n-icon-color\:sub-3:before {
+  background-color: var(--color-sub-3);
+}
+
+.n-icon-color\:accent-1:before {
+  background-color: var(--color-accent-1);
+}
+
+.n-icon-color\:accent-2:before {
+  background-color: var(--color-accent-2);
+}
+
+.n-icon-color\:accent-3:before {
+  background-color: var(--color-accent-3);
+}
+
+.n-icon-color\:base-1:before {
+  background-color: var(--color-base-1);
+}
+
+.n-icon-color\:base-2:before {
+  background-color: var(--color-base-2);
+}
+
+.n-icon-color\:base-3:before {
+  background-color: var(--color-base-3);
+}
+
+.n-icon-color\:base-4:before {
+  background-color: var(--color-base-4);
+}
+
+.n-icon-color\:base-5:before {
+  background-color: var(--color-base-5);
+}
+
+.n-icon-color\:base-6:before {
+  background-color: var(--color-base-6);
+}
+
+.n-icon-color\:base-7:before {
+  background-color: var(--color-base-7);
+}
+
+.n-icon-color\:base-8:before {
+  background-color: var(--color-base-8);
+}
+
+.n-icon-color\:base-9:before {
+  background-color: var(--color-base-9);
+}
+
+.n-icon-color\:base-10:before {
+  background-color: var(--color-base-10);
+}
+
+/* === 종류 ======================================================*/
+
+.n-icon\:alert:before {
+  --icon: url(/assets/image/icon/alert.svg);
+}
+
+.n-icon\:notification:before {
+  --icon: url(/assets/image/icon/notification.png);
+}
+
+.n-icon\:arrow_swap:before {
+  --icon: url(/assets/image/icon/arrow_swap.svg);
+}
+
+.n-icon\:arrow_down:after,
+.n-icon\:arrow_down:before {
+  --icon: url(/assets/image/icon/arrow_down.svg);
+}
+
+.n-icon\:arrow_up:after,
+.n-icon\:arrow_up:before {
+  --icon: url(/assets/image/icon/arrow_up.svg);
+}
+
+.n-icon\:arrow_right:after,
+.n-icon\:arrow_right:before {
+  --icon: url(/assets/image/icon/arrow_right.svg);
+}
+
+.n-icon\:arrow_left:after,
+.n-icon\:arrow_left:before {
+  --icon: url(/assets/image/icon/arrow_left.svg);
+}
+
+.n-icon\:bookmark_simple:before {
+  --icon: url(/assets/image/icon/bookmark.svg);
+}
+
+.n-icon\:bus:after,
+.n-icon\:bus:before {
+  --icon: url(/assets/image/icon/bus.png);
+}
+
+.n-icon\:calendar:before {
+  --icon: url(/assets/image/icon/calendar.svg);
+}
+
+.n-icon\:calendar_month:before {
+  --icon: url(/assets/image/icon/calendar_month.svg);
+}
+
+.n-icon\:category:before {
+  --icon: url(/assets/image/icon/category.svg);
+}
+
+.n-icon\:caution:after,
+.n-icon\:caution:before {
+  --icon: url(/assets/image/icon/caution.svg);
+}
+
+.n-icon\:chat:before {
+  --icon: url(/assets/image/icon/chat.svg);
+}
+
+.n-icon\:clock:before {
+  --icon: url(/assets/image/icon/clock.svg);
+}
+
+.n-icon\:check_doc:before {
+  --icon: url(/assets/image/icon/check_doc.svg);
+}
+
+.n-icon\:circle:before {
+  --icon: url(/assets/image/icon/circle.svg);
+}
+
+.n-icon\:clock_sand:before {
+  --icon: url(/assets/image/icon/clock_sand.svg);
+}
+
+.n-icon\:create:before {
+  --icon: url(/assets/image/icon/create.svg);
+}
+
+.n-icon\:credit_card:after,
+.n-icon\:credit_card:before {
+  --icon: url(/assets/image/icon/credit_card.svg);
+}
+
+.n-icon\:dashboard:before {
+  --icon: url(/assets/image/icon/dashboard.svg);
+}
+
+.n-icon\:edit:before {
+  --icon: url(/assets/image/icon/edit.svg);
+}
+
+.n-icon\:error:after,
+.n-icon\:error:before {
+  --icon: url(/assets/image/icon/error.svg);
+}
+
+.n-icon\:exit:before {
+  --icon: url(/assets/image/icon/exit.svg);
+}
+
+.n-icon\:faq:before {
+  --icon: url(/assets/image/icon/faq.svg);
+}
+
+.n-icon\:globe:before {
+  --icon: url(/assets/image/icon/globe.svg);
+}
+
+.n-icon\:globe_2:before {
+  --icon: url(/assets/image/icon/globe_2.svg);
+}
+
+.n-icon\:group:before {
+  --icon: url(/assets/image/icon/group.svg);
+}
+
+.n-icon\:instagram:after,
+.n-icon\:instagram:before {
+  --icon: url(/assets/image/icon/instagram.svg);
+}
+
+.n-icon\:list:before {
+  --icon: url(/assets/image/icon/list.svg);
+}
+
+.n-icon\:logout:before {
+  --icon: url(/assets/image/icon/logout.svg);
+}
+
+.n-icon\:notice:before {
+  --icon: url(/assets/image/icon/notice.svg);
+}
+
+.n-icon\:number1:after,
+.n-icon\:number1:before {
+  --icon: url(/assets/image/icon/number1.svg);
+}
+
+.n-icon\:number2:after,
+.n-icon\:number2:before {
+  --icon: url(/assets/image/icon/number2.svg);
+}
+
+.n-icon\:number3:after,
+.n-icon\:number3:before {
+  --icon: url(/assets/image/icon/number3.svg);
+}
+
+.n-icon\:number4:after,
+.n-icon\:number4:before {
+  --icon: url(/assets/image/icon/number4.svg);
+}
+
+.n-icon\:number5:after,
+.n-icon\:number5:before {
+  --icon: url(/assets/image/icon/number5.svg);
+}
+
+.n-icon\:meatball:after,
+.n-icon\:meatball:before {
+  --icon: url(/assets/image/icon/meatball.svg);
+}
+
+.n-icon\:more_vertical:before {
+  --icon: url(/assets/image/icon/more_vertical.svg);
+}
+
+.n-icon\:pending:before {
+  --icon: url(/assets/image/icon/pending.svg);
+}
+
+.n-icon\:people:after,
+.n-icon\:people:before {
+  --icon: url(/assets/image/icon/people.svg);
+}
+
+.n-icon\:placeholder:after,
+.n-icon\:placeholder:before {
+  --icon: url(/assets/image/icon/placeholder.svg);
+}
+
+.n-icon\:plus:before {
+  --icon: url(/assets/image/icon/plus.svg);
+}
+
+.n-icon\:price:before {
+  --icon: url(/assets/image/icon/price.svg);
+}
+
+.n-icon\:program-list:before {
+  --icon: url(/assets/image/icon/program-list.svg);
+  mask-size:22px;
+}
+
+.n-icon\:programs:before {
+  --icon: url(/assets/image/icon/programs.svg);
+}
+
+.n-icon\:rectangle:after,
+.n-icon\:rectangle:before {
+  --icon: url(/assets/image/icon/rectangle.svg);
+}
+
+.n-icon\:request:after,
+.n-icon\:request:before {
+  --icon: url(/assets/image/icon/request.svg);
+}
+
+.n-icon\:reset:after,
+.n-icon\:reset:before {
+  --icon: url(/assets/image/icon/reset.svg);
+}
+
+.n-icon\:review:before {
+  --icon: url(/assets/image/icon/review.svg);
+}
+
+.n-icon\:search:before {
+  --icon: url(/assets/image/icon/search.svg);
+}
+
+.n-icon\:setting:before {
+  --icon: url(/assets/image/icon/setting.svg);
+}
+
+.n-icon\:share:before {
+  --icon: url(/assets/image/icon/share.svg);
+}
+
+.n-icon\:star:before,
+.n-icon\:star:after {
+  --icon: url(/assets/image/icon/star.svg);
+}
+
+.n-icon\:subway:after,
+.n-icon\:subway:before {
+  --icon: url(/assets/image/icon/subway.png);
+}
+
+.n-icon\:success-circle-green:after,
+.n-icon\:success-circle-green:before {
+  --icon: url(/assets/image/icon/success-circle-green.svg);
+}
+
+.n-icon\:success-decagon:after,
+.n-icon\:success-decagon:before {
+  --icon: url(/assets/image/icon/success-decagon.svg);
+}
+
+.n-icon\:ticket:before {
+  --icon: url(/assets/image/icon/ticket.svg);
+}
+
+.n-icon\:walk:after,
+.n-icon\:walk:before {
+  --icon: url(/assets/image/icon/walk.png);
+}
+
+.n-icon\:wishlist:before {
+  --icon: url(/assets/image/icon/wishlist.svg);
+}

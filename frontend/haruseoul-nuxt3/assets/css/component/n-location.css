@@ -1,0 +1,173 @@
+/* icon */
+
+
+.n-icon\:clock:after, .n-icon\:clock:before {
+    background-color: var(--color-base-7);
+}
+
+.n-icon\:rectangle:after, .n-icon\:rectangle:before {
+    display: flex;
+    height: 200px;
+    background-color: var(--color-base-5);
+}
+
+/* panel */
+.n-panel-tag\:time {
+    border:none;
+    --btn-font-size: 12px;
+    --btn-padding: 3px 4px;
+    background-color: var(--color-base-3);
+    margin-bottom: 8px;
+}
+
+/* deco */
+
+.n-deco {
+    --deco-gap: var(--gap-1)
+}
+
+/* 코스 흐름 */
+.n-course-flow {
+
+    padding-top: var(--gap-6);
+    padding-bottom: var(--gap-8);
+
+    /* 경유지 */
+
+    .point {
+        display: flex;
+        flex-direction: row;
+        padding: 0 var(--gap-6);
+        height: 105px;
+
+        .icon-wrapper {
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            width: 60px;
+
+            .n-icon:not(.n-deco) {
+                text-indent: -9999px;
+            }
+
+            .n-icon\:rectangle:after, .n-icon\:rectangle:before {
+                position: absolute;
+                top: -41px; /* 상단에 위치 */
+                left: 30px; /* 수평 중앙 정렬 */
+                transform: translateX(-50%); /* 수평 중앙 정렬 보정 */
+                width: 7px;
+                height: 110px;
+            }
+
+            .n-icon\:placeholder:after, .n-icon\:placeholder:before,
+            .n-icon\:number1:after, .n-icon\:number1:before,
+            .n-icon\:number2:after, .n-icon\:number2:before,
+            .n-icon\:number3:after, .n-icon\:number3:before,
+            .n-icon\:number4:after, .n-icon\:number4:before,
+            .n-icon\:number5:after, .n-icon\:number5:before{
+                position: absolute;
+                top: 36%; /* 상단에 위치 */
+                left: 50%; /* 수평 중앙 정렬 */
+                transform: translateX(-50%); /* 수평 중앙 정렬 보정 */
+                --icon-size: var(--icon-size-7);
+                background-color: var(--color-base-7);
+            }
+        }
+
+        .point-detail {
+            flex-grow: 1; /* 가능한 공간을 모두 차지 */
+            margin-left: 8px; /* 왼쪽 여백 */
+
+            .point-name {
+                font-size: var(--font-size-8);
+                font-weight: bold;
+            }
+
+            .point-info {
+                color: var(--color-base-7);
+                margin-top: 14px;
+            }
+        }
+    }
+
+
+    /* 도착지 */
+
+    .point:last-child {
+        .icon-wrapper {
+            .n-icon\:placeholder:after, .n-icon\:placeholder:before {
+                background-color: var(--color-sub-1);
+            }
+        }
+    }
+
+    /* 출발지 */
+
+    .point:first-child {
+        .icon-wrapper {
+            .n-icon\:placeholder:after, .n-icon\:placeholder:before {
+                background-color: var(--color-red-1);
+            }
+
+            .n-icon\:rectangle:after, .n-icon\:rectangle:before {
+                display: none;
+            }
+        }
+    }
+
+    /* 이동수단 */
+
+    .transport {
+        display: flex;
+        flex-direction: row;
+        padding: 0 var(--gap-6);
+        height: 105px;
+
+        .icon-wrapper {
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            width: 60px;
+        }
+
+        .transport-detail {
+            display: flex;
+            padding-top: 37px; /* 상단에 위치 */
+            flex-grow: 1; /* 가능한 공간을 모두 차지 */
+            margin-left: 8px; /* 왼쪽 여백 */
+
+            p:last-child {
+                color: var(--color-base-6);
+                margin-left: var(--gap-1);
+            }
+        }
+
+        .n-icon:not(.n-deco) {
+            text-indent: -9999px;
+        }
+
+        img {
+            margin-top: var(--gap-3);
+            margin-left: var(--gap-3);
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .img-wrapper {
+            position: relative;
+            height: 40px;
+            width: 40px;
+            aspect-ratio: 1 / 1;
+        }
+
+        .n-icon\:rectangle:after, .n-icon\:rectangle:before {
+            position: absolute;
+            top: -41px; /* 상단에 위치 */
+            left: 30px; /* 수평 중앙 정렬 */
+            transform: translateX(-50%); /* 수평 중앙 정렬 보정 */
+            width: 7px;
+            height: 110px;
+        }
+    }
+}

@@ -1,0 +1,22 @@
+spring:
+  profiles:
+    active: dev #dev #prod
+    include: secret #민감정보 secret파일
+
+#  config:
+#    import: "file:/home/new8th3/application-secret.yml"
+
+  web:
+    resources:
+      static-locations: file:./uploads/
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 500MB
+      max-request-size: 1024MB
+server:
+  servlet:
+    context-path: /api/v1
+
+file:
+  upload-dir: ./uploads

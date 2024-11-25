@@ -1,0 +1,47 @@
+.collapse {
+  display: flex;
+  justify-content: center;
+  width: auto;
+  padding: var(--gap-6) var(--gap-1);
+  list-style-type: none;
+  pointer-events: none;
+
+  .title {
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--font-size-8);
+    font-weight: bold;
+    flex-grow: 1;
+  }
+
+  .n-icon {
+    cursor: pointer;
+    border: none;
+    pointer-events: all;
+  }
+}
+
+details[open] .collapse .n-icon\:arrow_down:before {
+  --icon: url(/assets/image/icon/arrow_up.svg);
+}
+
+.details {
+  /*margin: var(--gap-6); --pc 버전 */
+  margin: var(--gap-4) var(--gap-2);
+
+  .info-container .info-input {
+    justify-content: right;
+  }
+
+  .info-container ul .info-input {
+    justify-content: left;
+  }
+
+  .info-container {
+    padding: 0 var(--gap-6) var(--gap-3) var(--gap-6);
+  }
+}
+
+@media (min-width: 768px) {
+  padding: var(--gap-6);
+}

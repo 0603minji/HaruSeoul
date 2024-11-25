@@ -1,0 +1,219 @@
+.n-aside {
+    display: flex;
+    flex-direction: column;
+    width: 260px;
+    /* height를 100%로 설정하여 화면 전체를 차지 */
+    height: 100%;
+    /*화면에 고정된 위치*/
+    position: fixed;
+    /* 기본적으로 화면 오른쪽 밖에 숨김 */
+    right: -260px;
+    top: 0;
+    background-color: var(--color-base-1);
+    /* 다른 요소 위에 표시되도록 */
+    z-index: 52;
+    transition: 0.2s ease-in-out;
+
+    .aside-header {
+        /*가로 배치*/
+        display: flex;
+        /*양끝으로 요소들 배치*/
+        justify-content: space-between;
+        padding: var(--gap-3);
+
+        h1 {
+            display: none;
+        }
+
+        /* 알림 채팅아이콘 */
+        div {
+            display: flex;
+            gap: 8px;
+        }
+
+    }
+
+    .aside-profile {
+        /*가로 배치*/
+        display: flex;
+        /*이미지와 정보 수평 배치*/
+        align-items: center;
+        /*테두리*/
+        border-bottom: 1px solid var(--color-base-3);
+        gap: var(--gap-6);
+        padding-left: var(--gap-8);
+        padding-top: var(--gap-4);
+        padding-bottom: var(--gap-4);
+
+        h1 {
+            display: none;
+        }
+
+        .profile-img-container {
+            /*이미지 컨테이너 크기를 콘텐츠에 맞게 조정*/
+            height: fit-content;
+            width: fit-content;
+
+            .profile-img-wrapper {
+                display: inline-flex;
+                aspect-ratio: 1 / 1;
+                width: 60px;
+                border-radius: 50%;
+                overflow: hidden;
+
+                .profile-img {
+                    /*이미지 크기 고정*/
+                    width: 62px;
+                }
+            }
+
+        }
+
+        .profile-info {
+            /*세로 정렬*/
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap-4);
+
+            .nickname {
+                font-size: var(--font-size-8);
+                font-weight: var(--font-weight-2);
+            }
+
+            .account-setting {
+                display: flex;
+                align-items: center;
+
+                a {
+                    --deco-gap: 2px;
+                    --icon-size: 16px;
+                    display: flex;
+                    align-items: center;
+                }
+            }
+        }
+    }
+
+    nav {
+        .filter{
+            .collapse {
+                display: flex;
+                justify-content: center;
+                width: auto;
+                padding: 16px 18px 10px 18px;
+                list-style-type: none;
+                pointer-events: none;
+            }
+
+            .aside-menu {
+                /*세로 배치*/
+                display: flex;
+                flex-direction: column;
+                border-bottom: 1px solid var(--color-base-3);
+                width: var(--width-10p);
+                gap: 6px;
+                padding-bottom: 10px;
+
+                .menu {
+                    padding: 20px 32px;
+                    font-weight: var(--font-weight-2);
+                    display: flex;
+                    align-items: center;
+                }
+
+                /*메뉴 항목 호버 효과*/
+
+                .menu:hover {
+                    /*--icon-color: var(--color-sub-1);
+                    --btn-box-shadow: 0 -4px 8px var(--color-base-3), 0 4px 8px var(--color-base-3);
+                    color: var(--color-sub-1);*/
+                    background-color: var(--color-base-3);
+                    /*box-shadow: var(--btn-box-shadow);*/
+                }
+            }
+        }
+        /* 로그아웃 */
+        .aside-menu {
+            /*세로 배치*/
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid var(--color-base-3);
+            width: var(--width-10p);
+            gap: 6px;
+            padding-bottom: 10px;
+
+            .menu {
+                padding: 20px 32px;
+                font-weight: var(--font-weight-2);
+                display: flex;
+                align-items: center;
+                --deco-gap: 8px;
+            }
+
+            /*메뉴 항목 호버 효과*/
+
+            .menu:hover {
+                /*--icon-color: var(--color-sub-1);
+                --btn-box-shadow: 0 -4px 8px var(--color-base-3), 0 4px 8px var(--color-base-3);
+                color: var(--color-sub-1);*/
+                background-color: var(--color-base-3);
+                /*box-shadow: var(--btn-box-shadow);*/
+            }
+        }
+    }
+
+    .aside-footer {
+        /*가로 배치*/
+        display: flex;
+        /*오른쪽 끝에 정렬*/
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: auto;
+        padding-right: var(--gap-6);
+        padding-top: var(--gap-10);
+        padding-bottom: var(--gap-10);
+
+        select {
+            font-weight: var(--font-weight-1);
+            color: var(--color-main-3);
+            background-color: inherit;
+        }
+    }
+}
+
+
+/* 체크박스가 체크되면 aside 표시 */
+.n-aside-hider:checked ~ .n-aside {
+    /*체크박스 다음에 위치하는 형제 요소 중 .n-aside 클래스 가진 요소*/
+    /*~ : 일반형제 결합자*/
+    /*    특정 요소 뒤에 있는 형제 요소 중 지정된 요소를 선택*/
+    right: 0;
+}
+
+
+/* 어사이드 메뉴 바깥 영역 어둡게 */
+.bg-darkened {
+    /*화면에 고정 위치*/
+    position: fixed;
+    /*화면의 맨위와 맨 왼쪽에 위치*/
+    top: 0;
+    left: 0;
+    /*화면 전체를 크기*/
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /*초기 상태에서는 화면에 보이지 않음*/
+    visibility: hidden;
+    /*요소를 투명하게 보이지않게*/
+    opacity: 0;
+    z-index: 51;
+    transition: 0.1s ease-in-out;
+}
+
+/* 어사이드가 체크되면 오버레이가 활성화*/
+.n-aside-hider:checked ~ .bg-darkened {
+    visibility: visible;
+    opacity: 1;
+}
+
+
