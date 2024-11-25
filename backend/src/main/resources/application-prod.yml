@@ -3,7 +3,7 @@ spring:
     name: HaruSeoul
   web:
     resources:
-      static-locations: file:./uploads/
+      static-locations: file:/home/new8th3/HaruSeoul/backend/uploads/
       chain:
         content:
           mime-mappings:
