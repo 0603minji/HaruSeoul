@@ -35,7 +35,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:./uploads/");
+                .addResourceLocations("file:/home/new8th3/HaruSeoul/backend/uploads/");
     }
 
     @Bean
